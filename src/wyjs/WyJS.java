@@ -2,7 +2,6 @@ package wyjs;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import wyil.io.WyilFilePrinter;
@@ -17,19 +16,14 @@ public class WyJS {
 
 	private WyilFile file;
 	private int indent = 0;
-	//Sorted list of strings that make up the javascript file
-	private ArrayList<String> js;
 
 	public WyJS(WyilFile file) {
 		this.file = file;
 		ArrayList<Block> blocks = new ArrayList<Block>(file.blocks());
-		js = new ArrayList<String>();
 		for (Block f : blocks) {
 			write(f);
 		}
 	}
-	
-
 
 	private void write(Block e){
 		
@@ -47,44 +41,43 @@ public class WyJS {
 				i++;
 			}
 			str.append("){//" + func.type().toString() +"\n");
-			js.add(str.toString());
 			indent++;
-			Iterator iter = func.body().iterator();
-			while(iter.hasNext()){
-				Object tmp = iter.next();
-				write(tmp);
-			}
+				//System.out.println(c.body().);
+				Iterator iter = func.body().iterator();
+				while(iter.hasNext()){
+					Object tmp = iter.next();
+					write(tmp, str);
+				}
 			indent--;
-			js.add(getIndentBlock() + "}");
+			str.append(getIndentBlock() + "}");
 			
-			for(String s: js){
-				System.out.print(s);
-			}
+
+			System.out.println(str);
 		}
 	}
 	
-	private void write(Object o){
+	private void write(Object o, StringBuilder str){
 		if(o instanceof Codes.Const){
-			write((Codes.Const) o);
+			write((Codes.Const) o, str);
 		}else if(o instanceof Codes.BinaryOperator){
-			write((Codes.BinaryOperator) o);
+			write((Codes.BinaryOperator) o, str);
 		}else if(o instanceof Codes.Assign){
-			write((Codes.Assign) o);
+			write((Codes.Assign) o, str);
 		}else if(o instanceof Codes.Return){
-			write((Codes.Return) o);
+			write((Codes.Return) o, str);
 		}else{
 			System.out.println("Unknown object " + o.getClass());
 		}
 	}
 	
-	private void write(Codes.Const o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
+	private void write(Codes.Const o, StringBuilder str){
+		str.append(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
 	}
 	
-	private void write(Codes.BinaryOperator o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = ");
+	private void write(Codes.BinaryOperator o, StringBuilder str){
+		str.append(getIndentBlock() + "var r" + o.target() + "= ");
 		if(o.kind == Codes.BinaryOperatorKind.ADD){
-			js.add("r" + o.operand(0) + " + " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
+			str.append("r" + o.operand(0) + " + " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
 		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEAND){
 			System.out.println("Cant do BitWiseAnd");
 		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEOR){
@@ -92,11 +85,11 @@ public class WyJS {
 		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEXOR){
 			System.out.println("Cant do BitWiseXOR");
 		}else if(o.kind == Codes.BinaryOperatorKind.DIV){
-			js.add("r" + o.operand(0) + " / " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
+			str.append("r" + o.operand(0) + " / " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
 		}else if(o.kind == Codes.BinaryOperatorKind.LEFTSHIFT){
 			System.out.println("Cant do LeftShift");
 		}else if(o.kind == Codes.BinaryOperatorKind.MUL){
-			js.add("r" + o.operand(0) + " * " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
+			str.append("r" + o.operand(0) + " * " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
 		}else if(o.kind == Codes.BinaryOperatorKind.RANGE){
 			System.out.println("Cant do Range");
 		}else if(o.kind == Codes.BinaryOperatorKind.REM){
@@ -104,20 +97,21 @@ public class WyJS {
 		}else if(o.kind == Codes.BinaryOperatorKind.RIGHTSHIFT){
 			System.out.println("Cant do RightShift");
 		}else if(o.kind == Codes.BinaryOperatorKind.SUB){
-			js.add("r" + o.operand(0) + " - " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
+			str.append("r" + o.operand(0) + " - " + "r" + o.operand(1) + ";//" + o.toString() +"\n");
 		}else {
 			System.out.println("Unknown kind");
 		}
 	}
 	
-	private void write(Codes.Return o){
+	private void write(Codes.Return o, StringBuilder str){
+		//str.append(getIndentBlock() + "var r" + getNameNum() + " = " + o.constant + ";\n");
 		if(o.operand!=-1){
-			js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
+			str.append(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
 		}
 	}
 	
-	private void write(Codes.Assign o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
+	private void write(Codes.Assign o, StringBuilder str){
+		//TODO: not yet 
 	}
 	
 	private String getIndentBlock(){
