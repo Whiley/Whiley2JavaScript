@@ -1,3 +1,6 @@
-function test(bool x) -> bool x:
-	bool y = x == true
-	return y != false	
+import whiley.lang.*
+
+int x = 3;
+
+method main() -> void:
+    int x = 3;

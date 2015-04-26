@@ -1,5 +1,7 @@
 package wyjs;
 
+import jasm.lang.Bytecode;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +9,9 @@ import java.util.Iterator;
 
 import wyil.io.WyilFilePrinter;
 import wyil.io.WyilFileReader;
+import wyil.lang.Code;
 import wyil.lang.Codes;
+import wyil.lang.Codes.Label;
 import wyil.lang.Type;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Block;
@@ -19,18 +23,22 @@ public class WyJS {
 	private int indent = 0;
 	//Sorted list of strings that make up the javascript file
 	private ArrayList<String> js;
-	private int entryPoint = -1;
+	private ArrayList<Label> ignoreLabels;
 	
 	public WyJS(WyilFile file) {
 		this.file = file;
-		ArrayList<Block> blocks = new ArrayList<Block>(file.blocks());
+		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(file.functionOrMethods());
 		js = new ArrayList<String>();
-		for (Block f : blocks) {
+		ignoreLabels = new ArrayList<Label>();
+		for (FunctionOrMethod f : fom) {
 			write(f);
+		}
+		for(String s: js){
+			System.out.print(s);
 		}
 	}
 
-	private void write(Block e){
+	private void write(FunctionOrMethod e){
 		if(e instanceof FunctionOrMethod){
 			FunctionOrMethod func = (FunctionOrMethod) e;
 			StringBuilder str = new StringBuilder();
@@ -53,11 +61,7 @@ public class WyJS {
 				write(tmp);
 			}
 			indent--;
-			js.add("}");
-			
-			for(String s: js){
-				System.out.print(s);
-			}
+			js.add("}\n\n");
 		}
 	}
 	
@@ -74,22 +78,21 @@ public class WyJS {
 			write((Codes.If) o);
 		}else if(o instanceof Codes.Goto){
 			write((Codes.Goto) o);
+		}else if(o instanceof Codes.Assume){
+			write((Codes.Assume) o);
+		}else if(o instanceof Codes.Assert){
+			write((Codes.Assert)o);
 		}else if(o instanceof Codes.Label){
 			write((Codes.Label) o);
+		}else if(o instanceof Codes.Invoke){
+			write((Codes.Invoke) o);
 		}else{
 			System.out.println("Unknown object " + o.getClass());
 		}
 	}
 	
 	private void write(Codes.Const o){
-		if(entryPoint == -1){
-			js.add(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
-		}else{
-			js.add(entryPoint, getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
-			entryPoint++;
-			//realign();
-		}
-
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
 	}
 	
 	private void write(Codes.BinaryOperator o){
@@ -120,98 +123,95 @@ public class WyJS {
 		}else {
 			System.out.println("Unknown kind");
 		}
-		
-		if(entryPoint == -1){
-			js.add(str);
-		}else{
-			js.add(entryPoint, str);
-			entryPoint++;
-			//realign();
+		js.add(str);
+	}
+	
+	private void write(Codes.Assert o){
+		String str = (getIndentBlock() + "if(");
+		ArrayList<Code> code = new ArrayList<Code>();
+		for(Code c: o.bytecodes()){
+			if(c instanceof Codes.If){
+				Codes.If opers = (Codes.If) c;
+				str += "r" + opers.leftOperand;
+				if(opers.op == Codes.Comparator.EQ){//==
+					str += " != r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.GT){//>
+					str += " <= r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.GTEQ){//>=
+					str += " < r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.LT){//<
+					str += " >= r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.LTEQ){//<=
+					str += " > r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.NEQ){//!=
+					str += " == r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}
+				indent++;
+				str+= getIndentBlock() + "throw {name: 'Assert Failed', message: 'r" + opers.leftOperand + " !" + opers.op + " r" + opers.rightOperand + "'}\n";
+				indent--;
+				str+= getIndentBlock() + "}\n";
+			}else if(c instanceof Codes.Label){
+				ignoreLabels.add((Codes.Label) c);
+			}else if(c instanceof Codes.Fail){
+				
+			}else{
+				code.add(c);
+			}
 		}
+		
+		for(Code c: code){
+			write(c);
+			//System.out.println(js.get(js.size()-1));
+		}
+		js.add(str);
+	}
+	
+	private void write(Codes.Assume o){
+		System.out.println("Does not support Assume");
 	}
 	
 	private void write(Codes.Return o){
 		if(o.operand!=-1){
-			if(entryPoint == -1){
-				js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
-			}
-			else{
-				js.add(entryPoint+1, getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
-				entryPoint++;
-				//realign();
-			}
-			
+			js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
 		}
 	}
 	
 	private void write(Codes.Assign o){
-		if(entryPoint == -1){
-			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
-		}else{
-			js.add(entryPoint, getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
-			entryPoint++;
-			//realign();
-		}
-
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
 	}
 	
 	private HashMap<String, Integer> labelIndex =  new HashMap<String, Integer>();
 	
 	private void write(Codes.If o){
-		String str = "";
-		str +=getIndentBlock() + "if(r" + o.leftOperand;
-		if(o.op == Codes.Comparator.EQ){//==
-			str += " == r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.GT){//>
-			str += " > r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.GTEQ){//>=
-			str += " >= r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.IN){//?
-			
-		}else if(o.op == Codes.Comparator.LT){//<
-			str += " < r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.LTEQ){//<=
-			str += " <= r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.NEQ){//!=
-			str += " != r" + o.rightOperand + "){//" + o.toString() + "\n";
-		}else if(o.op == Codes.Comparator.SUBSET){//?
-			
-		}else if(o.op == Codes.Comparator.SUBSETEQ){//?
-			
-		}else {
-			System.out.println("Unknown operator");
-		}
-		if(entryPoint == -1){
-			js.add(str);
-			labelIndex.put(o.target, js.size());
-			js.add(getIndentBlock() + "} else{\n");
-		}else{
-			js.add(entryPoint, str);
-			entryPoint++;
-			//realign();
-			labelIndex.put(o.target, js.size());
-			js.add(getIndentBlock() + "} else{\n");
-			entryPoint++;
-			//realign();
-		}
-		//indent++;
+		System.out.println("If not supported");
 	}
 	
 	private void write(Codes.Goto o){
-		//indent--;
-		if(entryPoint == -1){
-			js.add(getIndentBlock() + "}\n");
-		}else{
-			js.add(entryPoint, getIndentBlock() + "}\n");
-			entryPoint++;
-			//realign();
-		}
-		labelIndex.put(o.target, js.size());
+		System.out.println("Goto not supported");
 	}
 	
 	private void write(Codes.Label o){
-		//indent++;
-		entryPoint = labelIndex.get(o.label);
+		if(ignoreLabels.contains(o)){
+			//IGNORE
+		}else{
+			System.out.println("Label not supported");
+		}
+	}
+	
+	private void write(Codes.Invoke o){
+		String str = getIndentBlock() + "var r" + o.target() + " = ";
+		str+= o.name.name() + "(";
+		int x = 1;
+		for(Integer i: o.operands()){
+			if(x == 1){
+				str+= "r" + i;
+			}else{
+				str+= ", r" + i;
+			}
+			str += ");\n";
+		}
+		
+		js.add(str);
 	}
 	
 	private String getIndentBlock(){
@@ -220,12 +220,6 @@ public class WyJS {
 			str+="   ";
 		}
 		return str;
-	}
-	
-	private void realign(){
-		for(Integer i: labelIndex.values()){
-			i++;
-		}
 	}
 
 	public static void main(String[] args) {
