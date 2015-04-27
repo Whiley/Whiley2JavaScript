@@ -1,7 +1,5 @@
-function test(int x) -> int:
-	return x
-
-function main():
-	assert(test(1)==1)
+method main():
 	int x = 1
-	assert(test(10)==10)
+	assert(x == 1)
+	x = 5
+	assert(x == 5)

@@ -1,7 +1,7 @@
 function test(int x) -> int:
-	return x + 1
+	return x
 
 function main():
-	assert(test(1) == 2)
+	assert(test(1) == 1)
 
-	assert(test(10) == 11)
+	assert(test(10) == 10)
