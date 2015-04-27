@@ -1,8 +1,12 @@
 package wyjs;
 
-import jasm.lang.Bytecode;
-
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,7 +18,6 @@ import wyil.lang.Codes;
 import wyil.lang.Codes.Label;
 import wyil.lang.Type;
 import wyil.lang.WyilFile;
-import wyil.lang.WyilFile.Block;
 import wyil.lang.WyilFile.FunctionOrMethod;
 
 public class WyJS {
@@ -33,11 +36,22 @@ public class WyJS {
 		for (FunctionOrMethod f : fom) {
 			write(f);
 		}
-		for(String s: js){
-			System.out.print(s);
+	}
+	
+	public void makeFile(String filename, String srcDir){
+		
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(srcDir + "/" + filename + ".js"));
+			for(String s: js){
+				out.print(s);
+			}
+			out.println("main();");
+			out.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-
 	private void write(FunctionOrMethod e){
 		if(e instanceof FunctionOrMethod){
 			FunctionOrMethod func = (FunctionOrMethod) e;
@@ -229,8 +243,8 @@ public class WyJS {
 			WyilFile wyilFile = r.read();
 			// Second, print out its contents (for now, though this should be
 			// changed)
-			WyilFilePrinter printer = new WyilFilePrinter(System.out);
-			printer.apply(wyilFile);
+			//WyilFilePrinter printer = new WyilFilePrinter(System.out);
+			//printer.apply(wyilFile);
 			
 			//Make the javascript file
 			
