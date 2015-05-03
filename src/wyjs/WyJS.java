@@ -175,13 +175,47 @@ public class WyJS {
 		
 		for(Code c: code){
 			write(c);
-			//System.out.println(js.get(js.size()-1));
 		}
 		js.add(str);
 	}
 	
 	private void write(Codes.Assume o){
-		System.out.println("Does not support Assume");
+		String str = (getIndentBlock() + "if(");
+		ArrayList<Code> code = new ArrayList<Code>();
+		for(Code c: o.bytecodes()){
+			if(c instanceof Codes.If){
+				Codes.If opers = (Codes.If) c;
+				str += "r" + opers.leftOperand;
+				if(opers.op == Codes.Comparator.EQ){//==
+					str += " != r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.GT){//>
+					str += " <= r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.GTEQ){//>=
+					str += " < r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.LT){//<
+					str += " >= r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.LTEQ){//<=
+					str += " > r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}else if(opers.op == Codes.Comparator.NEQ){//!=
+					str += " == r" + opers.rightOperand + "){//" + o.toString() + "\n";
+				}
+				indent++;
+				str+= getIndentBlock() + "throw {name: 'Assert Failed', message: 'r" + opers.leftOperand + " !" + opers.op + " r" + opers.rightOperand + "'}\n";
+				indent--;
+				str+= getIndentBlock() + "}\n";
+			}else if(c instanceof Codes.Label){
+				ignoreLabels.add((Codes.Label) c);
+			}else if(c instanceof Codes.Fail){
+				
+			}else{
+				code.add(c);
+			}
+		}
+		
+		for(Code c: code){
+			write(c);
+		}
+		js.add(str);
 	}
 	
 	private void write(Codes.Return o){
@@ -243,12 +277,12 @@ public class WyJS {
 			WyilFile wyilFile = r.read();
 			// Second, print out its contents (for now, though this should be
 			// changed)
-			//WyilFilePrinter printer = new WyilFilePrinter(System.out);
-			//printer.apply(wyilFile);
+			WyilFilePrinter printer = new WyilFilePrinter(System.out);
+			printer.apply(wyilFile);
 			
 			//Make the javascript file
 			
-			WyJS wy = new WyJS(wyilFile);
+			//WyJS wy = new WyJS(wyilFile);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}

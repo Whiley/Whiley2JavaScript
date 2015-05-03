@@ -1,5 +1,5 @@
 method main() -> void:
     bool x = true
-    assert x == true
+    assume x == true
     x = false
     assert x == false

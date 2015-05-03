@@ -3,7 +3,7 @@ function main(){//method() -> void
    var r1 = r2;//assign %1 = %2  : bool
    var r0 = r1;//assign %0 = %1  : bool
    var r3 = true;//const %3 = true : bool
-   if(r0 != r3){//assert
+   if(r0 != r3){//assume 
       throw {name: 'Assert Failed', message: 'r0 !eq r3'}
    }
    var r4 = false;//const %4 = false : bool
