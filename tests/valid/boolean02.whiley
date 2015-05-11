@@ -1,6 +1,6 @@
-method test(real x) -> real x:
+method testreal(real x) -> real x:
 	return x
 
-method main() -> void:
-	assert(test(1.1123) == 1.1123)
-	assert(test(10.5992) == 10.5992)
+method test() -> void:
+	assert(testreal(1.1123) == 1.1123)
+	assert(testreal(10.5992) == 10.5992)

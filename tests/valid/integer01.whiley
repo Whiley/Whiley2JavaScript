@@ -1,4 +1,4 @@
-method main():
+method test():
 	int x = 1
 	assert(x == 1)
 	x = 5

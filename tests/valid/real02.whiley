@@ -1,6 +1,6 @@
-method test(bool x) -> bool x:
+method testbool(bool x) -> bool x:
 	return x
 
-method main() -> void:
-	assert(test(true) == true)
-	assert(test(false) == false)
+method test() -> void:
+	assert(testbool(true) == true)
+	assert(testbool(false) == false)

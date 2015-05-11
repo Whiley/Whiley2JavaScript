@@ -1,17 +1,27 @@
-function main(){//method() -> void
+function test(){//method() -> void
    var r2 = 1;//const %2 = 1 : int
    var r1 = r2;//assign %1 = %2  : int
    var r0 = r1;//assign %0 = %1  : int
    var r3 = 1;//const %3 = 1 : int
-   if(r0 != r3){//assert
-      throw {name: 'Assert Failed', message: 'r0 !eq r3'}
-   }
-   var r4 = 5;//const %4 = 5 : int
-   var r0 = r4;//assign %0 = %4  : int
-   var r5 = 5;//const %5 = 5 : int
-   if(r0 != r5){//assert
-      throw {name: 'Assert Failed', message: 'r0 !eq r5'}
+   var control_flow_repeat = true;
+   var control_flow_pc = -1;
+   outer:
+   while(control_flow_repeat){
+      control_flow_repeat = false
+      switch(control_flow_pc){
+         case -1 :
+            if(r0  !=  r3){
+               throw {name: 'Assert Failed', message: 'fail'}
+            }
+         case 0:
+            var r4 = 5;//const %4 = 5 : int
+            var r0 = r4;//assign %0 = %4  : int
+            var r5 = 5;//const %5 = 5 : int
+            if(r0  !=  r5){
+               throw {name: 'Assert Failed', message: 'fail'}
+            }
+      }
    }
 }
 
-main();
+test();

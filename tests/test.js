@@ -1,19 +1,22 @@
-var test = "function test(){
-	var x = 10;
-	[lbl] topif:
-	if(x < 10){
-		goto topfalse;
-	}
-	x--;
-	[lbl] topfalse:
-	x++;
-	if(x>10){
-		goto middlefalse
-	}
+var test = "function test(){\n
+	var x = 10;\n
+	[lbl] topif:\n
+	if(x < 10){\n
+		goto topfalse;\n
+	}\n
+	x--;\n
+	[lbl] topfalse:\n
+	x++;\n
+	if(x>10){\n
+		goto middlefalse\n
+	}\n
+	x = 100;\n
+	[lbl] middlefalse:\n
+	x = 100000;\n
 
-}
-test();"
+	console.log(x);\n
 
+}\ntest();"
 /*
  * parseScripts
  * (c) James Padolsey
