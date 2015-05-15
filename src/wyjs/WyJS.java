@@ -180,60 +180,16 @@ public class WyJS {
 		js.add(str);
 	}
 	
-//	private void write(Codes.Assert o) throws Exception{
-//		String str = (getIndentBlock() + "if(");
-//		ArrayList<Code> code = new ArrayList<Code>();
-//		for(Code c: o.bytecodes()){
-//			write(c);
-//			if(c instanceof Codes.If){
-//				Codes.If opers = (Codes.If) c;
-//				str += "r" + opers.leftOperand + getIfop(opers, true) + "r" + opers.rightOperand + "){//" + o.toString() + "\n";
-//				indent++;
-//				str+= getIndentBlock() + "throw {name: 'Assert Failed', message: 'r" + opers.leftOperand + " !" + opers.op + " r" + opers.rightOperand + "'}\n";
-//				indent--;
-//				str+= getIndentBlock() + "}\n";
-//			}else if(c instanceof Codes.Label){
-//				
-//				ignoreLabels.add((Codes.Label) c);
-//			}else if(c instanceof Codes.Fail){
-//				
-//			}else{
-//				code.add(c);
-//			}
-//		}
-		
-//		for(Code c: code){
-//			write(c);
-//		}
-//		code.clear();
-//		js.add(str);
-//	}
-	
-	private void write(Codes.Assume o) throws Exception{
-		String str = (getIndentBlock() + "if(");
-		ArrayList<Code> code = new ArrayList<Code>();
-		for(Code c: o.bytecodes()){
-			if(c instanceof Codes.If){
-				Codes.If opers = (Codes.If) c;
-				str += "r" + opers.leftOperand + getIfop(opers, true) + "r" + opers.rightOperand + "){//" + o.toString() + "\n";
-				indent++;
-				str+= getIndentBlock() + "throw {name: 'Assert Failed', message: 'r" + opers.leftOperand + " !" + opers.op + " r" + opers.rightOperand + "'}\n";
-				indent--;
-				str+= getIndentBlock() + "}\n";
-			}else if(c instanceof Codes.Label){
-				
-				this.ignoreLabels.add((Codes.Label) c);
-			}else if(c instanceof Codes.Fail){
-				
-			}else{
-				code.add(c);
-			}
-		}
-		
-		for(Code c: code){
+	private void write(Codes.Assert o) throws Exception{
+		for(Code c : o.bytecodes()){
 			write(c);
 		}
-		js.add(str);
+	}
+	
+	private void write(Codes.Assume o) throws Exception{
+		for(Code c : o.bytecodes()){
+			write(c);
+		}
 	}
 	
 	private void write(Codes.Return o){
@@ -271,16 +227,16 @@ public class WyJS {
 			System.out.println(o.label);
 			//IGNORE
 		}else{
-				if(isBreak){
-					js.add("break;");
-					isBreak = false;
-				}
-				else{
-					indent--;
-					js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
-					indent++;
-				}
+			if(isBreak){
+				js.add("break;");
+				isBreak = false;
 			}
+			else{
+				indent--;
+				js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
+				indent++;
+			}
+		}
 		
 	}
 	
@@ -299,8 +255,9 @@ public class WyJS {
 			}else{
 				str+= ", r" + i;
 			}
-			str += ");\n";
+			x++;
 		}
+		str += ");\n";
 		
 		js.add(str);
 	}
