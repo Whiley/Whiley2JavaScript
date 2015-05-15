@@ -28,32 +28,32 @@ function test(){//method() -> void
             var r7 = index(r0, r8);
             var r9 = 1;//const %9 = 1 : int
             if(r7  ==  r9){
-               control_flow_pc = 8;
+               control_flow_pc = 47;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 8:
+         case 47:
             var r11 = 1;//const %11 = 1 : int
             var r10 = index(r0, r11);
             var r12 = 2;//const %12 = 2 : int
             if(r10  ==  r12){
-               control_flow_pc = 9;
+               control_flow_pc = 48;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 9:
+         case 48:
             var r14 = 2;//const %14 = 2 : int
             var r13 = index(r0, r14);
             var r15 = 3;//const %15 = 3 : int
             if(r13  ==  r15){
-               control_flow_pc = 10;
+               control_flow_pc = 49;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 10:
+         case 49:
             var r17 = [72,101,108,108,111,32,87,111,114,108,100];//const %17 = [72,101,108,108,111,32,87,111,114,108,100] : [int+]
             var r16 = r17;//assign %16 = %17  : [int+]
             var r1 = r16;//assign %1 = %16  : [int]
@@ -61,32 +61,32 @@ function test(){//method() -> void
             var r18 = index(r1, r19);
             var r20 = 72;//const %20 = 72 : int
             if(r18  ==  r20){
-               control_flow_pc = 11;
+               control_flow_pc = 50;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 11:
+         case 50:
             var r22 = 1;//const %22 = 1 : int
             var r21 = index(r1, r22);
             var r23 = 101;//const %23 = 101 : int
             if(r21  ==  r23){
-               control_flow_pc = 12;
+               control_flow_pc = 51;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 12:
+         case 51:
             var r25 = 2;//const %25 = 2 : int
             var r24 = index(r1, r25);
             var r26 = 108;//const %26 = 108 : int
             if(r24  ==  r26){
-               control_flow_pc = 13;
+               control_flow_pc = 52;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 13:
+         case 52:
       }
    }
 }

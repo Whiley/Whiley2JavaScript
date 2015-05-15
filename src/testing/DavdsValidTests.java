@@ -28,4 +28,10 @@ public class DavdsValidTests {
 	@Test public void BoolAssign_Valid_4(){ runTest("BoolAssign_Valid_4");}
 	@Test public void BoolAssign_Valid_5(){ runTest("BoolAssign_Valid_5");}
 	@Test public void BoolAssign_Valid_6(){ runTest("BoolAssign_Valid_6");}
+	
+	@Test public void IfElse_Valid_1(){ runTest("IfElse_Valid_1");}
+	@Test public void IfElse_Valid_2(){ runTest("IfElse_Valid_2");}
+	@Test public void IfElse_Valid_3(){ runTest("IfElse_Valid_3");}
+	@Test public void IfElse_Valid_4(){ runTest("IfElse_Valid_4");}
+	@Test public void IfElse_Valid_5(){ runTest("IfElse_Valid_5");}
 }

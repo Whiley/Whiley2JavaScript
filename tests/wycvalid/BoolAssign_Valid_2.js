@@ -14,160 +14,160 @@ function test(){//method() -> void
             var r1 = r4;//assign %1 = %4  : bool
             var r6 = true;//const %6 = true : bool
             if(r0  ==  r6){
-               control_flow_pc = 0;
+               control_flow_pc = 55;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1;
+            control_flow_pc = 56;
             control_flow_repeat = true;
             continue outer;
-         case 0:
+         case 55:
             var r7 = true;//const %7 = true : bool
             if(r0  ==  r7){
-               control_flow_pc = 2;
+               control_flow_pc = 57;
                control_flow_repeat = true;
                continue outer;
             }
-         case 1:
+         case 56:
             var r8 = false;//const %8 = false : bool
-            control_flow_pc = 3;
+            control_flow_pc = 58;
             control_flow_repeat = true;
             continue outer;
-         case 2:
+         case 57:
             var r8 = true;//const %8 = true : bool
-         case 3:
+         case 58:
             var r9 = true;//const %9 = true : bool
             if(r8  ==  r9){
-               control_flow_pc = 4;
+               control_flow_pc = 59;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 4:
+         case 59:
             var r10 = true;//const %10 = true : bool
             if(r0  ==  r10){
-               control_flow_pc = 5;
+               control_flow_pc = 60;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 6;
+            control_flow_pc = 61;
             control_flow_repeat = true;
             continue outer;
-         case 5:
+         case 60:
             var r11 = true;//const %11 = true : bool
             if(r1  ==  r11){
-               control_flow_pc = 7;
+               control_flow_pc = 62;
                control_flow_repeat = true;
                continue outer;
             }
-         case 6:
+         case 61:
             var r12 = false;//const %12 = false : bool
-            control_flow_pc = 8;
+            control_flow_pc = 63;
             control_flow_repeat = true;
             continue outer;
-         case 7:
+         case 62:
             var r12 = true;//const %12 = true : bool
-         case 8:
+         case 63:
             var r13 = false;//const %13 = false : bool
             if(r12  ==  r13){
-               control_flow_pc = 9;
+               control_flow_pc = 64;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 9:
+         case 64:
             var r14 = true;//const %14 = true : bool
             if(r1  ==  r14){
-               control_flow_pc = 10;
+               control_flow_pc = 65;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 11;
+            control_flow_pc = 66;
             control_flow_repeat = true;
             continue outer;
-         case 10:
+         case 65:
             var r15 = true;//const %15 = true : bool
             if(r0  ==  r15){
-               control_flow_pc = 12;
+               control_flow_pc = 67;
                control_flow_repeat = true;
                continue outer;
             }
-         case 11:
+         case 66:
             var r16 = false;//const %16 = false : bool
-            control_flow_pc = 13;
+            control_flow_pc = 68;
             control_flow_repeat = true;
             continue outer;
-         case 12:
+         case 67:
             var r16 = true;//const %16 = true : bool
-         case 13:
+         case 68:
             var r17 = false;//const %17 = false : bool
             if(r16  ==  r17){
-               control_flow_pc = 14;
+               control_flow_pc = 69;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 14:
+         case 69:
             var r18 = true;//const %18 = true : bool
             if(r1  ==  r18){
-               control_flow_pc = 15;
+               control_flow_pc = 70;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 16;
+            control_flow_pc = 71;
             control_flow_repeat = true;
             continue outer;
-         case 15:
+         case 70:
             var r19 = true;//const %19 = true : bool
             if(r1  ==  r19){
-               control_flow_pc = 17;
+               control_flow_pc = 72;
                control_flow_repeat = true;
                continue outer;
             }
-         case 16:
+         case 71:
             var r20 = false;//const %20 = false : bool
-            control_flow_pc = 18;
+            control_flow_pc = 73;
             control_flow_repeat = true;
             continue outer;
-         case 17:
+         case 72:
             var r20 = true;//const %20 = true : bool
-         case 18:
+         case 73:
             var r21 = false;//const %21 = false : bool
             if(r20  ==  r21){
-               control_flow_pc = 19;
+               control_flow_pc = 74;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 19:
+         case 74:
             var r22 = true;//const %22 = true : bool
             if(r1  ==  r22){
-               control_flow_pc = 20;
+               control_flow_pc = 75;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 21;
+            control_flow_pc = 76;
             control_flow_repeat = true;
             continue outer;
-         case 20:
+         case 75:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 21:
+         case 76:
             var r23 = true;//const %23 = true : bool
             if(r0  ==  r23){
-               control_flow_pc = 22;
+               control_flow_pc = 77;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 23;
+            control_flow_pc = 78;
             control_flow_repeat = true;
             continue outer;
-         case 22:
-            control_flow_pc = 24;
+         case 77:
+            control_flow_pc = 79;
             control_flow_repeat = true;
             continue outer;
-         case 23:
+         case 78:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 24:
+         case 79:
       }
    }
 }

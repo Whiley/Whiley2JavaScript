@@ -29,7 +29,6 @@ public class WyJS {
 	private ArrayList<String> js;
 	private ArrayList<Label> ignoreLabels;
 	
-	private boolean inSwitch = false;
 	private boolean isBreak = false;
 	
 	public WyJS(WyilFile file) {
@@ -139,6 +138,8 @@ public class WyJS {
 			write((Codes.Invoke) o);
 		}else if(o instanceof Codes.Fail){
 			write((Codes.Fail) o);
+		}else if(o instanceof Codes.UnaryOperator){
+			write((Codes.UnaryOperator) o);
 		}
 		else{
 			System.out.println("Unknown object " + o.getClass());
@@ -147,6 +148,11 @@ public class WyJS {
 	
 	private void write(Codes.Const o){
 		js.add(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
+	}
+	
+	private void write(Codes.UnaryOperator o){
+		
+		js.add(getIndentBlock() + "var r" + o.target() + " = -" + "r" + o.operand(0) + ";\n");
 	}
 	
 	private void write(Codes.BinaryOperator o){
@@ -224,7 +230,7 @@ public class WyJS {
 	
 	private void write(Codes.Label o){
 		if(this.ignoreLabels.contains(o)){
-			System.out.println(o.label);
+			//System.out.println(o.label);
 			//IGNORE
 		}else{
 			if(isBreak){
@@ -267,7 +273,6 @@ public class WyJS {
 			if(invert) return " != ";
 			return " == ";
 		}else if(opers.op == Codes.Comparator.GT){//>
-			System.out.println(invert);
 			if(invert) return " <= ";
 			return " > ";
 		}else if(opers.op == Codes.Comparator.GTEQ){//>=
@@ -277,7 +282,6 @@ public class WyJS {
 			if(invert) return " >= ";
 			return " < "; 
 		}else if(opers.op == Codes.Comparator.LTEQ){//<=
-			System.out.println(invert);
 			if(invert) return " > ";
 			return " <= ";
 		}else if(opers.op == Codes.Comparator.NEQ){//!=
