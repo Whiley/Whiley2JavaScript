@@ -31,4 +31,7 @@ public class JavascriptValidTests {
 	@Test public void JSValidTest9(){ runTest("controlflow02");}
 	@Test public void JSValidTest10(){ runTest("controlflow03");}
 	@Test public void JSValidTest11(){ runTest("controlflow04");}
+	@Test public void JSValidTest12(){ runTest("controlflownew1");}
+	@Test public void JSValidTest13(){ runTest("controlflownew2");}
+
 }

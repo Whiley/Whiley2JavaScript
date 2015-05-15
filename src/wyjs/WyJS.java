@@ -30,8 +30,6 @@ public class WyJS {
 	private ArrayList<Label> ignoreLabels;
 	
 	private boolean inSwitch = false;
-	private boolean inIf = false;
-	private boolean inIfDif = false;
 	private boolean isBreak = false;
 	
 	public WyJS(WyilFile file) {
@@ -76,20 +74,32 @@ public class WyJS {
 		str.append("){//" + e.type().toString() +"\n");
 		js.add(str.toString());
 		indent++;
+		// make initial Switch
+		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
+				+ getIndentBlock() + "var control_flow_pc = -1;\n"
+				+ getIndentBlock() + "outer:\n"
+				+ getIndentBlock() + "while(control_flow_repeat){\n");
+		indent++;
+		js.add(getIndentBlock() + "control_flow_repeat = false\n"
+				+ getIndentBlock() + "switch(control_flow_pc){\n");
+		indent++;
+		js.add(getIndentBlock() + "case -1 :\n");
+		indent++;
+		
+		
 		Iterator iter = e.body().iterator();
 		while(iter.hasNext()){
 			Object tmp = iter.next();
 			//System.out.println(tmp);
 			write(tmp);
 		}
-		if(inSwitch){
-			inSwitch = false;
-			indent--;
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-		}
+		
+		//TODO: close the switch
+		indent--;
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
 		indent--;
 		js.add("}\n\n");
 	}
@@ -170,11 +180,11 @@ public class WyJS {
 		js.add(str);
 	}
 	
-	private void write(Codes.Assert o) throws Exception{
-		String str = (getIndentBlock() + "if(");
-		ArrayList<Code> code = new ArrayList<Code>();
-		for(Code c: o.bytecodes()){
-			write(c);
+//	private void write(Codes.Assert o) throws Exception{
+//		String str = (getIndentBlock() + "if(");
+//		ArrayList<Code> code = new ArrayList<Code>();
+//		for(Code c: o.bytecodes()){
+//			write(c);
 //			if(c instanceof Codes.If){
 //				Codes.If opers = (Codes.If) c;
 //				str += "r" + opers.leftOperand + getIfop(opers, true) + "r" + opers.rightOperand + "){//" + o.toString() + "\n";
@@ -190,14 +200,14 @@ public class WyJS {
 //			}else{
 //				code.add(c);
 //			}
-		}
+//		}
 		
 //		for(Code c: code){
 //			write(c);
 //		}
 //		code.clear();
 //		js.add(str);
-	}
+//	}
 	
 	private void write(Codes.Assume o) throws Exception{
 		String str = (getIndentBlock() + "if(");
@@ -239,49 +249,21 @@ public class WyJS {
 	private void write(Codes.Fail o){
 		js.add(getIndentBlock() + "throw {name: 'Assert Failed', message: '" +o.toString() + "'}\n");
 	}
-
-	private int defaultCount = -1;
 	
 	private void write(Codes.If o) throws Exception{
-		String str = "";
-		if(inSwitch){
-			//indent--;
-			//str += getIndentBlock() + "case "+ defaultCount-- +" :\n";
-			//indent++;
-			str += getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, true) + " r" + o.rightOperand + "){\n";
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
 			indent++;
-			inIfDif = true;
-		}else{
-			str += getIndentBlock() + "var control_flow_repeat = true;\n";
-			str += getIndentBlock() + "var control_flow_pc = -1;\n";
-			str += getIndentBlock() + "outer:\n";
-			str += getIndentBlock() + "while(control_flow_repeat){\n";
-			//str += getIndentBlock() + "console.log('um');\n";
-			indent++;
-			str += getIndentBlock() + "control_flow_repeat = false\n";
-			str += getIndentBlock() + "switch(control_flow_pc){\n";
-			indent++;
-			str += getIndentBlock() + "case "+ defaultCount-- +" :\n";
-			indent++;
-			str += getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, true) + " r" + o.rightOperand + "){\n";
-			indent++;
-			inSwitch = true;
-			inIf = true;
-		}
-
-		//need 4 indents inwards
-		js.add(str);
+			js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
+			js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+			js.add(getIndentBlock() + "continue outer;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
 	}
 	
 	private void write(Codes.Goto o){
 		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "continue outer;\n");
-		if(inIf){
-			inIf = false;
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-		}
 	}
 	
 	private void write(Codes.Label o){
@@ -289,35 +271,27 @@ public class WyJS {
 			System.out.println(o.label);
 			//IGNORE
 		}else{
-			System.out.println(inSwitch);
-			if(inSwitch){
-				if(inIf){
-					System.out.println("I dont know" + o.label);
-					indent--;
-					js.add(getIndentBlock() + "}\n");
-					inIf = false;
-				}
 				if(isBreak){
 					js.add("break;");
 					isBreak = false;
 				}
-				if(inIfDif){
-					indent--;
-					js.add(getIndentBlock() + "}\n");
-					inIfDif = false;
-					inIf = true;
-				}else{
+				else{
 					indent--;
 					js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
 					indent++;
 				}
 			}
-		}
+		
 	}
 	
 	private void write(Codes.Invoke o){
-		String str = getIndentBlock() + "var r" + o.target() + " = ";
-		str+= o.name.name() + "(";
+		String str = "";
+		if(o.target() != -1){
+			str = getIndentBlock() + "var r" + o.target() + " = ";
+			str+= o.name.name() + "(";
+		}else {
+			str+= getIndentBlock() + o.name.name() + "(";
+		}
 		int x = 1;
 		for(Integer i: o.operands()){
 			if(x == 1){
