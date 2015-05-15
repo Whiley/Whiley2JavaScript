@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import com.sun.xml.internal.bind.v2.model.core.Adapter;
+
 import wyil.io.WyilFilePrinter;
 import wyil.io.WyilFileReader;
 import wyil.lang.Code;
@@ -89,11 +91,9 @@ public class WyJS {
 		Iterator iter = e.body().iterator();
 		while(iter.hasNext()){
 			Object tmp = iter.next();
-			//System.out.println(tmp);
 			write(tmp);
 		}
 		
-		//TODO: close the switch
 		indent--;
 		indent--;
 		js.add(getIndentBlock() + "}\n");
@@ -140,6 +140,8 @@ public class WyJS {
 			write((Codes.Fail) o);
 		}else if(o instanceof Codes.UnaryOperator){
 			write((Codes.UnaryOperator) o);
+		}else if(o instanceof Codes.Loop){
+			write((Codes.Loop) o);
 		}
 		else{
 			System.out.println("Unknown object " + o.getClass());
@@ -153,6 +155,16 @@ public class WyJS {
 	private void write(Codes.UnaryOperator o){
 		
 		js.add(getIndentBlock() + "var r" + o.target() + " = -" + "r" + o.operand(0) + ";\n");
+	}
+	
+	private void write(Codes.Loop o){
+		js.add(getIndentBlock() + "while(true){\n");
+		indent++;
+		for(Code c: o.bytecodes()){
+			write(c);
+		}
+		indent--;
+		js.add(getIndentBlock() + "}\n");
 	}
 	
 	private void write(Codes.BinaryOperator o){
