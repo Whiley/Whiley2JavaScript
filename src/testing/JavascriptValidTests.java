@@ -36,4 +36,10 @@ public class JavascriptValidTests {
 	
 	
 	@Test public void JSValidTest14(){ runTest("whilevalid1");}
+	@Test public void JSValidTest15(){ runTest("whilevalid2");}
+	
+	@Test public void JSValidTest16(){ runTest("ifelsevalid_1");}
+	@Test public void JSValidTest17(){ runTest("ifelsevalid_2");}
+	@Test public void JSValidTest18(){ runTest("ifelsevalid_3");}
+	@Test public void JSValidTest19(){ runTest("ifelsevalid_4");}
 }

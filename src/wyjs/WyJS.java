@@ -31,8 +31,6 @@ public class WyJS {
 	private ArrayList<String> js;
 	private ArrayList<Label> ignoreLabels;
 	
-	private boolean isBreak = false;
-	
 	public WyJS(WyilFile file) {
 		this.file = file;
 		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(file.functionOrMethods());
@@ -143,6 +141,9 @@ public class WyJS {
 		}else if(o instanceof Codes.Loop){
 			write((Codes.Loop) o);
 		}
+//		else if(o instanceof Codes.NewRecord){
+//			write((Codes.NewRecord) o);
+//		}
 		else{
 			System.out.println("Unknown object " + o.getClass());
 		}
@@ -157,14 +158,35 @@ public class WyJS {
 		js.add(getIndentBlock() + "var r" + o.target() + " = -" + "r" + o.operand(0) + ";\n");
 	}
 	
+	private int loopCounter = 0;
+	private boolean inLoop = false;
 	private void write(Codes.Loop o){
+		inLoop = true;
+
+		js.add(getIndentBlock() + "var control_flow_repeat"+ loopCounter +" = true;\n"
+				+ getIndentBlock() + "var control_flow_pc"+ loopCounter +" = -1;\n"
+				+ getIndentBlock() + "outer"+ loopCounter +":\n"
+				+ getIndentBlock() + "while(control_flow_repeat"+ loopCounter +"){\n");
+		indent++;
 		js.add(getIndentBlock() + "while(true){\n");
+		indent++;
+		js.add(getIndentBlock() + "control_flow_repeat"+ loopCounter +" = false\n"
+				+ getIndentBlock() + "switch(control_flow_pc"+ loopCounter +"){\n");
+		indent++;
+		js.add(getIndentBlock() + "case -1 :\n");
 		indent++;
 		for(Code c: o.bytecodes()){
 			write(c);
 		}
 		indent--;
+		indent--;
 		js.add(getIndentBlock() + "}\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		inLoop = false;
+		loopCounter++;
 	}
 	
 	private void write(Codes.BinaryOperator o){
@@ -227,9 +249,16 @@ public class WyJS {
 	private void write(Codes.If o) throws Exception{
 			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
 			indent++;
-			js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
-			js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-			js.add(getIndentBlock() + "continue outer;\n");
+			if(inLoop){
+				js.add(getIndentBlock() + "control_flow_pc"+ loopCounter +" = " + parseLabel(o.target) + ";\n");
+				js.add(getIndentBlock() + "control_flow_"+ loopCounter +" = true;\n");
+				js.add(getIndentBlock() + "continue outer"+ loopCounter +";\n");
+			}else{
+				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
+				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+				js.add(getIndentBlock() + "continue outer;\n");
+			}
+			
 			indent--;
 			js.add(getIndentBlock() + "}\n");
 	}
@@ -241,22 +270,16 @@ public class WyJS {
 	}
 	
 	private void write(Codes.Label o){
-		if(this.ignoreLabels.contains(o)){
-			//System.out.println(o.label);
-			//IGNORE
-		}else{
-			if(isBreak){
-				js.add("break;");
-				isBreak = false;
-			}
-			else{
-				indent--;
-				js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
-				indent++;
-			}
-		}
-		
+		indent--;
+		js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
+		indent++;
 	}
+	
+	//private void write(Codes.NewRecord o){
+		//String str = "var r" + o.target() + " = {";
+		//System.out.println(o.type().toString().);
+		//System.out.println(o.operands());
+	//}
 	
 	private void write(Codes.Invoke o){
 		String str = "";
