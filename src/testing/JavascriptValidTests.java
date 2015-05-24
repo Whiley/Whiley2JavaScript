@@ -42,4 +42,6 @@ public class JavascriptValidTests {
 	@Test public void JSValidTest17(){ runTest("ifelsevalid_2");}
 	@Test public void JSValidTest18(){ runTest("ifelsevalid_3");}
 	@Test public void JSValidTest19(){ runTest("ifelsevalid_4");}
+	
+	@Test public void JSValidTest20(){ runTest("recordvalid_1");}
 }

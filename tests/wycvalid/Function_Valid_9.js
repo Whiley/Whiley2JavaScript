@@ -18,12 +18,12 @@ function g(r0){//function({Function_Valid_9:fr6nat}) -> {Function_Valid_9:fr6nat
                      case -1 :
                         var r5 = 1;//const %5 = 1 : int
                         if(r2  <=  r5){
-                           control_flow_pc0 = 135;
+                           control_flow_pc0 = 137;
                            control_flow_0 = true;
                            continue outer0;
                         }
                         var r1 = r7;//assign %1 = %7  : {int}
-                     case 135:
+                     case 137:
                   }
                }
             }
@@ -71,12 +71,12 @@ function test(){//method() -> void
             var r16 = 234987234987;//const %16 = 234987234987 : int
             var r17 = 234987234987234;//const %17 = 234987234987234 : int
             if(r11  ==  r18){
-               control_flow_pc = 136;
+               control_flow_pc = 138;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 136:
+         case 138:
       }
    }
 }

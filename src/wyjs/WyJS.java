@@ -1,18 +1,11 @@
 package wyjs;
 
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-
-import com.sun.xml.internal.bind.v2.model.core.Adapter;
 
 import wyil.io.WyilFilePrinter;
 import wyil.io.WyilFileReader;
@@ -21,6 +14,7 @@ import wyil.lang.Codes;
 import wyil.lang.Codes.Label;
 import wyil.lang.Type;
 import wyil.lang.WyilFile;
+import wyil.lang.WyilFile.Constant;
 import wyil.lang.WyilFile.FunctionOrMethod;
 
 public class WyJS {
@@ -36,6 +30,9 @@ public class WyJS {
 		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(file.functionOrMethods());
 		js = new ArrayList<String>();
 		ignoreLabels = new ArrayList<Label>();
+		for(Constant c: file.constants()){
+			write(c);
+		}
 		for (FunctionOrMethod f : fom) {
 			write(f);
 		}
@@ -58,6 +55,11 @@ public class WyJS {
 			e.printStackTrace();
 		}
 	}
+	
+	private void write(Constant c){
+		js.add(getIndentBlock() + "var " + c.name() + " = " + c.constant().toString() + ";\n");
+	}
+	
 	private void write(FunctionOrMethod e){
 		StringBuilder str = new StringBuilder();
 		str.append(getIndentBlock() + "function " + e.name() + "(");
@@ -141,9 +143,19 @@ public class WyJS {
 		}else if(o instanceof Codes.Loop){
 			write((Codes.Loop) o);
 		}
-//		else if(o instanceof Codes.NewRecord){
-//			write((Codes.NewRecord) o);
-//		}
+		else if(o instanceof Codes.NewRecord){
+			write((Codes.NewRecord) o);
+		}else if(o instanceof Codes.FieldLoad){
+			write((Codes.FieldLoad) o);
+		}else if(o instanceof Codes.Update){
+			write((Codes.Update) o);
+		}else if(o instanceof Codes.NewList){
+			write((Codes.NewList) o);
+		}else if(o instanceof Codes.LengthOf){
+			write((Codes.LengthOf) o);
+		}else if(o instanceof Codes.IndexOf){
+			write((Codes.IndexOf) o);
+		}
 		else{
 			System.out.println("Unknown object " + o.getClass());
 		}
@@ -247,20 +259,22 @@ public class WyJS {
 	}
 	
 	private void write(Codes.If o) throws Exception{
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
-			indent++;
-			if(inLoop){
-				js.add(getIndentBlock() + "control_flow_pc"+ loopCounter +" = " + parseLabel(o.target) + ";\n");
-				js.add(getIndentBlock() + "control_flow_"+ loopCounter +" = true;\n");
-				js.add(getIndentBlock() + "continue outer"+ loopCounter +";\n");
-			}else{
-				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
-				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-				js.add(getIndentBlock() + "continue outer;\n");
-			}
-			
-			indent--;
-			js.add(getIndentBlock() + "}\n");
+		//TODO: Fix comparisons with lists and records
+
+		js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
+		indent++;
+		if(inLoop){
+			js.add(getIndentBlock() + "control_flow_pc"+ loopCounter +" = " + parseLabel(o.target) + ";\n");
+			js.add(getIndentBlock() + "control_flow_"+ loopCounter +" = true;\n");
+			js.add(getIndentBlock() + "continue outer"+ loopCounter +";\n");
+		}else{
+			js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
+			js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+			js.add(getIndentBlock() + "continue outer;\n");
+		}
+		
+		indent--;
+		js.add(getIndentBlock() + "}\n");
 	}
 	
 	private void write(Codes.Goto o){
@@ -275,11 +289,32 @@ public class WyJS {
 		indent++;
 	}
 	
-	//private void write(Codes.NewRecord o){
-		//String str = "var r" + o.target() + " = {";
-		//System.out.println(o.type().toString().);
-		//System.out.println(o.operands());
-	//}
+	private void write(Codes.NewRecord o){
+		String str = getIndentBlock() + "var r" + o.target() + " = {";
+		int i = 0;
+		for(String s: o.type().keys()){
+			str += s + ": r" + o.operand(i);
+			i++;
+			if(i != o.type().keys().size()){
+				str+=", ";
+			}
+		}
+		str += "};\n";
+		js.add(str);
+	}
+	
+	private void write(Codes.FieldLoad o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + "." + o.field + ";\n");
+	}
+	
+	private void write(Codes.Update o){
+		if(o.afterType instanceof Type.List){
+			js.add(getIndentBlock() + "r" + o.target() + "[r" + o.operand(0) + "] = r" + o.operand(1) + ";\n");
+		}else if(o.afterType instanceof Type.Record){
+			js.add(getIndentBlock() + "r" + o.target() + "." + o.fields.get(0) + " = r" + o.operand(0) + ";\n");
+		}
+		
+	}
 	
 	private void write(Codes.Invoke o){
 		String str = "";
@@ -301,6 +336,32 @@ public class WyJS {
 		str += ");\n";
 		
 		js.add(str);
+	}
+	
+	public void write(Codes.NewList o){
+		String str = getIndentBlock() + "var r" + o.target() + " = [";
+		int x = 0;
+		if(o.operands().length==0){
+			str += "];\n";
+		}else{
+			for(Integer i: o.operands()){
+				x++;
+				if(x==o.operands().length){
+					str += "r" + i + "];\n";
+				}else{
+					str += "r" + i + ", ";
+				}
+			}
+		}
+		js.add(str);
+	}
+	
+	public void write(Codes.LengthOf o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".length;\n");
+	}
+	
+	public void write(Codes.IndexOf o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + "[r" + o.operand(1) + "];\n");
 	}
 	
 	private String getIfop(Codes.If opers, boolean invert) throws Exception{

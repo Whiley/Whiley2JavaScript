@@ -18,34 +18,34 @@ function test(){//method() -> void
             var r2 = r7;//assign %2 = %7  : int
             var r10 = 63;//const %10 = 63 : int
             if(r2  ==  r10){
-               control_flow_pc = 142;
+               control_flow_pc = 146;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 142:
+         case 146:
             var r11 = r0 * r0;//mul %11 = %0, %0 : int
             var r12 = r11 - r1;//sub %12 = %11, %1 : int
             var r2 = r12;//assign %2 = %12  : int
             var r13 = 63;//const %13 = 63 : int
             if(r2  ==  r13){
-               control_flow_pc = 143;
+               control_flow_pc = 147;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 143:
+         case 147:
             var r14 = r0 - r1;//sub %14 = %0, %1 : int
             var r15 = r0 * r14;//mul %15 = %0, %14 : int
             var r2 = r15;//assign %2 = %15  : int
             var r16 = 56;//const %16 = 56 : int
             if(r2  ==  r16){
-               control_flow_pc = 144;
+               control_flow_pc = 148;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 144:
+         case 148:
       }
    }
 }

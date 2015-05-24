@@ -14,12 +14,12 @@ function test(){//method() -> void
             var r0 = r4;//assign %0 = %4  : real
             var r5 = 12376523476123.989472426;//const %5 = 12376523476123.989472426 : real
             if(r0  ==  r5){
-               control_flow_pc = 91;
+               control_flow_pc = 81;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 91:
+         case 81:
       }
    }
 }

@@ -19,6 +19,8 @@ public class DavdsValidTests {
 	
 	@Test public void DecimalAssignment_Valid_1(){ runTest("DecimalAssignment_Valid_1");}
 	
+	@Test public void Constant_Valid_3(){ runTest("Constant_Valid_3");}
+	
 	@Test public void IntMul_Valid_1(){ runTest("IntMul_Valid_1");}
 	@Test public void IntMul_Valid_2(){ runTest("IntMul_Valid_2");}
 	
@@ -52,11 +54,41 @@ public class DavdsValidTests {
 	
 	@Test public void BoolReturn_Valid_1(){ runTest("BoolReturn_Valid_1");}
 	
+	@Test public void RecordAccess_Valid_1(){ runTest("RecordAccess_Valid_1");}
+	@Test public void RecordAccess_Valid_2(){ runTest("RecordAccess_Valid_2");}
+	
+	@Test public void RecordAssign_Valid_1(){ runTest("RecordAssign_Valid_1");}
+	@Test public void RecordAssign_Valid_2(){ runTest("RecordAssign_Valid_2");}
+	
 	@Test public void IfElse_Valid_1(){ runTest("IfElse_Valid_1");}
 	@Test public void IfElse_Valid_2(){ runTest("IfElse_Valid_2");}
 	@Test public void IfElse_Valid_3(){ runTest("IfElse_Valid_3");}
 	@Test public void IfElse_Valid_4(){ runTest("IfElse_Valid_4");}
 	@Test public void IfElse_Valid_5(){ runTest("IfElse_Valid_5");}
+	
+	@Test public void ListGenerator_Valid_1(){ runTest("ListGenerator_Valid_1");}
+	@Test public void ListGenerator_Valid_2(){ runTest("ListGenerator_Valid_2");}
+	@Test public void ListGenerator_Valid_3(){ runTest("ListGenerator_Valid_3");}
+	@Test public void ListGenerator_Valid_5(){ runTest("ListGenerator_Valid_5");}
+	
+	@Test public void ListAssign_Valid_1(){ runTest("ListAssign_Valid_1");}
+	@Test public void ListAssign_Valid_2(){ runTest("ListAssign_Valid_2");}
+	@Test public void ListAssign_Valid_3(){ runTest("ListAssign_Valid_3");}
+	@Test public void ListAssign_Valid_4(){ runTest("ListAssign_Valid_4");}
+	@Test public void ListAssign_Valid_5(){ runTest("ListAssign_Valid_5");}
+	@Test public void ListAssign_Valid_6(){ runTest("ListAssign_Valid_6");}
+	@Test public void ListAssign_Valid_7(){ runTest("ListAssign_Valid_7");}
+	@Test public void ListAssign_Valid_8(){ runTest("ListAssign_Valid_8");}
+	@Test public void ListAssign_Valid_9(){ runTest("ListAssign_Valid_9");}
+	@Test public void ListAssign_Valid_10(){ runTest("ListAssign_Valid_10");}
+	@Test public void ListAssign_Valid_11(){ runTest("ListAssign_Valid_11");}
+	
+	@Test public void While_Valid_1(){ runTest("While_Valid_1");}
+	@Test public void While_Valid_2(){ runTest("While_Valid_2");}
+	@Test public void While_Valid_3(){ runTest("While_Valid_3");}
+	@Test public void While_Valid_5(){ runTest("While_Valid_5");}
+	@Test public void While_Valid_7(){ runTest("While_Valid_7");}
+	@Test public void While_Valid_9(){ runTest("While_Valid_9");}
 	
 	@Test public void Function_Valid_1(){ runTest("Function_Valid_1");}
 	@Test public void Function_Valid_2(){ runTest("Function_Valid_2");}

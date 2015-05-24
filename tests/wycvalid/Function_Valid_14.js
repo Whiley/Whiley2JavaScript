@@ -66,46 +66,47 @@ function test(){//method() -> void
             var r0 = f(r1);
             var r2 = 1;//const %2 = 1 : int
             if(r0  ==  r2){
-               control_flow_pc = 49;
+               control_flow_pc = 53;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 49:
+         case 53:
             var r4 = 1.234;//const %4 = 1.234 : real
             var r3 = f(r4);
             var r5 = 2;//const %5 = 2 : int
             if(r3  ==  r5){
-               control_flow_pc = 50;
+               control_flow_pc = 54;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 50:
+         case 54:
             var r7 = 1;//const %7 = 1 : int
             var r8 = 2;//const %8 = 2 : int
             var r9 = 3;//const %9 = 3 : int
+            var r10 = [r7, r8, r9];
             var r6 = f(r10);
             var r11 = 3;//const %11 = 3 : int
             if(r6  ==  r11){
-               control_flow_pc = 51;
+               control_flow_pc = 55;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 51:
+         case 55:
             var r13 = 1;//const %13 = 1 : int
             var r14 = 2;//const %14 = 2 : int
             var r15 = 3;//const %15 = 3 : int
             var r12 = f(r16);
             var r17 = 4;//const %17 = 4 : int
             if(r12  ==  r17){
-               control_flow_pc = 52;
+               control_flow_pc = 56;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 52:
+         case 56:
       }
    }
 }

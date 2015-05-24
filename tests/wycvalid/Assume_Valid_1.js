@@ -19,20 +19,20 @@ function sum(r0){//function([Assume_Valid_1:nat]) -> Assume_Valid_1:nat
                      case -1 :
                         var r5 = 0;//const %5 = 0 : int
                         if(r1  >=  r5){
-                           control_flow_pc0 = 226;
+                           control_flow_pc0 = 269;
                            control_flow_0 = true;
                            continue outer0;
                         }
                         throw {name: 'Assert Failed', message: 'fail'}
-                     case 226:
+                     case 269:
                         var r6 = 0;//const %6 = 0 : int
                         if(r1  >=  r6){
-                           control_flow_pc0 = 227;
+                           control_flow_pc0 = 270;
                            control_flow_0 = true;
                            continue outer0;
                         }
                         throw {name: 'Assert Failed', message: 'fail'}
-                     case 227:
+                     case 270:
                         var r7 = r1 + r2;//add %7 = %1, %2 : int
                         var r1 = r7;//assign %1 = %7  : int
                   }
@@ -55,17 +55,18 @@ function test(){//method() -> void
             var r4 = 1;//const %4 = 1 : int
             var r5 = 2;//const %5 = 2 : int
             var r6 = 3;//const %6 = 3 : int
+            var r7 = [r3, r4, r5, r6];
             var r2 = sum(r7);
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
             var r8 = 6;//const %8 = 6 : int
             if(r0  ==  r8){
-               control_flow_pc = 228;
+               control_flow_pc = 271;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 228:
+         case 271:
       }
    }
 }
