@@ -8,23 +8,23 @@ function f(r0){//function(bool) -> bool
          case -1 :
             var r1 = true;//const %1 = true : bool
             if(r0  ==  r1){
-               control_flow_pc = 99;
+               control_flow_pc = 154;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 100;
+            control_flow_pc = 155;
             control_flow_repeat = true;
             continue outer;
-         case 99:
+         case 154:
             var r2 = true;//const %2 = true : bool
             return r2;//return %2 : bool
-            control_flow_pc = 101;
+            control_flow_pc = 156;
             control_flow_repeat = true;
             continue outer;
-         case 100:
+         case 155:
             var r3 = false;//const %3 = false : bool
             return r3;//return %3 : bool
-         case 101:
+         case 156:
       }
    }
 }
@@ -41,26 +41,26 @@ function test(){//method() -> void
             var r0 = f(r1);
             var r2 = true;//const %2 = true : bool
             if(r0  ==  r2){
-               control_flow_pc = 102;
+               control_flow_pc = 157;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 102:
+         case 157:
             var r4 = false;//const %4 = false : bool
             var r3 = f(r4);
             var r5 = true;//const %5 = true : bool
             if(r3  ==  r5){
-               control_flow_pc = 103;
+               control_flow_pc = 158;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 104;
+            control_flow_pc = 159;
             control_flow_repeat = true;
             continue outer;
-         case 103:
+         case 158:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 104:
+         case 159:
       }
    }
 }

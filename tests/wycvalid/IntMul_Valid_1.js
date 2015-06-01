@@ -15,12 +15,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r7 = 7;//const %7 = 7 : int
             if(r0  ==  r7){
-               control_flow_pc = 145;
+               control_flow_pc = 201;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 145:
+         case 201:
       }
    }
 }

@@ -24,12 +24,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r3 = f(r0);
             if(r3  ==  r0){
-               control_flow_pc = 125;
+               control_flow_pc = 180;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 125:
+         case 180:
       }
    }
 }

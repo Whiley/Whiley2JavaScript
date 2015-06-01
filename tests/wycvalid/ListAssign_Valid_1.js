@@ -22,37 +22,50 @@ function test(){//method() -> void
             var r12 = r1[r11];
             var r13 = r0.length;
             if(r12  !=  r13){
-               control_flow_pc = 0;
+               control_flow_pc = 285;
                control_flow_repeat = true;
                continue outer;
             }
-            console.log(1);
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 285:
             var r14 = 1;//const %14 = 1 : int
             var r15 = 2;//const %15 = 2 : int
             var r16 = 3;//const %16 = 3 : int
             var r17 = [r14, r15, r16];
-            if(r0  ==  r17){
-               control_flow_pc = 1;
-               control_flow_repeat = true;
-               continue outer;
+            if(r0.length ==  r17.length){
+               var listComp = true;
+               for(var i = 0; i<r0.length;i++){
+                  if(r0[i]  !=  r17[i]){
+                     listCompFail = false;
+                  }
+               }
+               if(listComp){
+                  control_flow_pc = 286;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
             }
-            console.log(2);
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1:
+         case 286:
             var r18 = 1;//const %18 = 1 : int
             var r19 = 2;//const %19 = 2 : int
             var r20 = 2;//const %20 = 2 : int
             var r21 = [r18, r19, r20];
-            if(r1  ==  r21){
-               control_flow_pc = 2;
-               control_flow_repeat = true;
-               continue outer;
+            if(r1.length ==  r21.length){
+               var listComp = true;
+               for(var i = 0; i<r1.length;i++){
+                  if(r1[i]  !=  r21[i]){
+                     listCompFail = false;
+                  }
+               }
+               if(listComp){
+                  control_flow_pc = 287;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
             }
-            console.log(3);
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
+         case 287:
       }
    }
 }

@@ -25,27 +25,27 @@ function test(){//method() -> void
             var r3 = f(r0);
             var r4 = true;//const %4 = true : bool
             if(r3  ==  r4){
-               control_flow_pc = 82;
+               control_flow_pc = 137;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 82:
+         case 137:
             var r5 = false;//const %5 = false : bool
             var r0 = r5;//assign %0 = %5  : bool
             var r6 = f(r0);
             var r7 = true;//const %7 = true : bool
             if(r6  ==  r7){
-               control_flow_pc = 83;
+               control_flow_pc = 138;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 84;
+            control_flow_pc = 139;
             control_flow_repeat = true;
             continue outer;
-         case 83:
+         case 138:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 84:
+         case 139:
       }
    }
 }

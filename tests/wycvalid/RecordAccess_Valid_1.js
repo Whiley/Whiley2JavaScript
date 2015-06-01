@@ -8,7 +8,6 @@ function get(r0){//method(RecordAccess_Valid_1:Ptype) -> int
          case -1 :
             var r1 = 1;//const %1 = 1 : int
             var r2 = 1;//const %2 = 1 : int
-            r0.mode = r2;
             var r4 = r3.mode;
             return r4;//return %4 : int
       }

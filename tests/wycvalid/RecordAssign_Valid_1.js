@@ -35,22 +35,22 @@ function test(){//method() -> void
             var r9 = r0.f1;
             var r10 = r0.f2;
             if(r9  !=  r10){
-               control_flow_pc = 96;
+               control_flow_pc = 151;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 96:
+         case 151:
             var r11 = 1;//const %11 = 1 : int
             var r12 = 3;//const %12 = 3 : int
             var r13 = {f1: r11, f2: r12};
-            if(r0  ==  r13){
-               control_flow_pc = 97;
+            if(r0.f1 ==  r13.f1 && r0.f2 ==  r13.f2){
+               control_flow_pc = 152;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 97:
+         case 152:
       }
    }
 }

@@ -12,36 +12,28 @@ function reverse(r0){//function([int]) -> [int]
             var r6 = [];
             var r5 = r6;//assign %5 = %6  : [void]
             var r2 = r5;//assign %2 = %5  : [int]
-            var control_flow_repeat0 = true;
-            var control_flow_pc0 = -1;
-            outer0:
-            while(control_flow_repeat0){
-               while(true){
-                  control_flow_repeat0 = false
-                  switch(control_flow_pc0){
-                     case -1 :
-                        var r7 = r0.length;
-                        if(r1  <=  r7){
-                           control_flow_pc0 = 0;
-                           control_flow_0 = true;
-                           continue outer0;
-                        }
-                        throw {name: 'Assert Failed', message: 'fail'}
-                     case 0:
-                        var r8 = 0;//const %8 = 0 : int
-                        if(r1  <=  r8){
-                           control_flow_pc0 = 1;
-                           control_flow_0 = true;
-                           continue outer0;
-                        }
-                        var r9 = 1;//const %9 = 1 : int
-                        var r10 = r1 - r9;//sub %10 = %1, %9 : int
-                        var r1 = r10;//assign %1 = %10  : int
-                        var r11 = r0[r1];
-                        var r12 = [r11];
-                        var r2 = r13;//assign %2 = %13  : [int]
-                  }
+            loopBegin0:
+            while(true){
+               var r7 = r0.length;
+               if(r1  <=  r7){
+                  control_flow_pc = 0;
+                  control_flow_repeat = true;
+                  continue outer;
                }
+               throw {name: 'Assert Failed', message: 'fail'}
+            case 0:
+               var r8 = 0;//const %8 = 0 : int
+               if(r1  <=  r8){
+                  control_flow_pc = 1;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
+               var r9 = 1;//const %9 = 1 : int
+               var r10 = r1 - r9;//sub %10 = %1, %9 : int
+               var r1 = r10;//assign %1 = %10  : int
+               var r11 = r0[r1];
+               var r12 = [r11];
+               var r2 = r13;//assign %2 = %13  : [int]
             }
          case 1:
             return r2;//return %2 : [int]
@@ -72,10 +64,18 @@ function test(){//method() -> void
             var r12 = 2;//const %12 = 2 : int
             var r13 = 1;//const %13 = 1 : int
             var r14 = [r9, r10, r11, r12, r13];
-            if(r0  ==  r14){
-               control_flow_pc = 2;
-               control_flow_repeat = true;
-               continue outer;
+            if(r0.length ==  r14.length){
+               var listComp = true;
+               for(var i = 0; i<r0.length;i++){
+                  if(r0[i]  !=  r14[i]){
+                     listCompFail = false;
+                  }
+               }
+               if(listComp){
+                  control_flow_pc = 2;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2:

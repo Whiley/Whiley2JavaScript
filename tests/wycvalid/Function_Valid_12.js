@@ -57,10 +57,18 @@ function test(){//method() -> void
             var r6 = 2;//const %6 = 2 : int
             var r7 = 3;//const %7 = 3 : int
             var r8 = [r5, r6, r7];
-            if(r0  ==  r8){
-               control_flow_pc = 46;
-               control_flow_repeat = true;
-               continue outer;
+            if(r0.length ==  r8.length){
+               var listComp = true;
+               for(var i = 0; i<r0.length;i++){
+                  if(r0[i]  !=  r8[i]){
+                     listCompFail = false;
+                  }
+               }
+               if(listComp){
+                  control_flow_pc = 46;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 46:
@@ -73,10 +81,18 @@ function test(){//method() -> void
             var r15 = 2.2;//const %15 = 2.2 : real
             var r16 = 3.3;//const %16 = 3.3 : real
             var r17 = [r14, r15, r16];
-            if(r9  ==  r17){
-               control_flow_pc = 47;
-               control_flow_repeat = true;
-               continue outer;
+            if(r9.length ==  r17.length){
+               var listComp = true;
+               for(var i = 0; i<r9.length;i++){
+                  if(r9[i]  !=  r17[i]){
+                     listCompFail = false;
+                  }
+               }
+               if(listComp){
+                  control_flow_pc = 47;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 47:

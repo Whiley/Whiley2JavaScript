@@ -11,7 +11,7 @@ function f(r0){//function([[int]]) -> int
             var r3 = r2.length;
             var r4 = 2;//const %4 = 2 : int
             if(r3  <=  r4){
-               control_flow_pc = 89;
+               control_flow_pc = 144;
                control_flow_repeat = true;
                continue outer;
             }
@@ -20,13 +20,13 @@ function f(r0){//function([[int]]) -> int
             var r7 = 1;//const %7 = 1 : int
             var r8 = r6[r7];
             return r8;//return %8 : int
-            control_flow_pc = 90;
+            control_flow_pc = 145;
             control_flow_repeat = true;
             continue outer;
-         case 89:
+         case 144:
             var r9 = 0;//const %9 = 0 : int
             return r9;//return %9 : int
-         case 90:
+         case 145:
       }
    }
 }
@@ -51,12 +51,12 @@ function test(){//method() -> void
             var r9 = f(r0);
             var r10 = 2;//const %10 = 2 : int
             if(r9  ==  r10){
-               control_flow_pc = 91;
+               control_flow_pc = 146;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 91:
+         case 146:
       }
    }
 }

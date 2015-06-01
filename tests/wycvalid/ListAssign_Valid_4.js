@@ -1,3 +1,11 @@
+var PAWN = 0;
+var KNIGHT = 1;
+var BISHOP = 2;
+var ROOK = 3;
+var QUEEN = 4;
+var KING = 5;
+var WHITE_PAWN = {colour:=true,kind:=0};
+var BLACK_PAWN = {colour:=false,kind:=0};
 function f(r0){//function(ListAssign_Valid_4:Board) -> ListAssign_Valid_4:Board
    var control_flow_repeat = true;
    var control_flow_pc = -1;
@@ -36,13 +44,13 @@ function test(){//method() -> void
             var r10 = {colour: r8, kind: r9};
             var r11 = [r10];
             var r12 = {flag: r7, rows: r11};
-            if(r6  ==  r12){
-               control_flow_pc = 243;
+            if(r6.flag ==  r12.flag && r6.rows ==  r12.rows){
+               control_flow_pc = 299;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 243:
+         case 299:
       }
    }
 }

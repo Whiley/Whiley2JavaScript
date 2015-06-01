@@ -23,16 +23,16 @@ function test(){//method() -> void
             var r0 = pred();
             var r1 = true;//const %1 = true : bool
             if(r0  ==  r1){
-               control_flow_pc = 93;
+               control_flow_pc = 148;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 94;
+            control_flow_pc = 149;
             control_flow_repeat = true;
             continue outer;
-         case 93:
+         case 148:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 94:
+         case 149:
       }
    }
 }

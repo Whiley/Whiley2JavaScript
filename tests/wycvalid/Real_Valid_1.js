@@ -15,39 +15,39 @@ function test(){//method() -> void
             var r6 = r0 + r1;//add %6 = %0, %1 : real
             var r7 = 3.6;//const %7 = 3.6 : real
             if(r6  ==  r7){
-               control_flow_pc = 141;
+               control_flow_pc = 197;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 141:
+         case 197:
             var r8 = r1 - r0;//sub %8 = %1, %0 : real
             var r9 = 1.2;//const %9 = 1.2 : real
             if(r8  ==  r9){
-               control_flow_pc = 142;
+               control_flow_pc = 198;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 142:
+         case 198:
             var r10 = r0 / r1;//div %10 = %0, %1 : real
             var r11 = 0.5;//const %11 = 0.5 : real
             if(r10  ==  r11){
-               control_flow_pc = 143;
+               control_flow_pc = 199;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 143:
+         case 199:
             var r12 = r0 * r1;//mul %12 = %0, %1 : real
             var r13 = 2.88;//const %13 = 2.88 : real
             if(r12  ==  r13){
-               control_flow_pc = 144;
+               control_flow_pc = 200;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 144:
+         case 200:
       }
    }
 }

@@ -31,13 +31,13 @@ function test(){//method() -> void
             var r6 = 1;//const %6 = 1 : int
             var r7 = {x: r6};
             var r8 = {current: r7};
-            if(r5  ==  r8){
-               control_flow_pc = 98;
+            if(r5.current ==  r8.current){
+               control_flow_pc = 153;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 98:
+         case 153:
       }
    }
 }

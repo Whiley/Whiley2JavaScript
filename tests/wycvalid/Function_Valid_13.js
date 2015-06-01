@@ -59,7 +59,7 @@ function test(){//method() -> void
             var r6 = 1;//const %6 = 1 : int
             var r7 = -r6;
             var r8 = {x: r5, y: r7};
-            if(r0  ==  r8){
+            if(r0.x ==  r8.x && r0.y ==  r8.y){
                control_flow_pc = 51;
                control_flow_repeat = true;
                continue outer;
@@ -73,7 +73,7 @@ function test(){//method() -> void
             var r12 = 1;//const %12 = 1 : int
             var r13 = 2;//const %13 = 2 : int
             var r14 = {x: r12, y: r13};
-            if(r0  ==  r14){
+            if(r0.x ==  r14.x && r0.y ==  r14.y){
                control_flow_pc = 52;
                control_flow_repeat = true;
                continue outer;

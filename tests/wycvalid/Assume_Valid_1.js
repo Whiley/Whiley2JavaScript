@@ -9,34 +9,26 @@ function sum(r0){//function([Assume_Valid_1:nat]) -> Assume_Valid_1:nat
             var r4 = 0;//const %4 = 0 : int
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
-            var control_flow_repeat0 = true;
-            var control_flow_pc0 = -1;
-            outer0:
-            while(control_flow_repeat0){
-               while(true){
-                  control_flow_repeat0 = false
-                  switch(control_flow_pc0){
-                     case -1 :
-                        var r5 = 0;//const %5 = 0 : int
-                        if(r1  >=  r5){
-                           control_flow_pc0 = 269;
-                           control_flow_0 = true;
-                           continue outer0;
-                        }
-                        throw {name: 'Assert Failed', message: 'fail'}
-                     case 269:
-                        var r6 = 0;//const %6 = 0 : int
-                        if(r1  >=  r6){
-                           control_flow_pc0 = 270;
-                           control_flow_0 = true;
-                           continue outer0;
-                        }
-                        throw {name: 'Assert Failed', message: 'fail'}
-                     case 270:
-                        var r7 = r1 + r2;//add %7 = %1, %2 : int
-                        var r1 = r7;//assign %1 = %7  : int
-                  }
+            loopBegin0:
+            while(true){
+               var r5 = 0;//const %5 = 0 : int
+               if(r1  >=  r5){
+                  control_flow_pc = 325;
+                  control_flow_repeat = true;
+                  continue outer;
                }
+               throw {name: 'Assert Failed', message: 'fail'}
+            case 325:
+               var r6 = 0;//const %6 = 0 : int
+               if(r1  >=  r6){
+                  control_flow_pc = 326;
+                  control_flow_repeat = true;
+                  continue outer;
+               }
+               throw {name: 'Assert Failed', message: 'fail'}
+            case 326:
+               var r7 = r1 + r2;//add %7 = %1, %2 : int
+               var r1 = r7;//assign %1 = %7  : int
             }
             return r1;//return %1 : int
       }
@@ -61,12 +53,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r8 = 6;//const %8 = 6 : int
             if(r0  ==  r8){
-               control_flow_pc = 271;
+               control_flow_pc = 327;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 271:
+         case 327:
       }
    }
 }

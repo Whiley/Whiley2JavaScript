@@ -16,7 +16,7 @@ function test(){//method() -> void
             var r9 = {x: r7, y: r8};
             var r6 = r9;//assign %6 = %9  : {int x,int y}
             var r1 = r6;//assign %1 = %6  : {int x,int y}
-            if(r0  !=  r1){
+            if(r0.x ==  r1.x && r0.y ==  r1.y){
                control_flow_pc = 0;
                control_flow_repeat = true;
                continue outer;

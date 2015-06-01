@@ -38,22 +38,22 @@ function test(){//method() -> void
             var r0 = f(r1);
             var r2 = 2;//const %2 = 2 : int
             if(r0  ==  r2){
-               control_flow_pc = 121;
+               control_flow_pc = 176;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 121:
+         case 176:
             var r4 = 1.23;//const %4 = 1.23 : real
             var r3 = f(r4);
             var r5 = 1;//const %5 = 1 : int
             if(r3  ==  r5){
-               control_flow_pc = 122;
+               control_flow_pc = 177;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 122:
+         case 177:
       }
    }
 }
