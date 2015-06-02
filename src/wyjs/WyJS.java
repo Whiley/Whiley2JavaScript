@@ -16,6 +16,7 @@ import wyil.lang.CodeBlock;
 import wyil.lang.CodeBlock.Index;
 import wyil.lang.CodeUtils;
 import wyil.lang.Codes;
+import wyil.lang.Codes.If;
 import wyil.lang.Codes.Label;
 import wyil.lang.Type;
 import wyil.lang.WyilFile;
@@ -148,7 +149,11 @@ public class WyJS {
 		}else if(o instanceof Codes.UnaryOperator){
 			write((Codes.UnaryOperator) o);
 		}else if(o instanceof Codes.Loop){
-			write((Codes.Loop) o);
+			try {
+				write((Codes.Loop) o);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		else if(o instanceof Codes.NewRecord){
 			write((Codes.NewRecord) o);
@@ -179,68 +184,221 @@ public class WyJS {
 	
 	private int loopCounter = 0;
 	private boolean inLoop = false;
-	private void write(Codes.Loop o){
-//		inLoop = true;
-//
-//		js.add(getIndentBlock() + "var control_flow_repeat"+ loopCounter +" = true;\n"
-//				+ getIndentBlock() + "var control_flow_pc"+ loopCounter +" = -1;\n"
-//				+ getIndentBlock() + "outer"+ loopCounter +":\n"
-//				+ getIndentBlock() + "while(control_flow_repeat"+ loopCounter +"){\n");
-//		indent++;
-//		js.add(getIndentBlock() + "while(true){\n");
-//		indent++;
-//		js.add(getIndentBlock() + "control_flow_repeat"+ loopCounter +" = false\n"
-//				+ getIndentBlock() + "switch(control_flow_pc"+ loopCounter +"){\n");
-//		indent++;
-//		js.add(getIndentBlock() + "case -1 :\n");
-//		indent++;\
-		
+	private void write(Codes.Loop o) throws Exception{
 		Map<String, Index> labelMap = CodeUtils.buildLabelMap(new AttributedCodeBlock(o.bytecodes()));
-		Index i = labelMap.values().iterator().next();
-		int currentCounter = loopCounter;
-		js.add(getIndentBlock() + "loopBegin" + loopCounter++ + ":\n");
+		Iterator iter;
+		boolean inelse = false;
+		Index i;
 		js.add(getIndentBlock() + "while(true){\n");
 		indent++;
-		boolean finished = false;
-		boolean needContinue = false;
+		if((iter = labelMap.values().iterator()).hasNext()){
+			i = (Index) iter.next();
+		}else{
+			i = null;
+		}
 		for(Code c: o.bytecodes()){
-			if(c instanceof Codes.Label){
-				if(needContinue){
-					js.add(getIndentBlock() + "continue loopBegin" + currentCounter + ";\n");
-					needContinue = false;
+			if(c instanceof Codes.If){
+				Index x;
+				if((x = labelMap.get(((Codes.If) c).target)) != null){
+					//within the loop
+					writeLoopIf(o, (Codes.If) c, labelMap);
+				}else{
+					//jumping out, parse normally
+					write(c);
 				}
-				if(!finished){
-					finished = true;
-					indent--;
-					js.add(getIndentBlock() + "}\n");
-				}
-				write(c);
-				Index labelIndex;
-				if((labelIndex = labelMap.get(((Codes.Label) c).label)) != null){
-					if(i.isWithin(labelIndex)){
-						needContinue = true;
+//				js.add(getIndentBlock() + "else{\n");
+//				inelse = true;
+			}else if(c instanceof Codes.Goto){
+				Index x;
+				boolean write = false;
+				if((x = labelMap.get(((Codes.Goto) c).target)) != null){
+					for(Code code: o.bytecodes()){
+						if(write){
+							write(code);
+						}
+						if(c instanceof Label){
+							if(((Label) code).label == ((Codes.If) c).target){
+								write = true;
+							}else{
+								write = false;
+							}
+						}
 					}
+				}else{
+					write(c);
 				}
+			}else if(c instanceof Codes.Assert){
+				//TODO:
+//				Codes.Assert ass = (Codes.Assert) c;
+//				
+//				boolean write = false;
+//				for(Code c1 : ass.bytecodes()){
+//					if(c1 instanceof Codes.If){
+//						String label = ((Codes.If) c1).target;
+//						writeIf((If) c1);
+//						for(Code c2: ass.bytecodes()){
+//							if(c2 instanceof Codes.Label){
+//								if(((Codes.Label) c2).label == label){
+//									write = true;
+//								}else{
+//									write = false;
+//								}
+//							} else if(write){
+//								write(c2);
+//							}
+//						}
+//						indent--;
+//						js.add(getIndentBlock() + "}\n");
+//					}else if(c1 instanceof Codes.Label){
+//						break;
+//					}else{
+//						write(c1);	
+//					}
+//				}
+				
+			}else if(c instanceof Codes.Assume){
+				//TODO:
+//				Codes.Assume ass = (Codes.Assume)
+//				boolean write = false;
+//				for(Code c1 : ass.bytecodes()){
+//					if(c1 instanceof Codes.If){
+//						String label = ((Codes.If) c1).target;
+//						writeIf((If) c1);
+//						for(Code c2: ass.bytecodes()){
+//							if(write){
+//								write(c2);
+//							}else if(c2 instanceof Codes.Label){
+//								if(((Codes.Label) c2).label == label){
+//									write = true;
+//								}else{
+//									write = false;
+//								}
+//							}
+//						}
+//					}else if(c1 instanceof Codes.Label){
+//						if(write){
+//							write = false;
+//						}
+//					}else{
+//						if(write){
+//							write(c);	
+//						}
+//					}
+//				}
+				
+			}else if(c instanceof Codes.Label){
+//				 should have already been written
 			}else{
 				write(c);
 			}
 		}
-		if(needContinue){
-			js.add(getIndentBlock() + "continue loopBegin" + currentCounter + ";\n");
+//		if(needContinue){
+//			js.add(getIndentBlock() + "continue loopBegin" + currentCounter + ";\n");
+//		}
+//		if(!finished){
+//			indent--;
+//			js.add(getIndentBlock() + "}\n");
+//		}
+		//if(inelse)
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		
+	}
+	
+	private void writeIf(Codes.If o) throws Exception{
+		if(o.type instanceof Type.Record){
+			String ifop = getIfop(o, false);
+			Type.Record rec = (Type.Record)o.type;
+			js.add(getIndentBlock() + "if(");
+			int x = 0;
+			for(String s: rec.keys()){
+				x++;
+				if(x == rec.keys().size()){
+					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + "){\n");
+				}else{
+					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
+				}
+			}
+		}else if(o.type instanceof Type.List){
+			String ifop = getIfop(o, false);
+			Type.List list = (Type.List) o.type;
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
+			indent++;
+			js.add(getIndentBlock() + "var listComp = true;\n");
+			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand + ".length;i++){\n");
+			indent++;
+			js.add(getIndentBlock() + "if(r"+ o.leftOperand + "[i] "+ getIfop(o,true) +" r" + o.rightOperand + "[i]){\n");
+			indent++;
+			js.add(getIndentBlock() + "listCompFail = false;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			js.add(getIndentBlock() + "if(listComp){\n");
+		}else{
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
 		}
-		if(!finished){
+		indent++;
+	}
+	
+	private void writeLoopIf(Codes.Loop l, Codes.If o, Map<String, Index> map) throws Exception{
+		String tar = o.target;//the name of the label we need
+		boolean write = false;
+		
+		boolean inDeep = false;
+		if(o.type instanceof Type.Record){
+			String ifop = getIfop(o, false);
+			Type.Record rec = (Type.Record)o.type;
+			js.add(getIndentBlock() + "if(");
+			int x = 0;
+			for(String s: rec.keys()){
+				x++;
+				if(x == rec.keys().size()){
+					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + "){\n");
+				}else{
+					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
+				}
+			}
+		}else if(o.type instanceof Type.List){
+			String ifop = getIfop(o, false);
+			Type.List list = (Type.List) o.type;
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
+			indent++;
+			js.add(getIndentBlock() + "var listComp = true;\n");
+			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand + ".length;i++){\n");
+			indent++;
+			js.add(getIndentBlock() + "if(r"+ o.leftOperand + "[i] "+ getIfop(o,true) +" r" + o.rightOperand + "[i]){\n");
+			indent++;
+			js.add(getIndentBlock() + "listCompFail = false;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			js.add(getIndentBlock() + "if(listComp){\n");
+			inDeep = true;
+		}else{
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
+		}
+		indent++;
+		for(Code c: l.bytecodes()){
+			if(write){
+				write(c);
+			}
+			if(c instanceof Label){
+				if(((Label) c).label == tar){
+					write = true;
+				}else{
+					write = false;
+				}
+			}
+		}
+		if(inDeep){
 			indent--;
 			js.add(getIndentBlock() + "}\n");
 		}
-//		indent--;
-//		indent--;
-//		js.add(getIndentBlock() + "}\n");
-//		indent--;
-//		js.add(getIndentBlock() + "}\n");
-//		indent--;
-//		js.add(getIndentBlock() + "}\n");
-//		inLoop = false;
-//		loopCounter++;
+		js.add(getIndentBlock() + "continue;\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
 	}
 	
 	private void write(Codes.BinaryOperator o){
@@ -336,7 +494,6 @@ public class WyJS {
 			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
 		}
 
-		
 		indent++;
 		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");

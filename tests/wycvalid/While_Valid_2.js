@@ -12,31 +12,8 @@ function binarySearch(r0, r1){//function([int],int) -> bool
             var r8 = r0.length;
             var r7 = r8;//assign %7 = %8  : int
             var r3 = r7;//assign %3 = %7  : int
-            loopBegin0:
             while(true){
-               var r9 = 0;//const %9 = 0 : int
-               if(r9  >  r2){
-                  control_flow_pc = 92;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r10 = r0.length;
-               if(r3  >  r10){
-                  control_flow_pc = 92;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               if(r2  <=  r3){
-                  control_flow_pc = 93;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 92:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 93:
-               var r12 = 0;//const %12 = 0 : int
-               var r13 =                var r16 = r0.length;
-               var r17 =                if(r2  >=  r3){
+               if(r2  >=  r3){
                   control_flow_pc = 98;
                   control_flow_repeat = true;
                   continue outer;
@@ -48,32 +25,31 @@ function binarySearch(r0, r1){//function([int],int) -> bool
                var r4 = r19;//assign %4 = %19  : int
                var r23 = r0[r4];
                if(r23  >=  r1){
-                  control_flow_pc = 99;
+                  var r26 = r0[r4];
+                  if(r26  <=  r1){
+                     control_flow_pc = 101;
+                     control_flow_repeat = true;
+                     continue outer;
+                  }
+                  var r3 = r4;//assign %3 = %4  : int
+                  control_flow_pc = 100;
                   control_flow_repeat = true;
                   continue outer;
+               case 101:
                }
                var r24 = 1;//const %24 = 1 : int
                var r25 = r4 + r24;//add %25 = %4, %24 : int
                var r2 = r25;//assign %2 = %25  : int
-               control_flow_pc = 100;
-               control_flow_repeat = true;
-               continue outer;
+               var r26 = r0[r4];
+               if(r26  <=  r1){
+                  var r27 = true;//const %27 = true : bool
+                  return r27;//return %27 : bool
+               case 100:
+               }
+               var r3 = r4;//assign %3 = %4  : int
+               var r27 = true;//const %27 = true : bool
+               return r27;//return %27 : bool
             }
-         case 99:
-            var r26 = r0[r4];
-            if(r26  <=  r1){
-               control_flow_pc = 101;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            var r3 = r4;//assign %3 = %4  : int
-            control_flow_pc = 100;
-            control_flow_repeat = true;
-            continue outer;
-         case 101:
-            var r27 = true;//const %27 = true : bool
-            return r27;//return %27 : bool
-         case 100:
          case 98:
             var r28 = false;//const %28 = false : bool
             return r28;//return %28 : bool

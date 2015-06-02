@@ -12,23 +12,7 @@ function sum(r0){//function([While_Valid_3:nat]) -> While_Valid_3:nat
             var r6 = 0;//const %6 = 0 : int
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            loopBegin0:
             while(true){
-               var r7 = 0;//const %7 = 0 : int
-               if(r1  <  r7){
-                  control_flow_pc = 114;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r8 = 0;//const %8 = 0 : int
-               if(r2  >=  r8){
-                  control_flow_pc = 115;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 114:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 115:
                var r9 = r0.length;
                if(r1  >=  r9){
                   control_flow_pc = 116;

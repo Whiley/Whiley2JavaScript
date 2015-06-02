@@ -6,22 +6,22 @@ function sum_1(r0){//function(IfElse_Valid_4:LinkedList) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            control_flow_pc = 1;
+            control_flow_pc = 28;
             control_flow_repeat = true;
             continue outer;
-         case 0:
+         case 27:
             var r1 = 0;//const %1 = 0 : int
             return r1;//return %1 : int
-            control_flow_pc = 2;
+            control_flow_pc = 29;
             control_flow_repeat = true;
             continue outer;
-         case 1:
+         case 28:
             var r2 = r0.data;
             var r4 = r0.next;
             var r3 = sum_1(r4);
             var r5 = r2 + r3;//add %5 = %2, %3 : int
             return r5;//return %5 : int
-         case 2:
+         case 29:
       }
    }
 }
@@ -34,22 +34,22 @@ function sum_2(r0){//function(IfElse_Valid_4:LinkedList) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            control_flow_pc = 4;
+            control_flow_pc = 31;
             control_flow_repeat = true;
             continue outer;
-         case 3:
+         case 30:
             var r1 = 0;//const %1 = 0 : int
             return r1;//return %1 : int
-            control_flow_pc = 5;
+            control_flow_pc = 32;
             control_flow_repeat = true;
             continue outer;
-         case 4:
+         case 31:
             var r2 = r0.data;
             var r4 = r0.next;
             var r3 = sum_2(r4);
             var r5 = r2 + r3;//add %5 = %2, %3 : int
             return r5;//return %5 : int
-         case 5:
+         case 32:
       }
    }
 }
@@ -67,13 +67,13 @@ function sum_3(r0){//function(IfElse_Valid_4:LinkedList) -> int
             var r2 = sum_3(r3);
             var r4 = r1 + r2;//add %4 = %1, %2 : int
             return r4;//return %4 : int
-            control_flow_pc = 7;
+            control_flow_pc = 34;
             control_flow_repeat = true;
             continue outer;
-         case 6:
+         case 33:
             var r5 = 0;//const %5 = 0 : int
             return r5;//return %5 : int
-         case 7:
+         case 34:
       }
    }
 }
@@ -100,30 +100,30 @@ function test(){//method() -> void
             var r9 = sum_1(r0);
             var r10 = 6;//const %10 = 6 : int
             if(r9  ==  r10){
-               control_flow_pc = 8;
+               control_flow_pc = 35;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 8:
+         case 35:
             var r11 = sum_2(r0);
             var r12 = 6;//const %12 = 6 : int
             if(r11  ==  r12){
-               control_flow_pc = 9;
+               control_flow_pc = 36;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 9:
+         case 36:
             var r13 = sum_3(r0);
             var r14 = 6;//const %14 = 6 : int
             if(r13  ==  r14){
-               control_flow_pc = 10;
+               control_flow_pc = 37;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 10:
+         case 37:
       }
    }
 }

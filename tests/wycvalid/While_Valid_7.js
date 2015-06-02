@@ -13,27 +13,10 @@ function extract(r0){//function([int]) -> [int]
             var r7 = [r6];
             var r5 = r7;//assign %5 = %7  : [int]
             var r2 = r5;//assign %2 = %5  : [int]
-            loopBegin0:
             while(true){
-               var r8 = r2.length;
-               var r9 = 0;//const %9 = 0 : int
-               if(r8  <=  r9){
-                  control_flow_pc = 127;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r10 = 0;//const %10 = 0 : int
-               if(r1  >=  r10){
-                  control_flow_pc = 128;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 127:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 128:
                var r11 = r0.length;
                if(r1  >=  r11){
-                  control_flow_pc = 129;
+                  control_flow_pc = 3;
                   control_flow_repeat = true;
                   continue outer;
                }
@@ -44,7 +27,7 @@ function extract(r0){//function([int]) -> [int]
                var r16 = r1 + r15;//add %16 = %1, %15 : int
                var r1 = r16;//assign %1 = %16  : int
             }
-         case 129:
+         case 3:
             return r2;//return %2 : [int]
       }
    }
@@ -95,13 +78,13 @@ function test(){//method() -> void
                   }
                }
                if(listComp){
-                  control_flow_pc = 130;
+                  control_flow_pc = 4;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 130:
+         case 4:
       }
    }
 }

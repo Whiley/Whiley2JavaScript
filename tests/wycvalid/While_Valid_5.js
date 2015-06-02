@@ -12,37 +12,28 @@ function extract(r0){//function([int]) -> [While_Valid_5:nat]
             var r6 = [];
             var r5 = r6;//assign %5 = %6  : [void]
             var r2 = r5;//assign %2 = %5  : [int]
-            loopBegin0:
             while(true){
-               var r7 = 0;//const %7 = 0 : int
-               if(r1  <  r7){
-                  control_flow_pc = 121;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
                var r10 = r0.length;
                if(r1  >=  r10){
-                  control_flow_pc = 123;
+                  control_flow_pc = 3;
                   control_flow_repeat = true;
                   continue outer;
                }
                var r11 = r0[r1];
                var r12 = 0;//const %12 = 0 : int
                if(r11  <  r12){
-                  control_flow_pc = 124;
-                  control_flow_repeat = true;
-                  continue outer;
+                  var r16 = 1;//const %16 = 1 : int
+                  var r17 = r1 + r16;//add %17 = %1, %16 : int
+                  var r1 = r17;//assign %1 = %17  : int
                }
                var r13 = r0[r1];
                var r14 = [r13];
                var r2 = r15;//assign %2 = %15  : [int]
+               var r16 = 1;//const %16 = 1 : int
+               var r17 = r1 + r16;//add %17 = %1, %16 : int
+               var r1 = r17;//assign %1 = %17  : int
             }
-         case 124:
-            var r16 = 1;//const %16 = 1 : int
-            var r17 = r1 + r16;//add %17 = %1, %16 : int
-            var r1 = r17;//assign %1 = %17  : int
-            continue loopBegin0;
-         case 123:
+         case 3:
             return r2;//return %2 : [int]
       }
    }
@@ -87,13 +78,13 @@ function test(){//method() -> void
                   }
                }
                if(listComp){
-                  control_flow_pc = 125;
+                  control_flow_pc = 5;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 125:
+         case 5:
       }
    }
 }

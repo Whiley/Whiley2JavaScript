@@ -12,16 +12,7 @@ function reverse(r0){//function([int]) -> [int]
             var r6 = [];
             var r5 = r6;//assign %5 = %6  : [void]
             var r2 = r5;//assign %2 = %5  : [int]
-            loopBegin0:
             while(true){
-               var r7 = r0.length;
-               if(r1  <=  r7){
-                  control_flow_pc = 0;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 0:
                var r8 = 0;//const %8 = 0 : int
                if(r1  <=  r8){
                   control_flow_pc = 1;

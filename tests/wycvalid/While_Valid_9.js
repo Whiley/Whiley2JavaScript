@@ -13,17 +13,7 @@ function extract(r0){//function([int]) -> [int]
             var r7 = [r6];
             var r5 = r7;//assign %5 = %7  : [int]
             var r2 = r5;//assign %2 = %5  : [int]
-            loopBegin0:
             while(true){
-               var r8 = r2.length;
-               var r9 = 0;//const %9 = 0 : int
-               if(r8  >  r9){
-                  control_flow_pc = 132;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 132:
                var r10 = r0.length;
                if(r1  >=  r10){
                   control_flow_pc = 133;
