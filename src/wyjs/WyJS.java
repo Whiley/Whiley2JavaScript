@@ -7,6 +7,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import wyil.io.WyilFilePrinter;
@@ -19,6 +20,7 @@ import wyil.lang.Codes;
 import wyil.lang.Codes.If;
 import wyil.lang.Codes.Label;
 import wyil.lang.Type;
+import wyil.lang.Type.Any;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Constant;
 import wyil.lang.WyilFile.FunctionOrMethod;
@@ -28,29 +30,40 @@ public class WyJS {
 
 	private WyilFile file;
 	private int indent = 0;
-	private int currentLabel;
 	//Sorted list of strings that make up the javascript file
 	private ArrayList<String> js;
-	private ArrayList<Label> ignoreLabels;
 	
-	public WyJS(WyilFile file) {
+	/**
+	 * Creates the contents of a JavaScript file from 
+	 * a specified Whiley wyil file.
+	 * The JavaScript is equal to the wyil file
+	 * @param  file the wyil file that is being converted
+	 * @return WyJS The JavaScript converter object
+	 * @throws Exception 
+	 */
+	public WyJS (WyilFile file) throws Exception {
 		this.file = file;
 		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(file.functionOrMethods());
 		js = new ArrayList<String>();
-		ignoreLabels = new ArrayList<Label>();
-		for(Constant c: file.constants()){
-			write(c);
-		}
+		//for each function of method, write it to an array in JavaScript form
 		for (FunctionOrMethod f : fom) {
 			write(f);
 		}
+		//print it out once we're done
 		for(String s: js){
 			System.out.print(s);
 		}
 	}
 	
+	/**
+	 * Creates a JavaScript file from the JavaScript array
+	 * Used for the test cases
+	 * @param  filename the name of the file being converted
+	 * @param srcDir the source directory of where the file 
+	 * 		  will be stored 
+	 * @return WyJS The JavaScript converter object
+	 */
 	public void makeFile(String filename, String srcDir){
-		
 		try {
 			PrintStream out = new PrintStream(new FileOutputStream(srcDir + "/" + filename + ".js"));
 			for(String s: js){
@@ -63,24 +76,20 @@ public class WyJS {
 		}
 	}
 	
-	private void write(Constant c){
-		js.add(getIndentBlock() + "var " + c.name() + " = " + c.constant().toString() + ";\n");
-	}
-	
-	private void write(FunctionOrMethod e){
-		StringBuilder str = new StringBuilder();
-		str.append(getIndentBlock() + "function " + e.name() + "(");
+	private void write(FunctionOrMethod func) throws Exception{
+		String str = "";
+		str += getIndentBlock() + "function " + func.name() + "(";
 		int i = 1;
-		for(Type t : e.type().params()){
+		for(Type t : func.type().params()){
 			if(i==1){
-				str.append("r" + (i-1));
+				str += "r" + (i-1);
 			}else{
-				str.append(", r" + (i-1));
+				str += ", r" + (i-1);
 			}
 			i++;
 		}
-		str.append("){//" + e.type().toString() +"\n");
-		js.add(str.toString());
+		str += "){//" + func.type().toString() +"\n";
+		js.add(str);
 		indent++;
 		// make initial Switch
 		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
@@ -92,16 +101,15 @@ public class WyJS {
 				+ getIndentBlock() + "switch(control_flow_pc){\n");
 		indent++;
 		js.add(getIndentBlock() + "case -1 :\n");
-		currentLabel = -1;
 		indent++;
 		
-		
-		Iterator iter = e.body().iterator();
+		//for each bytecode in the method, convert it to JavaScript
+		Iterator iter = func.body().iterator();
 		while(iter.hasNext()){
 			Object tmp = iter.next();
 			write(tmp);
 		}
-		
+		//close the file
 		indent--;
 		indent--;
 		js.add(getIndentBlock() + "}\n");
@@ -111,7 +119,7 @@ public class WyJS {
 		js.add("}\n\n");
 	}
 	
-	private void write(Object o){
+	private void write(Object o) throws Exception{
 		if(o instanceof Codes.Const){
 			write((Codes.Const) o);
 		}else if(o instanceof Codes.BinaryOperator){
@@ -121,25 +129,13 @@ public class WyJS {
 		}else if(o instanceof Codes.Return){
 			write((Codes.Return) o);
 		}else if(o instanceof Codes.If){
-			try {
-				write((Codes.If) o);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			write((Codes.If) o);
 		}else if(o instanceof Codes.Goto){
 			write((Codes.Goto) o);
 		}else if(o instanceof Codes.Assume){
-			try {
-				write((Codes.Assume) o);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			write((Codes.Assume) o);
 		}else if(o instanceof Codes.Assert){
-			try {
-				write((Codes.Assert)o);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			write((Codes.Assert)o);
 		}else if(o instanceof Codes.Label){
 			write((Codes.Label) o);
 		}else if(o instanceof Codes.Invoke){
@@ -149,13 +145,8 @@ public class WyJS {
 		}else if(o instanceof Codes.UnaryOperator){
 			write((Codes.UnaryOperator) o);
 		}else if(o instanceof Codes.Loop){
-			try {
-				write((Codes.Loop) o);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		else if(o instanceof Codes.NewRecord){
+			write((Codes.Loop) o);
+		}else if(o instanceof Codes.NewRecord){
 			write((Codes.NewRecord) o);
 		}else if(o instanceof Codes.FieldLoad){
 			write((Codes.FieldLoad) o);
@@ -169,33 +160,194 @@ public class WyJS {
 			write((Codes.IndexOf) o);
 		}
 		else{
-			System.out.println("Unknown object " + o.getClass());
+			throw new Exception("Unknown object " + o.getClass());
 		}
 	}
 	
 	private void write(Codes.Const o){
+		System.out.println(o.constant.type());
 		js.add(getIndentBlock() + "var r" + o.target() + " = " + o.constant + ";//" + o.toString() +"\n");
 	}
 	
-	private void write(Codes.UnaryOperator o){
-		
-		js.add(getIndentBlock() + "var r" + o.target() + " = -" + "r" + o.operand(0) + ";\n");
+	private void write(Codes.BinaryOperator o) throws Exception{
+		String str = "";
+		str += getIndentBlock() + "var r" + o.target() + " = ";
+		if(o.kind == Codes.BinaryOperatorKind.ADD){
+			str += "r" + o.operand(0) + " + " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
+		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEAND){
+			System.out.println("Cant do BitWiseAnd");
+		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEOR){
+			System.out.println("Cant do BitWiseOr");
+		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEXOR){
+			System.out.println("Cant do BitWiseXOR");
+		}else if(o.kind == Codes.BinaryOperatorKind.DIV){
+			str += "r" + o.operand(0) + " / " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
+		}else if(o.kind == Codes.BinaryOperatorKind.LEFTSHIFT){
+			System.out.println("Cant do LeftShift");
+		}else if(o.kind == Codes.BinaryOperatorKind.MUL){
+			str += "r" + o.operand(0) + " * " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
+		}else if(o.kind == Codes.BinaryOperatorKind.RANGE){
+			System.out.println("Cant do Range");
+		}else if(o.kind == Codes.BinaryOperatorKind.REM){
+			System.out.println("Cant do REM");
+		}else if(o.kind == Codes.BinaryOperatorKind.RIGHTSHIFT){
+			System.out.println("Cant do RightShift");
+		}else if(o.kind == Codes.BinaryOperatorKind.SUB){
+			str += "r" + o.operand(0) + " - " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
+		}else {
+			throw new Exception("Unknown kind" + o.toString());
+		}
+		js.add(str);
 	}
 	
-	private int loopCounter = 0;
-	private boolean inLoop = false;
+	private void write(Codes.Assign o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
+	}
+	
+	private void write(Codes.Return o){
+		if(o.operand!=-1){
+			js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
+		}
+	}
+	
+	private void write(Codes.If o) throws Exception{
+		//if we need to close more than one curly brace
+		boolean closeCurly = false;
+		if(o.type instanceof Type.Record){
+			//TODO: deal with recursive records
+			String ifop = getIfop(o, false);
+			Type.Record rec = (Type.Record)o.type;
+			//List<String> ends = getExtensions(rec);
+			js.add(getIndentBlock() + "if(");
+			int x = 0;
+//			for(String s: rec.keys()){
+//				x++;
+//				if(x == rec.keys().size()){
+//					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + "){//" + o.toString() +"\n");
+//				}else{
+//					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
+//				}
+//			}
+			for(String s: rec.keys()){
+				x++;
+				if(x == rec.keys().size()){
+					js.add("JSON.stringify(r" + o.leftOperand + ")" + ifop + " JSON.stringify(r" + o.rightOperand + ")" + "){//" + o.toString() +"\n");
+				}else{
+					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
+				}
+			}
+		}else if(o.type instanceof Type.List){
+			String ifop = getIfop(o, false);
+			Type.List list = (Type.List) o.type;
+			//first compare the lengths of the arrays.
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
+			indent++;
+			//if they are equal, compare each element of the list
+			js.add(getIndentBlock() + "var listComp = true;\n");
+			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand + ".length;i++){\n");
+			indent++;
+			js.add(getIndentBlock() + "if(r"+ o.leftOperand + "[i] "+ getIfop(o,true) +" r" + o.rightOperand + "[i]){\n");
+			indent++;
+			js.add(getIndentBlock() + "listCompFail = false;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+			//if all elements are equal, execute the code
+			js.add(getIndentBlock() + "if(listComp){//" + o.toString() +"\n");
+			closeCurly = true;
+		}else{
+			//otherwise we can just add it normally
+			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){//" + o.toString() +"\n");
+		}
+
+		indent++;
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
+		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+		js.add(getIndentBlock() + "continue outer;\n");
+		if(closeCurly){
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+		}
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+	}
+	
+	private List<String> getExtensions(Type.Record rec){
+		List<String> extensions = new ArrayList<String>();
+		int index = 0;
+		String current = "";
+		for(String key: rec.keys()){
+			Type t = rec.field(key);
+			while(t instanceof Type.Record){
+				current += "." + key;
+				
+			}
+			
+			current += "." + key;
+			index++;
+		}
+		return null;
+	}
+	
+	private void write(Codes.Goto o){
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
+		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+		js.add(getIndentBlock() + "continue outer;//" + o.toString() +"\n");
+	}
+	
+	private void write(Codes.Assume o) throws Exception{
+		for(Code c : o.bytecodes()){
+			write(c);
+		}
+	}
+	
+	private void write(Codes.Assert o) throws Exception{
+		for(Code c : o.bytecodes()){
+			write(c);
+		}
+	}
+	
+	private void write(Codes.Invoke o){
+		String str = "";
+		if(o.target() != -1){
+			str = getIndentBlock() + "var r" + o.target() + " = ";
+			str+= o.name.name() + "(";
+		}else {
+			str+= getIndentBlock() + o.name.name() + "(";
+		}
+		int x = 1;
+		for(Integer i: o.operands()){
+			if(x == 1){
+				str+= "r" + i;
+			}else{
+				str+= ", r" + i;
+			}
+			x++;
+		}
+		str += ");//" + o.toString() +"\n";
+		js.add(str);
+	}
+	
+	private void write(Codes.Label o){
+		indent--;
+		js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
+		indent++;
+	}
+	
+	private void write(Codes.Fail o){
+		js.add(getIndentBlock() + "throw {name: 'Assert Failed', message: '" +o.toString() + "'}\n");
+	}
+	
+	private void write(Codes.UnaryOperator o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = -" + "r" + o.operand(0) + ";//" + o.toString() +"\n");
+	}
+	
 	private void write(Codes.Loop o) throws Exception{
 		Map<String, Index> labelMap = CodeUtils.buildLabelMap(new AttributedCodeBlock(o.bytecodes()));
 		Iterator iter;
-		boolean inelse = false;
-		Index i;
-		js.add(getIndentBlock() + "while(true){\n");
+		js.add(getIndentBlock() + "while(true){//" + o.toString() +"\n");
 		indent++;
-		if((iter = labelMap.values().iterator()).hasNext()){
-			i = (Index) iter.next();
-		}else{
-			i = null;
-		}
 		for(Code c: o.bytecodes()){
 			if(c instanceof Codes.If){
 				Index x;
@@ -206,12 +358,11 @@ public class WyJS {
 					//jumping out, parse normally
 					write(c);
 				}
-//				js.add(getIndentBlock() + "else{\n");
-//				inelse = true;
 			}else if(c instanceof Codes.Goto){
 				Index x;
 				boolean write = false;
 				if((x = labelMap.get(((Codes.Goto) c).target)) != null){
+					//jumping within loop, have to write the contents of the label we want to jump to
 					for(Code code: o.bytecodes()){
 						if(write){
 							write(code);
@@ -225,120 +376,22 @@ public class WyJS {
 						}
 					}
 				}else{
+					//jumping out the loop, parse normally
 					write(c);
 				}
 			}else if(c instanceof Codes.Assert){
 				//TODO:
-//				Codes.Assert ass = (Codes.Assert) c;
-//				
-//				boolean write = false;
-//				for(Code c1 : ass.bytecodes()){
-//					if(c1 instanceof Codes.If){
-//						String label = ((Codes.If) c1).target;
-//						writeIf((If) c1);
-//						for(Code c2: ass.bytecodes()){
-//							if(c2 instanceof Codes.Label){
-//								if(((Codes.Label) c2).label == label){
-//									write = true;
-//								}else{
-//									write = false;
-//								}
-//							} else if(write){
-//								write(c2);
-//							}
-//						}
-//						indent--;
-//						js.add(getIndentBlock() + "}\n");
-//					}else if(c1 instanceof Codes.Label){
-//						break;
-//					}else{
-//						write(c1);	
-//					}
-//				}
-				
 			}else if(c instanceof Codes.Assume){
 				//TODO:
-//				Codes.Assume ass = (Codes.Assume)
-//				boolean write = false;
-//				for(Code c1 : ass.bytecodes()){
-//					if(c1 instanceof Codes.If){
-//						String label = ((Codes.If) c1).target;
-//						writeIf((If) c1);
-//						for(Code c2: ass.bytecodes()){
-//							if(write){
-//								write(c2);
-//							}else if(c2 instanceof Codes.Label){
-//								if(((Codes.Label) c2).label == label){
-//									write = true;
-//								}else{
-//									write = false;
-//								}
-//							}
-//						}
-//					}else if(c1 instanceof Codes.Label){
-//						if(write){
-//							write = false;
-//						}
-//					}else{
-//						if(write){
-//							write(c);	
-//						}
-//					}
-//				}
-				
 			}else if(c instanceof Codes.Label){
-//				 should have already been written
+				 //should have already been written
 			}else{
 				write(c);
 			}
 		}
-//		if(needContinue){
-//			js.add(getIndentBlock() + "continue loopBegin" + currentCounter + ";\n");
-//		}
-//		if(!finished){
-//			indent--;
-//			js.add(getIndentBlock() + "}\n");
-//		}
-		//if(inelse)
 		indent--;
 		js.add(getIndentBlock() + "}\n");
 		
-	}
-	
-	private void writeIf(Codes.If o) throws Exception{
-		if(o.type instanceof Type.Record){
-			String ifop = getIfop(o, false);
-			Type.Record rec = (Type.Record)o.type;
-			js.add(getIndentBlock() + "if(");
-			int x = 0;
-			for(String s: rec.keys()){
-				x++;
-				if(x == rec.keys().size()){
-					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + "){\n");
-				}else{
-					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
-				}
-			}
-		}else if(o.type instanceof Type.List){
-			String ifop = getIfop(o, false);
-			Type.List list = (Type.List) o.type;
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
-			indent++;
-			js.add(getIndentBlock() + "var listComp = true;\n");
-			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand + ".length;i++){\n");
-			indent++;
-			js.add(getIndentBlock() + "if(r"+ o.leftOperand + "[i] "+ getIfop(o,true) +" r" + o.rightOperand + "[i]){\n");
-			indent++;
-			js.add(getIndentBlock() + "listCompFail = false;\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			js.add(getIndentBlock() + "if(listComp){\n");
-		}else{
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
-		}
-		indent++;
 	}
 	
 	private void writeLoopIf(Codes.Loop l, Codes.If o, Map<String, Index> map) throws Exception{
@@ -361,7 +414,6 @@ public class WyJS {
 			}
 		}else if(o.type instanceof Type.List){
 			String ifop = getIfop(o, false);
-			Type.List list = (Type.List) o.type;
 			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
 			indent++;
 			js.add(getIndentBlock() + "var listComp = true;\n");
@@ -401,124 +453,6 @@ public class WyJS {
 		js.add(getIndentBlock() + "}\n");
 	}
 	
-	private void write(Codes.BinaryOperator o){
-		String str = "";
-		str += getIndentBlock() + "var r" + o.target() + " = ";
-		if(o.kind == Codes.BinaryOperatorKind.ADD){
-			str += "r" + o.operand(0) + " + " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
-		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEAND){
-			System.out.println("Cant do BitWiseAnd");
-		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEOR){
-			System.out.println("Cant do BitWiseOr");
-		}else if(o.kind == Codes.BinaryOperatorKind.BITWISEXOR){
-			System.out.println("Cant do BitWiseXOR");
-		}else if(o.kind == Codes.BinaryOperatorKind.DIV){
-			str += "r" + o.operand(0) + " / " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
-		}else if(o.kind == Codes.BinaryOperatorKind.LEFTSHIFT){
-			System.out.println("Cant do LeftShift");
-		}else if(o.kind == Codes.BinaryOperatorKind.MUL){
-			str += "r" + o.operand(0) + " * " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
-		}else if(o.kind == Codes.BinaryOperatorKind.RANGE){
-			System.out.println("Cant do Range");
-		}else if(o.kind == Codes.BinaryOperatorKind.REM){
-			System.out.println("Cant do REM");
-		}else if(o.kind == Codes.BinaryOperatorKind.RIGHTSHIFT){
-			System.out.println("Cant do RightShift");
-		}else if(o.kind == Codes.BinaryOperatorKind.SUB){
-			str += "r" + o.operand(0) + " - " + "r" + o.operand(1) + ";//" + o.toString() +"\n";
-		}else {
-			System.out.println("Unknown kind");
-		}
-		js.add(str);
-	}
-	
-	private void write(Codes.Assert o) throws Exception{
-		for(Code c : o.bytecodes()){
-			write(c);
-		}
-	}
-	
-	private void write(Codes.Assume o) throws Exception{
-		for(Code c : o.bytecodes()){
-			write(c);
-		}
-	}
-	
-	private void write(Codes.Return o){
-		if(o.operand!=-1){
-			js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() +"\n");
-		}
-	}
-	
-	private void write(Codes.Assign o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() +"\n");
-	}
-	
-	private void write(Codes.Fail o){
-		js.add(getIndentBlock() + "throw {name: 'Assert Failed', message: '" +o.toString() + "'}\n");
-	}
-	
-	private void write(Codes.If o) throws Exception{
-		boolean inDeep = false;
-		if(o.type instanceof Type.Record){
-			String ifop = getIfop(o, false);
-			Type.Record rec = (Type.Record)o.type;
-			js.add(getIndentBlock() + "if(");
-			int x = 0;
-			for(String s: rec.keys()){
-				x++;
-				if(x == rec.keys().size()){
-					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + "){\n");
-				}else{
-					js.add("r" + o.leftOperand + "." + s + ifop + " r" + o.rightOperand + "." + s + " && ");
-				}
-			}
-		}else if(o.type instanceof Type.List){
-			String ifop = getIfop(o, false);
-			Type.List list = (Type.List) o.type;
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop + " r" + o.rightOperand + ".length){\n");
-			indent++;
-			js.add(getIndentBlock() + "var listComp = true;\n");
-			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand + ".length;i++){\n");
-			indent++;
-			js.add(getIndentBlock() + "if(r"+ o.leftOperand + "[i] "+ getIfop(o,true) +" r" + o.rightOperand + "[i]){\n");
-			indent++;
-			js.add(getIndentBlock() + "listCompFail = false;\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			js.add(getIndentBlock() + "if(listComp){\n");
-			inDeep = true;
-		}else{
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + " " + getIfop(o, false) + " r" + o.rightOperand + "){\n");
-		}
-
-		indent++;
-		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
-		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-		js.add(getIndentBlock() + "continue outer;\n");
-		if(inDeep){
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-		}
-		indent--;
-		js.add(getIndentBlock() + "}\n");
-	}
-	
-	private void write(Codes.Goto o){
-		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
-		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-		js.add(getIndentBlock() + "continue outer;\n");
-	}
-	
-	private void write(Codes.Label o){
-		indent--;
-		js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
-		currentLabel = Integer.parseInt(o.label.substring(o.label.length()-1));
-		indent++;
-	}
-	
 	private void write(Codes.NewRecord o){
 		String str = getIndentBlock() + "var r" + o.target() + " = {";
 		int i = 0;
@@ -529,43 +463,27 @@ public class WyJS {
 				str+=", ";
 			}
 		}
-		str += "};\n";
+		str += "};//" + o.toString() + "\n";
 		js.add(str);
 	}
 	
 	private void write(Codes.FieldLoad o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + "." + o.field + ";\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + "." + o.field + ";//" + o.toString() + "\n");
 	}
 	
-	private void write(Codes.Update o){
+	private void write(Codes.Update o) throws Exception{
 		if(o.afterType instanceof Type.List){
-			js.add(getIndentBlock() + "r" + o.target() + "[r" + o.operand(0) + "] = r" + o.operand(1) + ";\n");
+			js.add(getIndentBlock() + "r" + o.target() + "[r" + o.operand(0) + "] = r" + o.operand(1) + ";//" + o.toString() + "\n");
 		}else if(o.afterType instanceof Type.Record){
-			js.add(getIndentBlock() + "r" + o.target() + "." + o.fields.get(0) + " = r" + o.operand(0) + ";\n");
-		}
-		
-	}
-	
-	private void write(Codes.Invoke o){
-		String str = "";
-		if(o.target() != -1){
-			str = getIndentBlock() + "var r" + o.target() + " = ";
-			str+= o.name.name() + "(";
-		}else {
-			str+= getIndentBlock() + o.name.name() + "(";
-		}
-		int x = 1;
-		for(Integer i: o.operands()){
-			if(x == 1){
-				str+= "r" + i;
-			}else{
-				str+= ", r" + i;
+			String extension = "";
+			for(String s: o.fields){
+				extension += "." + s;
 			}
-			x++;
+			js.add(getIndentBlock() + "r" + o.target() + extension + " = r" + o.operand(0) + ";//" + o.toString() + "\n");
+		}else{
+			throw new Exception("Unknown Update Type" + o.toString());
 		}
-		str += ");\n";
 		
-		js.add(str);
 	}
 	
 	public void write(Codes.NewList o){
@@ -587,7 +505,7 @@ public class WyJS {
 	}
 	
 	public void write(Codes.LengthOf o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".length;\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".length;//" + o.toString() + "\n");
 	}
 	
 	public void write(Codes.IndexOf o){
@@ -622,7 +540,6 @@ public class WyJS {
 		return label.substring(5);
 	}
 	
-	
 	private String getIndentBlock(){
 		String str = "";
 		for(int i = 0; i < indent; i++){
@@ -645,6 +562,8 @@ public class WyJS {
 			
 			WyJS wy = new WyJS(wyilFile);
 		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}

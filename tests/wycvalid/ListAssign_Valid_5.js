@@ -16,10 +16,10 @@ function move(r0, r1, r2){//function(int,int,[[ListAssign_Valid_5:nint]]) -> [[L
             var r10 = 1;//const %10 = 1 : int
             var r11 = r0 + r10;//add %11 = %0, %10 : int
             var r12 = null;//const %12 = null : null
-            r2[r0] = r11;
+            r2[r0] = r11;//update %2[%0][%11] = %12 : [[null|int]] -> [[null|int]]
             var r13 = 1;//const %13 = 1 : int
             var r14 = r1 + r13;//add %14 = %1, %13 : int
-            r2[r1] = r14;
+            r2[r1] = r14;//update %2[%1][%14] = %3 : [[null|int]] -> [[null|int]]
             return r2;//return %2 : [[null|int]]
       }
    }
@@ -50,7 +50,7 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : [[null|int]]
             var r16 = 0;//const %16 = 0 : int
             var r17 = 1;//const %17 = 1 : int
-            var r15 = move(r16, r17, r0);
+            var r15 = move(r16, r17, r0);//invoke %15 = (%16, %17, %0) ListAssign_Valid_5:move : function(int,int,[[ListAssign_Valid_5:nint]]) -> [[ListAssign_Valid_5:nint]]
             var r0 = r15;//assign %0 = %15  : [[null|int]]
             var r18 = 1;//const %18 = 1 : int
             var r19 = null;//const %19 = null : null
@@ -72,14 +72,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 306;
+               if(listComp){//ifeq %0, %30 goto label23 : [[null|int]]
+                  control_flow_pc = 23;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 306:
+         case 23:
       }
    }
 }

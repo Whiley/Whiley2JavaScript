@@ -16,13 +16,13 @@ function test(){//method() -> void
             var r9 = {x: r7, y: r8};
             var r6 = r9;//assign %6 = %9  : {int x,int y}
             var r1 = r6;//assign %1 = %6  : {int x,int y}
-            if(r0.x ==  r1.x && r0.y ==  r1.y){
-               control_flow_pc = 0;
+            if(r0.x ==  r1.x && r0.y ==  r1.y){//ifeq %0, %1 goto label64 : {int x,int y}
+               control_flow_pc = 64;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 64:
       }
    }
 }

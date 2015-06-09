@@ -12,7 +12,7 @@ function test(){//method() -> void
             while(true){
                var r3 = 10;//const %3 = 10 : int
                if(r0  >=  r3){
-                  control_flow_pc = 0;
+                  control_flow_pc = 39;
                   control_flow_repeat = true;
                   continue outer;
                }
@@ -20,7 +20,7 @@ function test(){//method() -> void
                var r5 = r0 + r4;//add %5 = %0, %4 : int
                var r0 = r5;//assign %0 = %5  : int
             }
-         case 0:
+         case 39:
       }
    }
 }

@@ -21,8 +21,8 @@ function test(){//method() -> void
          case -1 :
             var r2 = 0;//const %2 = 0 : int
             var r3 = 0;//const %3 = 0 : int
-            if(r2  !=  r3){
-               control_flow_pc = 288;
+            if(r2  !=  r3){//ifne %2, %3 goto label5 : int
+               control_flow_pc = 5;
                control_flow_repeat = true;
                continue outer;
             }
@@ -31,10 +31,10 @@ function test(){//method() -> void
             var r6 = 3;//const %6 = 3 : int
             var r7 = [r4, r5, r6];
             var r0 = r7;//assign %0 = %7  : [int]
-            control_flow_pc = 289;
+            control_flow_pc = 6;
             control_flow_repeat = true;
-            continue outer;
-         case 288:
+            continue outer;//goto label6
+         case 5:
             var r8 = 1;//const %8 = 1 : int
             var r9 = [r8];
             var r10 = 2;//const %10 = 2 : int
@@ -44,23 +44,23 @@ function test(){//method() -> void
             var r14 = [r13];
             var r15 = [r9, r12, r14];
             var r0 = r15;//assign %0 = %15  : [[int]]
-         case 289:
+         case 6:
             var r16 = 1;//const %16 = 1 : int
             var r17 = 0;//const %17 = 0 : int
             var r18 = 1;//const %18 = 1 : int
-            r0[r17] = r18;
-            var r19 = f(r0);
+            r0[r17] = r18;//update %0[%17] = %18 : [[int]]|[int] -> [int|[int]]
+            var r19 = f(r0);//invoke %19 = (%0) ListAssign_Valid_2:f : function([ListAssign_Valid_2:intlist]) -> any
             var r20 = 1;//const %20 = 1 : int
             var r21 = 2;//const %21 = 2 : int
             var r22 = 3;//const %22 = 3 : int
             var r23 = [r20, r21, r22];
-            if(r19  ==  r23){
-               control_flow_pc = 290;
+            if(r19  ==  r23){//ifeq %19, %23 goto label7 : any
+               control_flow_pc = 7;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 290:
+         case 7:
       }
    }
 }

@@ -26,7 +26,7 @@ function test(){//method() -> void
             var r17 = 4;//const %17 = 4 : int
             var r18 = 5;//const %18 = 5 : int
             var r19 = [r16, r17, r18];
-            r1[r15] = r19;
+            r1[r15] = r19;//update %1[%15] = %19 : [[int]] -> [[int]]
             var r20 = 0;//const %20 = 0 : int
             var r21 = r0[r20];
             var r22 = 1;//const %22 = 1 : int
@@ -40,14 +40,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 315;
+               if(listComp){//ifeq %21, %25 goto label32 : [int]
+                  control_flow_pc = 32;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 315:
+         case 32:
             var r26 = 1;//const %26 = 1 : int
             var r27 = r0[r26];
             var r28 = 0;//const %28 = 0 : int
@@ -59,14 +59,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 316;
+               if(listComp){//ifeq %27, %29 goto label33 : [int]
+                  control_flow_pc = 33;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 316:
+         case 33:
             var r30 = 0;//const %30 = 0 : int
             var r31 = r1[r30];
             var r32 = 3;//const %32 = 3 : int
@@ -80,14 +80,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 317;
+               if(listComp){//ifeq %31, %35 goto label34 : [int]
+                  control_flow_pc = 34;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 317:
+         case 34:
             var r36 = 1;//const %36 = 1 : int
             var r37 = r1[r36];
             var r38 = 0;//const %38 = 0 : int
@@ -99,14 +99,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 318;
+               if(listComp){//ifeq %37, %39 goto label35 : [int]
+                  control_flow_pc = 35;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 318:
+         case 35:
       }
    }
 }

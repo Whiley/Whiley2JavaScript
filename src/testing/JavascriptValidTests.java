@@ -49,4 +49,5 @@ public class JavascriptValidTests {
 	@Test public void JSValidTest22(){ runTest("recordvalid_3");}
 	
 	@Test public void JSValidTest23(){ runTest("listvalid1");}
+	@Test public void JSValidTest24(){ runTest("listvalid_1");}
 }

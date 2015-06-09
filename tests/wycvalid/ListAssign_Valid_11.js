@@ -9,7 +9,7 @@ function f(r0){//function([int]) -> [int]
             var r1 = 5;//const %1 = 5 : int
             var r2 = 0;//const %2 = 0 : int
             var r3 = 5;//const %3 = 5 : int
-            r0[r2] = r3;
+            r0[r2] = r3;//update %0[%2] = %3 : [int] -> [int]
             return r0;//return %0 : [int]
       }
    }
@@ -29,7 +29,7 @@ function test(){//method() -> void
             var r5 = [r2, r3, r4];
             var r1 = r5;//assign %1 = %5  : [int]
             var r0 = r1;//assign %0 = %1  : [int]
-            var r6 = f(r0);
+            var r6 = f(r0);//invoke %6 = (%0) ListAssign_Valid_11:f : function([int]) -> [int]
             var r7 = 5;//const %7 = 5 : int
             var r8 = 2;//const %8 = 2 : int
             var r9 = 3;//const %9 = 3 : int
@@ -41,14 +41,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 196;
+               if(listComp){//ifeq %6, %10 goto label1 : [int]
+                  control_flow_pc = 1;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 196:
+         case 1:
       }
    }
 }

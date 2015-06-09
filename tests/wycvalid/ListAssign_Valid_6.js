@@ -17,17 +17,17 @@ function test(){//method() -> void
             var r8 = 3;//const %8 = 3 : int
             var r9 = 2;//const %9 = 2 : int
             var r10 = 3;//const %10 = 3 : int
-            r1[r9] = r10;
+            r1[r9] = r10;//update %1[%9] = %10 : [int] -> [int]
             var r11 = 2;//const %11 = 2 : int
             var r12 = r1[r11];
-            var r13 = r0.length;
-            if(r12  ==  r13){
-               control_flow_pc = 307;
+            var r13 = r0.length;//lengthof %13 = %0 : [int]
+            if(r12  ==  r13){//ifeq %12, %13 goto label24 : int
+               control_flow_pc = 24;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 307:
+         case 24:
             var r14 = 1;//const %14 = 1 : int
             var r15 = 2;//const %15 = 2 : int
             var r16 = 4;//const %16 = 4 : int
@@ -39,14 +39,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 308;
+               if(listComp){//ifeq %0, %17 goto label25 : [int]
+                  control_flow_pc = 25;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 308:
+         case 25:
             var r18 = 1;//const %18 = 1 : int
             var r19 = 2;//const %19 = 2 : int
             var r20 = 3;//const %20 = 3 : int
@@ -58,14 +58,14 @@ function test(){//method() -> void
                      listCompFail = false;
                   }
                }
-               if(listComp){
-                  control_flow_pc = 309;
+               if(listComp){//ifeq %1, %21 goto label26 : [int]
+                  control_flow_pc = 26;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 309:
+         case 26:
       }
    }
 }

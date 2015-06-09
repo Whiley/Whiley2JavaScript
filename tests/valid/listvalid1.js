@@ -26,13 +26,13 @@ function test(){//method() -> void
                   }
                }
                if(listComp){
-                  control_flow_pc = 0;
+                  control_flow_pc = 67;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 67:
       }
    }
 }

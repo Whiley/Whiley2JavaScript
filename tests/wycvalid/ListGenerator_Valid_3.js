@@ -8,10 +8,10 @@ function f(r0){//function([[int]]) -> int
          case -1 :
             var r1 = 0;//const %1 = 0 : int
             var r2 = r0[r1];
-            var r3 = r2.length;
+            var r3 = r2.length;//lengthof %3 = %2 : [int]
             var r4 = 2;//const %4 = 2 : int
-            if(r3  <=  r4){
-               control_flow_pc = 144;
+            if(r3  <=  r4){//ifle %3, %4 goto label4 : int
+               control_flow_pc = 4;
                control_flow_repeat = true;
                continue outer;
             }
@@ -20,13 +20,13 @@ function f(r0){//function([[int]]) -> int
             var r7 = 1;//const %7 = 1 : int
             var r8 = r6[r7];
             return r8;//return %8 : int
-            control_flow_pc = 145;
+            control_flow_pc = 5;
             control_flow_repeat = true;
-            continue outer;
-         case 144:
+            continue outer;//goto label5
+         case 4:
             var r9 = 0;//const %9 = 0 : int
             return r9;//return %9 : int
-         case 145:
+         case 5:
       }
    }
 }
@@ -48,15 +48,15 @@ function test(){//method() -> void
             var r8 = [r5, r7];
             var r1 = r8;//assign %1 = %8  : [[int]]
             var r0 = r1;//assign %0 = %1  : [[int]]
-            var r9 = f(r0);
+            var r9 = f(r0);//invoke %9 = (%0) ListGenerator_Valid_3:f : function([[int]]) -> int
             var r10 = 2;//const %10 = 2 : int
-            if(r9  ==  r10){
-               control_flow_pc = 146;
+            if(r9  ==  r10){//ifeq %9, %10 goto label6 : int
+               control_flow_pc = 6;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 146:
+         case 6:
       }
    }
 }

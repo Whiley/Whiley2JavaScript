@@ -14,13 +14,13 @@ function test(){//method() -> void
             var r7 = {x: r6};
             var r5 = r7;//assign %5 = %7  : {int x}
             var r1 = r5;//assign %1 = %5  : {int x}
-            if(r0.x ==  r1.x){
-               control_flow_pc = 0;
+            if(r0.x ==  r1.x){//ifeq %0, %1 goto label65 : {int x}
+               control_flow_pc = 65;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 65:
       }
    }
 }

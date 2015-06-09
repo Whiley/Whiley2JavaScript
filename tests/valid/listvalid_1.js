@@ -14,58 +14,48 @@ function test(){//method() -> void
             var r0 = r2;//assign %0 = %2  : [int]
             var r7 = r0;//assign %7 = %0  : [int]
             var r1 = r7;//assign %1 = %7  : [int]
-            var r8 = 2;//const %8 = 2 : int
-            var r9 = 2;//const %9 = 2 : int
-            var r10 = 2;//const %10 = 2 : int
+            var r8 = 0;//const %8 = 0 : int
+            var r9 = 0;//const %9 = 0 : int
+            var r10 = 0;//const %10 = 0 : int
             r1[r9] = r10;//update %1[%9] = %10 : [int] -> [int]
-            var r11 = 2;//const %11 = 2 : int
-            var r12 = r1[r11];
-            var r13 = r0.length;//lengthof %13 = %0 : [int]
-            if(r12  !=  r13){//ifne %12, %13 goto label2 : int
-               control_flow_pc = 2;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
-            var r14 = 1;//const %14 = 1 : int
-            var r15 = 2;//const %15 = 2 : int
-            var r16 = 3;//const %16 = 3 : int
-            var r17 = [r14, r15, r16];
-            if(r0.length ==  r17.length){
+            var r11 = 1;//const %11 = 1 : int
+            var r12 = 2;//const %12 = 2 : int
+            var r13 = 3;//const %13 = 3 : int
+            var r14 = [r11, r12, r13];
+            if(r0.length ==  r14.length){
                var listComp = true;
                for(var i = 0; i<r0.length;i++){
-                  if(r0[i]  !=  r17[i]){
+                  if(r0[i]  !=  r14[i]){
                      listCompFail = false;
                   }
                }
-               if(listComp){//ifeq %0, %17 goto label3 : [int]
-                  control_flow_pc = 3;
+               if(listComp){//ifeq %0, %14 goto label0 : [int]
+                  control_flow_pc = 0;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 3:
-            var r18 = 1;//const %18 = 1 : int
-            var r19 = 2;//const %19 = 2 : int
-            var r20 = 2;//const %20 = 2 : int
-            var r21 = [r18, r19, r20];
-            if(r1.length ==  r21.length){
+         case 0:
+            var r15 = 0;//const %15 = 0 : int
+            var r16 = 2;//const %16 = 2 : int
+            var r17 = 3;//const %17 = 3 : int
+            var r18 = [r15, r16, r17];
+            if(r1.length ==  r18.length){
                var listComp = true;
                for(var i = 0; i<r1.length;i++){
-                  if(r1[i]  !=  r21[i]){
+                  if(r1[i]  !=  r18[i]){
                      listCompFail = false;
                   }
                }
-               if(listComp){//ifeq %1, %21 goto label4 : [int]
-                  control_flow_pc = 4;
+               if(listComp){//ifeq %1, %18 goto label1 : [int]
+                  control_flow_pc = 1;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 4:
+         case 1:
       }
    }
 }

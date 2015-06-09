@@ -1,7 +1,7 @@
 public function f(int x) -> int x:
 	while x < 10:
 		if x==1:
-			x = 15
+			break
 		x = x + 1
 	return x
 
