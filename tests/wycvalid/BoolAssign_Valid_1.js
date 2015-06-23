@@ -1,4 +1,5 @@
 function test(){//method() -> void
+	console.log("ok");
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -32,3 +33,4 @@ function test(){//method() -> void
 }
 
 test();
+

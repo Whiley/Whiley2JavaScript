@@ -5,12 +5,14 @@ import static org.junit.Assert.fail;
 import java.io.*;
 
 import wyil.io.WyilFileReader;
-import wyil.lang.WyilFile;
 import wyjs.WyJS;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 public class TestUtils {
 	
-	private static String whileyBuild = "wyjc-all-v0.3.33.jar";
+	private static String whileyBuild = "wyjc-all-v0.3.35.jar";
 	private static String wyilFolder = '"' + "wyil" +'"';
 	
 	public static String exec(String filename, String srcDir) {
@@ -37,35 +39,100 @@ public class TestUtils {
 				WyilFileReader r = new WyilFileReader(srcDir + "/wyil/" + filename + ".wyil");
 				WyJS js = new WyJS(r.read());
 				js.makeFile(filename, srcDir);
-				
-				tmp = "node " + filename + ".js";
-				
-				p = Runtime.getRuntime().exec(tmp, null, new File(srcDir));
+				filename = srcDir + File.separatorChar + filename + ".js";
+				Reader file = new FileReader(new File(filename));
+			    Context cxt = Context.enter();
+			    Scriptable scope = cxt.initStandardObjects();
+			    OutputStream out = new ByteArrayOutputStream();
+			    Object jssysout = Context.javaToJS(new PrintStream(out), scope);
+			    OutputStream err = new ByteArrayOutputStream();
+			    Object jssyserr = Context.javaToJS(new PrintStream(err), scope);
 
-				syserr = new StringBuffer();
-				sysout = new StringBuffer();
-				new StreamGrabber(p.getErrorStream(), syserr);
-				new StreamGrabber(p.getInputStream(), sysout);
-				exitCode = p.waitFor();
+			    ScriptableObject.putConstProperty(scope, "sysout", jssysout);
+			    ScriptableObject.putConstProperty(scope, "syserr", jssyserr);
+
+			    //Set up the library
+			    String lib = "tests" + File.separatorChar + "WyJS_Runtime.js";
+			    Reader library = new FileReader(new File(lib));
+			    cxt.evaluateReader(scope, library, lib, 1, null);
+    		    cxt.evaluateReader(scope, file, filename, 1, null);
+			    cxt.evaluateString(scope, "test()", "test", 1, null);
+				
+//				tmp = "node " + filename + ".js";
+//				
+//				p = Runtime.getRuntime().exec(tmp, null, new File(srcDir));
+//
+//				syserr = new StringBuffer();
+//				sysout = new StringBuffer();
+//				new StreamGrabber(p.getErrorStream(), syserr);
+//				new StreamGrabber(p.getInputStream(), sysout);
+//				exitCode = p.waitFor();
 				if (exitCode != 0) {
 					System.err
 							.println("============================================================");
 					System.err.println(filename);
 					System.err
 							.println("============================================================");
-					System.err.println(syserr);
+					System.err.println(jssyserr);
+					
+					System.err.println(jssysout);
 					return null;
 				} else {
-					return sysout.toString();
+					return out.toString();
 				}
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			fail("Problem running compiled test");
+		} finally{
+			Context.exit();
 		}
 
 		return null;
 	}
+	
+	/**
+	 * Execute the main() method on a given (generated) Javascript file, and
+	 * capture the output.
+	 *
+	 * @param filename Filename of generated JavaScript source file.
+	 * @return
+	 */
+//	private static String execJavaScript(String filename) {
+//		OutputStream out = new ByteArrayOutputStream();
+//	    try {
+//	      Reader file = new FileReader(new File(filename));
+//	      Context cxt = Context.enter();
+//	      Scriptable scope = cxt.initStandardObjects();
+//
+//
+//	      Object sysout = Context.javaToJS(new PrintStream(out), scope);
+//	      OutputStream err = new ByteArrayOutputStream();
+//	      Object syserr = Context.javaToJS(new PrintStream(err), scope);
+//
+//	      ScriptableObject.putConstProperty(scope, "sysout", sysout);
+//	      ScriptableObject.putConstProperty(scope, "syserr", syserr);
+//
+//	      //Set up the library
+//	      String lib = testdir + File.separatorChar + "Wyscript.js";
+//	      Reader library = new FileReader(new File(lib));
+//	      cxt.evaluateReader(scope, library, lib, 1, null);
+//
+//	      cxt.evaluateReader(scope, file, filename, 1, null);
+//	      cxt.evaluateString(scope, "main()", "main", 1, null);
+//
+//	      System.err.println(err);
+//	      return out.toString();
+//	    } catch (Exception ex) {
+//	      System.err.print(out);
+//	      ex.printStackTrace();
+//	      fail("Problem running compiled test");
+//	    } finally {
+//	      Context.exit();
+//	    }
+//
+//	    return null;
+//	  }
 	
 	static public class StreamGrabber extends Thread {
 		private InputStream input;
