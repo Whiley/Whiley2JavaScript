@@ -19,50 +19,49 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = 0;//const %2 = 0 : int
-            var r3 = 0;//const %3 = 0 : int
-            if(r2  !=  r3){//ifne %2, %3 goto label2418 : int
-               control_flow_pc = 2418;
+            var r2 = new WyJS.Integer(0);
+            var r3 = new WyJS.Integer(0);
+            if(WyJS.equals(r2, r3, false)){
+               control_flow_pc = 2412;
                control_flow_repeat = true;
                continue outer;
             }
-            var r4 = 1;//const %4 = 1 : int
-            var r5 = 2;//const %5 = 2 : int
-            var r6 = 3;//const %6 = 3 : int
-            var r7 = [r4, r5, r6];
-            var r0 = r7;//assign %0 = %7  : [int]
-            control_flow_pc = 2419;
+            var r4 = new WyJS.Integer(1);
+            var r5 = new WyJS.Integer(2);
+            var r6 = new WyJS.Integer(3);
+            var r7 = new WyJS.List([r4, r5, r6]);
+            var r0 = r7.clone();//assign %0 = %7  : [int]
+            control_flow_pc = 2413;
             control_flow_repeat = true;
-            continue outer;//goto label2419
-         case 2418:
-            var r8 = 1;//const %8 = 1 : int
-            var r9 = [r8];
-            var r10 = 2;//const %10 = 2 : int
-            var r11 = 3;//const %11 = 3 : int
-            var r12 = [r10, r11];
-            var r13 = 5;//const %13 = 5 : int
-            var r14 = [r13];
-            var r15 = [r9, r12, r14];
-            var r0 = r15;//assign %0 = %15  : [[int]]
-         case 2419:
-            var r16 = 1;//const %16 = 1 : int
-            var r17 = 0;//const %17 = 0 : int
-            var r18 = 1;//const %18 = 1 : int
-            r0[r17] = r18;//update %0[%17] = %18 : [[int]]|[int] -> [int|[int]]
+            continue outer;//goto label2413
+         case 2412:
+            var r8 = new WyJS.Integer(1);
+            var r9 = new WyJS.List([r8]);
+            var r10 = new WyJS.Integer(2);
+            var r11 = new WyJS.Integer(3);
+            var r12 = new WyJS.List([r10, r11]);
+            var r13 = new WyJS.Integer(5);
+            var r14 = new WyJS.List([r13]);
+            var r15 = new WyJS.List([r9, r12, r14]);
+            var r0 = r15.clone();//assign %0 = %15  : [[int]]
+         case 2413:
+            var r16 = new WyJS.Integer(1);
+            var r17 = new WyJS.Integer(0);
+            var r18 = new WyJS.Integer(1);
+            r0.setValue(r17, r18);//update %0[%17] = %18 : [[int]]|[int] -> [int|[int]]
             var r19 = f(r0);//invoke %19 = (%0) ListAssign_Valid_2:f : function([ListAssign_Valid_2:intlist]) -> any
-            var r20 = 1;//const %20 = 1 : int
-            var r21 = 2;//const %21 = 2 : int
-            var r22 = 3;//const %22 = 3 : int
-            var r23 = [r20, r21, r22];
-            if(r19  ==  r23){//ifeq %19, %23 goto label2420 : any
-               control_flow_pc = 2420;
+            var r20 = new WyJS.Integer(1);
+            var r21 = new WyJS.Integer(2);
+            var r22 = new WyJS.Integer(3);
+            var r23 = new WyJS.List([r20, r21, r22]);
+            if(WyJS.equals(r19, r23, true)){
+               control_flow_pc = 2414;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2420:
+         case 2414:
       }
    }
 }
 
-test();

@@ -6,8 +6,8 @@ function diver(r0, r1, r2){//function(real,real,real) -> real
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = r0 / r1;//div %3 = %0, %1 : real
-            var r4 = r3 / r2;//div %4 = %3, %2 : real
+            var r3 = r0.div(r1);//div %3 = %0, %1 : real
+            var r4 = r3.div(r2);//div %4 = %3, %2 : real
             return r4;//return %4 : real
       }
    }
@@ -21,36 +21,35 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 1.2;//const %1 = 1.2 : real
-            var r2 = 3.4;//const %2 = 3.4 : real
-            var r3 = 4.5;//const %3 = 4.5 : real
+            var r1 = new WyJS.Real(1.2);
+            var r2 = new WyJS.Real(3.4);
+            var r3 = new WyJS.Real(4.5);
             var r0 = diver(r1, r2, r3);//invoke %0 = (%1, %2, %3) RealDiv_Valid_7:diver : function(real,real,real) -> real
-            var r4 = 4.0;//const %4 = 4.0 : real
-            var r5 = 51.0;//const %5 = 51.0 : real
-            var r6 = r4 / r5;//div %6 = %4, %5 : real
-            if(r0  ==  r6){//ifeq %0, %6 goto label463 : real
-               control_flow_pc = 463;
+            var r4 = new WyJS.Real(4.0);
+            var r5 = new WyJS.Real(51.0);
+            var r6 = r4.div(r5);//div %6 = %4, %5 : real
+            if(WyJS.equals(r0, r6, true)){
+               control_flow_pc = 457;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 463:
-            var r8 = 1000.0;//const %8 = 1000.0 : real
-            var r9 = 300.0;//const %9 = 300.0 : real
-            var r10 = 400.0;//const %10 = 400.0 : real
+         case 457:
+            var r8 = new WyJS.Real(1000.0);
+            var r9 = new WyJS.Real(300.0);
+            var r10 = new WyJS.Real(400.0);
             var r7 = diver(r8, r9, r10);//invoke %7 = (%8, %9, %10) RealDiv_Valid_7:diver : function(real,real,real) -> real
-            var r11 = 1.0;//const %11 = 1.0 : real
-            var r12 = 120.0;//const %12 = 120.0 : real
-            var r13 = r11 / r12;//div %13 = %11, %12 : real
-            if(r7  ==  r13){//ifeq %7, %13 goto label464 : real
-               control_flow_pc = 464;
+            var r11 = new WyJS.Real(1.0);
+            var r12 = new WyJS.Real(120.0);
+            var r13 = r11.div(r12);//div %13 = %11, %12 : real
+            if(WyJS.equals(r7, r13, true)){
+               control_flow_pc = 458;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 464:
+         case 458:
       }
    }
 }
 
-test();

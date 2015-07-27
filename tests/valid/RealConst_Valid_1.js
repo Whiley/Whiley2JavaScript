@@ -14,12 +14,12 @@ function test(){//method() -> void
             var r0 = r4;//assign %0 = %4  : real
             var r5 = new WyJS.Real(12376523476123.989472426);
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 1180;
+               control_flow_pc = 1174;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1180:
+         case 1174:
       }
    }
 }

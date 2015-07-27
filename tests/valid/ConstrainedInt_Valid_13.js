@@ -6,7 +6,7 @@ function f(r0){//function(ConstrainedInt_Valid_13:code) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = r0.op;//fieldload %3 = %0 op : {int op,[int] payload}
+            var r3 = r0.fieldLoad("op");//fieldload %3 = %0 op : {int op,[int] payload}
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
             return r1;//return %1 : int
@@ -22,21 +22,20 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 1;//const %1 = 1 : int
-            var r2 = 1;//const %2 = 1 : int
-            var r3 = [r2];
-            var r4 = {op: r1, payload: r3};//newrecord %4 = (%1, %3) : {int op,[int] payload}
+            var r1 = new WyJS.Integer(1);
+            var r2 = new WyJS.Integer(1);
+            var r3 = new WyJS.List([r2]);
+            var r4 = new WyJS.Record(["op", "payload"], [r1, r3]);
             var r0 = f(r4);//invoke %0 = (%4) ConstrainedInt_Valid_13:f : function(ConstrainedInt_Valid_13:code) -> int
-            var r5 = 1;//const %5 = 1 : int
-            if(r0  ==  r5){//ifeq %0, %5 goto label2344 : int
-               control_flow_pc = 2344;
+            var r5 = new WyJS.Integer(1);
+            if(WyJS.equals(r0, r5, true)){
+               control_flow_pc = 2338;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2344:
+         case 2338:
       }
    }
 }
 
-test();

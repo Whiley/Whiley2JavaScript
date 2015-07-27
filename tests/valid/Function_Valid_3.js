@@ -24,12 +24,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r3 = f(r0);//invoke %3 = (%0) Function_Valid_3:f : function(int) -> int
             if(WyJS.equals(r3, r0, true)){
-               control_flow_pc = 1857;
+               control_flow_pc = 1851;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1857:
+         case 1851:
       }
    }
 }

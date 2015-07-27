@@ -23,12 +23,12 @@ function test(){//method() -> void
             var r0 = f();//invoke %0 = () ConstrainedInt_Valid_4:f : function() -> ConstrainedInt_Valid_4:nat
             var r1 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 521;
+               control_flow_pc = 515;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 521:
+         case 515:
       }
    }
 }

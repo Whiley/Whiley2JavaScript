@@ -21,18 +21,17 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 3;//const %1 = 3 : int
+            var r1 = new WyJS.Integer(3);
             var r0 = f(r1);//invoke %0 = (%1) ConstrainedInt_Valid_23:f : function(ConstrainedInt_Valid_23:cr2num) -> int
-            var r2 = 3;//const %2 = 3 : int
-            if(r0  ==  r2){//ifeq %0, %2 goto label2398 : int
-               control_flow_pc = 2398;
+            var r2 = new WyJS.Integer(3);
+            if(WyJS.equals(r0, r2, true)){
+               control_flow_pc = 2392;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2398:
+         case 2392:
       }
    }
 }
 
-test();

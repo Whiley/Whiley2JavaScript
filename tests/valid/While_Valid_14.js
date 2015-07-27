@@ -12,7 +12,7 @@ function extract(r0){//function([int]) -> int
             while(true){//loop (%1, %4, %5, %6)
                var r4 = r0.length;//lengthof %4 = %0 : [int]
                if(WyJS.gt(r1, r4, true)){
-                  control_flow_pc = 568;
+                  control_flow_pc = 562;
                   control_flow_repeat = true;
                   continue outer;
                }
@@ -20,7 +20,7 @@ function extract(r0){//function([int]) -> int
                var r6 = r1.add(r5);//add %6 = %1, %5 : int
                var r1 = r6;//assign %1 = %6  : int
             }
-         case 568:
+         case 562:
             return r1;//return %1 : int
       }
    }
@@ -46,18 +46,18 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(2345);
             var r13 = new WyJS.Integer(4);
             var r14 = new WyJS.Integer(5);
-            var r15 = [r4, r6, r7, r8, r10, r11, r12, r13, r14];
+            var r15 = new WyJS.List([r4, r6, r7, r8, r10, r11, r12, r13, r14]);
             var r2 = extract(r15);//invoke %2 = (%15) While_Valid_14:extract : function([int]) -> int
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
             var r16 = new WyJS.Integer(9);
             if(WyJS.equals(r0, r16, true)){
-               control_flow_pc = 569;
+               control_flow_pc = 563;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 569:
+         case 563:
       }
    }
 }

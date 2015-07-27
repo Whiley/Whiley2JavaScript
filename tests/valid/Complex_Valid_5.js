@@ -16,8 +16,8 @@ function EmptyBoard(){//function() -> Complex_Valid_5:EmptyBoard
             var r7 = new WyJS.Integer(0);
             var r8 = new WyJS.Integer(0);
             var r9 = new WyJS.Integer(0);
-            var r10 = [r1, r2, r3, r4, r5, r6, r7, r8, r9];
-            var r11 = {pieces: r0, move: r10};//newrecord %11 = (%0, %10) : {int move,[int] pieces}
+            var r10 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9]);
+            var r11 = new WyJS.Record(["pieces", "move"], [r0, r10]);
             return r11;//return %11 : {int move,[int] pieces}
       }
    }
@@ -31,7 +31,7 @@ function play(r0, r1, r2){//function(Complex_Valid_5:Board,Complex_Valid_5:Piece
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            r0.pieces = r2;//update %0.pieces[%2] = %1 : {int move,[int] pieces} -> {int move,[int] pieces}
+            r0.setValue("pieces", r2);//update %0.pieces[%2] = %1 : {int move,[int] pieces} -> {int move,[int] pieces}
             return r0;//return %0 : {int move,[int] pieces}
       }
    }
@@ -62,15 +62,15 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(0);
             var r14 = new WyJS.Integer(0);
             var r15 = new WyJS.Integer(0);
-            var r16 = [r7, r8, r9, r10, r11, r12, r13, r14, r15];
-            var r17 = {pieces: r6, move: r16};//newrecord %17 = (%6, %16) : {int move,[int] pieces}
+            var r16 = new WyJS.List([r7, r8, r9, r10, r11, r12, r13, r14, r15]);
+            var r17 = new WyJS.Record(["pieces", "move"], [r6, r16]);
             if(WyJS.equals(r0, r17, true)){
-               control_flow_pc = 1543;
+               control_flow_pc = 1537;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1543:
+         case 1537:
       }
    }
 }

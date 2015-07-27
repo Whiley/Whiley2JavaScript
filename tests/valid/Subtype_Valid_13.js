@@ -8,22 +8,22 @@ function test(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(5);
-            var r4 = {f: r2, g: r3};//newrecord %4 = (%2, %3) : {int f,int g}
+            var r4 = new WyJS.Record(["f", "g"], [r2, r3]);
             var r1 = r4;//assign %1 = %4  : {int f,int g}
             var r0 = r1;//assign %0 = %1  : {int f,int g}
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(2);
-            r0.g = r6;//update %0.g = %6 : {int f,int g} -> {int f,int g}
+            r0.setValue("g", r6);//update %0.g = %6 : {int f,int g} -> {int f,int g}
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
-            var r9 = {f: r7, g: r8};//newrecord %9 = (%7, %8) : {int f,int g}
+            var r9 = new WyJS.Record(["f", "g"], [r7, r8]);
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 499;
+               control_flow_pc = 493;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 499:
+         case 493:
       }
    }
 }

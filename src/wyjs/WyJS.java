@@ -137,7 +137,7 @@ public class WyJS {
 		} else if (o instanceof Codes.Return) {
 			write((Codes.Return) o);
 		} else if (o instanceof Codes.If) {
-			write((Codes.If) o);
+			write((Codes.If) o, false, null);
 		} else if (o instanceof Codes.Goto) {
 			write((Codes.Goto) o);
 		} else if (o instanceof Codes.AssertOrAssume) {
@@ -164,7 +164,9 @@ public class WyJS {
 			write((Codes.LengthOf) o);
 		} else if (o instanceof Codes.IndexOf) {
 			write((Codes.IndexOf) o);
-		} else {
+		} else if(o instanceof Codes.IfIs){
+			write((Codes.IfIs) o);
+		} else{
 			throw new Exception("Unknown object " + o.getClass());
 		}
 	}
@@ -174,6 +176,7 @@ public class WyJS {
 		// Find type of constant, make the appropriate type
 		String consts = getIndentBlock() + "var r" + o.target() + " = ";
 		if (o.assignedType() instanceof Type.Any) {
+			if(o.constant instanceof wyil.lang.Constant.Integer)
 			consts += "new WyJS.Any(" + o.constant + ");\n";
 		} else if (o.assignedType() instanceof Type.List) {
 			Type.List list = (Type.List) o.assignedType();
@@ -181,29 +184,30 @@ public class WyJS {
 		} else if (o.assignedType() instanceof Type.Bool) {
 			consts += o.constant + ";\n";
 		} else if (o.assignedType() instanceof Type.Record) {
-			Type.Record rec = (Type.Record) o.assignedType();
-			int i = 0;
-			String names = "[";
-			String values = "[";
-			for (String s : rec.keys()) {
-				i++;
-				if (i == rec.keys().size()) {
-					names += s + "]";
-				} else {
-					names += s + ", ";
-				}
-			}
-			for (Type s : rec.fields().values()) {
-				System.out.println(s);
-				i++;
-				if (i == rec.keys().size()) {
-					names += s + "]";
-				} else {
-					names += s + ", ";
-				}
-
-			}
-			consts = "new WyJS.Record(" + o.constant + ")";
+			//Should be declared as a new record
+//			Type.Record rec = (Type.Record) o.assignedType();
+//			int i = 0;
+//			String names = "[";
+//			String values = "[";
+//			for (String s : rec.keys()) {
+//				i++;
+//				if (i == rec.keys().size()) {
+//					names += s + "]";
+//				} else {
+//					names += s + ", ";
+//				}
+//			}
+//			for (Type s : rec.fields().values()) {
+//				System.out.println(s);
+//				i++;
+//				if (i == rec.keys().size()) {
+//					names += s + "]";
+//				} else {
+//					names += s + ", ";
+//				}
+//
+//			}
+//			consts = "new WyJS.Record(" + o.constant + ")";
 		} else if (o.assignedType() instanceof Type.Int) {
 			consts += "new WyJS.Integer(" + o.constant + ");\n";
 		} else if (o.assignedType() instanceof Type.Real) {
@@ -267,22 +271,23 @@ public class WyJS {
 		// TODO: Use Runtime file
 		// find type of rhs, make appropriate type
 		if(o.type() instanceof Type.List){
-			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
+			js.add(getIndentBlock() + "r" + o.target() + " = r" + o.operand(0)
 					+ ".clone();//" + o.toString() + "\n");
-		}else{
-			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
+		} else{
+			js.add(getIndentBlock() + "r" + o.target() + " = r" + o.operand(0)
 					+ ";//" + o.toString() + "\n");
 		}
 	}
 
 	private void write(Codes.Return o) {
+
 		if (o.operand != -1) {
 			js.add(getIndentBlock() + "return r" + o.operand + ";//"
 					+ o.toString() + "\n");
 		}
 	}
 
-	private void write(Codes.If o) throws Exception {
+	private void write(Codes.If o, boolean loop, Object nulzorz) throws Exception {
 		// TODO: Use Runtime file
 		// can use the appropriate .equals method depending on type of if
 		if (o.type instanceof Type.Bool) {
@@ -297,7 +302,7 @@ public class WyJS {
 						+ o.rightOperand + "){\n");
 				break;
 			default:
-				throw new Exception(o.op + "shouldnt be used with Bools?");
+				throw new Exception(o.op + " shouldnt be used with Bools?");
 			}
 		} else {
 			switch (o.op) {
@@ -331,6 +336,36 @@ public class WyJS {
 			}
 		}
 
+		indent++;
+		if(!loop){
+			js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
+					+ ";\n");
+			js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+			js.add(getIndentBlock() + "continue outer;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+		}else{
+			boolean write = false;
+			for (Code c : ((Codes.Loop) nulzorz).bytecodes()) {
+				if (write) {
+					write(c);
+				}
+				if (c instanceof Label) {
+					if (((Label) c).label == o.target) {
+						write = true;
+					} else {
+						write = false;
+					}
+				}
+			}
+			js.add(getIndentBlock() + "continue;\n");
+			indent--;
+			js.add(getIndentBlock() + "}\n");
+		}
+	}
+	
+	public void write(Codes.IfIs o) throws Exception{
+		js.add(getIndentBlock() + "if(WyJS.is(r" + o.operand + ", " + getType(o.rightOperand) + ")){\n");
 		indent++;
 		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
 				+ ";\n");
@@ -412,10 +447,10 @@ public class WyJS {
 				Index x;
 				if ((x = labelMap.get(((Codes.If) c).target)) != null) {
 					// within the loop
-					writeLoopIf(o, (Codes.If) c, labelMap);
+					write((Codes.If) c, true, o);
 				} else {
 					// jumping out, parse normally
-					write(c);
+					write((Codes.If) c, false, null);
 				}
 			} else if (c instanceof Codes.Goto) {
 				Index x;
@@ -437,7 +472,7 @@ public class WyJS {
 					}
 				} else {
 					// jumping out the loop, parse normally
-					write(c);
+					write((Codes.Goto) c);
 				}
 			} else if (c instanceof Codes.Assert) {
 				// TODO:
@@ -445,6 +480,7 @@ public class WyJS {
 				// TODO:
 			} else if (c instanceof Codes.Label) {
 				// should have already been written
+				break;
 			} else {
 				write(c);
 			}
@@ -454,91 +490,31 @@ public class WyJS {
 
 	}
 
-	private void writeLoopIf(Codes.Loop l, Codes.If o, Map<String, Index> map)
-			throws Exception {
-		// TODO: Hopefully can simplify and use the runtime file
-		String tar = o.target;// the name of the label we need
-		boolean write = false;
-
-		boolean inDeep = false;
-		if (o.type instanceof Type.Record) {
-			String ifop = getIfop(o, false);
-			Type.Record rec = (Type.Record) o.type;
-			js.add(getIndentBlock() + "if(");
-			int x = 0;
-			for (String s : rec.keys()) {
-				x++;
-				if (x == rec.keys().size()) {
-					js.add("r" + o.leftOperand + "." + s + ifop + " r"
-							+ o.rightOperand + "." + s + "){\n");
-				} else {
-					js.add("r" + o.leftOperand + "." + s + ifop + " r"
-							+ o.rightOperand + "." + s + " && ");
-				}
-			}
-		} else if (o.type instanceof Type.List) {
-			String ifop = getIfop(o, false);
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + ".length" + ifop
-					+ " r" + o.rightOperand + ".length){\n");
-			indent++;
-			js.add(getIndentBlock() + "var listComp = true;\n");
-			js.add(getIndentBlock() + "for(var i = 0; i<r" + o.leftOperand
-					+ ".length;i++){\n");
-			indent++;
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + "[i] "
-					+ getIfop(o, true) + " r" + o.rightOperand + "[i]){\n");
-			indent++;
-			js.add(getIndentBlock() + "listCompFail = false;\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-			js.add(getIndentBlock() + "if(listComp){\n");
-			inDeep = true;
-		} else {
-			js.add(getIndentBlock() + "if(r" + o.leftOperand + " "
-					+ getIfop(o, false) + " r" + o.rightOperand + "){\n");
-		}
-		indent++;
-		for (Code c : l.bytecodes()) {
-			if (write) {
-				write(c);
-			}
-			if (c instanceof Label) {
-				if (((Label) c).label == tar) {
-					write = true;
-				} else {
-					write = false;
-				}
-			}
-		}
-		if (inDeep) {
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-		}
-		js.add(getIndentBlock() + "continue;\n");
-		indent--;
-		js.add(getIndentBlock() + "}\n");
-	}
-
-	private void write(Codes.NewRecord o) {
+	private void write(Codes.NewRecord o) throws Exception {
 		// TODO: Use Runtime file
 		// Create a record object
 		String names = "[";
 		String values = "[";
+		String types = "[";
 		int i = 0;
 		for (String s : o.type().keys()) {
 			i++;
 			if (i == o.type().keys().size()) {
 				names += '"' + s + '"' + "]";
 				values += "r" + o.operand(i - 1) + "]";
+				types += getType(o.type().field(s)) + "]";
 			} else {
 				names += '"' + s + '"' + ", ";
 				values += "r" + o.operand(i - 1) + ", ";
+				types += getType(o.type().field(s)) + ", ";
 			}
 		}
+		
+		
+		String type = "new WyJS.Type.Record("+names+", " + types + ")";
+		
 		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Record("
-				+ names + ", " + values + ");\n");
+				+ names + ", " + values + ", " + type + ");\n");
 	}
 
 	private void write(Codes.FieldLoad o) {
@@ -574,12 +550,10 @@ public class WyJS {
 
 	}
 
-	public void write(Codes.NewList o) {
-		// TODO: Use Runtime file
-		// Create datatype using Runtime type
+	public void write(Codes.NewList o) throws Exception {
 		String values = "[";
 		if (o.operands().length == 0) {
-			values += "];\n";
+			values += "]";
 		} else {
 			int i = 0;
 			for (Integer x : o.operands()) {
@@ -592,55 +566,107 @@ public class WyJS {
 			}
 		}
 		
-		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.List(" + values + ");\n");
+		
+		String type = getType(o.type());
+		
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.List(" + values + ", " + type + ");\n");
 	}
 
 	public void write(Codes.LengthOf o) {
-		// TODO: Use Runtime file
-		// pretty much the same, just gotta change to get the right object
 		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
-				+ ".length;//" + o.toString() + "\n");
+				+ ".length();//" + o.toString() + "\n");
 	}
 
 	public void write(Codes.IndexOf o) {
-		// TODO: Use Runtime file
-		// use appropriate runtime method
 		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 				+ ".getValue(r" + o.operand(1) + ");\n");
 	}
 
-	private String getIfop(Codes.If opers, boolean invert) throws Exception {
-		if (opers.op == Codes.Comparator.EQ) {// ==
-			if (invert)
-				return " != ";
-			return " == ";
-		} else if (opers.op == Codes.Comparator.GT) {// >
-			if (invert)
-				return " <= ";
-			return " > ";
-		} else if (opers.op == Codes.Comparator.GTEQ) {// >=
-			if (invert)
-				return " < ";
-			return " >= ";
-		} else if (opers.op == Codes.Comparator.LT) {// <
-			if (invert)
-				return " >= ";
-			return " < ";
-		} else if (opers.op == Codes.Comparator.LTEQ) {// <=
-			if (invert)
-				return " > ";
-			return " <= ";
-		} else if (opers.op == Codes.Comparator.NEQ) {// !=
-			if (invert)
-				return " == ";
-			return " != ";
-		} else {
-			throw new Exception(opers.op + "not supported?");
-		}
-	}
-
 	private String parseLabel(String label) {
 		return label.substring(5);
+	}
+	
+	private String getType(Type t) throws Exception{
+		if(t instanceof Type.Any){
+			//return "new WyJS.Type.Any();";
+		} else if(t instanceof Type.Bool){
+			return "new WyJS.Type.Bool()";
+		}else if(t instanceof Type.List){
+			return "new WyJS.Type.List(" + getType(((Type.List) t).element()) + ")";
+		}else if(t instanceof Type.Int){
+			return "new WyJS.Type.Int()";
+		}else if(t instanceof Type.Real){
+			return "new WyJS.Type.Real()";
+		}else if(t instanceof Type.Record){
+			Type.Record rec = (Type.Record) t;
+			String names = "[";
+			String types = "[";
+			int i = 0;
+			for(String s: rec.keys()){
+				i++;
+				if(i == rec.keys().size()){
+					names += '"' + s + '"' + "]";
+					types += getType(rec.field(s)) + "]";
+				}else{
+					names += '"' + s + '"' + ", ";
+					types += getType(rec.field(s)) + ", ";
+				}
+			}
+			return "new WyJS.Type.Record("+names+", " + types + ")";
+		}else if(t instanceof Type.Null){
+			return "new WyJS.Type.Null()";
+		}else if(t instanceof Type.Void){
+			return "new WyJS.Type.Void()";
+		}else if(t instanceof Type.Union){
+			Type.Union union = (Type.Union) t;
+			String types = "[";
+			int i = 0;
+			for(Type ty: union.bounds()){
+				i++;
+				if(i == union.bounds().size()){
+					types += getType(ty) + "]";
+				}else{
+					types += getType(ty) + ", ";
+				}
+			}
+			return "new WyJS.Type.Union(" + types + ")";
+		}else {
+			//throw new Exception("Unknown Type in getType " + t);
+		}
+		return "";
+	}
+	
+	//Do we even need this?
+	private String getConstType(wyil.lang.Constant con){
+		if(con instanceof wyil.lang.Constant.Integer){
+			return "new WyJS.Type.Int";
+		}else if(con instanceof wyil.lang.Constant.Bool){
+			return "new WyJS.Type.Bool";
+		}else if(con instanceof wyil.lang.Constant.Byte){
+			
+		}else if(con instanceof wyil.lang.Constant.Decimal){
+			return "new WyJS.Type.Real";
+		}else if(con instanceof wyil.lang.Constant.Lambda){
+			
+		}else if(con instanceof wyil.lang.Constant.List){
+			wyil.lang.Constant.List tmp = (wyil.lang.Constant.List)con;
+			tmp.type().element();
+			return "new WyJS.List('" + tmp.type().element() +"')";
+		}else if(con instanceof wyil.lang.Constant.Null){
+			return "new WyJS.Type.Null";
+		}else if(con instanceof wyil.lang.Constant.Rational){
+			
+		}else if(con instanceof wyil.lang.Constant.Record){
+			wyil.lang.Constant.Record tmp = (wyil.lang.Constant.Record)con;
+		}else if(con instanceof wyil.lang.Constant.Tuple){
+			
+		}else if(con instanceof wyil.lang.Constant.Type){
+			
+		}else{
+			
+		}
+		
+		return "";
 	}
 
 	private String getIndentBlock() {

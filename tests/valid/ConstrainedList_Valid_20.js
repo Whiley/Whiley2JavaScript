@@ -18,7 +18,7 @@ function get(r0, r1){//function([ConstrainedList_Valid_20:nat],int) -> int
             control_flow_repeat = true;
             continue outer;//goto label175
          case 174:
-            var r4 = r0[r1];
+            var r4 = r0.getValue(r1);
             return r4;//return %4 : int
          case 175:
       }
@@ -39,9 +39,9 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(7);
             var r6 = new WyJS.Integer(9);
             var r7 = new WyJS.Integer(11);
-            var r8 = [r2, r3, r4, r5, r6, r7];
-            var r1 = r8;//assign %1 = %8  : [int]
-            var r0 = r1;//assign %0 = %1  : [int]
+            var r8 = new WyJS.List([r2, r3, r4, r5, r6, r7]);
+            var r1 = r8.clone();//assign %1 = %8  : [int]
+            var r0 = r1.clone();//assign %0 = %1  : [int]
             var r10 = new WyJS.Integer(0);
             var r9 = get(r0, r10);//invoke %9 = (%0, %10) ConstrainedList_Valid_20:get : function([ConstrainedList_Valid_20:nat],int) -> int
             var r11 = new WyJS.Integer(1);

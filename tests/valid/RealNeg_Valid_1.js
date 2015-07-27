@@ -24,32 +24,32 @@ function test(){//method() -> void
             var r0 = f(r1);//invoke %0 = (%1) RealNeg_Valid_1:f : function(real) -> real
             var r2 = new WyJS.Real(-1.2);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1268;
+               control_flow_pc = 1262;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1268:
+         case 1262:
             var r4 = new WyJS.Real(0.00001);
             var r3 = f(r4);//invoke %3 = (%4) RealNeg_Valid_1:f : function(real) -> real
             var r5 = new WyJS.Real(-0.00001);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 1269;
+               control_flow_pc = 1263;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1269:
+         case 1263:
             var r7 = new WyJS.Real(5632.0);
             var r6 = f(r7);//invoke %6 = (%7) RealNeg_Valid_1:f : function(real) -> real
             var r8 = new WyJS.Real(-5632.0);
             if(WyJS.equals(r6, r8, true)){
-               control_flow_pc = 1270;
+               control_flow_pc = 1264;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1270:
+         case 1264:
       }
    }
 }

@@ -15,12 +15,12 @@ function test(){//method() -> void
             var r6 = true;
             var r7 = new WyJS.Record(["code", "flag"], [r5, r6]);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 0;
+               control_flow_pc = 1459;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 1459:
             var r8 = false;
             var r9 = false;
             r0.setValue("flag", r9);//update %0.flag = %9 : {int code,bool flag} -> {int code,bool flag}
@@ -28,12 +28,12 @@ function test(){//method() -> void
             var r11 = false;
             var r12 = new WyJS.Record(["code", "flag"], [r10, r11]);
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 1;
+               control_flow_pc = 1460;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1:
+         case 1460:
       }
    }
 }

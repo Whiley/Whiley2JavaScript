@@ -9,17 +9,17 @@ function f(r0){//method([int]) -> void
             var r3 = r0.length;//lengthof %3 = %0 : [int]
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            var r4 = 1;//const %4 = 1 : int
-            var r5 = r1 - r4;//sub %5 = %1, %4 : int
-            var r6 = r0[r5];
-            var r7 = 3;//const %7 = 3 : int
-            if(r6  ==  r7){//ifeq %6, %7 goto label1186 : int
-               control_flow_pc = 1186;
+            var r4 = new WyJS.Integer(1);
+            var r5 = r1.sub(r4);//sub %5 = %1, %4 : int
+            var r6 = r0.getValue(r5);
+            var r7 = new WyJS.Integer(3);
+            if(WyJS.equals(r6, r7, true)){
+               control_flow_pc = 1180;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1186:
+         case 1180:
       }
    }
 }
@@ -32,15 +32,14 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = 1;//const %2 = 1 : int
-            var r3 = 2;//const %3 = 2 : int
-            var r4 = 3;//const %4 = 3 : int
-            var r5 = [r2, r3, r4];
-            var r1 = r5;//assign %1 = %5  : [int]
-            var r0 = r1;//assign %0 = %1  : [int]
+            var r2 = new WyJS.Integer(1);
+            var r3 = new WyJS.Integer(2);
+            var r4 = new WyJS.Integer(3);
+            var r5 = new WyJS.List([r2, r3, r4]);
+            var r1 = r5.clone();//assign %1 = %5  : [int]
+            var r0 = r1.clone();//assign %0 = %1  : [int]
             f(r0);//invoke %(%0) ListGenerator_Valid_2:f : method([int]) -> void
       }
    }
 }
 
-test();

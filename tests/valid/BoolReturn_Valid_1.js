@@ -23,16 +23,16 @@ function test(){//method() -> void
             var r0 = pred();//invoke %0 = () BoolReturn_Valid_1:pred : function() -> bool
             var r1 = true;
             if(r0 === r1){
-               control_flow_pc = 1192;
+               control_flow_pc = 1186;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1193;
+            control_flow_pc = 1187;
             control_flow_repeat = true;
-            continue outer;//goto label1193
-         case 1192:
+            continue outer;//goto label1187
+         case 1186:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1193:
+         case 1187:
       }
    }
 }

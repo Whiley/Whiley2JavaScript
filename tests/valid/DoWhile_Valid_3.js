@@ -17,34 +17,34 @@ function test(){//method() -> void
                   var r0 = r5;//assign %0 = %5  : int
                   var r6 = new WyJS.Integer(5);
                   if(WyJS.gt(r0, r6, true)){
-                     control_flow_pc = 475;
+                     control_flow_pc = 469;
                      control_flow_repeat = true;
                      continue outer;
                   }
                   continue;
                }
-               control_flow_pc = 475;
+               control_flow_pc = 469;
                control_flow_repeat = true;
-               continue outer;//goto label475
+               continue outer;//goto label469
                var r4 = new WyJS.Integer(1);
                var r5 = r0.add(r4);//add %5 = %0, %4 : int
                var r0 = r5;//assign %0 = %5  : int
                var r6 = new WyJS.Integer(5);
                if(WyJS.gt(r0, r6, true)){
-                  control_flow_pc = 475;
+                  control_flow_pc = 469;
                   control_flow_repeat = true;
                   continue outer;
                }
             }
-         case 475:
+         case 469:
             var r7 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 476;
+               control_flow_pc = 470;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 476:
+         case 470:
       }
    }
 }

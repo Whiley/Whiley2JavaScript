@@ -6,68 +6,51 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = 1;//const %3 = 1 : int
-            var r4 = 2;//const %4 = 2 : int
-            var r5 = 4;//const %5 = 4 : int
-            var r6 = [r3, r4, r5];
-            var r2 = r6;//assign %2 = %6  : [int]
-            var r0 = r2;//assign %0 = %2  : [int]
-            var r7 = r0;//assign %7 = %0  : [int]
-            var r1 = r7;//assign %1 = %7  : [int]
-            var r8 = 3;//const %8 = 3 : int
-            var r9 = 2;//const %9 = 2 : int
-            var r10 = 3;//const %10 = 3 : int
-            r1[r9] = r10;//update %1[%9] = %10 : [int] -> [int]
-            var r11 = 2;//const %11 = 2 : int
-            var r12 = r1[r11];
+            var r3 = new WyJS.Integer(1);
+            var r4 = new WyJS.Integer(2);
+            var r5 = new WyJS.Integer(4);
+            var r6 = new WyJS.List([r3, r4, r5]);
+            var r2 = r6.clone();//assign %2 = %6  : [int]
+            var r0 = r2.clone();//assign %0 = %2  : [int]
+            var r7 = r0.clone();//assign %7 = %0  : [int]
+            var r1 = r7.clone();//assign %1 = %7  : [int]
+            var r8 = new WyJS.Integer(3);
+            var r9 = new WyJS.Integer(2);
+            var r10 = new WyJS.Integer(3);
+            r1.setValue(r9, r10);//update %1[%9] = %10 : [int] -> [int]
+            var r11 = new WyJS.Integer(2);
+            var r12 = r1.getValue(r11);
             var r13 = r0.length;//lengthof %13 = %0 : [int]
-            if(r12  ==  r13){//ifeq %12, %13 goto label2438 : int
-               control_flow_pc = 2438;
+            if(WyJS.equals(r12, r13, true)){
+               control_flow_pc = 2432;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2438:
-            var r14 = 1;//const %14 = 1 : int
-            var r15 = 2;//const %15 = 2 : int
-            var r16 = 4;//const %16 = 4 : int
-            var r17 = [r14, r15, r16];
-            if(r0.length ==  r17.length){
-               var listComp = true;
-               for(var i = 0; i<r0.length;i++){
-                  if(r0[i]  !=  r17[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %0, %17 goto label2439 : [int]
-                  control_flow_pc = 2439;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+         case 2432:
+            var r14 = new WyJS.Integer(1);
+            var r15 = new WyJS.Integer(2);
+            var r16 = new WyJS.Integer(4);
+            var r17 = new WyJS.List([r14, r15, r16]);
+            if(WyJS.equals(r0, r17, true)){
+               control_flow_pc = 2433;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2439:
-            var r18 = 1;//const %18 = 1 : int
-            var r19 = 2;//const %19 = 2 : int
-            var r20 = 3;//const %20 = 3 : int
-            var r21 = [r18, r19, r20];
-            if(r1.length ==  r21.length){
-               var listComp = true;
-               for(var i = 0; i<r1.length;i++){
-                  if(r1[i]  !=  r21[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %1, %21 goto label2440 : [int]
-                  control_flow_pc = 2440;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+         case 2433:
+            var r18 = new WyJS.Integer(1);
+            var r19 = new WyJS.Integer(2);
+            var r20 = new WyJS.Integer(3);
+            var r21 = new WyJS.List([r18, r19, r20]);
+            if(WyJS.equals(r1, r21, true)){
+               control_flow_pc = 2434;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2440:
+         case 2434:
       }
    }
 }
 
-test();

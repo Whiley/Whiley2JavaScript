@@ -25,34 +25,34 @@ function test(){//method() -> void
             var r0 = f(r1, r2);//invoke %0 = (%1, %2) IntDiv_Valid_1:f : function(int,int) -> int
             var r3 = new WyJS.Integer(5);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1;
+               control_flow_pc = 2315;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1:
+         case 2315:
             var r5 = new WyJS.Integer(9);
             var r6 = new WyJS.Integer(3);
             var r4 = f(r5, r6);//invoke %4 = (%5, %6) IntDiv_Valid_1:f : function(int,int) -> int
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r4, r7, true)){
-               control_flow_pc = 2;
+               control_flow_pc = 2316;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
+         case 2316:
             var r9 = new WyJS.Integer(10);
             var r10 = new WyJS.Integer(3);
             var r8 = f(r9, r10);//invoke %8 = (%9, %10) IntDiv_Valid_1:f : function(int,int) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r8, r11, true)){
-               control_flow_pc = 3;
+               control_flow_pc = 2317;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 3:
+         case 2317:
       }
    }
 }

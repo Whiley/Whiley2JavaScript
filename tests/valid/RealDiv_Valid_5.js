@@ -6,8 +6,8 @@ function g(r0){//function(real) -> real
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 3.0;//const %1 = 3.0 : real
-            var r2 = r0 / r1;//div %2 = %0, %1 : real
+            var r1 = new WyJS.Real(3.0);
+            var r2 = r0.div(r1);//div %2 = %0, %1 : real
             return r2;//return %2 : real
       }
    }
@@ -21,20 +21,19 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 0.234;//const %1 = 0.234 : real
+            var r1 = new WyJS.Real(0.234);
             var r0 = g(r1);//invoke %0 = (%1) RealDiv_Valid_5:g : function(real) -> real
-            var r2 = 0.234;//const %2 = 0.234 : real
-            var r3 = 3.0;//const %3 = 3.0 : real
-            var r4 = r2 / r3;//div %4 = %2, %3 : real
-            if(r0  ==  r4){//ifeq %0, %4 goto label459 : real
-               control_flow_pc = 459;
+            var r2 = new WyJS.Real(0.234);
+            var r3 = new WyJS.Real(3.0);
+            var r4 = r2.div(r3);//div %4 = %2, %3 : real
+            if(WyJS.equals(r0, r4, true)){
+               control_flow_pc = 453;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 459:
+         case 453:
       }
    }
 }
 
-test();

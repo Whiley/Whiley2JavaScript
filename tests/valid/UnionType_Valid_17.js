@@ -38,29 +38,29 @@ function test(){//method() -> void
             var r3 = f(r0);//invoke %3 = (%0) UnionType_Valid_17:f : method(int) -> int
             var r4 = new WyJS.Integer(123);
             if(WyJS.equals(r3, r4, true)){
-               control_flow_pc = 420;
+               control_flow_pc = 414;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 420:
+         case 414:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
-            var r8 = [r5, r6, r7];
-            var r0 = r8;//assign %0 = %8  : [int]
+            var r8 = new WyJS.List([r5, r6, r7]);
+            var r0 = r8.clone();//assign %0 = %8  : [int]
             var r9 = g(r0);//invoke %9 = (%0) UnionType_Valid_17:g : method([int]) -> [int]
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(2);
             var r12 = new WyJS.Integer(3);
-            var r13 = [r10, r11, r12];
+            var r13 = new WyJS.List([r10, r11, r12]);
             if(WyJS.equals(r9, r13, true)){
-               control_flow_pc = 421;
+               control_flow_pc = 415;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 421:
+         case 415:
       }
    }
 }

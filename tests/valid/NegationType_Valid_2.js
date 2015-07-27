@@ -23,12 +23,12 @@ function test(){//method() -> void
             var r0 = f(r1);//invoke %0 = (%1) NegationType_Valid_2:f : function(int) -> !null
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1631;
+               control_flow_pc = 1625;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1631:
+         case 1625:
       }
    }
 }

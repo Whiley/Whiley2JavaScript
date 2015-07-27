@@ -1,12 +1,8 @@
 
 
-type tac1tup is {int f1, int f2} where f1 < f2
+type unionrecord is {int|real x, int|null y} 
 
-function f() -> tac1tup:
-    return {f1: 2, f2: 3}
-
-public export method test() -> void:
-    tac1tup x = f()
-    x.f1 = x.f2 - 2
-    assert x.f1 != x.f2
-    assume x == {f1: 1, f2: 3}
+public method test() -> void:
+    unionrecord x = {x: 1, y: null}
+    unionrecord y = {x: 1.5, y: 1}
+    unionrecord z = {x: 1.7, y: null}

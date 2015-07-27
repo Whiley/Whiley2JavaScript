@@ -52,17 +52,17 @@ function f(r0){//function(ConstrainedList_Valid_11:state) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = r0.pos;//fieldload %1 = %0 pos : {[int] input,int pos}
-            var r2 = r0.input;//fieldload %2 = %0 input : {[int] input,int pos}
+            var r1 = r0.fieldLoad("pos");//fieldload %1 = %0 pos : {[int] input,int pos}
+            var r2 = r0.fieldLoad("input");//fieldload %2 = %0 input : {[int] input,int pos}
             var r3 = r2.length;//lengthof %3 = %2 : [int]
             if(WyJS.gt(r1, r3, true)){
                control_flow_pc = 150;
                control_flow_repeat = true;
                continue outer;
             }
-            var r5 = r0.input;//fieldload %5 = %0 input : {[int] input,int pos}
-            var r6 = r0.pos;//fieldload %6 = %0 pos : {[int] input,int pos}
-            var r7 = r5[r6];
+            var r5 = r0.fieldLoad("input");//fieldload %5 = %0 input : {[int] input,int pos}
+            var r6 = r0.fieldLoad("pos");//fieldload %6 = %0 pos : {[int] input,int pos}
+            var r7 = r5.getValue(r6);
             var r4 = isLetter(r7);//invoke %4 = (%7) ConstrainedList_Valid_11:isLetter : function(int) -> bool
             var r8 = true;
             if(r4 === r8){
@@ -74,9 +74,9 @@ function f(r0){//function(ConstrainedList_Valid_11:state) -> int
             control_flow_repeat = true;
             continue outer;//goto label150
          case 151:
-            var r9 = r0.input;//fieldload %9 = %0 input : {[int] input,int pos}
-            var r10 = r0.pos;//fieldload %10 = %0 pos : {[int] input,int pos}
-            var r11 = r9[r10];
+            var r9 = r0.fieldLoad("input");//fieldload %9 = %0 input : {[int] input,int pos}
+            var r10 = r0.fieldLoad("pos");//fieldload %10 = %0 pos : {[int] input,int pos}
+            var r11 = r9.getValue(r10);
             return r11;//return %11 : int
          case 150:
             var r12 = new WyJS.Integer(32);
@@ -95,7 +95,7 @@ function test(){//method() -> void
          case -1 :
             var r1 = new WyJS.List([104,101,108,108,111]);
             var r2 = new WyJS.Integer(0);
-            var r3 = {input: r1, pos: r2};//newrecord %3 = (%1, %2) : {[int+] input,int pos}
+            var r3 = new WyJS.Record(["input", "pos"], [r1, r2]);
             var r0 = f(r3);//invoke %0 = (%3) ConstrainedList_Valid_11:f : function(ConstrainedList_Valid_11:state) -> int
             var r4 = new WyJS.Integer(104);
             if(WyJS.equals(r0, r4, true)){

@@ -29,13 +29,13 @@ function inc(r0){//function([ConstrainedList_Valid_22:nat]) -> [ConstrainedList_
                   var r2 = r19;//assign %2 = %19  : int
                   continue;
                }
-               var r10 = r0[r1];
+               var r10 = r0.getValue(r1);
                var r11 = new WyJS.Integer(1);
                var r12 = r10.add(r11);//add %12 = %10, %11 : int
-               var r13 = r0[r1];
+               var r13 = r0.getValue(r1);
                var r14 = new WyJS.Integer(1);
                var r15 = r13.add(r14);//add %15 = %13, %14 : int
-               r0[r1] = r15;//update %0[%1] = %15 : [int] -> [int]
+               r0.setValue(r1, r15);//update %0[%1] = %15 : [int] -> [int]
                var r16 = new WyJS.Integer(1);
                var r17 = r1.add(r16);//add %17 = %1, %16 : int
                var r1 = r17;//assign %1 = %17  : int
@@ -72,10 +72,10 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(0);
-            var r2 = [r1];
+            var r2 = new WyJS.List([r1]);
             var r0 = inc(r2);//invoke %0 = (%2) ConstrainedList_Valid_22:inc : function([ConstrainedList_Valid_22:nat]) -> [ConstrainedList_Valid_22:nat]
             var r3 = new WyJS.Integer(1);
-            var r4 = [r3];
+            var r4 = new WyJS.List([r3]);
             if(WyJS.equals(r0, r4, true)){
                control_flow_pc = 198;
                control_flow_repeat = true;
@@ -86,12 +86,12 @@ function test(){//method() -> void
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
             var r8 = new WyJS.Integer(3);
-            var r9 = [r6, r7, r8];
+            var r9 = new WyJS.List([r6, r7, r8]);
             var r5 = inc(r9);//invoke %5 = (%9) ConstrainedList_Valid_22:inc : function([ConstrainedList_Valid_22:nat]) -> [ConstrainedList_Valid_22:nat]
             var r10 = new WyJS.Integer(2);
             var r11 = new WyJS.Integer(3);
             var r12 = new WyJS.Integer(4);
-            var r13 = [r10, r11, r12];
+            var r13 = new WyJS.List([r10, r11, r12]);
             if(WyJS.equals(r5, r13, true)){
                control_flow_pc = 199;
                control_flow_repeat = true;
@@ -110,7 +110,7 @@ function test(){//method() -> void
             var r23 = new WyJS.Integer(2);
             var r24 = new WyJS.Integer(1);
             var r25 = new WyJS.Integer(0);
-            var r26 = [r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25];
+            var r26 = new WyJS.List([r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25]);
             var r14 = inc(r26);//invoke %14 = (%26) ConstrainedList_Valid_22:inc : function([ConstrainedList_Valid_22:nat]) -> [ConstrainedList_Valid_22:nat]
             var r27 = new WyJS.Integer(11);
             var r28 = new WyJS.Integer(10);
@@ -123,7 +123,7 @@ function test(){//method() -> void
             var r35 = new WyJS.Integer(3);
             var r36 = new WyJS.Integer(2);
             var r37 = new WyJS.Integer(1);
-            var r38 = [r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37];
+            var r38 = new WyJS.List([r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37]);
             if(WyJS.equals(r14, r38, true)){
                control_flow_pc = 200;
                control_flow_repeat = true;

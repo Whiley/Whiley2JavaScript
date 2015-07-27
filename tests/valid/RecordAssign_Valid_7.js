@@ -7,7 +7,7 @@ function f(r0){//function(RecordAssign_Valid_7:i8) -> RecordAssign_Valid_7:bytes
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(2);
-            var r2 = {b2: r0, b1: r1};//newrecord %2 = (%0, %1) : {int b1,int b2}
+            var r2 = new WyJS.Record(["b2", "b1"], [r0, r1]);
             return r2;//return %2 : {int b1,int b2}
       }
    }
@@ -29,26 +29,26 @@ function test(){//method() -> void
             var r1 = r4;//assign %1 = %4  : {int b1,int b2}
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
-            var r8 = {b2: r6, b1: r7};//newrecord %8 = (%6, %7) : {int b1,int b2}
+            var r8 = new WyJS.Record(["b2", "b1"], [r6, r7]);
             if(WyJS.equals(r1, r8, true)){
-               control_flow_pc = 1239;
+               control_flow_pc = 1233;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1239:
-            var r9 = {b2: r0, b1: r0};//newrecord %9 = (%0, %0) : {int b1,int b2}
+         case 1233:
+            var r9 = new WyJS.Record(["b2", "b1"], [r0, r0]);
             var r1 = r9;//assign %1 = %9  : {int b1,int b2}
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(1);
-            var r12 = {b2: r10, b1: r11};//newrecord %12 = (%10, %11) : {int b1,int b2}
+            var r12 = new WyJS.Record(["b2", "b1"], [r10, r11]);
             if(WyJS.equals(r1, r12, true)){
-               control_flow_pc = 1240;
+               control_flow_pc = 1234;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1240:
+         case 1234:
       }
    }
 }

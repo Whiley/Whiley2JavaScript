@@ -6,7 +6,7 @@ function f(r0){//function(UnionType_Valid_19:tupper) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = r0.op;//fieldload %1 = %0 op : {int|[int] il,int op}
+            var r1 = r0.fieldLoad("op");//fieldload %1 = %0 op : {int|[int] il,int op}
             return r1;//return %1 : int
       }
    }
@@ -22,18 +22,18 @@ function test(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(1);
-            var r4 = {op: r2, il: r3};//newrecord %4 = (%2, %3) : {int il,int op}
+            var r4 = new WyJS.Record(["op", "il"], [r2, r3]);
             var r1 = r4;//assign %1 = %4  : {int il,int op}
             var r0 = r1;//assign %0 = %1  : {int|[int] il,int op}
             var r5 = f(r0);//invoke %5 = (%0) UnionType_Valid_19:f : function(UnionType_Valid_19:tupper) -> int
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 427;
+               control_flow_pc = 421;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 427:
+         case 421:
       }
    }
 }

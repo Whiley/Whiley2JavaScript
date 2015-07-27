@@ -6,109 +6,76 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = 1;//const %3 = 1 : int
-            var r4 = 2;//const %4 = 2 : int
-            var r5 = 3;//const %5 = 3 : int
-            var r6 = [r3, r4, r5];
-            var r7 = 0;//const %7 = 0 : int
-            var r8 = [r7];
-            var r9 = [r6, r8];
-            var r2 = r9;//assign %2 = %9  : [[int]]
-            var r0 = r2;//assign %0 = %2  : [[int]]
-            var r10 = r0;//assign %10 = %0  : [[int]]
-            var r1 = r10;//assign %1 = %10  : [[int]]
-            var r11 = 3;//const %11 = 3 : int
-            var r12 = 4;//const %12 = 4 : int
-            var r13 = 5;//const %13 = 5 : int
-            var r14 = [r11, r12, r13];
-            var r15 = 0;//const %15 = 0 : int
-            var r16 = 3;//const %16 = 3 : int
-            var r17 = 4;//const %17 = 4 : int
-            var r18 = 5;//const %18 = 5 : int
-            var r19 = [r16, r17, r18];
-            r1[r15] = r19;//update %1[%15] = %19 : [[int]] -> [[int]]
-            var r20 = 0;//const %20 = 0 : int
-            var r21 = r0[r20];
-            var r22 = 1;//const %22 = 1 : int
-            var r23 = 2;//const %23 = 2 : int
-            var r24 = 3;//const %24 = 3 : int
-            var r25 = [r22, r23, r24];
-            if(r21.length ==  r25.length){
-               var listComp = true;
-               for(var i = 0; i<r21.length;i++){
-                  if(r21[i]  !=  r25[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %21, %25 goto label2446 : [int]
-                  control_flow_pc = 2446;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+            var r3 = new WyJS.Integer(1);
+            var r4 = new WyJS.Integer(2);
+            var r5 = new WyJS.Integer(3);
+            var r6 = new WyJS.List([r3, r4, r5]);
+            var r7 = new WyJS.Integer(0);
+            var r8 = new WyJS.List([r7]);
+            var r9 = new WyJS.List([r6, r8]);
+            var r2 = r9.clone();//assign %2 = %9  : [[int]]
+            var r0 = r2.clone();//assign %0 = %2  : [[int]]
+            var r10 = r0.clone();//assign %10 = %0  : [[int]]
+            var r1 = r10.clone();//assign %1 = %10  : [[int]]
+            var r11 = new WyJS.Integer(3);
+            var r12 = new WyJS.Integer(4);
+            var r13 = new WyJS.Integer(5);
+            var r14 = new WyJS.List([r11, r12, r13]);
+            var r15 = new WyJS.Integer(0);
+            var r16 = new WyJS.Integer(3);
+            var r17 = new WyJS.Integer(4);
+            var r18 = new WyJS.Integer(5);
+            var r19 = new WyJS.List([r16, r17, r18]);
+            r1.setValue(r15, r19);//update %1[%15] = %19 : [[int]] -> [[int]]
+            var r20 = new WyJS.Integer(0);
+            var r21 = r0.getValue(r20);
+            var r22 = new WyJS.Integer(1);
+            var r23 = new WyJS.Integer(2);
+            var r24 = new WyJS.Integer(3);
+            var r25 = new WyJS.List([r22, r23, r24]);
+            if(WyJS.equals(r21, r25, true)){
+               control_flow_pc = 2440;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2446:
-            var r26 = 1;//const %26 = 1 : int
-            var r27 = r0[r26];
-            var r28 = 0;//const %28 = 0 : int
-            var r29 = [r28];
-            if(r27.length ==  r29.length){
-               var listComp = true;
-               for(var i = 0; i<r27.length;i++){
-                  if(r27[i]  !=  r29[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %27, %29 goto label2447 : [int]
-                  control_flow_pc = 2447;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+         case 2440:
+            var r26 = new WyJS.Integer(1);
+            var r27 = r0.getValue(r26);
+            var r28 = new WyJS.Integer(0);
+            var r29 = new WyJS.List([r28]);
+            if(WyJS.equals(r27, r29, true)){
+               control_flow_pc = 2441;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2447:
-            var r30 = 0;//const %30 = 0 : int
-            var r31 = r1[r30];
-            var r32 = 3;//const %32 = 3 : int
-            var r33 = 4;//const %33 = 4 : int
-            var r34 = 5;//const %34 = 5 : int
-            var r35 = [r32, r33, r34];
-            if(r31.length ==  r35.length){
-               var listComp = true;
-               for(var i = 0; i<r31.length;i++){
-                  if(r31[i]  !=  r35[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %31, %35 goto label2448 : [int]
-                  control_flow_pc = 2448;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+         case 2441:
+            var r30 = new WyJS.Integer(0);
+            var r31 = r1.getValue(r30);
+            var r32 = new WyJS.Integer(3);
+            var r33 = new WyJS.Integer(4);
+            var r34 = new WyJS.Integer(5);
+            var r35 = new WyJS.List([r32, r33, r34]);
+            if(WyJS.equals(r31, r35, true)){
+               control_flow_pc = 2442;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2448:
-            var r36 = 1;//const %36 = 1 : int
-            var r37 = r1[r36];
-            var r38 = 0;//const %38 = 0 : int
-            var r39 = [r38];
-            if(r37.length ==  r39.length){
-               var listComp = true;
-               for(var i = 0; i<r37.length;i++){
-                  if(r37[i]  !=  r39[i]){
-                     listCompFail = false;
-                  }
-               }
-               if(listComp){//ifeq %37, %39 goto label2449 : [int]
-                  control_flow_pc = 2449;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+         case 2442:
+            var r36 = new WyJS.Integer(1);
+            var r37 = r1.getValue(r36);
+            var r38 = new WyJS.Integer(0);
+            var r39 = new WyJS.List([r38]);
+            if(WyJS.equals(r37, r39, true)){
+               control_flow_pc = 2443;
+               control_flow_repeat = true;
+               continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2449:
+         case 2443:
       }
    }
 }
 
-test();

@@ -1,0 +1,42 @@
+function f(r0){//function(ConstrainedRecord_Valid_3:btup) -> [int]
+   var control_flow_repeat = true;
+   var control_flow_pc = -1;
+   outer:
+   while(control_flow_repeat){
+      control_flow_repeat = false
+      switch(control_flow_pc){
+         case -1 :
+            var r1 = r0.fieldLoad("op");//fieldload %1 = %0 op : {int index,int op}
+            var r2 = r0.fieldLoad("index");//fieldload %2 = %0 index : {int index,int op}
+            var r3 = new WyJS.List([r1, r2], new WyJS.List('int'));
+            return r3;//return %3 : [int]
+      }
+   }
+}
+
+function test(){//method() -> void
+   var control_flow_repeat = true;
+   var control_flow_pc = -1;
+   outer:
+   while(control_flow_repeat){
+      control_flow_repeat = false
+      switch(control_flow_pc){
+         case -1 :
+            var r1 = new WyJS.Integer(2);
+            var r2 = new WyJS.Integer(1);
+            var r3 = new WyJS.Record(["op", "index"], [r1, r2], new WyJS.Type.Record(["op", "index"], '{int index,int op}'));
+            var r0 = f(r3);//invoke %0 = (%3) ConstrainedRecord_Valid_3:f : function(ConstrainedRecord_Valid_3:btup) -> [int]
+            var r4 = new WyJS.Integer(1);
+            var r5 = new WyJS.Integer(2);
+            var r6 = new WyJS.List([r4, r5], new WyJS.List('int'));
+            if(WyJS.equals(r0, r6, true)){
+               control_flow_pc = 1355;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 1355:
+      }
+   }
+}
+

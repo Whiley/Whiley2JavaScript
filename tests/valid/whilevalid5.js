@@ -6,28 +6,26 @@ function f(r0){//function(int) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            while(true){
-               var r1 = 10;//const %1 = 10 : int
-               if(r0  >=  r1){
-                  control_flow_pc = 22;
+            while(true){//loop (%0, %1, %2, %3, %4)
+               var r1 = new WyJS.Integer(10);
+               if(WyJS.gt(r0, r1, true)){
+                  control_flow_pc = 0;
                   control_flow_repeat = true;
                   continue outer;
                }
-               var r2 = 1;//const %2 = 1 : int
-               if(r0  !=  r2){
-                  var r3 = 1;//const %3 = 1 : int
-                  var r4 = r0 + r3;//add %4 = %0, %3 : int
-                  var r0 = r4;//assign %0 = %4  : int
+               var r2 = new WyJS.Integer(1);
+               if(WyJS.equals(r0, r2, false)){
+                  var r3 = new WyJS.Integer(1);
+                  var r4 = r0.add(r3);//add %4 = %0, %3 : int
+                  r0 = r4;//assign %0 = %4  : int
                   continue;
                }
-               control_flow_pc = 22;
+               control_flow_pc = 0;
                control_flow_repeat = true;
-               continue outer;
-               var r3 = 1;//const %3 = 1 : int
-               var r4 = r0 + r3;//add %4 = %0, %3 : int
-               var r0 = r4;//assign %0 = %4  : int
+               continue outer;//goto label0
             }
-         case 22:
+         case 0:
+            sysout.println(r0.val);
             return r0;//return %0 : int
       }
    }
@@ -41,28 +39,27 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 0;//const %1 = 0 : int
-            var r0 = f(r1);
-            var r2 = 16;//const %2 = 16 : int
-            if(r0  ==  r2){
-               control_flow_pc = 24;
+            var r1 = new WyJS.Integer(0);
+            var r0 = f(r1);//invoke %0 = (%1) whilevalid5:f : function(int) -> int
+            var r2 = new WyJS.Integer(16);
+            if(WyJS.equals(r0, r2, true)){
+               control_flow_pc = 2;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 24:
-            var r4 = 5;//const %4 = 5 : int
-            var r3 = f(r4);
-            var r5 = 10;//const %5 = 10 : int
-            if(r3  ==  r5){
-               control_flow_pc = 25;
+         case 2:
+            var r4 = new WyJS.Integer(5);
+            var r3 = f(r4);//invoke %3 = (%4) whilevalid5:f : function(int) -> int
+            var r5 = new WyJS.Integer(10);
+            if(WyJS.equals(r3, r5, true)){
+               control_flow_pc = 3;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 25:
+         case 3:
       }
    }
 }
 
-test();

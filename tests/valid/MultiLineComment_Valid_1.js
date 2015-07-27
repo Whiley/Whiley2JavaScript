@@ -9,12 +9,12 @@ function test(){//method() -> void
             var r0 = true;
             var r1 = true;
             if(r0 === r1){
-               control_flow_pc = 538;
+               control_flow_pc = 532;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 538:
+         case 532:
       }
    }
 }

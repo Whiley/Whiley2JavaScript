@@ -23,12 +23,12 @@ function test(){//method() -> void
             var r0 = f(r1);//invoke %0 = (%1) UnionType_Valid_6:f : function(UnionType_Valid_6:wur4nat) -> any
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1952;
+               control_flow_pc = 1946;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1952:
+         case 1946:
       }
    }
 }

@@ -9,18 +9,18 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = [r2, r3, r4];
-            var r1 = r5;//assign %1 = %5  : [int]
-            var r0 = r1;//assign %0 = %1  : [int]
+            var r5 = new WyJS.List([r2, r3, r4]);
+            var r1 = r5.clone();//assign %1 = %5  : [int]
+            var r0 = r1.clone();//assign %0 = %1  : [int]
             var r6 = r0.length;//lengthof %6 = %0 : [int]
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 897;
+               control_flow_pc = 891;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 897:
+         case 891:
       }
    }
 }

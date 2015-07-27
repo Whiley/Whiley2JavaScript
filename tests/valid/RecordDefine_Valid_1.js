@@ -21,20 +21,20 @@ function test(){//method() -> void
          case -1 :
             var r3 = new WyJS.Integer(1);
             var r4 = new WyJS.Integer(1);
-            var r5 = {x: r3, y: r4};//newrecord %5 = (%3, %4) : {int x,int y}
+            var r5 = new WyJS.Record(["x", "y"], [r3, r4]);
             var r2 = f(r5);//invoke %2 = (%5) RecordDefine_Valid_1:f : function(RecordDefine_Valid_1:Point) -> RecordDefine_Valid_1:Point
             var r1 = r2;//assign %1 = %2  : {int x,int y}
             var r0 = r1;//assign %0 = %1  : {int x,int y}
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(1);
-            var r8 = {x: r6, y: r7};//newrecord %8 = (%6, %7) : {int x,int y}
+            var r8 = new WyJS.Record(["x", "y"], [r6, r7]);
             if(WyJS.equals(r0, r8, true)){
-               control_flow_pc = 269;
+               control_flow_pc = 263;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 269:
+         case 263:
       }
    }
 }

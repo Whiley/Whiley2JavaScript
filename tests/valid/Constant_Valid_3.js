@@ -11,14 +11,14 @@ function test(){//method() -> void
             var r2 = r1.neg();//neg %2 = %1 : int
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = [r2, r3, r4];
+            var r5 = new WyJS.List([r2, r3, r4]);
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 1925;
+               control_flow_pc = 1919;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1925:
+         case 1919:
       }
    }
 }

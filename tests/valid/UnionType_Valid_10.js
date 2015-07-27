@@ -19,22 +19,24 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = [];
+            var r2 = new WyJS.List([];
+);
             var r3 = new WyJS.Integer(11);
-            var r4 = {op: r2, data: r3};//newrecord %4 = (%2, %3) : {[void] data,int op}
+            var r4 = new WyJS.Record(["op", "data"], [r2, r3]);
             var r1 = r4;//assign %1 = %4  : {[void] data,int op}
             var r0 = r1;//assign %0 = %1  : {[int] data,int op}
             var r5 = f(r0);//invoke %5 = (%0) UnionType_Valid_10:f : function(UnionType_Valid_10:msgType) -> UnionType_Valid_10:msgType
-            var r6 = [];
+            var r6 = new WyJS.List([];
+);
             var r7 = new WyJS.Integer(11);
-            var r8 = {op: r6, data: r7};//newrecord %8 = (%6, %7) : {[void] data,int op}
+            var r8 = new WyJS.Record(["op", "data"], [r6, r7]);
             if(WyJS.equals(r5, r8, true)){
-               control_flow_pc = 399;
+               control_flow_pc = 393;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 399:
+         case 393:
       }
    }
 }
