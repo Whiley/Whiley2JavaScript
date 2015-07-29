@@ -166,6 +166,14 @@ public class WyJS {
 			write((Codes.IndexOf) o);
 		} else if(o instanceof Codes.IfIs){
 			write((Codes.IfIs) o);
+		} else if(o instanceof Codes.NewTuple){
+			write((Codes.NewTuple) o);
+		} else if(o instanceof Codes.TupleLoad){
+			write((Codes.TupleLoad) o);
+		} else if(o instanceof Codes.ListOperator){
+			write((Codes.ListOperator) o);
+		} else if(o instanceof Codes.IndirectInvoke){
+			write((Codes.IndirectInvoke) o);
 		} else{
 			throw new Exception("Unknown object " + o.getClass());
 		}
@@ -269,6 +277,7 @@ public class WyJS {
 
 	private void write(Codes.Assign o) {
 		// TODO: Use Runtime file
+		//ANY TYPE?
 		// find type of rhs, make appropriate type
 		if(o.type() instanceof Type.List){
 			js.add(getIndentBlock() + "r" + o.target() + " = r" + o.operand(0)
@@ -293,6 +302,8 @@ public class WyJS {
 		if (o.type instanceof Type.Bool) {
 			// Can only be EQ or NEQ
 			switch (o.op) {
+			//WHAT IF THE RIGHT HAND SIDE IS NOT A BOOL??????
+			//TODO:
 			case EQ:
 				js.add(getIndentBlock() + "if(r" + o.leftOperand + " === r"
 						+ o.rightOperand + "){\n");
@@ -364,7 +375,7 @@ public class WyJS {
 		}
 	}
 	
-	public void write(Codes.IfIs o) throws Exception{
+	private void write(Codes.IfIs o) throws Exception{
 		js.add(getIndentBlock() + "if(WyJS.is(r" + o.operand + ", " + getType(o.rightOperand) + ")){\n");
 		indent++;
 		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
@@ -382,7 +393,7 @@ public class WyJS {
 		js.add(getIndentBlock() + "continue outer;//" + o.toString() + "\n");
 	}
 
-	public void write(Codes.AssertOrAssume o) throws Exception {
+	private void write(Codes.AssertOrAssume o) throws Exception {
 		for (Code c : o.bytecodes()) {
 			write(c);
 		}
@@ -407,6 +418,11 @@ public class WyJS {
 		}
 		str += ");//" + o.toString() + "\n";
 		js.add(str);
+	}
+	
+	private void write(Codes.IndirectInvoke o){
+		//TODO:
+		js.add(getIndentBlock() + "Indirect Invoke Here " + o.toString() + "\n");
 	}
 
 	private void write(Codes.Label o) {
@@ -550,7 +566,7 @@ public class WyJS {
 
 	}
 
-	public void write(Codes.NewList o) throws Exception {
+	private void write(Codes.NewList o) throws Exception {
 		String values = "[";
 		if (o.operands().length == 0) {
 			values += "]";
@@ -572,14 +588,43 @@ public class WyJS {
 		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.List(" + values + ", " + type + ");\n");
 	}
 
-	public void write(Codes.LengthOf o) {
+	private void write(Codes.LengthOf o) {
 		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 				+ ".length();//" + o.toString() + "\n");
 	}
 
-	public void write(Codes.IndexOf o) {
+	private void write(Codes.IndexOf o) {
 		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 				+ ".getValue(r" + o.operand(1) + ");\n");
+	}
+	
+	private void write(Codes.ListOperator o) throws Exception{
+		switch(o.kind){
+		case APPEND:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".append(r" + o.operand(1) + ");\n");
+			break;
+		default:
+			throw new Exception("Unknown List Operator Kind " + o.kind);
+		}
+	}
+	
+	private void write(Codes.NewTuple o) throws Exception{
+		String values = "[";
+		int i = 0;
+		for (Integer x : o.operands()) {
+			i++;
+			if (i == o.operands().length) {
+				values += "r" + x + "]";
+			} else {
+				values += "r" + x + ", ";
+			}
+		}
+		String type = getType(o.assignedType());
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Tuple(" + values + ", " + type + ");\n");
+	}
+	
+	private void write(Codes.TupleLoad o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r" + o.operand(0) + ".tupleLoad(" + o.index + ");\n");
 	}
 
 	private String parseLabel(String label) {
@@ -617,6 +662,19 @@ public class WyJS {
 			return "new WyJS.Type.Null()";
 		}else if(t instanceof Type.Void){
 			return "new WyJS.Type.Void()";
+		}else if(t instanceof Type.Tuple){
+			Type.Tuple tup = (Type.Tuple) t;
+			String types = "[";
+			int i = 0;
+			for(Type ty: tup.elements()){
+				i++;
+				if(i == tup.elements().size()){
+					types += getType(ty) + "]";
+				}else{
+					types += getType(ty) + ", ";
+				}
+			}
+			return "new WyJS.Type.Tuple(" + types + ")";
 		}else if(t instanceof Type.Union){
 			Type.Union union = (Type.Union) t;
 			String types = "[";

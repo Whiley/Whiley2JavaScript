@@ -266,6 +266,7 @@ WyJS.List.prototype.length = function() {
 
 //Appends another list to this list (must be of same type)
 WyJS.List.prototype.append = function(other) {
+
   var result = [];
   var count = 0;
   var i;
@@ -275,6 +276,9 @@ WyJS.List.prototype.append = function(other) {
   for (i = 0; i < other.list.length; i++) {
     result[count++] = other.list[i];
   }
+  	if(this.type instanceof WyJS.Void){
+		return new WyJS.List(result, other.type);
+	}
   return new WyJS.List(result, this.type);
 };
 
@@ -294,23 +298,6 @@ WyJS.List.prototype.clone = function() {
   return new WyJS.List(clist, this.type);
 };
 
-WyJS.List.prototype.toString = function() {
-  var str = '[';
-  var first = true;
-  var i;
-  
-  for (i = 0; i < this.list.length; i++) {
-    if (!first) {
-      str += ', ';
-    }
-    
-    first = false;
-    str += (this.list[i] === null) ? 'null' : (this.list[i].toString().toString());
-  }
-  str += ']';
-  return str;
-};
-
 WyJS.List.prototype.equals = function(other) {
 	
 	var i;
@@ -327,6 +314,47 @@ WyJS.List.prototype.equals = function(other) {
     }
   }
   return true;
+};
+
+//TUPLE CLASS/METHODS
+WyJS.Tuple = function(values, type) {
+	this.values = values;
+	this.type = type;
+};
+
+WyJS.Tuple.prototype.tupleLoad = function(num){
+	var load = num;
+	if(load.val !== undefined){
+		load = load.val
+	}
+	return this.values[load];
+}
+
+WyJS.Tuple.prototype.equals = function(other) {
+	if (!(other instanceof WyJS.Tuple))
+		return false;
+		
+	if (other.values.length != this.values.length)
+		return false;
+		
+	var i;
+	for (i = 0; i < this.values.length; i++) {
+		if (!WyJS.equals(this.values[i], other.values[i], true))
+			return false;
+	}
+	return true;
+};
+
+WyJS.Tuple.prototype.clone = function() {
+	var newlist = [];
+	var i = 0;
+	for (i = 0; i < this.values.length; i++) {
+		var tmp = this.values[i];
+		if (tmp instanceof WyJS.Record || tmp instanceof WyJS.List || tmp instanceof WyJS.Tuple)
+			tmp = tmp.clone();
+		newlist[i] = tmp;
+	}
+	return new WyJS.Tuple(newlist, this.type);
 };
 
 //Checks if two objects are equal (or not equal, based on the isEqual parameter)
@@ -559,6 +587,24 @@ WyJS.Type.Record.prototype.subtype = function(superType) {
     }
     return false;
   }
+  //return (superType instanceof WyJS.Type.Union && superType.unionSupertype(this));
+  return false;
+};
+
+WyJS.Type.Tuple = function(typeList) {this.typeList = typeList;}
+WyJS.Type.Tuple.prototype = new WyJS.Type();
+WyJS.Type.Tuple.prototype.subtype = function(superType) {
+ 	if (superType instanceof WyJS.Type.Tuple) {
+ 	 	if (superType.typeList.length != this.typeList.length)
+ 	 		return false;
+ 	 
+    	var i = 0;
+    	for (i = 0; i < this.typeList.length; i++) {
+    		if (!(this.typeList[i].subtype(superType.typeList[i])))
+    			return false;
+    	}
+    	return true;
+ 	}
   //return (superType instanceof WyJS.Type.Union && superType.unionSupertype(this));
   return false;
 };

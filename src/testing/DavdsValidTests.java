@@ -2001,10 +2001,10 @@ public class DavdsValidTests {
 //			runTest("Syntax_Valid_1");
 //		}
 //
-//		@Test
-//		public void TupleType_Valid_1() throws IOException {
-//			runTest("TupleType_Valid_1");
-//		}
+		@Test
+		public void TupleType_Valid_1() throws IOException {
+			runTest("TupleType_Valid_1");
+		}
 //
 //		@Test
 //		public void TupleType_Valid_2() throws IOException {
