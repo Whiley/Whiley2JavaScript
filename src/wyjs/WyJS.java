@@ -5,12 +5,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import wyc.lang.Stmt.Case;
+import wyc.util.WycBuildTask.Registry;
+import wyfs.io.BinaryOutputStream;
+import wyfs.lang.Path;
+import wyfs.lang.Content.Filter;
+import wyfs.lang.Path.Entry;
+import wyfs.lang.Path.ID;
+import wyfs.lang.Path.Root;
+import wyfs.util.DirectoryRoot;
 import wyil.io.WyilFilePrinter;
 import wyil.io.WyilFileReader;
 import wyil.lang.Code;
@@ -26,6 +36,8 @@ import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Constant;
 import wyil.lang.WyilFile.FunctionOrMethod;
 import wyil.util.AttributedCodeBlock;
+import wyil.util.TypeExpander;
+import wyrl.io.JavaIdentifierOutputStream;
 
 public class WyJS {
 
@@ -50,6 +62,17 @@ public class WyJS {
 		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(
 				file.functionOrMethods());
 		js = new ArrayList<String>();
+		System.out.println(file.types());
+//		if(!file.types().isEmpty()){
+//			js.add("var userTypes = [];\n");
+//			int i = 0;
+//			for(WyilFile.Type ty: file.types()){
+//				js.add("userTypes[" + i + "] = ");
+//				System.out.println();
+//				
+//				i++;
+//			}
+//		}
 		// for each function of method, write it to an array in JavaScript form
 		for (FunctionOrMethod f : fom) {
 			write(f);
@@ -70,7 +93,7 @@ public class WyJS {
 	 *            the source directory of where the file will be stored
 	 * @return WyJS The JavaScript converter object
 	 */
-	public void makeFile(String filename, String srcDir) {
+	public String makeFile(String filename, String srcDir) {
 		try {
 			PrintStream out = new PrintStream(new FileOutputStream(srcDir + "/"
 					+ filename + ".js"));
@@ -82,13 +105,19 @@ public class WyJS {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		List<FunctionOrMethod> start = file.functionOrMethod("test");
+		return nameMangle(start.get(0).name(), start.get(0).type());
 	}
 
 	private void write(FunctionOrMethod func) throws Exception {
 		String str = "";
-		str += getIndentBlock() + "function " + func.name() + "(";
+		str += getIndentBlock() + "function " + nameMangle(func.name(), func.type()) + "(";
 		int i = 1;
 		for (Type t : func.type().params()) {
+			if(t instanceof Type.Nominal){
+				Type.Nominal yo = (Type.Nominal) t;
+				//System.out.println(yo.name().name().equals("Console"));
+			}
 			if (i == 1) {
 				str += "r" + (i - 1);
 			} else {
@@ -187,8 +216,14 @@ public class WyJS {
 			if(o.constant instanceof wyil.lang.Constant.Integer)
 			consts += "new WyJS.Any(" + o.constant + ");\n";
 		} else if (o.assignedType() instanceof Type.List) {
+			o.constant.type();
 			Type.List list = (Type.List) o.assignedType();
-			consts += "new WyJS.List(" + o.constant + ");\n";
+			System.out.println(getType(list.element()) + "NEVER COMES THROUGH HERE");
+			if(list.element() instanceof Type.Record){
+				consts += "new WyJS.List(" + o.constant.toString().replace('=', ' ') + ");\n";
+			}else{
+				consts += "new WyJS.List(" + o.constant + ");\n";
+			}
 		} else if (o.assignedType() instanceof Type.Bool) {
 			consts += o.constant + ";\n";
 		} else if (o.assignedType() instanceof Type.Record) {
@@ -276,7 +311,8 @@ public class WyJS {
 	}
 
 	private void write(Codes.Assign o) {
-		// TODO: Use Runtime file
+		// TODO: Use Runtime file 
+		//TODO: wtf no var
 		//ANY TYPE?
 		// find type of rhs, make appropriate type
 		if(o.type() instanceof Type.List){
@@ -289,14 +325,13 @@ public class WyJS {
 	}
 
 	private void write(Codes.Return o) {
-
 		if (o.operand != -1) {
 			js.add(getIndentBlock() + "return r" + o.operand + ";//"
 					+ o.toString() + "\n");
 		}
 	}
 
-	private void write(Codes.If o, boolean loop, Object nulzorz) throws Exception {
+	private void write(Codes.If o, boolean loop, Object loopornull) throws Exception {
 		// TODO: Use Runtime file
 		// can use the appropriate .equals method depending on type of if
 		if (o.type instanceof Type.Bool) {
@@ -357,16 +392,17 @@ public class WyJS {
 			js.add(getIndentBlock() + "}\n");
 		}else{
 			boolean write = false;
-			for (Code c : ((Codes.Loop) nulzorz).bytecodes()) {
-				if (write) {
-					write(c);
-				}
+			for (Code c : ((Codes.Loop) loopornull).bytecodes()) {
 				if (c instanceof Label) {
 					if (((Label) c).label == o.target) {
 						write = true;
+						continue;
 					} else {
 						write = false;
 					}
+				}
+				if (write) {
+					write(c);
 				}
 			}
 			js.add(getIndentBlock() + "continue;\n");
@@ -400,12 +436,41 @@ public class WyJS {
 	}
 
 	private void write(Codes.Invoke o) {
+		if(o.name.name().equals("max")){
+			String wat = "var r" + o.target() + " = Math.max(";
+			int x = 1;
+			for (int i : o.operands()) {
+				if (x == 1) {
+					wat += "r" + i;
+				} else {
+					wat += ", r" + i;
+				}
+				x++;
+			}
+			wat += ");\n";
+			js.add(getIndentBlock() + wat);
+			return;
+		}else if(o.name.name().equals("min")){
+			String wat = "var r" + o.target() + " = Math.min(";
+			int x = 1;
+			for (int i : o.operands()) {
+				if (x == 1) {
+					wat += "r" + i;
+				} else {
+					wat += ", r" + i;
+				}
+				x++;
+			}
+			wat += ");\n";
+			js.add(getIndentBlock() + wat);
+			return;
+		}
 		String str = "";
 		if (o.target() != -1) {
 			str = getIndentBlock() + "var r" + o.target() + " = ";
-			str += o.name.name() + "(";
+			str += nameMangle(o.name.name(), o.type()) + "(";
 		} else {
-			str += getIndentBlock() + o.name.name() + "(";
+			str += getIndentBlock() + nameMangle(o.name.name(), o.type()) + "(";
 		}
 		int x = 1;
 		for (Integer i : o.operands()) {
@@ -422,6 +487,7 @@ public class WyJS {
 	
 	private void write(Codes.IndirectInvoke o){
 		//TODO:
+		//System.out.println(o.type().automaton);
 		js.add(getIndentBlock() + "Indirect Invoke Here " + o.toString() + "\n");
 	}
 
@@ -513,19 +579,23 @@ public class WyJS {
 		String values = "[";
 		String types = "[";
 		int i = 0;
+//		System.out.println();
+//		System.out.println(o.assignedType());
 		for (String s : o.type().keys()) {
 			i++;
+//			System.out.println(o.type().field(s));
+//			System.out.println(s);
 			if (i == o.type().keys().size()) {
-				names += '"' + s + '"' + "]";
+				names = names + '"' + s + '"' + "]";
 				values += "r" + o.operand(i - 1) + "]";
 				types += getType(o.type().field(s)) + "]";
 			} else {
-				names += '"' + s + '"' + ", ";
+				names = names + '"' + s + '"' + ", ";
 				values += "r" + o.operand(i - 1) + ", ";
 				types += getType(o.type().field(s)) + ", ";
 			}
 		}
-		
+//		System.out.println(names + " " + values + " " + types);
 		
 		String type = "new WyJS.Type.Record("+names+", " + types + ")";
 		
@@ -688,10 +758,37 @@ public class WyJS {
 				}
 			}
 			return "new WyJS.Type.Union(" + types + ")";
+		}else if(t instanceof Type.Nominal){
+			Registry reg = new Registry();
+			DirectoryRoot root = new DirectoryRoot("minesweeper", reg);
+			ArrayList<Root> roots = new ArrayList<Root>();
+			roots.add(root);
+			wybs.util.StdProject proj = new wybs.util.StdProject(roots);
+			TypeExpander ty = new TypeExpander(proj);
+			Type newTy = ty.getUnderlyingType(t);
+			return getType(newTy);
 		}else {
-			//throw new Exception("Unknown Type in getType " + t);
+			throw new Exception("Unknown Type in getType " + t);
 		}
 		return "";
+	}
+	
+	public static String nameMangle(String name, Type.FunctionOrMethod ft) {
+		try {
+			return name + "$" + typeMangle(ft);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static String typeMangle(Type.FunctionOrMethod ft)
+			throws IOException {
+		JavaIdentifierOutputStream jout = new JavaIdentifierOutputStream();
+		BinaryOutputStream binout = new BinaryOutputStream(jout);
+		Type.BinaryWriter tm = new Type.BinaryWriter(binout);
+		tm.write(ft);
+		binout.close(); // force flush
+		return jout.toString();
 	}
 	
 	//Do we even need this?
@@ -745,6 +842,7 @@ public class WyJS {
 			// WyilFilePrinter printer = new WyilFilePrinter(System.out);
 			// printer.apply(wyilFile);
 			// Make the javascript file
+			
 
 			WyJS wy = new WyJS(wyilFile);
 		} catch (IOException e) {

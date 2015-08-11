@@ -38,7 +38,7 @@ public class TestUtils {
 			} else {
 				WyilFileReader r = new WyilFileReader(srcDir + "/wyil/" + filename + ".wyil");
 				WyJS js = new WyJS(r.read());
-				js.makeFile(filename, srcDir);
+				String start = js.makeFile(filename, srcDir);
 				filename = srcDir + File.separatorChar + filename + ".js";
 				Reader file = new FileReader(new File(filename));
 			    Context cxt = Context.enter();
@@ -56,7 +56,7 @@ public class TestUtils {
 			    Reader library = new FileReader(new File(lib));
 			    cxt.evaluateReader(scope, library, lib, 1, null);
     		    cxt.evaluateReader(scope, file, filename, 1, null);
-			    cxt.evaluateString(scope, "test()", "test", 1, null);
+			    cxt.evaluateString(scope, start, "test", 1, null);
 				
 //				tmp = "node " + filename + ".js";
 //				

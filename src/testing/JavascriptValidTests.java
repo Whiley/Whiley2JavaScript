@@ -22,8 +22,8 @@ public class JavascriptValidTests {
 	}
 	
 //	@Test public void JSValidTes25(){ runTest("any01");}
-//	@Test public void JSValidTest1(){ runTest("integer01");}
-//	@Test public void JSValidTest2(){ runTest("integer02");}
+	@Test public void JSValidTest1(){ runTest("integer01");}
+	@Test public void JSValidTest2(){ runTest("integer02");}
 //	@Test public void JSValidTest3(){ runTest("integer03");}
 //
 //	@Test public void JSValidTest4(){ runTest("boolean01");}

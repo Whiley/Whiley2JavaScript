@@ -1,4 +1,4 @@
-function testint(r0){//function(int) -> int
+function testint$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,7 +11,7 @@ function testint(r0){//function(int) -> int
    }
 }
 
-function test(){//function() -> void
+function test$X9_7VkE(){//function() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -19,28 +19,27 @@ function test(){//function() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 1;//const %1 = 1 : int
-            var r0 = testint(r1);
-            var r2 = 1;//const %2 = 1 : int
-            if(r0  ==  r2){
-               control_flow_pc = 2;
+            var r1 = new WyJS.Integer(1);
+            var r0 = testint(r1);//invoke %0 = (%1) integer02:testint : function(int) -> int
+            var r2 = new WyJS.Integer(1);
+            if(WyJS.equals(r0, r2, true)){
+               control_flow_pc = 0;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
-            var r4 = 10;//const %4 = 10 : int
-            var r3 = testint(r4);
-            var r5 = 10;//const %5 = 10 : int
-            if(r3  ==  r5){
-               control_flow_pc = 3;
+         case 0:
+            var r4 = new WyJS.Integer(10);
+            var r3 = testint(r4);//invoke %3 = (%4) integer02:testint : function(int) -> int
+            var r5 = new WyJS.Integer(10);
+            if(WyJS.equals(r3, r5, true)){
+               control_flow_pc = 1;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 3:
+         case 1:
       }
    }
 }
 
-test();
