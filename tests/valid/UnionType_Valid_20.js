@@ -1,4 +1,4 @@
-function f(r0){//function(UnionType_Valid_20:byteCode) -> UnionType_Valid_20:byteCode
+function f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$72$kV0$X0FT$F6$_0kF$w5$Z0FOFs2(r0){//function(UnionType_Valid_20:byteCode) -> UnionType_Valid_20:byteCode
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,7 +11,7 @@ function f(r0){//function(UnionType_Valid_20:byteCode) -> UnionType_Valid_20:byt
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -21,13 +21,13 @@ function test(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(0);
-            var r4 = new WyJS.Record(["op", "index"], [r2, r3]);
+            var r4 = new WyJS.Record(["index", "op"], [r2, r3], new WyJS.Type.Record(["index", "op"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r1 = r4;//assign %1 = %4  : {int index,int op}
             var r0 = r1;//assign %0 = %1  : {int index,int op}
-            var r5 = f(r0);//invoke %5 = (%0) UnionType_Valid_20:f : function(UnionType_Valid_20:byteCode) -> UnionType_Valid_20:byteCode
+            var r5 = f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$72$kV0$X0FT$F6$_0kF$w5$Z0FOFs2(r0);//invoke %5 = (%0) UnionType_Valid_20:f : function(UnionType_Valid_20:byteCode) -> UnionType_Valid_20:byteCode
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(0);
-            var r8 = new WyJS.Record(["op", "index"], [r6, r7]);
+            var r8 = new WyJS.Record(["index", "op"], [r6, r7], new WyJS.Type.Record(["index", "op"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r5, r8, true)){
                control_flow_pc = 430;
                control_flow_repeat = true;

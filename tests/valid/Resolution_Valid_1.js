@@ -1,4 +1,4 @@
-function f(r0){//function(int) -> int
+function f$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,7 +13,7 @@ function f(r0){//function(int) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,7 +22,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r3 = new WyJS.Integer(10);
-            var r2 = f(r3);//invoke %2 = (%3) Resolution_Valid_1:f : function(int) -> int
+            var r2 = f$Y9bFXA$W(r3);//invoke %2 = (%3) Resolution_Valid_1:f : function(int) -> int
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
             var r4 = new WyJS.Integer(11);

@@ -1,4 +1,4 @@
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -9,12 +9,12 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
-            var r7 = new WyJS.List([r4, r5, r6]);
-            var r3 = r7.clone();//assign %3 = %7  : [int]
-            var r0 = r3.clone();//assign %0 = %3  : [int]
+            var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            r3 = r7.clone();//assign %3 = %7  : [int]
+            r0 = r3.clone();//assign %0 = %3  : [int]
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(2);
-            var r11 = new WyJS.Record(["x", "y"], [r9, r10]);
+            var r11 = new WyJS.Record(["x", "y"], [r9, r10], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r8 = r11;//assign %8 = %11  : {int x,int y}
             var r1 = r8;//assign %1 = %8  : {int x,int y}
             var r13 = r1.fieldLoad("x");//fieldload %13 = %1 x : {int x,int y}

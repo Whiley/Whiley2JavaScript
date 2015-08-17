@@ -1,4 +1,4 @@
-function diver(r0, r1, r2){//function(real,real,real) -> real
+function diver$Y9fFX7k7$WE(r0, r1, r2){//function(real,real,real) -> real
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,7 +13,7 @@ function diver(r0, r1, r2){//function(real,real,real) -> real
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -24,7 +24,7 @@ function test(){//method() -> void
             var r1 = new WyJS.Real(1.2);
             var r2 = new WyJS.Real(3.4);
             var r3 = new WyJS.Real(4.5);
-            var r0 = diver(r1, r2, r3);//invoke %0 = (%1, %2, %3) RealDiv_Valid_7:diver : function(real,real,real) -> real
+            var r0 = diver$Y9fFX7k7$WE(r1, r2, r3);//invoke %0 = (%1, %2, %3) RealDiv_Valid_7:diver : function(real,real,real) -> real
             var r4 = new WyJS.Real(4.0);
             var r5 = new WyJS.Real(51.0);
             var r6 = r4.div(r5);//div %6 = %4, %5 : real
@@ -38,7 +38,7 @@ function test(){//method() -> void
             var r8 = new WyJS.Real(1000.0);
             var r9 = new WyJS.Real(300.0);
             var r10 = new WyJS.Real(400.0);
-            var r7 = diver(r8, r9, r10);//invoke %7 = (%8, %9, %10) RealDiv_Valid_7:diver : function(real,real,real) -> real
+            var r7 = diver$Y9fFX7k7$WE(r8, r9, r10);//invoke %7 = (%8, %9, %10) RealDiv_Valid_7:diver : function(real,real,real) -> real
             var r11 = new WyJS.Real(1.0);
             var r12 = new WyJS.Real(120.0);
             var r13 = r11.div(r12);//div %13 = %11, %12 : real

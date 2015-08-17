@@ -1,4 +1,4 @@
-function f(r0){//function(int) -> int
+function f$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -14,7 +14,7 @@ function f(r0){//function(int) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -23,15 +23,15 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(1);
-            var r0 = f(r1);//invoke %0 = (%1) Ensures_Valid_5:f : function(int) -> int
+            var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Ensures_Valid_5:f : function(int) -> int
             var r2 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1824;
+               control_flow_pc = 1821;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1824:
+         case 1821:
       }
    }
 }

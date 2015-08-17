@@ -1,4 +1,4 @@
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -7,7 +7,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.Integer(1);
-            var r3 = new WyJS.Record(["f"], [r2]);
+            var r3 = new WyJS.Record(["f"], [r2], new WyJS.Type.Record(["f"], [new WyJS.Type.Int()]));
             var r1 = r3;//assign %1 = %3  : {int f}
             var r0 = r1;//assign %0 = %1  : {int f}
             var r4 = r0.fieldLoad("f");//fieldload %4 = %0 f : {int f}
@@ -16,16 +16,16 @@ function test(){//method() -> void
             var r7 = r0.fieldLoad("f");//fieldload %7 = %0 f : {int f}
             var r8 = new WyJS.Integer(1);
             var r9 = r7.add(r8);//add %9 = %7, %8 : int
-            r0.setValue("f", r9);//update %0.f = %9 : {int f} -> {int f}
+            r0.setValue("f", r9);
             var r10 = new WyJS.Integer(2);
-            var r11 = new WyJS.Record(["f"], [r10]);
+            var r11 = new WyJS.Record(["f"], [r10], new WyJS.Type.Record(["f"], [new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r11, true)){
-               control_flow_pc = 1246;
+               control_flow_pc = 1243;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1246:
+         case 1243:
       }
    }
 }

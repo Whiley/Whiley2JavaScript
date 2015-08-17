@@ -1,4 +1,4 @@
-function sum(r0, r1){//function(ConstrainedList_Valid_9:posintlist,int) -> int
+function sum$Z9dFas1Fc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$tc0$k0kQ$B6$d0VQ$F6$g0FP$B6$o0(r0, r1){//function(ConstrainedList_Valid_9:posintlist,int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -6,30 +6,30 @@ function sum(r0, r1){//function(ConstrainedList_Valid_9:posintlist,int) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = r0.length;//lengthof %2 = %0 : [int]
+            var r2 = r0.length();//lengthof %2 = %0 : [int]
             if(WyJS.equals(r1, r2, false)){
-               control_flow_pc = 1767;
+               control_flow_pc = 1764;
                control_flow_repeat = true;
                continue outer;
             }
             var r3 = new WyJS.Integer(0);
             return r3;//return %3 : int
-            control_flow_pc = 1768;
+            control_flow_pc = 1765;
             control_flow_repeat = true;
-            continue outer;//goto label1768
-         case 1767:
+            continue outer;//goto label1765
+         case 1764:
             var r4 = r0.getValue(r1);
             var r6 = new WyJS.Integer(1);
             var r7 = r1.add(r6);//add %7 = %1, %6 : int
-            var r5 = sum(r0, r7);//invoke %5 = (%0, %7) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist,int) -> int
+            var r5 = sum$Z9dFas1Fc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$tc0$k0kQ$B6$d0VQ$F6$g0FP$B6$o0(r0, r7);//invoke %5 = (%0, %7) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist,int) -> int
             var r8 = r4.add(r5);//add %8 = %4, %5 : int
             return r8;//return %8 : int
-         case 1768:
+         case 1765:
       }
    }
 }
 
-function sum(r0){//function(ConstrainedList_Valid_9:posintlist) -> int
+function sum$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$ZY5$$6$j0kR$Z5$i0$S$k5$d0kR$Fr2(r0){//function(ConstrainedList_Valid_9:posintlist) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -38,13 +38,13 @@ function sum(r0){//function(ConstrainedList_Valid_9:posintlist) -> int
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.Integer(0);
-            var r1 = sum(r0, r2);//invoke %1 = (%0, %2) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist,int) -> int
+            var r1 = sum$Z9dFas1Fc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$tc0$k0kQ$B6$d0VQ$F6$g0FP$B6$o0(r0, r2);//invoke %1 = (%0, %2) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist,int) -> int
             return r1;//return %1 : int
       }
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -59,16 +59,16 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(5);
             var r6 = new WyJS.Integer(6);
             var r7 = new WyJS.Integer(7);
-            var r8 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7]);
-            var r0 = sum(r8);//invoke %0 = (%8) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist) -> int
+            var r8 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r0 = sum$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$ZY5$$6$j0kR$Z5$i0$S$k5$d0kR$Fr2(r8);//invoke %0 = (%8) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist) -> int
             var r9 = new WyJS.Integer(28);
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 1770;
+               control_flow_pc = 1767;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1770:
+         case 1767:
       }
    }
 }

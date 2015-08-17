@@ -1,4 +1,4 @@
-function f(r0){//function([int]) -> [int]
+function f$Z9bF1D527RWz(r0){//function([int]) -> [int]
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,7 +11,7 @@ function f(r0){//function([int]) -> [int]
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -20,7 +20,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
-            var r0 = f(r1);//invoke %0 = (%1) Coercion_Valid_2:f : function([int]) -> [int]
+            var r0 = f$Z9bF1D527RWz(r1);//invoke %0 = (%1) Coercion_Valid_2:f : function([int]) -> [int]
             var r2 = new WyJS.Integer(72);
             var r3 = new WyJS.Integer(101);
             var r4 = new WyJS.Integer(108);
@@ -32,14 +32,14 @@ function test(){//method() -> void
             var r10 = new WyJS.Integer(114);
             var r11 = new WyJS.Integer(108);
             var r12 = new WyJS.Integer(100);
-            var r13 = new WyJS.List([r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12]);
+            var r13 = new WyJS.List([r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r13, true)){
-               control_flow_pc = 1356;
+               control_flow_pc = 1353;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1356:
+         case 1353:
       }
    }
 }

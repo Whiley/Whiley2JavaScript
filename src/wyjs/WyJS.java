@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,6 +30,7 @@ import wyil.lang.CodeBlock.Index;
 import wyil.lang.CodeUtils;
 import wyil.lang.Codes;
 import wyil.lang.Codes.If;
+import wyil.lang.Codes.LVal;
 import wyil.lang.Codes.Label;
 import wyil.lang.Type;
 import wyil.lang.Type.Any;
@@ -62,7 +64,7 @@ public class WyJS {
 		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(
 				file.functionOrMethods());
 		js = new ArrayList<String>();
-		System.out.println(file.types());
+		//System.out.println(file.types());
 //		if(!file.types().isEmpty()){
 //			js.add("var userTypes = [];\n");
 //			int i = 0;
@@ -180,7 +182,10 @@ public class WyJS {
 		} else if (o instanceof Codes.UnaryOperator) {
 			write((Codes.UnaryOperator) o);
 		} else if (o instanceof Codes.Loop) {
-			write((Codes.Loop) o);
+			Codes.Loop loop = (Codes.Loop) o;
+			Map<String, Index> labelMap = CodeUtils
+					.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
+			write(loop, labelMap);
 		} else if (o instanceof Codes.NewRecord) {
 			write((Codes.NewRecord) o);
 		} else if (o instanceof Codes.FieldLoad) {
@@ -203,7 +208,9 @@ public class WyJS {
 			write((Codes.ListOperator) o);
 		} else if(o instanceof Codes.IndirectInvoke){
 			write((Codes.IndirectInvoke) o);
-		} else{
+		} else if(o instanceof Codes.Convert){
+			write((Codes.Convert) o);
+		}else{
 			throw new Exception("Unknown object " + o.getClass());
 		}
 	}
@@ -319,9 +326,14 @@ public class WyJS {
 			js.add(getIndentBlock() + "r" + o.target() + " = r" + o.operand(0)
 					+ ".clone();//" + o.toString() + "\n");
 		} else{
-			js.add(getIndentBlock() + "r" + o.target() + " = r" + o.operand(0)
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 					+ ";//" + o.toString() + "\n");
 		}
+	}
+	
+	private void write(Codes.Convert o) throws Exception{	
+		String type = getType(o.result);
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.Cast(r" + o.operand(0) + ", " + type + ");\n");
 	}
 
 	private void write(Codes.Return o) {
@@ -437,7 +449,7 @@ public class WyJS {
 
 	private void write(Codes.Invoke o) {
 		if(o.name.name().equals("max")){
-			String wat = "var r" + o.target() + " = Math.max(";
+			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.max(";
 			int x = 1;
 			for (int i : o.operands()) {
 				if (x == 1) {
@@ -447,21 +459,21 @@ public class WyJS {
 				}
 				x++;
 			}
-			wat += ");\n";
+			wat += "));\n";
 			js.add(getIndentBlock() + wat);
 			return;
 		}else if(o.name.name().equals("min")){
-			String wat = "var r" + o.target() + " = Math.min(";
+			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.min(";
 			int x = 1;
 			for (int i : o.operands()) {
 				if (x == 1) {
-					wat += "r" + i;
+					wat += "r" + i + ".val";
 				} else {
-					wat += ", r" + i;
+					wat += ", r" + i + ".val";
 				}
 				x++;
 			}
-			wat += ");\n";
+			wat += "));\n";
 			js.add(getIndentBlock() + wat);
 			return;
 		}
@@ -516,59 +528,126 @@ public class WyJS {
 			throw new Exception("Unary not supported.. Yet");
 		}
 	}
-
-	private void write(Codes.Loop o) throws Exception {
+	
+	Map<String, List<Code>> labels = new HashMap<String, List<Code>>();
+	private void write(Codes.Loop o, Map<String, Index> labelMap) throws Exception {
 		// TODO: Could maybe use the runtime file?
-		Map<String, Index> labelMap = CodeUtils
-				.buildLabelMap(new AttributedCodeBlock(o.bytecodes()));
-		Iterator iter;
+		boolean yo = false;
+		String name = "";
+		ArrayList<Code> codes = new ArrayList<Code>();
+		ArrayList<String> strings = new ArrayList<String>();
+		for(Code c: o.bytecodes()){
+			if(yo){
+				codes.add(c);
+			}
+			if(c instanceof Codes.Label){
+				if(yo){
+					labels.put(name, codes);
+					strings.add(name);
+					name = "";
+					codes.clear();
+				}else{
+					name = ((Codes.Label)c).label;
+					System.out.println(name);
+					yo = true;
+				}
+			}
+		}
+		if(name != ""){
+			labels.put(name, codes);
+			strings.add(name);
+		}
+		
+		
 		js.add(getIndentBlock() + "while(true){//" + o.toString() + "\n");
 		indent++;
-		for (Code c : o.bytecodes()) {
-			if (c instanceof Codes.If) {
-				Index x;
-				if ((x = labelMap.get(((Codes.If) c).target)) != null) {
-					// within the loop
-					write((Codes.If) c, true, o);
-				} else {
-					// jumping out, parse normally
-					write((Codes.If) c, false, null);
-				}
-			} else if (c instanceof Codes.Goto) {
-				Index x;
-				boolean write = false;
-				if ((x = labelMap.get(((Codes.Goto) c).target)) != null) {
-					// jumping within loop, have to write the contents of the
-					// label we want to jump to
-					for (Code code : o.bytecodes()) {
-						if (write) {
-							write(code);
-						}
-						if (c instanceof Label) {
-							if (((Label) code).label == ((Codes.If) c).target) {
-								write = true;
-							} else {
-								write = false;
-							}
-						}
-					}
-				} else {
-					// jumping out the loop, parse normally
-					write((Codes.Goto) c);
-				}
-			} else if (c instanceof Codes.Assert) {
-				// TODO:
-			} else if (c instanceof Codes.Assume) {
-				// TODO:
-			} else if (c instanceof Codes.Label) {
-				// should have already been written
-				break;
-			} else {
+		
+		Iterator<Code> iter = o.iterator();
+		while(iter.hasNext()){
+			Code c = iter.next();
+			if(c instanceof Codes.If){
+				//write start of if eg: if(blah){
+				//write code of that label
+			} else if(c instanceof Codes.IfIs){
+				
+			} else if(c instanceof Codes.Goto){
+				
+			} else if(c instanceof Codes.Loop){
+				
+			} else if(c instanceof Codes.Label){
+				
+			} else{
 				write(c);
 			}
 		}
+		
+		
+		
+		
+		
+		
+//		for(String s: labelMap.keySet()){
+//			System.out.println(s + " " + labelMap.get(s));
+//			
+//		}
+//		for (Code c : o.bytecodes()) {
+//			if (c instanceof Codes.If) {
+//				Index x;
+//				if ((x = labelMap.get(((Codes.If) c).target)) != null) {
+//					// within the loop
+//					write((Codes.If) c, true, o);
+//				} else {
+//					// jumping out, parse normally
+//					write((Codes.If) c, false, null);
+//				}
+//			} else if (c instanceof Codes.Goto) {
+//				Index x;
+//				boolean write = false;
+//				if ((x = labelMap.get(((Codes.Goto) c).target)) != null) {
+//					// jumping within loop, have to write the contents of the
+//					// label we want to jump to
+//					for (Code code : o.bytecodes()) {
+//						if (write) {
+//							write(code);
+//						}
+//						if (c instanceof Label) {
+//							if (((Label) code).label == ((Codes.If) c).target) {
+//								write = true;
+//							} else {
+//								write = false;
+//							}
+//						}
+//					}
+//				} else {
+//					// jumping out the loop, parse normally
+//					write((Codes.Goto) c);
+//				}
+//			} else if(c instanceof Codes.Loop){
+//				Codes.Loop loop = (Codes.Loop) c;
+//				Map<String, Index> newMap = CodeUtils
+//						.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
+//				for (String s: labelMap.keySet()) {
+//					newMap.put(s, labelMap.get(s));
+//				}
+//				write(loop,newMap);
+//			}
+//			else if (c instanceof Codes.Assert) {
+//				// TODO:
+//			} else if (c instanceof Codes.Assume) {
+//				// TODO:
+//			} else if (c instanceof Codes.Label) {
+//				// should have already been written
+//				break;
+//			} else {
+//				write(c);
+//			}
+//		}
 		indent--;
 		js.add(getIndentBlock() + "}\n");
+		System.out.println("leaving");
+		for(String s: strings){
+			labels.remove(s);
+		}
 
 	}
 
@@ -581,11 +660,11 @@ public class WyJS {
 		int i = 0;
 //		System.out.println();
 //		System.out.println(o.assignedType());
-		for (String s : o.type().keys()) {
+		ArrayList<String> temp = new ArrayList<String>(o.type().keys());
+		Collections.sort(temp);
+		for(String s: temp){
 			i++;
-//			System.out.println(o.type().field(s));
-//			System.out.println(s);
-			if (i == o.type().keys().size()) {
+			if (i == temp.size()) {
 				names = names + '"' + s + '"' + "]";
 				values += "r" + o.operand(i - 1) + "]";
 				types += getType(o.type().field(s)) + "]";
@@ -595,7 +674,6 @@ public class WyJS {
 				types += getType(o.type().field(s)) + ", ";
 			}
 		}
-//		System.out.println(names + " " + values + " " + types);
 		
 		String type = "new WyJS.Type.Record("+names+", " + types + ")";
 		
@@ -613,26 +691,51 @@ public class WyJS {
 	private void write(Codes.Update o) throws Exception {
 		// TODO: Use Runtime file
 		// Use appropriate runtime method
-		if (o.afterType instanceof Type.List) {
-			js.add(getIndentBlock() + "r" + o.target() + ".setValue(r" + o.operand(0)
-					+ ", r" + o.operand(1) + ");//" + o.toString() + "\n");
-		} else if (o.afterType instanceof Type.Record) {
-			 String extension = "";
-			 int i = 0;
-			 for (String s : o.fields) {
-				 i++;
-				 if(i == o.fields.size()){
-					 extension += s;
-				 }else{
-					 extension += s + ".";
-				 }
-			 }
-			js.add(getIndentBlock() + "r" + o.target() + ".setValue(" + '"'
-					+ extension + '"' + ", r" + o.operand(0) + ");//"
-					+ o.toString() + "\n");
-		} else {
-			throw new Exception("Unknown Update Type: " + o.toString());
+		Iterator<LVal> vals = o.iterator();
+		int i = 0;
+		boolean first = true;
+		String str = "";
+		while(vals.hasNext()){
+			LVal l = vals.next();
+			if(l instanceof Codes.RecordLVal){
+				Codes.RecordLVal rec = (Codes.RecordLVal) l;
+				if(vals.hasNext()){
+					if(first){
+						str = "r" + o.target() + ".fieldLoad("+ '"' + rec.field + '"' + ")";
+					}else {
+						str += ".fieldLoad("+ '"' + rec.field + '"' + ")";
+					}
+				}else{
+					if(first){
+						str = "r" + o.target() + ".setValue(" + '"' + rec.field + '"' + ", r" + o.operand(i) +");\n";
+					}else {
+						str += ".setValue(" + '"' + rec.field + '"' + ", r" + o.operand(i) +");\n";
+					}
+				}
+			}else if(l instanceof Codes.ListLVal){
+				Codes.ListLVal lis = (Codes.ListLVal) l;
+				if(vals.hasNext()){
+					if(first){
+						str = "r" + o.target() + " = r" + o.operand(i) + ".getValue(r" + lis.indexOperand + ")";
+					} else{
+						str += ".getValue(r" + lis.indexOperand + ")";
+					}
+				}else {
+					if(first){
+						str = "r" + o.target() + ".setValue(r" + o.operand(0) + ", r" + o.operand(1) +");\n";
+					}else{
+						str += ".setValue(r" + o.operand(i) + ", r" + o.operand(i+1) +");\n";
+					}
+				}
+				i++;
+			}else if(l instanceof Codes.ReferenceLVal){
+				throw new Exception("How to do Reference LVAL?");
+			}else{
+				throw new Exception("Unknown LVal type" + o);
+			}
+			first = false;
 		}
+		js.add(getIndentBlock() + str);
 
 	}
 

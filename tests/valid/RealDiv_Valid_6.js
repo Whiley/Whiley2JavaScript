@@ -1,4 +1,4 @@
-function g(r0){//function(real) -> real
+function g$Y9bF1B1Fs2(r0){//function(real) -> real
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,7 +13,7 @@ function g(r0){//function(real) -> real
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,7 +22,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Real(0.234);
-            var r0 = g(r1);//invoke %0 = (%1) RealDiv_Valid_6:g : function(real) -> real
+            var r0 = g$Y9bF1B1Fs2(r1);//invoke %0 = (%1) RealDiv_Valid_6:g : function(real) -> real
             var r2 = new WyJS.Real(0.468);
             var r3 = new WyJS.Real(6.0);
             var r4 = r2.div(r3);//div %4 = %2, %3 : real

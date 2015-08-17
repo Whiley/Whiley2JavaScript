@@ -1,4 +1,4 @@
-function f(r0){//function(int) -> int
+function f$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -38,7 +38,7 @@ function f(r0){//function(int) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -47,7 +47,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(1);
-            var r0 = f(r1);//invoke %0 = (%1) IfElse_Valid_1:f : function(int) -> int
+            var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) IfElse_Valid_1:f : function(int) -> int
             var r2 = new WyJS.Integer(1);
             var r3 = r2.neg();//neg %3 = %2 : int
             if(WyJS.equals(r0, r3, true)){
@@ -58,7 +58,7 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 225:
             var r5 = new WyJS.Integer(10);
-            var r4 = f(r5);//invoke %4 = (%5) IfElse_Valid_1:f : function(int) -> int
+            var r4 = f$Y9bFXA$W(r5);//invoke %4 = (%5) IfElse_Valid_1:f : function(int) -> int
             var r6 = new WyJS.Integer(0);
             if(WyJS.equals(r4, r6, true)){
                control_flow_pc = 226;
@@ -68,7 +68,7 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 226:
             var r8 = new WyJS.Integer(11);
-            var r7 = f(r8);//invoke %7 = (%8) IfElse_Valid_1:f : function(int) -> int
+            var r7 = f$Y9bFXA$W(r8);//invoke %7 = (%8) IfElse_Valid_1:f : function(int) -> int
             var r9 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r9, true)){
                control_flow_pc = 227;
@@ -78,7 +78,7 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 227:
             var r11 = new WyJS.Integer(1212);
-            var r10 = f(r11);//invoke %10 = (%11) IfElse_Valid_1:f : function(int) -> int
+            var r10 = f$Y9bFXA$W(r11);//invoke %10 = (%11) IfElse_Valid_1:f : function(int) -> int
             var r12 = new WyJS.Integer(1);
             if(WyJS.equals(r10, r12, true)){
                control_flow_pc = 228;
@@ -89,7 +89,7 @@ function test(){//method() -> void
          case 228:
             var r14 = new WyJS.Integer(1212);
             var r15 = r14.neg();//neg %15 = %14 : int
-            var r13 = f(r15);//invoke %13 = (%15) IfElse_Valid_1:f : function(int) -> int
+            var r13 = f$Y9bFXA$W(r15);//invoke %13 = (%15) IfElse_Valid_1:f : function(int) -> int
             var r16 = new WyJS.Integer(1);
             var r17 = r16.neg();//neg %17 = %16 : int
             if(WyJS.equals(r13, r17, true)){

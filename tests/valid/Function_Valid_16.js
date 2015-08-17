@@ -1,4 +1,4 @@
-function f(r0){//function(int) -> int
+function f$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,7 +13,7 @@ function f(r0){//function(int) -> int
    }
 }
 
-function g(r0, r1){//function(int,int) -> int
+function g$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -27,7 +27,7 @@ function g(r0, r1){//function(int,int) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -46,10 +46,10 @@ function test(){//method() -> void
                control_flow_repeat = true;
                continue outer;
             }
-            var r7 = f(r1);//invoke %7 = (%1) Function_Valid_16:f : function(int) -> int
+            var r7 = f$Y9bFXA$W(r1);//invoke %7 = (%1) Function_Valid_16:f : function(int) -> int
             var r0 = r7;//assign %0 = %7  : int
          case 277:
-            var r9 = g(r0, r1);//invoke %9 = (%0, %1) Function_Valid_16:g : function(int,int) -> int
+            var r9 = g$Y9dFXs1Fs2(r0, r1);//invoke %9 = (%0, %1) Function_Valid_16:g : function(int,int) -> int
             var r8 = r9;//assign %8 = %9  : int
             var r2 = r8;//assign %2 = %8  : int
             var r10 = new WyJS.Integer(3);

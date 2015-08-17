@@ -1,4 +1,4 @@
-function f(){//function() -> ConstrainedInt_Valid_5:nat
+function f$Y9_FP8s1$20kQ$s5$n0$S$76$W0FP$s5$_0$O$Z3$i0$S$w4$L0FN$k5$d0$O$w4$pB$s5$W0$SFs2(){//function() -> ConstrainedInt_Valid_5:nat
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -12,7 +12,7 @@ function f(){//function() -> ConstrainedInt_Valid_5:nat
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -20,7 +20,7 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = f();//invoke %0 = () ConstrainedInt_Valid_5:f : function() -> ConstrainedInt_Valid_5:nat
+            var r0 = f$Y9_FP8s1$20kQ$s5$n0$S$76$W0FP$s5$_0$O$Z3$i0$S$w4$L0FN$k5$d0$O$w4$pB$s5$W0$SFs2();//invoke %0 = () ConstrainedInt_Valid_5:f : function() -> ConstrainedInt_Valid_5:nat
             var r1 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r1, true)){
                control_flow_pc = 516;

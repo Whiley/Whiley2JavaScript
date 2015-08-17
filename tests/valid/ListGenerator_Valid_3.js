@@ -1,4 +1,4 @@
-function f(r0){//function([[int]]) -> int
+function f$_9bFaA$0D53D5WE(r0){//function([[int]]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -8,7 +8,7 @@ function f(r0){//function([[int]]) -> int
          case -1 :
             var r1 = new WyJS.Integer(0);
             var r2 = r0.getValue(r1);
-            var r3 = r2.length;//lengthof %3 = %2 : [int]
+            var r3 = r2.length();//lengthof %3 = %2 : [int]
             var r4 = new WyJS.Integer(2);
             if(WyJS.lt(r3, r4, true)){
                control_flow_pc = 1182;
@@ -31,7 +31,7 @@ function f(r0){//function([[int]]) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -42,13 +42,13 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = new WyJS.List([r2, r3, r4]);
+            var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
             var r6 = new WyJS.Integer(1);
-            var r7 = new WyJS.List([r6]);
-            var r8 = new WyJS.List([r5, r7]);
-            var r1 = r8.clone();//assign %1 = %8  : [[int]]
-            var r0 = r1.clone();//assign %0 = %1  : [[int]]
-            var r9 = f(r0);//invoke %9 = (%0) ListGenerator_Valid_3:f : function([[int]]) -> int
+            var r7 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.List([r5, r7], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
+            r1 = r8.clone();//assign %1 = %8  : [[int]]
+            r0 = r1.clone();//assign %0 = %1  : [[int]]
+            var r9 = f$_9bFaA$0D53D5WE(r0);//invoke %9 = (%0) ListGenerator_Valid_3:f : function([[int]]) -> int
             var r10 = new WyJS.Integer(2);
             if(WyJS.equals(r9, r10, true)){
                control_flow_pc = 1184;

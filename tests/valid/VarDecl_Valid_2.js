@@ -1,4 +1,4 @@
-function g(r0){//function(int) -> int
+function g$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,7 +11,7 @@ function g(r0){//function(int) -> int
    }
 }
 
-function f(r0){//function(int) -> int
+function f$Y9bFXA$W(r0){//function(int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -23,13 +23,13 @@ function f(r0){//function(int) -> int
             var r4 = r0.add(r3);//add %4 = %0, %3 : int
             var r2 = r4;//assign %2 = %4  : int
             var r1 = r2;//assign %1 = %2  : int
-            var r5 = g(r1);//invoke %5 = (%1) VarDecl_Valid_2:g : function(int) -> int
+            var r5 = g$Y9bFXA$W(r1);//invoke %5 = (%1) VarDecl_Valid_2:g : function(int) -> int
             return r5;//return %5 : int
       }
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -38,7 +38,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(1);
-            var r0 = f(r1);//invoke %0 = (%1) VarDecl_Valid_2:f : function(int) -> int
+            var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) VarDecl_Valid_2:f : function(int) -> int
             var r2 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r2, true)){
                control_flow_pc = 1105;

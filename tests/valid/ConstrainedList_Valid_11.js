@@ -1,4 +1,4 @@
-function isLetter(r0){//function(int) -> bool
+function isLetter$Z9bF59$WA$(r0){//function(int) -> bool
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -44,7 +44,7 @@ function isLetter(r0){//function(int) -> bool
    }
 }
 
-function f(r0){//function(ConstrainedList_Valid_11:state) -> int
+function f$Z9bFaA$WL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$32$lJ$B6$o0FN$F6$_0(r0){//function(ConstrainedList_Valid_11:state) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -54,7 +54,7 @@ function f(r0){//function(ConstrainedList_Valid_11:state) -> int
          case -1 :
             var r1 = r0.fieldLoad("pos");//fieldload %1 = %0 pos : {[int] input,int pos}
             var r2 = r0.fieldLoad("input");//fieldload %2 = %0 input : {[int] input,int pos}
-            var r3 = r2.length;//lengthof %3 = %2 : [int]
+            var r3 = r2.length();//lengthof %3 = %2 : [int]
             if(WyJS.gt(r1, r3, true)){
                control_flow_pc = 150;
                control_flow_repeat = true;
@@ -63,7 +63,7 @@ function f(r0){//function(ConstrainedList_Valid_11:state) -> int
             var r5 = r0.fieldLoad("input");//fieldload %5 = %0 input : {[int] input,int pos}
             var r6 = r0.fieldLoad("pos");//fieldload %6 = %0 pos : {[int] input,int pos}
             var r7 = r5.getValue(r6);
-            var r4 = isLetter(r7);//invoke %4 = (%7) ConstrainedList_Valid_11:isLetter : function(int) -> bool
+            var r4 = isLetter$Z9bF59$WA$(r7);//invoke %4 = (%7) ConstrainedList_Valid_11:isLetter : function(int) -> bool
             var r8 = true;
             if(r4 === r8){
                control_flow_pc = 151;
@@ -85,7 +85,7 @@ function f(r0){//function(ConstrainedList_Valid_11:state) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -95,8 +95,8 @@ function test(){//method() -> void
          case -1 :
             var r1 = new WyJS.List([104,101,108,108,111]);
             var r2 = new WyJS.Integer(0);
-            var r3 = new WyJS.Record(["input", "pos"], [r1, r2]);
-            var r0 = f(r3);//invoke %0 = (%3) ConstrainedList_Valid_11:f : function(ConstrainedList_Valid_11:state) -> int
+            var r3 = new WyJS.Record(["input", "pos"], [r1, r2], new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
+            var r0 = f$Z9bFaA$WL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$32$lJ$B6$o0FN$F6$_0(r3);//invoke %0 = (%3) ConstrainedList_Valid_11:f : function(ConstrainedList_Valid_11:state) -> int
             var r4 = new WyJS.Integer(104);
             if(WyJS.equals(r0, r4, true)){
                control_flow_pc = 152;

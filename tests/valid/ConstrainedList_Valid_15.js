@@ -1,4 +1,4 @@
-function f(){//function() -> [int]
+function f$Z9_FsNBVk4D(){//function() -> [int]
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -12,7 +12,7 @@ function f(){//function() -> [int]
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -20,7 +20,7 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = f();//invoke %0 = () ConstrainedList_Valid_15:f : function() -> [int]
+            var r0 = f$Z9_FsNBVk4D();//invoke %0 = () ConstrainedList_Valid_15:f : function() -> [int]
             var r1 = new WyJS.List([]);
             if(WyJS.equals(r0, r1, true)){
                control_flow_pc = 157;

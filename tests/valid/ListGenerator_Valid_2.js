@@ -1,4 +1,4 @@
-function f(r0){//method([int]) -> void
+function f$3Ab737klNRWz(r0){//method([int]) -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -6,7 +6,7 @@ function f(r0){//method([int]) -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = r0.length;//lengthof %3 = %0 : [int]
+            var r3 = r0.length();//lengthof %3 = %0 : [int]
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
             var r4 = new WyJS.Integer(1);
@@ -24,7 +24,7 @@ function f(r0){//method([int]) -> void
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -35,10 +35,10 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = new WyJS.List([r2, r3, r4]);
-            var r1 = r5.clone();//assign %1 = %5  : [int]
-            var r0 = r1.clone();//assign %0 = %1  : [int]
-            f(r0);//invoke %(%0) ListGenerator_Valid_2:f : method([int]) -> void
+            var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            r1 = r5.clone();//assign %1 = %5  : [int]
+            r0 = r1.clone();//assign %0 = %1  : [int]
+            f$3Ab737klNRWz(r0);//invoke %(%0) ListGenerator_Valid_2:f : method([int]) -> void
       }
    }
 }

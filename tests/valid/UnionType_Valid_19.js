@@ -1,4 +1,4 @@
-function f(r0){//function(UnionType_Valid_19:tupper) -> int
+function f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$tN$F6$p0$R$$6$_0VR(r0){//function(UnionType_Valid_19:tupper) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -12,7 +12,7 @@ function f(r0){//function(UnionType_Valid_19:tupper) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,10 +22,10 @@ function test(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(1);
-            var r4 = new WyJS.Record(["op", "il"], [r2, r3]);
+            var r4 = new WyJS.Record(["il", "op"], [r2, r3], new WyJS.Type.Record(["il", "op"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r1 = r4;//assign %1 = %4  : {int il,int op}
             var r0 = r1;//assign %0 = %1  : {int|[int] il,int op}
-            var r5 = f(r0);//invoke %5 = (%0) UnionType_Valid_19:f : function(UnionType_Valid_19:tupper) -> int
+            var r5 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$tN$F6$p0$R$$6$_0VR(r0);//invoke %5 = (%0) UnionType_Valid_19:f : function(UnionType_Valid_19:tupper) -> int
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
                control_flow_pc = 421;

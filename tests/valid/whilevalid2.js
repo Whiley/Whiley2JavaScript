@@ -1,4 +1,4 @@
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,14 +11,7 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             while(true){//loop (%0, %3, %4, %5, %6, %7)
                var r3 = new WyJS.Integer(10);
-               if(WyJS.gt(r0, r3, true)){
-                  control_flow_pc = 0;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
                var r4 = new WyJS.Integer(9);
-               if(WyJS.equals(r0, r4, false)){
-               }
                var r5 = new WyJS.Integer(10);
                var r0 = r5;//assign %0 = %5  : int
                var r6 = new WyJS.Integer(1);

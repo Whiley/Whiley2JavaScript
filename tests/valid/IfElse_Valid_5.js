@@ -1,4 +1,4 @@
-function getFlag(r0){//function(IfElse_Valid_5:Record) -> int
+function getFlag$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$JY0VJ$J5$Y0kQ$76$Z0(r0){//function(IfElse_Valid_5:Record) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -42,7 +42,7 @@ function getFlag(r0){//function(IfElse_Valid_5:Record) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -51,10 +51,10 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.Integer(1);
-            var r3 = new WyJS.Record(["flag"], [r2]);
+            var r3 = new WyJS.Record(["flag"], [r2], new WyJS.Type.Record(["flag"], [new WyJS.Type.Int()]));
             var r1 = r3;//assign %1 = %3  : {int flag}
             var r0 = r1;//assign %0 = %1  : {int flag}
-            var r4 = getFlag(r0);//invoke %4 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
+            var r4 = getFlag$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$JY0VJ$J5$Y0kQ$76$Z0(r0);//invoke %4 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
             var r5 = new WyJS.Integer(1);
             if(WyJS.equals(r4, r5, true)){
                control_flow_pc = 258;
@@ -64,9 +64,9 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 258:
             var r6 = new WyJS.Integer(0);
-            var r7 = new WyJS.Record(["flag"], [r6]);
+            var r7 = new WyJS.Record(["flag"], [r6], new WyJS.Type.Record(["flag"], [new WyJS.Type.Int()]));
             var r0 = r7;//assign %0 = %7  : {int flag}
-            var r8 = getFlag(r0);//invoke %8 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
+            var r8 = getFlag$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$JY0VJ$J5$Y0kQ$76$Z0(r0);//invoke %8 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
             var r9 = new WyJS.Integer(1);
             var r10 = r9.neg();//neg %10 = %9 : int
             if(WyJS.equals(r8, r10, true)){
@@ -78,9 +78,9 @@ function test(){//method() -> void
          case 259:
             var r11 = new WyJS.Integer(1);
             var r12 = r11.neg();//neg %12 = %11 : int
-            var r13 = new WyJS.Record(["flag"], [r12]);
+            var r13 = new WyJS.Record(["flag"], [r12], new WyJS.Type.Record(["flag"], [new WyJS.Type.Int()]));
             var r0 = r13;//assign %0 = %13  : {int flag}
-            var r14 = getFlag(r0);//invoke %14 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
+            var r14 = getFlag$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$JY0VJ$J5$Y0kQ$76$Z0(r0);//invoke %14 = (%0) IfElse_Valid_5:getFlag : function(IfElse_Valid_5:Record) -> int
             var r15 = new WyJS.Integer(0);
             if(WyJS.equals(r14, r15, true)){
                control_flow_pc = 260;

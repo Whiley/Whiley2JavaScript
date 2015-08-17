@@ -1,4 +1,4 @@
-function extract(r0){//function([int]) -> int
+function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -10,12 +10,7 @@ function extract(r0){//function([int]) -> int
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
             while(true){//loop (%1, %4, %5, %6)
-               var r4 = r0.length;//lengthof %4 = %0 : [int]
-               if(WyJS.gt(r1, r4, true)){
-                  control_flow_pc = 562;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+               var r4 = r0.length();//lengthof %4 = %0 : [int]
                var r5 = new WyJS.Integer(1);
                var r6 = r1.add(r5);//add %6 = %1, %5 : int
                var r1 = r6;//assign %1 = %6  : int
@@ -26,7 +21,7 @@ function extract(r0){//function([int]) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -46,8 +41,8 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(2345);
             var r13 = new WyJS.Integer(4);
             var r14 = new WyJS.Integer(5);
-            var r15 = new WyJS.List([r4, r6, r7, r8, r10, r11, r12, r13, r14]);
-            var r2 = extract(r15);//invoke %2 = (%15) While_Valid_14:extract : function([int]) -> int
+            var r15 = new WyJS.List([r4, r6, r7, r8, r10, r11, r12, r13, r14], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r2 = extract$Z9bFaA$0D5Wz(r15);//invoke %2 = (%15) While_Valid_14:extract : function([int]) -> int
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
             var r16 = new WyJS.Integer(9);

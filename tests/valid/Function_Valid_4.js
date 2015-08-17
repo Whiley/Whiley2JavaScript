@@ -1,4 +1,4 @@
-function g(r0){//function(Function_Valid_4:fr4nat) -> Function_Valid_4:fr4nat
+function g$Y9bFXL1c$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0$C5$a0VR$F2$i0FN$F631(r0){//function(Function_Valid_4:fr4nat) -> Function_Valid_4:fr4nat
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,7 +13,7 @@ function g(r0){//function(Function_Valid_4:fr4nat) -> Function_Valid_4:fr4nat
    }
 }
 
-function f(r0){//function(Function_Valid_4:fr4nat) -> int
+function f$Z9bFaA$WL1c$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0$C5$a0VR$F2$i0FN$F6(r0){//function(Function_Valid_4:fr4nat) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -26,7 +26,7 @@ function f(r0){//function(Function_Valid_4:fr4nat) -> int
    }
 }
 
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -37,16 +37,16 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
-            var r4 = g(r0);//invoke %4 = (%0) Function_Valid_4:g : function(Function_Valid_4:fr4nat) -> Function_Valid_4:fr4nat
-            var r3 = f(r4);//invoke %3 = (%4) Function_Valid_4:f : function(Function_Valid_4:fr4nat) -> int
+            var r4 = g$Y9bFXL1c$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0$C5$a0VR$F2$i0FN$F631(r0);//invoke %4 = (%0) Function_Valid_4:g : function(Function_Valid_4:fr4nat) -> Function_Valid_4:fr4nat
+            var r3 = f$Z9bFaA$WL1c$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0$C5$a0VR$F2$i0FN$F6(r4);//invoke %3 = (%4) Function_Valid_4:f : function(Function_Valid_4:fr4nat) -> int
             var r5 = new WyJS.Integer(2);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 1853;
+               control_flow_pc = 1850;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1853:
+         case 1850:
       }
    }
 }
