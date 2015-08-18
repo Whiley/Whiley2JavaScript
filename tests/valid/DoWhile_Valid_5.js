@@ -12,23 +12,33 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            while(true){//loop (%1, %2, %7, %8, %9, %10, %11, %12)
-               var r7 = r0.getValue(r1);
-               var r8 = r2.add(r7);//add %8 = %2, %7 : int
-               var r2 = r8;//assign %2 = %8  : int
-               var r9 = new WyJS.Integer(1);
-               var r10 = r1.add(r9);//add %10 = %1, %9 : int
-               var r1 = r10;//assign %1 = %10  : int
-               var r11 = new WyJS.Integer(0);
-               if(WyJS.gt(r1, r11, true)){
-                  control_flow_pc = 472;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 472:
-               var r12 = r0.length();//lengthof %12 = %0 : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = r0.getValue(r1);
+            var r8 = r2.add(r7);//add %8 = %2, %7 : int
+            var r2 = r8;//assign %2 = %8  : int
+            var r9 = new WyJS.Integer(1);
+            var r10 = r1.add(r9);//add %10 = %1, %9 : int
+            var r1 = r10;//assign %1 = %10  : int
+            var r11 = new WyJS.Integer(0);
+            if(WyJS.gt(r1, r11, true)){
+               control_flow_pc = 472;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 472:
+            var r12 = r0.length();//lengthof %12 = %0 : [int]
+            if(WyJS.gt(r1, r12, true)){
+               control_flow_pc = 473;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 473:
             return r2;//return %2 : int
       }

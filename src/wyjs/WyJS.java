@@ -168,7 +168,7 @@ public class WyJS {
 		} else if (o instanceof Codes.Return) {
 			write((Codes.Return) o);
 		} else if (o instanceof Codes.If) {
-			write((Codes.If) o, false, null);
+			write((Codes.If) o);
 		} else if (o instanceof Codes.Goto) {
 			write((Codes.Goto) o);
 		} else if (o instanceof Codes.AssertOrAssume) {
@@ -234,7 +234,9 @@ public class WyJS {
 		} else if (o.assignedType() instanceof Type.Bool) {
 			consts += o.constant + ";\n";
 		} else if (o.assignedType() instanceof Type.Record) {
+			//o.constant.
 			//Should be declared as a new record
+//			Codes.NewRecord(o.assignedType(), o.target(), )
 //			Type.Record rec = (Type.Record) o.assignedType();
 //			int i = 0;
 //			String names = "[";
@@ -342,8 +344,19 @@ public class WyJS {
 					+ o.toString() + "\n");
 		}
 	}
+	
+	private void write(Codes.If o) throws Exception{
+		js.add(writeIfTop(o));
+		indent++;
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
+				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+		js.add(getIndentBlock() + "continue outer;\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+	}
 
-	private void write(Codes.If o, boolean loop, Object loopornull) throws Exception {
+	private String writeIfTop(Codes.If o) throws Exception {
 		// TODO: Use Runtime file
 		// can use the appropriate .equals method depending on type of if
 		if (o.type instanceof Type.Bool) {
@@ -352,74 +365,38 @@ public class WyJS {
 			//WHAT IF THE RIGHT HAND SIDE IS NOT A BOOL??????
 			//TODO:
 			case EQ:
-				js.add(getIndentBlock() + "if(r" + o.leftOperand + " === r"
-						+ o.rightOperand + "){\n");
-				break;
+				return getIndentBlock() + "if(r" + o.leftOperand + " === r"
+						+ o.rightOperand + "){\n";
 			case NEQ:
-				js.add(getIndentBlock() + "if(r" + o.leftOperand + " !== r"
-						+ o.rightOperand + "){\n");
-				break;
+				return getIndentBlock() + "if(r" + o.leftOperand + " !== r"
+						+ o.rightOperand + "){\n";
 			default:
 				throw new Exception(o.op + " shouldnt be used with Bools?");
 			}
 		} else {
 			switch (o.op) {
 			case EQ:
-				js.add(getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", true)){\n";
 			case GT:
-				js.add(getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", false)){\n";
 			case GTEQ:
-				js.add(getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", true)){\n";
 			case LT:
-				js.add(getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", false)){\n";
 			case LTEQ:
-				js.add(getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", true)){\n";
 			case NEQ:
-				js.add(getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n");
-				break;
+				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
+						+ ", r" + o.rightOperand + ", false)){\n";
 
 			default:
 				throw new Exception(o.op + "not supported?");
 			}
-		}
-
-		indent++;
-		if(!loop){
-			js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
-					+ ";\n");
-			js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-			js.add(getIndentBlock() + "continue outer;\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
-		}else{
-			boolean write = false;
-			for (Code c : ((Codes.Loop) loopornull).bytecodes()) {
-				if (c instanceof Label) {
-					if (((Label) c).label == o.target) {
-						write = true;
-						continue;
-					} else {
-						write = false;
-					}
-				}
-				if (write) {
-					write(c);
-				}
-			}
-			js.add(getIndentBlock() + "continue;\n");
-			indent--;
-			js.add(getIndentBlock() + "}\n");
 		}
 	}
 	
@@ -453,9 +430,9 @@ public class WyJS {
 			int x = 1;
 			for (int i : o.operands()) {
 				if (x == 1) {
-					wat += "r" + i;
+					wat += "r" + i + ".val";
 				} else {
-					wat += ", r" + i;
+					wat += ", r" + i + ".val";
 				}
 				x++;
 			}
@@ -536,11 +513,13 @@ public class WyJS {
 		String name = "";
 		ArrayList<Code> codes = new ArrayList<Code>();
 		ArrayList<String> strings = new ArrayList<String>();
+		String lastLabel = "";
 		for(Code c: o.bytecodes()){
 			if(yo){
 				codes.add(c);
 			}
 			if(c instanceof Codes.Label){
+				lastLabel = ((Codes.Label) c).label;
 				if(yo){
 					labels.put(name, codes);
 					strings.add(name);
@@ -559,29 +538,89 @@ public class WyJS {
 		}
 		
 		
-		js.add(getIndentBlock() + "while(true){//" + o.toString() + "\n");
+		int loopLabel = getFreshLabel();
+		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel
+				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+		js.add(getIndentBlock() + "break;\n");
+		indent--;
+		js.add(getIndentBlock() + "case " + loopLabel + ":\n");
 		indent++;
+		ArrayList<Integer> labels = new ArrayList<Integer>();
+		int currentIndex = -1;
 		
 		Iterator<Code> iter = o.iterator();
 		while(iter.hasNext()){
 			Code c = iter.next();
 			if(c instanceof Codes.If){
-				//write start of if eg: if(blah){
-				//write code of that label
-			} else if(c instanceof Codes.IfIs){
+				String top = writeIfTop((If) c);
+				if ((labelMap.get((((Codes.If) c).target)) != null)) {
+					//jumping in the loop
+					js.add(writeIfTop((If) c));
+					indent++;
+					
+					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.If) c).target)
+							+ ";\n");
+					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+					js.add(getIndentBlock() + "break;\n");
+					indent--;
+					js.add(getIndentBlock() + "}\n");
+					//write else
+					currentIndex++;
+					labels.add(getFreshLabel());
+					js.add(getIndentBlock() + "else{\n");
+					indent++;
+					js.add(getIndentBlock() + "control_flow_pc = " + labels.get(currentIndex)
+							+ ";\n");
+					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+					js.add(getIndentBlock() + "break;\n");
+					indent--;
+					js.add(getIndentBlock() + "}\n");
+					indent--;
+					js.add(getIndentBlock() + "case " + labels.get(currentIndex) + ":\n");
+					indent++;
+				} else{
+					//terminating statement
+					write(c);
+				}
+//					// within the loop
+//					write((Codes.If) c, true, o);
+//				} else {
+//					// jumping out, parse normally
+//					write((Codes.If) c, false, null);
+//				}
 				
-			} else if(c instanceof Codes.Goto){
-				
-			} else if(c instanceof Codes.Loop){
-				
-			} else if(c instanceof Codes.Label){
-				
+			} 
+//			else if(c instanceof Codes.IfIs){
+//				
+//			} else if(c instanceof Codes.Goto){
+//				
+//			} else if(c instanceof Codes.Loop){
+//				
+//			} 
+			else if(c instanceof Codes.Label){
+				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(lastLabel)
+						+ ";\n");
+				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+				js.add(getIndentBlock() + "break;\n");
+				indent--;
+				js.add(getIndentBlock() + "case " + parseLabel(((Codes.Label) c).label) + ":\n");
+				indent++;
 			} else{
 				write(c);
 			}
 		}
+		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel
+				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+		js.add(getIndentBlock() + "break;\n");
 		
 		
+		//write new case
+		//if (if|ifis|loop|goto|label)
+		//	write differently
+		//else 
+		//	write bytecode
 		
 		
 		
@@ -622,15 +661,16 @@ public class WyJS {
 //					// jumping out the loop, parse normally
 //					write((Codes.Goto) c);
 //				}
-//			} else if(c instanceof Codes.Loop){
-//				Codes.Loop loop = (Codes.Loop) c;
-//				Map<String, Index> newMap = CodeUtils
-//						.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
-//				for (String s: labelMap.keySet()) {
-//					newMap.put(s, labelMap.get(s));
-//				}
-//				write(loop,newMap);
 //			}
+////			else if(c instanceof Codes.Loop){
+////				Codes.Loop loop = (Codes.Loop) c;
+////				Map<String, Index> newMap = CodeUtils
+////						.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
+////				for (String s: labelMap.keySet()) {
+////					newMap.put(s, labelMap.get(s));
+////				}
+////				write(loop,newMap);
+////			}
 //			else if (c instanceof Codes.Assert) {
 //				// TODO:
 //			} else if (c instanceof Codes.Assume) {
@@ -642,12 +682,12 @@ public class WyJS {
 //				write(c);
 //			}
 //		}
-		indent--;
-		js.add(getIndentBlock() + "}\n");
-		System.out.println("leaving");
-		for(String s: strings){
-			labels.remove(s);
-		}
+//		indent--;
+//		js.add(getIndentBlock() + "}\n");
+//		System.out.println("leaving");
+//		for(String s: strings){
+//			labels.remove(s);
+//		}
 
 	}
 
@@ -820,13 +860,15 @@ public class WyJS {
 			String names = "[";
 			String types = "[";
 			int i = 0;
-			for(String s: rec.keys()){
+			ArrayList<String> temp = new ArrayList<String>(rec.keys());
+			Collections.sort(temp);
+			for(String s: temp){
 				i++;
-				if(i == rec.keys().size()){
-					names += '"' + s + '"' + "]";
+				if (i == temp.size()) {
+					names = names + '"' + s + '"' + "]";
 					types += getType(rec.field(s)) + "]";
-				}else{
-					names += '"' + s + '"' + ", ";
+				} else {
+					names = names + '"' + s + '"' + ", ";
 					types += getType(rec.field(s)) + ", ";
 				}
 			}
@@ -892,6 +934,12 @@ public class WyJS {
 		tm.write(ft);
 		binout.close(); // force flush
 		return jout.toString();
+	}
+	
+	int labelCount = -2;
+	private int getFreshLabel(){
+		labelCount--;
+		return labelCount+1;
 	}
 	
 	//Do we even need this?

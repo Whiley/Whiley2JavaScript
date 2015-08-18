@@ -9,14 +9,39 @@ function indexOf$a9dF514mJFs1RB5Is2(r0, r1){//function(int,[int]) -> int|null
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            while(true){//loop (%2, %5, %6, %7, %8)
-               var r5 = r1.length();//lengthof %5 = %1 : [int]
-               var r6 = r1.getValue(r2);
-               return r2;//return %2 : null|int
-               var r7 = new WyJS.Integer(1);
-               var r8 = r2.add(r7);//add %8 = %2, %7 : int
-               var r2 = r8;//assign %2 = %8  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r5 = r1.length();//lengthof %5 = %1 : [int]
+            if(WyJS.gt(r2, r5, true)){
+               control_flow_pc = 2205;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r6 = r1.getValue(r2);
+            if(WyJS.equals(r0, r6, false)){
+               control_flow_pc = 2206;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            return r2;//return %2 : null|int
+            control_flow_pc = 2206;
+            control_flow_repeat = true;
+            break;
+         case 2206:
+            var r7 = new WyJS.Integer(1);
+            var r8 = r2.add(r7);//add %8 = %2, %7 : int
+            var r2 = r8;//assign %2 = %8  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 2205:
             var r9 = null;/n            return r9;//return %9 : null|int
       }

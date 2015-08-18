@@ -12,31 +12,41 @@ function sum$Z9bFaL1T$FF$B6$n0FS$o5$_0kM$N4$W0$Q$Z5$Z0kM$3n$VQ$35$o00D5Wz(r0){//
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            while(true){//loop (%1, %2, %7, %8, %9, %10, %11, %12, %13)
-               var r7 = new WyJS.Integer(0);
-               if(WyJS.gt(r1, r7, true)){
-                  control_flow_pc = 2427;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 2427:
-               var r8 = r0.length();//lengthof %8 = %0 : [int]
-               var r9 = new WyJS.Integer(0);
-               if(WyJS.gt(r1, r9, true)){
-                  control_flow_pc = 2429;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 2429:
-               var r10 = r0.getValue(r2);
-               var r11 = r1.add(r10);//add %11 = %1, %10 : int
-               var r1 = r11;//assign %1 = %11  : int
-               var r12 = new WyJS.Integer(1);
-               var r13 = r2.add(r12);//add %13 = %2, %12 : int
-               var r2 = r13;//assign %2 = %13  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = new WyJS.Integer(0);
+            if(WyJS.gt(r1, r7, true)){
+               control_flow_pc = 2427;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 2427:
+            var r8 = r0.length();//lengthof %8 = %0 : [int]
+            if(WyJS.gt(r2, r8, true)){
+               control_flow_pc = 2428;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r9 = new WyJS.Integer(0);
+            if(WyJS.gt(r1, r9, true)){
+               control_flow_pc = 2429;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 2429:
+            var r10 = r0.getValue(r2);
+            var r11 = r1.add(r10);//add %11 = %1, %10 : int
+            var r1 = r11;//assign %1 = %11  : int
+            var r12 = new WyJS.Integer(1);
+            var r13 = r2.add(r12);//add %13 = %2, %12 : int
+            var r2 = r13;//assign %2 = %13  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 2428:
             return r1;//return %1 : int
       }

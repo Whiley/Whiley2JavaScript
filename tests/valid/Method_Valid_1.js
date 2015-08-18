@@ -35,18 +35,43 @@ function numPieces$_9dF5u1Fc_V6$o3$_0$S$V5$j0$O$w4$L0FN$k5$d0$O$w4$lJ$73$j0FN$76
             var r8 = new WyJS.Integer(0);
             var r7 = r8;//assign %7 = %8  : int
             var r3 = r7;//assign %3 = %7  : int
-            while(true){//loop (%2, %3, %4, %9, %10, %11, %12, %13, %14, %15)
-               var r9 = r0.length();//lengthof %9 = %0 : [int]
-               var r11 = r0.getValue(r3);
-               var r10 = r11;//assign %10 = %11  : int
-               var r4 = r10;//assign %4 = %10  : int
-               var r12 = new WyJS.Integer(1);
-               var r13 = r2.add(r12);//add %13 = %2, %12 : int
-               var r2 = r13;//assign %2 = %13  : int
-               var r14 = new WyJS.Integer(1);
-               var r15 = r3.add(r14);//add %15 = %3, %14 : int
-               var r3 = r15;//assign %3 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r9 = r0.length();//lengthof %9 = %0 : [int]
+            if(WyJS.gt(r3, r9, true)){
+               control_flow_pc = 1190;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r11 = r0.getValue(r3);
+            var r10 = r11;//assign %10 = %11  : int
+            var r4 = r10;//assign %4 = %10  : int
+            if(WyJS.equals(r4, r1, false)){
+               control_flow_pc = 1191;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r12 = new WyJS.Integer(1);
+            var r13 = r2.add(r12);//add %13 = %2, %12 : int
+            var r2 = r13;//assign %2 = %13  : int
+            control_flow_pc = 1191;
+            control_flow_repeat = true;
+            break;
+         case 1191:
+            var r14 = new WyJS.Integer(1);
+            var r15 = r3.add(r14);//add %15 = %3, %14 : int
+            var r3 = r15;//assign %3 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1190:
             return r2;//return %2 : int
       }

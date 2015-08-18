@@ -12,18 +12,28 @@ function count$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r7 = r0.mul(r1);//mul %7 = %0, %1 : int
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
-            while(true){//loop (%2, %8, %9)
-               if(WyJS.lt(r2, r3, true)){
-                  control_flow_pc = 653;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 653:
-               var r8 = new WyJS.Integer(1);
-               var r9 = r2.add(r8);//add %9 = %2, %8 : int
-               var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            if(WyJS.lt(r2, r3, true)){
+               control_flow_pc = 653;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 653:
+            if(WyJS.gt(r2, r3, true)){
+               control_flow_pc = 654;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r8 = new WyJS.Integer(1);
+            var r9 = r2.add(r8);//add %9 = %2, %8 : int
+            var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 654:
             return r2;//return %2 : int
       }

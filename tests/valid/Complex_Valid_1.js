@@ -63,16 +63,49 @@ function clearRowExcept$_9fFaWc$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$3n$$J
             var r19 = r18.add(r3);//add %19 = %18, %3 : int
             var r17 = r19;//assign %17 = %19  : int
             var r5 = r17;//assign %5 = %17  : int
-            while(true){//loop (%5, %20, %21, %22, %23, %24, %25)
-               var r20 = r1.fieldLoad("col");//fieldload %20 = %1 col : {int col,int row}
-               var r21 = r2.fieldLoad("rows");//fieldload %21 = %2 rows : {bool blackCastleKingSide,bool blackCastleQueenSide,[[null|{bool colour,int kind}]] rows,bool whiteCastleKingSide,bool whiteCastleQueenSide}
-               var r22 = r21.getValue(r4);
-               var r23 = r22.getValue(r5);
-               var r24 = r5.add(r3);//add %24 = %5, %3 : int
-               var r5 = r24;//assign %5 = %24  : int
-               var r25 = false;
-               return r25;//return %25 : bool
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r20 = r1.fieldLoad("col");//fieldload %20 = %1 col : {int col,int row}
+            if(WyJS.equals(r5, r20, true)){
+               control_flow_pc = 1484;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r21 = r2.fieldLoad("rows");//fieldload %21 = %2 rows : {bool blackCastleKingSide,bool blackCastleQueenSide,[[null|{bool colour,int kind}]] rows,bool whiteCastleKingSide,bool whiteCastleQueenSide}
+            var r22 = r21.getValue(r4);
+            var r23 = r22.getValue(r5);
+            if(WyJS.is(r23, new WyJS.Type.Null())){
+               control_flow_pc = 1485;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = 1486;
+            control_flow_repeat = true;
+            continue outer;//goto label1486
+            control_flow_pc = 1487;
+            control_flow_repeat = true;
+            break;
+         case 1485:
+            var r24 = r5.add(r3);//add %24 = %5, %3 : int
+            var r5 = r24;//assign %5 = %24  : int
+            control_flow_pc = 1487;
+            control_flow_repeat = true;
+            continue outer;//goto label1487
+            control_flow_pc = 1487;
+            control_flow_repeat = true;
+            break;
+         case 1486:
+            var r25 = false;
+            return r25;//return %25 : bool
+            control_flow_pc = 1487;
+            control_flow_repeat = true;
+            break;
+         case 1487:
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1484:
             var r26 = true;
             return r26;//return %26 : bool

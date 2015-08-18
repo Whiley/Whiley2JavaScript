@@ -9,29 +9,44 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r4 = r0.length();//lengthof %4 = %0 : [int]
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            while(true){//loop (%2, %5, %6, %7, %8, %9, %10, %11)
-               var r5 = new WyJS.Integer(1);
-               var r6 = r2.sub(r5);//sub %6 = %2, %5 : int
-               var r2 = r6;//assign %2 = %6  : int
-               var r7 = new WyJS.Integer(1);
-               var r8 = r7.neg();//neg %8 = %7 : int
-               if(WyJS.lt(r2, r8, false)){
-                  control_flow_pc = 479;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r9 = r0.length();//lengthof %9 = %0 : [int]
-               if(WyJS.lt(r2, r9, false)){
-                  control_flow_pc = 480;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 479:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 480:
-               var r10 = new WyJS.Integer(0);
-               var r11 = r0.getValue(r2);
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r5 = new WyJS.Integer(1);
+            var r6 = r2.sub(r5);//sub %6 = %2, %5 : int
+            var r2 = r6;//assign %2 = %6  : int
+            var r7 = new WyJS.Integer(1);
+            var r8 = r7.neg();//neg %8 = %7 : int
+            if(WyJS.lt(r2, r8, false)){
+               control_flow_pc = 479;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r9 = r0.length();//lengthof %9 = %0 : [int]
+            if(WyJS.lt(r2, r9, false)){
+               control_flow_pc = 480;
+               control_flow_repeat = true;
+               continue outer;
+            }
+         case 479:
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 480:
+            var r10 = new WyJS.Integer(0);
+            if(WyJS.lt(r2, r10, false)){
+               control_flow_pc = 481;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r11 = r0.getValue(r2);
+            if(WyJS.equals(r11, r1, true)){
+               control_flow_pc = 481;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 481:
             return r2;//return %2 : int
       }

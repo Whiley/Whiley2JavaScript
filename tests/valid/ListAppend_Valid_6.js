@@ -12,15 +12,41 @@ function test$b9dF5X1FVYGWYW0Yk4D(r0, r1){//function([real],[int]) -> bool
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
-            while(true){//loop (%3, %8, %9, %10, %11, %12)
-               var r8 = r2.length();//lengthof %8 = %2 : [int|real]
-               var r9 = r2.getValue(r3);
-               var r10 = true;
-               return r10;//return %10 : bool
-               var r11 = new WyJS.Integer(1);
-               var r12 = r3.add(r11);//add %12 = %3, %11 : int
-               var r3 = r12;//assign %3 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r8 = r2.length();//lengthof %8 = %2 : [int|real]
+            if(WyJS.gt(r3, r8, true)){
+               control_flow_pc = 1693;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r9 = r2.getValue(r3);
+            if(WyJS.is(r9, new WyJS.Type.Int())){
+               control_flow_pc = 1694;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = 1695;
+            control_flow_repeat = true;
+            continue outer;//goto label1695
+            control_flow_pc = 1695;
+            control_flow_repeat = true;
+            break;
+         case 1694:
+            var r10 = true;
+            return r10;//return %10 : bool
+            control_flow_pc = 1695;
+            control_flow_repeat = true;
+            break;
+         case 1695:
+            var r11 = new WyJS.Integer(1);
+            var r12 = r3.add(r11);//add %12 = %3, %11 : int
+            var r3 = r12;//assign %3 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1693:
             var r13 = false;
             return r13;//return %13 : bool

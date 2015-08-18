@@ -13,16 +13,26 @@ function extract$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r7 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
             r5 = r7.clone();//assign %5 = %7  : [int]
             r2 = r5.clone();//assign %2 = %5  : [int]
-            while(true){//loop (%1, %2, %8, %9, %10, %11, %12, %13)
-               var r8 = r0.length();//lengthof %8 = %0 : [int]
-               var r9 = new WyJS.Integer(1);
-               var r10 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Int()));
-               var r11 = r2.append(r10);
-               r2 = r11.clone();//assign %2 = %11  : [int]
-               var r12 = new WyJS.Integer(1);
-               var r13 = r1.add(r12);//add %13 = %1, %12 : int
-               var r1 = r13;//assign %1 = %13  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r8 = r0.length();//lengthof %8 = %0 : [int]
+            if(WyJS.gt(r1, r8, true)){
+               control_flow_pc = 542;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r9 = new WyJS.Integer(1);
+            var r10 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r11 = r2.append(r10);
+            r2 = r11.clone();//assign %2 = %11  : [int]
+            var r12 = new WyJS.Integer(1);
+            var r13 = r1.add(r12);//add %13 = %1, %12 : int
+            var r1 = r13;//assign %1 = %13  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 542:
             return r2;//return %2 : [int]
       }

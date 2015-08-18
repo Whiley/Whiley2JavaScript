@@ -26,21 +26,89 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
             var r11 = new WyJS.Integer(0);
             var r10 = r11;//assign %10 = %11  : int
             var r3 = r10;//assign %3 = %10  : int
-            while(true){//loop (%2, %3, %4, %5, %6, %7, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28, %29, %30, %31, %32, %33, %34, %35, %36, %37, %38, %39, %40)
-               var r12 = r0.fieldLoad("height");//fieldload %12 = %0 height : {[[int]] data,int height,int width}
-               var r14 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-               r13 = r14.clone();//assign %13 = %14  : [void]
-               r4 = r13.clone();//assign %4 = %13  : [int]
-               var r16 = new WyJS.Integer(0);
-               var r15 = r16;//assign %15 = %16  : int
-               var r5 = r15;//assign %5 = %15  : int
-               var r37 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-               var r38 = r2.append(r37);
-               r2 = r38.clone();//assign %2 = %38  : [[int]]
-               var r39 = new WyJS.Integer(1);
-               var r40 = r3.add(r39);//add %40 = %3, %39 : int
-               var r3 = r40;//assign %3 = %40  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r12 = r0.fieldLoad("height");//fieldload %12 = %0 height : {[[int]] data,int height,int width}
+            if(WyJS.gt(r3, r12, true)){
+               control_flow_pc = 1401;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r14 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
+            r13 = r14.clone();//assign %13 = %14  : [void]
+            r4 = r13.clone();//assign %4 = %13  : [int]
+            var r16 = new WyJS.Integer(0);
+            var r15 = r16;//assign %15 = %16  : int
+            var r5 = r15;//assign %5 = %15  : int
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
+         case -3:
+            var r17 = r1.fieldLoad("width");//fieldload %17 = %1 width : {[[int]] data,int height,int width}
+            if(WyJS.gt(r5, r17, true)){
+               control_flow_pc = 1402;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r19 = new WyJS.Integer(0);
+            var r18 = r19;//assign %18 = %19  : int
+            var r6 = r18;//assign %6 = %18  : int
+            var r21 = new WyJS.Integer(0);
+            var r20 = r21;//assign %20 = %21  : int
+            var r7 = r20;//assign %7 = %20  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+         case -4:
+            var r22 = r0.fieldLoad("width");//fieldload %22 = %0 width : {[[int]] data,int height,int width}
+            if(WyJS.gt(r7, r22, true)){
+               control_flow_pc = 1403;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r23 = r0.fieldLoad("data");//fieldload %23 = %0 data : {[[int]] data,int height,int width}
+            var r24 = r23.getValue(r3);
+            var r25 = r24.getValue(r7);
+            var r26 = r1.fieldLoad("data");//fieldload %26 = %1 data : {[[int]] data,int height,int width}
+            var r27 = r26.getValue(r7);
+            var r28 = r27.getValue(r5);
+            var r29 = r25.mul(r28);//mul %29 = %25, %28 : int
+            var r30 = r6.add(r29);//add %30 = %6, %29 : int
+            var r6 = r30;//assign %6 = %30  : int
+            var r31 = new WyJS.Integer(1);
+            var r32 = r7.add(r31);//add %32 = %7, %31 : int
+            var r7 = r32;//assign %7 = %32  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+            control_flow_pc = 1403;
+            control_flow_repeat = true;
+            break;
+         case 1403:
+            var r33 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r34 = r4.append(r33);
+            r4 = r34.clone();//assign %4 = %34  : [int]
+            var r35 = new WyJS.Integer(1);
+            var r36 = r5.add(r35);//add %36 = %5, %35 : int
+            var r5 = r36;//assign %5 = %36  : int
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
+            control_flow_pc = 1402;
+            control_flow_repeat = true;
+            break;
+         case 1402:
+            var r37 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
+            var r38 = r2.append(r37);
+            r2 = r38.clone();//assign %2 = %38  : [[int]]
+            var r39 = new WyJS.Integer(1);
+            var r40 = r3.add(r39);//add %40 = %3, %39 : int
+            var r3 = r40;//assign %3 = %40  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1401:
             var r42 = r1.fieldLoad("width");//fieldload %42 = %1 width : {[[int]] data,int height,int width}
             var r43 = r0.fieldLoad("height");//fieldload %43 = %0 height : {[[int]] data,int height,int width}

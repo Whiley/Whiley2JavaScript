@@ -12,24 +12,34 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             r5 = r6.clone();//assign %5 = %6  : [void]
             r2 = r5.clone();//assign %2 = %5  : [int]
-            while(true){//loop (%1, %2, %7, %8, %9, %10, %11, %12, %13)
-               var r7 = r0.length();//lengthof %7 = %0 : [int]
-               if(WyJS.lt(r1, r7, true)){
-                  control_flow_pc = 1118;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 1118:
-               var r8 = new WyJS.Integer(0);
-               var r9 = new WyJS.Integer(1);
-               var r10 = r1.sub(r9);//sub %10 = %1, %9 : int
-               var r1 = r10;//assign %1 = %10  : int
-               var r11 = r0.getValue(r1);
-               var r12 = new WyJS.List([r11], new WyJS.Type.List(new WyJS.Type.Int()));
-               var r13 = r2.append(r12);
-               r2 = r13.clone();//assign %2 = %13  : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = r0.length();//lengthof %7 = %0 : [int]
+            if(WyJS.lt(r1, r7, true)){
+               control_flow_pc = 1118;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 1118:
+            var r8 = new WyJS.Integer(0);
+            if(WyJS.lt(r1, r8, true)){
+               control_flow_pc = 1119;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r9 = new WyJS.Integer(1);
+            var r10 = r1.sub(r9);//sub %10 = %1, %9 : int
+            var r1 = r10;//assign %1 = %10  : int
+            var r11 = r0.getValue(r1);
+            var r12 = new WyJS.List([r11], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = r2.append(r12);
+            r2 = r13.clone();//assign %2 = %13  : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1119:
             return r2;//return %2 : [int]
       }

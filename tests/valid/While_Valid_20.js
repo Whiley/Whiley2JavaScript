@@ -9,13 +9,23 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             var r3 = new WyJS.Integer(0);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            while(true){//loop (%0, %1, %4, %5, %6)
-               var r4 = r0.fieldLoad("data");//fieldload %4 = %0 data : X<{int data,X|null next}>
-               var r5 = r1.add(r4);//add %5 = %1, %4 : int
-               var r1 = r5;//assign %1 = %5  : int
-               var r6 = r0.fieldLoad("next");//fieldload %6 = %0 next : X<{int data,X|null next}>
-               var r0 = r6;//assign %0 = %6  : X<null|{int data,X next}>
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            if(WyJS.is(r0, new WyJS.Type.Null())){
+               control_flow_pc = 582;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r4 = r0.fieldLoad("data");//fieldload %4 = %0 data : X<{int data,X|null next}>
+            var r5 = r1.add(r4);//add %5 = %1, %4 : int
+            var r1 = r5;//assign %1 = %5  : int
+            var r6 = r0.fieldLoad("next");//fieldload %6 = %0 next : X<{int data,X|null next}>
+            var r0 = r6;//assign %0 = %6  : X<null|{int data,X next}>
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 582:
             return r1;//return %1 : int
       }

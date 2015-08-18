@@ -9,12 +9,22 @@ function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r3 = new WyJS.Integer(0);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            while(true){//loop (%1, %4, %5, %6)
-               var r4 = r0.length();//lengthof %4 = %0 : [int]
-               var r5 = new WyJS.Integer(1);
-               var r6 = r1.add(r5);//add %6 = %1, %5 : int
-               var r1 = r6;//assign %1 = %6  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r4 = r0.length();//lengthof %4 = %0 : [int]
+            if(WyJS.gt(r1, r4, true)){
+               control_flow_pc = 562;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r5 = new WyJS.Integer(1);
+            var r6 = r1.add(r5);//add %6 = %1, %5 : int
+            var r1 = r6;//assign %1 = %6  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 562:
             return r1;//return %1 : int
       }

@@ -11,20 +11,59 @@ function play$Z9bF1D527FWz(r0){//function([bool]) -> [bool]
             var r5 = new WyJS.Integer(0);
             var r4 = r5;//assign %4 = %5  : int
             var r2 = r4;//assign %2 = %4  : int
-            while(true){//loop (%1, %2, %6, %7, %8, %9, %10, %11, %12, %13, %14)
-               var r6 = r0.length();//lengthof %6 = %0 : [bool]
-               var r7 = isAlive$_9dF5X1Fs1RB12(r2, r0);//invoke %7 = (%2, %0) BoolList_Valid_2:isAlive : function(int,[bool]) -> bool
-               var r8 = true;
-               var r9 = true;
-               var r10 = true;
-               r1.setValue(r2, r10);
-               var r11 = false;
-               var r12 = false;
-               r1.setValue(r2, r12);
-               var r13 = new WyJS.Integer(1);
-               var r14 = r2.add(r13);//add %14 = %2, %13 : int
-               var r2 = r14;//assign %2 = %14  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r6 = r0.length();//lengthof %6 = %0 : [bool]
+            if(WyJS.gt(r2, r6, true)){
+               control_flow_pc = 1291;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r7 = isAlive$_9dF5X1Fs1RB12(r2, r0);//invoke %7 = (%2, %0) BoolList_Valid_2:isAlive : function(int,[bool]) -> bool
+            var r8 = true;
+            if(r7 === r8){
+               control_flow_pc = 1292;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            control_flow_pc = 1293;
+            control_flow_repeat = true;
+            continue outer;//goto label1293
+            control_flow_pc = 1294;
+            control_flow_repeat = true;
+            break;
+         case 1292:
+            var r9 = true;
+            var r10 = true;
+            r1.setValue(r2, r10);
+            control_flow_pc = 1294;
+            control_flow_repeat = true;
+            continue outer;//goto label1294
+            control_flow_pc = 1294;
+            control_flow_repeat = true;
+            break;
+         case 1293:
+            var r11 = false;
+            var r12 = false;
+            r1.setValue(r2, r12);
+            control_flow_pc = 1294;
+            control_flow_repeat = true;
+            break;
+         case 1294:
+            var r13 = new WyJS.Integer(1);
+            var r14 = r2.add(r13);//add %14 = %2, %13 : int
+            var r2 = r14;//assign %2 = %14  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1291:
             return r1;//return %1 : [bool]
       }

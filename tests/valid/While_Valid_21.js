@@ -12,28 +12,38 @@ function create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
-            while(true){//loop (%2, %3, %8, %9, %10, %11, %12)
-               if(WyJS.gt(r3, r0, false)){
-                  control_flow_pc = 589;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r8 = r2.length();//lengthof %8 = %2 : [int]
-               if(WyJS.equals(r3, r8, true)){
-                  control_flow_pc = 590;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 589:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 590:
-               var r9 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
-               var r10 = r2.append(r9);
-               r2 = r10.clone();//assign %2 = %10  : [int]
-               var r11 = new WyJS.Integer(1);
-               var r12 = r3.add(r11);//add %12 = %3, %11 : int
-               var r3 = r12;//assign %3 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            if(WyJS.gt(r3, r0, false)){
+               control_flow_pc = 589;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r8 = r2.length();//lengthof %8 = %2 : [int]
+            if(WyJS.equals(r3, r8, true)){
+               control_flow_pc = 590;
+               control_flow_repeat = true;
+               continue outer;
+            }
+         case 589:
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 590:
+            if(WyJS.gt(r3, r0, true)){
+               control_flow_pc = 591;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r9 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = r2.append(r9);
+            r2 = r10.clone();//assign %2 = %10  : [int]
+            var r11 = new WyJS.Integer(1);
+            var r12 = r3.add(r11);//add %12 = %3, %11 : int
+            var r3 = r12;//assign %3 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 591:
             return r2;//return %2 : [int]
       }

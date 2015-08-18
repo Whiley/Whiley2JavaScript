@@ -11,50 +11,75 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|nul
             var r2 = r4;//assign %2 = %4  : int
             var r7 = null;/n            var r6 = r7;//assign %6 = %7  : null
             var r3 = r6;//assign %3 = %6  : null|int
-            while(true){//loop (%2, %3, %8, %9, %10, %11, %12, %13, %14, %15)
-               var r8 = new WyJS.Integer(0);
-               if(WyJS.lt(r2, r8, false)){
-                  control_flow_pc = 727;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               if(WyJS.is(r3, new WyJS.Type.Int())){
-                  control_flow_pc = 728;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r8 = new WyJS.Integer(0);
+            if(WyJS.lt(r2, r8, false)){
+               control_flow_pc = 727;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            if(WyJS.is(r3, new WyJS.Type.Int())){
+               control_flow_pc = 728;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = 729;
+            control_flow_repeat = true;
+            continue outer;//goto label729
+         case 728:
+            var r9 = new WyJS.Integer(0);
+            if(WyJS.gt(r9, r3, false)){
+               control_flow_pc = 727;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r10 = r0.length();//lengthof %10 = %0 : [int]
+            if(WyJS.gt(r3, r10, true)){
+               control_flow_pc = 727;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r11 = r0.getValue(r3);
+            if(WyJS.equals(r11, r1, true)){
                control_flow_pc = 729;
                control_flow_repeat = true;
-               continue outer;//goto label729
-            case 728:
-               var r9 = new WyJS.Integer(0);
-               if(WyJS.gt(r9, r3, false)){
-                  control_flow_pc = 727;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r10 = r0.length();//lengthof %10 = %0 : [int]
-               if(WyJS.gt(r3, r10, true)){
-                  control_flow_pc = 727;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r11 = r0.getValue(r3);
-               if(WyJS.equals(r11, r1, true)){
-                  control_flow_pc = 729;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 727:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 729:
-               var r12 = r0.length();//lengthof %12 = %0 : [int]
-               var r13 = r0.getValue(r2);
-               var r3 = r2;//assign %3 = %2  : int
-               var r14 = new WyJS.Integer(1);
-               var r15 = r2.add(r14);//add %15 = %2, %14 : int
-               var r2 = r15;//assign %2 = %15  : int
+               continue outer;
             }
+         case 727:
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 729:
+            var r12 = r0.length();//lengthof %12 = %0 : [int]
+            if(WyJS.gt(r2, r12, true)){
+               control_flow_pc = 730;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r13 = r0.getValue(r2);
+            if(WyJS.equals(r13, r1, false)){
+               control_flow_pc = 731;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r3 = r2;//assign %3 = %2  : int
+            control_flow_pc = 731;
+            control_flow_repeat = true;
+            break;
+         case 731:
+            var r14 = new WyJS.Integer(1);
+            var r15 = r2.add(r14);//add %15 = %2, %14 : int
+            var r2 = r15;//assign %2 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 730:
             return r3;//return %3 : null|int
       }

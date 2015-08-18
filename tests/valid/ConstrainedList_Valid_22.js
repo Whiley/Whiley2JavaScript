@@ -12,35 +12,70 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            while(true){//loop (%0, %1, %2, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19)
-               var r7 = new WyJS.Integer(0);
-               if(WyJS.gt(r1, r7, true)){
-                  control_flow_pc = 193;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 193:
-               var r8 = r0.length();//lengthof %8 = %0 : [int]
-               var r9 = r0.length();//lengthof %9 = %0 : [int]
-               var r10 = r0.getValue(r1);
-               var r11 = new WyJS.Integer(1);
-               var r12 = r10.add(r11);//add %12 = %10, %11 : int
-               var r13 = r0.getValue(r1);
-               var r14 = new WyJS.Integer(1);
-               var r15 = r13.add(r14);//add %15 = %13, %14 : int
-               r0.setValue(r1, r15);
-               var r16 = new WyJS.Integer(1);
-               var r17 = r1.add(r16);//add %17 = %1, %16 : int
-               var r1 = r17;//assign %1 = %17  : int
-               var r18 = new WyJS.Integer(1);
-               var r19 = r2.add(r18);//add %19 = %2, %18 : int
-               var r2 = r19;//assign %2 = %19  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = new WyJS.Integer(0);
+            if(WyJS.gt(r1, r7, true)){
+               control_flow_pc = 193;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 193:
+            var r8 = r0.length();//lengthof %8 = %0 : [int]
+            if(WyJS.gt(r2, r8, true)){
+               control_flow_pc = 194;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r9 = r0.length();//lengthof %9 = %0 : [int]
+            if(WyJS.gt(r1, r9, true)){
+               control_flow_pc = 195;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r10 = r0.getValue(r1);
+            var r11 = new WyJS.Integer(1);
+            var r12 = r10.add(r11);//add %12 = %10, %11 : int
+            var r13 = r0.getValue(r1);
+            var r14 = new WyJS.Integer(1);
+            var r15 = r13.add(r14);//add %15 = %13, %14 : int
+            r0.setValue(r1, r15);
+            control_flow_pc = 195;
+            control_flow_repeat = true;
+            break;
+         case 195:
+            var r16 = new WyJS.Integer(1);
+            var r17 = r1.add(r16);//add %17 = %1, %16 : int
+            var r1 = r17;//assign %1 = %17  : int
+            var r18 = new WyJS.Integer(1);
+            var r19 = r2.add(r18);//add %19 = %2, %18 : int
+            var r2 = r19;//assign %2 = %19  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 194:
-            while(true){//quantify %20 in %0 (%21) : [int]
-               var r21 = new WyJS.Integer(0);
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+         case -4:
+            var r21 = new WyJS.Integer(0);
+            if(WyJS.lt(r20, r21, false)){
+               control_flow_pc = 196;
+               control_flow_repeat = true;
+               continue outer;
             }
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
             control_flow_pc = 197;
             control_flow_repeat = true;
             continue outer;//goto label197

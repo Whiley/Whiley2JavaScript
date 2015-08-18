@@ -9,43 +9,71 @@ function find$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            while(true){//loop (%2, %5, %6, %7, %8, %9, %10, %11, %12)
-               var r5 = new WyJS.Integer(0);
-               if(WyJS.gt(r5, r2, false)){
-                  control_flow_pc = 669;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r6 = r0.length();//lengthof %6 = %0 : [int]
-               if(WyJS.lt(r2, r6, true)){
-                  control_flow_pc = 670;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 669:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 670:
-               var r7 = r0.length();//lengthof %7 = %0 : [int]
-               var r8 = r0.getValue(r2);
-               var r9 = new WyJS.Integer(0);
-               if(WyJS.gt(r9, r2, false)){
-                  control_flow_pc = 673;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r10 = r0.length();//lengthof %10 = %0 : [int]
-               if(WyJS.lt(r2, r10, false)){
-                  control_flow_pc = 674;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-            case 673:
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 674:
-               var r11 = new WyJS.Integer(1);
-               var r12 = r2.add(r11);//add %12 = %2, %11 : int
-               var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r5 = new WyJS.Integer(0);
+            if(WyJS.gt(r5, r2, false)){
+               control_flow_pc = 669;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r6 = r0.length();//lengthof %6 = %0 : [int]
+            if(WyJS.lt(r2, r6, true)){
+               control_flow_pc = 670;
+               control_flow_repeat = true;
+               continue outer;
+            }
+         case 669:
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 670:
+            var r7 = r0.length();//lengthof %7 = %0 : [int]
+            if(WyJS.gt(r2, r7, true)){
+               control_flow_pc = 671;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r8 = r0.getValue(r2);
+            if(WyJS.equals(r8, r1, false)){
+               control_flow_pc = 672;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r9 = new WyJS.Integer(0);
+            if(WyJS.gt(r9, r2, false)){
+               control_flow_pc = 673;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r10 = r0.length();//lengthof %10 = %0 : [int]
+            if(WyJS.lt(r2, r10, false)){
+               control_flow_pc = 674;
+               control_flow_repeat = true;
+               continue outer;
+            }
+         case 673:
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 674:
+            control_flow_pc = 671;
+            control_flow_repeat = true;
+            continue outer;//goto label671
+            control_flow_pc = 672;
+            control_flow_repeat = true;
+            break;
+         case 672:
+            var r11 = new WyJS.Integer(1);
+            var r12 = r2.add(r11);//add %12 = %2, %11 : int
+            var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 671:
             return r2;//return %2 : int
       }

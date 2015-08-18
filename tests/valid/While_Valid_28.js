@@ -26,23 +26,33 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r10 = new WyJS.Integer(1);
             var r11 = r1.add(r10);//add %11 = %1, %10 : int
             var r1 = r11;//assign %1 = %11  : int
-            while(true){//loop (%1, %2, %12, %13, %14, %15, %16, %17)
-               var r12 = new WyJS.Integer(0);
-               if(WyJS.gt(r1, r12, true)){
-                  control_flow_pc = 660;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 660:
-               var r13 = r0.length();//lengthof %13 = %0 : [int]
-               var r14 = r0.getValue(r1);
-               var r15 = r2.add(r14);//add %15 = %2, %14 : int
-               var r2 = r15;//assign %2 = %15  : int
-               var r16 = new WyJS.Integer(1);
-               var r17 = r1.add(r16);//add %17 = %1, %16 : int
-               var r1 = r17;//assign %1 = %17  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r12 = new WyJS.Integer(0);
+            if(WyJS.gt(r1, r12, true)){
+               control_flow_pc = 660;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 660:
+            var r13 = r0.length();//lengthof %13 = %0 : [int]
+            if(WyJS.gt(r1, r13, true)){
+               control_flow_pc = 661;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r14 = r0.getValue(r1);
+            var r15 = r2.add(r14);//add %15 = %2, %14 : int
+            var r2 = r15;//assign %2 = %15  : int
+            var r16 = new WyJS.Integer(1);
+            var r17 = r1.add(r16);//add %17 = %1, %16 : int
+            var r1 = r17;//assign %1 = %17  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 661:
             return r2;//return %2 : int
       }

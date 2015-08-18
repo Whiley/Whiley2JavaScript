@@ -12,16 +12,26 @@ function append$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            while(true){//loop (%1, %2, %7, %8, %9, %10, %11, %12)
-               var r7 = r0.length();//lengthof %7 = %0 : [int]
-               var r8 = r0.getValue(r2);
-               var r9 = new WyJS.List([r8], new WyJS.Type.List(new WyJS.Type.Int()));
-               var r10 = r9.append(r1);
-               r1 = r10.clone();//assign %1 = %10  : [int]
-               var r11 = new WyJS.Integer(1);
-               var r12 = r2.add(r11);//add %12 = %2, %11 : int
-               var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = r0.length();//lengthof %7 = %0 : [int]
+            if(WyJS.gt(r2, r7, true)){
+               control_flow_pc = 1687;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r8 = r0.getValue(r2);
+            var r9 = new WyJS.List([r8], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = r9.append(r1);
+            r1 = r10.clone();//assign %1 = %10  : [int]
+            var r11 = new WyJS.Integer(1);
+            var r12 = r2.add(r11);//add %12 = %2, %11 : int
+            var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1687:
             return r1;//return %1 : [int]
       }

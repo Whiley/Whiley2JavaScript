@@ -9,15 +9,40 @@ function has$_9dF5X1Fs1RB52(r0, r1){//function(int,[int]) -> bool
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            while(true){//loop (%2, %5, %6, %7, %8, %9)
-               var r5 = r1.length();//lengthof %5 = %1 : [int]
-               var r6 = r1.getValue(r2);
-               var r7 = true;
-               return r7;//return %7 : bool
-               var r8 = new WyJS.Integer(1);
-               var r9 = r2.add(r8);//add %9 = %2, %8 : int
-               var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r5 = r1.length();//lengthof %5 = %1 : [int]
+            if(WyJS.gt(r2, r5, true)){
+               control_flow_pc = 2194;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r6 = r1.getValue(r2);
+            if(WyJS.equals(r0, r6, false)){
+               control_flow_pc = 2195;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r7 = true;
+            return r7;//return %7 : bool
+            control_flow_pc = 2195;
+            control_flow_repeat = true;
+            break;
+         case 2195:
+            var r8 = new WyJS.Integer(1);
+            var r9 = r2.add(r8);//add %9 = %2, %8 : int
+            var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 2194:
             var r10 = false;
             return r10;//return %10 : bool

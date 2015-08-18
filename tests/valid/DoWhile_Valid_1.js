@@ -12,25 +12,35 @@ function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            while(true){//loop (%1, %2, %7, %8, %9, %10, %11, %12, %13, %14)
-               var r7 = r0.getValue(r2);
-               var r8 = r1.add(r7);//add %8 = %1, %7 : int
-               var r1 = r8;//assign %1 = %8  : int
-               var r9 = new WyJS.Integer(1);
-               var r10 = r2.add(r9);//add %10 = %2, %9 : int
-               var r2 = r10;//assign %2 = %10  : int
-               var r11 = new WyJS.Integer(0);
-               if(WyJS.gt(r2, r11, true)){
-                  control_flow_pc = 460;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               throw {name: 'Assert Failed', message: 'fail'}
-            case 460:
-               var r12 = new WyJS.Integer(1);
-               var r13 = r2.add(r12);//add %13 = %2, %12 : int
-               var r14 = r0.length();//lengthof %14 = %0 : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r7 = r0.getValue(r2);
+            var r8 = r1.add(r7);//add %8 = %1, %7 : int
+            var r1 = r8;//assign %1 = %8  : int
+            var r9 = new WyJS.Integer(1);
+            var r10 = r2.add(r9);//add %10 = %2, %9 : int
+            var r2 = r10;//assign %2 = %10  : int
+            var r11 = new WyJS.Integer(0);
+            if(WyJS.gt(r2, r11, true)){
+               control_flow_pc = 460;
+               control_flow_repeat = true;
+               continue outer;
             }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 460:
+            var r12 = new WyJS.Integer(1);
+            var r13 = r2.add(r12);//add %13 = %2, %12 : int
+            var r14 = r0.length();//lengthof %14 = %0 : [int]
+            if(WyJS.gt(r13, r14, true)){
+               control_flow_pc = 461;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 461:
             return r1;//return %1 : int
       }
