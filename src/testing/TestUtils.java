@@ -53,10 +53,13 @@ public class TestUtils {
 
 			    //Set up the library
 			    String lib = "tests" + File.separatorChar + "WyJS_Runtime.js";
+			    String math = "tests" + File.separatorChar + "Math.js";
 			    Reader library = new FileReader(new File(lib));
+			    Reader mathlib = new FileReader(new File(math));
 			    cxt.evaluateReader(scope, library, lib, 1, null);
+			    cxt.evaluateReader(scope, mathlib, math, 1, null);
     		    cxt.evaluateReader(scope, file, filename, 1, null);
-			    cxt.evaluateString(scope, start, "test", 1, null);
+			    cxt.evaluateString(scope, start + "();", "test", 1, null);
 				
 //				tmp = "node " + filename + ".js";
 //				
@@ -78,7 +81,7 @@ public class TestUtils {
 					System.err.println(jssysout);
 					return null;
 				} else {
-					return out.toString();
+					return out.toString() + err.toString();
 				}
 			}
 		} catch (Exception ex) {

@@ -11,22 +11,22 @@ function test$1A_7VkE(){//method() -> void
             var r0 = r1;//assign %0 = %1  : bool
             var r3 = true;
             if(r0 === r3){
-               control_flow_pc = 2048;
+               control_flow_pc = 2059;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2048:
+         case 2059:
             var r4 = false;
             var r0 = r4;//assign %0 = %4  : bool
             var r5 = false;
             if(r0 === r5){
-               control_flow_pc = 2049;
+               control_flow_pc = 2060;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2049:
+         case 2060:
       }
    }
 }

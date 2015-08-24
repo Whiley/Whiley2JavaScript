@@ -42,9 +42,6 @@ function Cash$_9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0k
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
             control_flow_pc = 187;
             control_flow_repeat = true;
             continue outer;//goto label187
@@ -70,9 +67,6 @@ function Cash$_9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0k
             var r30 = new WyJS.Integer(1);
             var r31 = r2.add(r30);//add %31 = %2, %30 : int
             var r2 = r31;//assign %2 = %31  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 188:
             return r1;//return %1 : [int]
       }

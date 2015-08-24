@@ -32,9 +32,6 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
             control_flow_pc = 547;
             control_flow_repeat = true;
             continue outer;//goto label547
@@ -83,9 +80,6 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
             var r20 = new WyJS.Integer(1);
             var r21 = r1.add(r20);//add %21 = %1, %20 : int
             var r1 = r21;//assign %1 = %21  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 548:
             return r2;//return %2 : [int]
       }

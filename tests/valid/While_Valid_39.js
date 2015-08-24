@@ -48,9 +48,6 @@ function contains$_9dF5X1FVY0t12(r0, r1){//function([int],int) -> bool
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 800:
             var r11 = false;
             return r11;//return %11 : bool

@@ -15,12 +15,12 @@ function f$Z9dFaGYmBFs1(r0, r1){//function(int,int) -> (int,int)
             var r6 = new WyJS.Integer(2);
             var r7 = r6.mul(r1);//mul %7 = %6, %1 : int
             if(WyJS.equals(r7, r0, true)){
-               control_flow_pc = 2323;
+               control_flow_pc = 2334;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2323:
+         case 2334:
             var r8 = new WyJS.Tuple([r0, r1], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r8;//return %8 : (int,int)
       }
@@ -42,12 +42,12 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Tuple([r3, r4], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 2324;
+               control_flow_pc = 2335;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2324:
+         case 2335:
       }
    }
 }

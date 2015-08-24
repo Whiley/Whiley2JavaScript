@@ -24,9 +24,6 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.List([r5], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Void())));
             var r7 = r0.append(r6);
             r0 = r7.clone();//assign %0 = %7  : [[void]]
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 580:
             var r8 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             var r9 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));

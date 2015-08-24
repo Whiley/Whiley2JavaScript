@@ -56,9 +56,6 @@ function indexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 873:
             return r2;//return %2 : int
       }

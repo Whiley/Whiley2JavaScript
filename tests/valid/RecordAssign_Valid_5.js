@@ -33,12 +33,12 @@ function test$1A_7VkE(){//method() -> void
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.Record(["f1", "f2"], [r6, r7], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r8, true)){
-               control_flow_pc = 1222;
+               control_flow_pc = 1233;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1222:
+         case 1233:
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(1);
             r0.setValue("f1", r10);
@@ -49,12 +49,12 @@ function test$1A_7VkE(){//method() -> void
             var r14 = new WyJS.Integer(3);
             var r15 = new WyJS.Record(["f1", "f2"], [r13, r14], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r1, r15, true)){
-               control_flow_pc = 1223;
+               control_flow_pc = 1234;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1223:
+         case 1234:
       }
    }
 }

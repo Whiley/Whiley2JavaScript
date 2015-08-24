@@ -40,11 +40,28 @@ function Board$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mK$73$j0FN$76$Z0WAw(r0, r1){
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
-            while(r3.val < (r0.val * r1.val)){
-            	var list = HiddenSquare$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$ml0$70FP$F5$Z0FO$s5$I0FR$J6$W0VR$J53c$(false, false);
-            	r2 = r2.append(new WyJS.List([list],new WyJS.Type.List(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))));
-        		r3 = r3.add(new WyJS.Integer(1));
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r8 = r0.mul(r1);//mul %8 = %0, %1 : int
+            if(WyJS.gt(r3, r8, true)){
+               control_flow_pc = 1;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r10 = false;
+            var r11 = false;
+            var r9 = HiddenSquare$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$ml0$70FP$F5$Z0FO$s5$I0FR$J6$W0VR$J53c$(r10, r11);//invoke %9 = (%10, %11) Minesweeper:HiddenSquare : function(bool,bool) -> Minesweeper:HiddenSquare
+            var r12 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()])));
+            var r13 = r2.append(r12);
+            r2 = r13.clone();//assign %2 = %13  : [{bool flagged,bool holdsBomb}]
+            var r14 = new WyJS.Integer(1);
+            var r15 = r3.add(r14);//add %15 = %3, %14 : int
+            var r3 = r15;//assign %3 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1:
             var r16 = new WyJS.Record(["height", "squares", "width"], [r1, r2, r0], new WyJS.Type.Record(["height", "squares", "width"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()])), new WyJS.Type.Int()]));
             return r16;//return %16 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
@@ -164,20 +181,87 @@ function determineRank$Z9fFa7i$3P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$O(
             var r11 = new WyJS.Integer(0);
             var r12 = new WyJS.Integer(1);
             var r13 = r2.sub(r12);//sub %13 = %2, %12 : int
-            var r10 = new WyJS.Integer(Math.max(r11.val, r13.val));
+            var r10 = max$Y9dFXs1Fs2(r11, r13);//invoke %10 = (%11, %13) whiley/lang/Math:max : function(int,int) -> int
             var r9 = r10;//assign %9 = %10  : int
             var r4 = r9;//assign %4 = %9  : int
-            while(r4.val < Math.min(r0.fieldLoad("height").val, r2.val + 2)){
-            	var c = Math.max(0, r1.val - 1);
-            	while(c < Math.min(r0.fieldLoad("width").val,r1.val + 2)){
-            		var sq = getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, new WyJS.Integer(c), r4);
-            		if(sq.fieldLoad("holdsBomb")){
-            			r3 = r3.add(new WyJS.Integer(1));
-            		}
-            		c = c + 1;
-            	}
-            	r4 = r4.add(new WyJS.Integer(1));
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
+         case -3:
+            var r15 = r0.fieldLoad("height");//fieldload %15 = %0 height : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r16 = new WyJS.Integer(2);
+            var r17 = r2.add(r16);//add %17 = %2, %16 : int
+            var r14 = min$Y9dFXs1Fs2(r15, r17);//invoke %14 = (%15, %17) whiley/lang/Math:min : function(int,int) -> int
+            if(WyJS.gt(r4, r14, true)){
+               control_flow_pc = 20;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r20 = new WyJS.Integer(0);
+            var r21 = new WyJS.Integer(1);
+            var r22 = r1.sub(r21);//sub %22 = %1, %21 : int
+            var r19 = max$Y9dFXs1Fs2(r20, r22);//invoke %19 = (%20, %22) whiley/lang/Math:max : function(int,int) -> int
+            var r18 = r19;//assign %18 = %19  : int
+            var r5 = r18;//assign %5 = %18  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+         case -4:
+            var r24 = r0.fieldLoad("width");//fieldload %24 = %0 width : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r25 = new WyJS.Integer(2);
+            var r26 = r1.add(r25);//add %26 = %1, %25 : int
+            var r23 = min$Y9dFXs1Fs2(r24, r26);//invoke %23 = (%24, %26) whiley/lang/Math:min : function(int,int) -> int
+            if(WyJS.gt(r5, r23, true)){
+               control_flow_pc = 21;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r28 = getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, r5, r4);//invoke %28 = (%0, %5, %4) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
+            var r27 = r28;//assign %27 = %28  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+            var r6 = r27;//assign %6 = %27  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+            var r29 = r6.fieldLoad("holdsBomb");//fieldload %29 = %6 holdsBomb : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+            var r30 = true;
+            if(r29 === r30){
+               control_flow_pc = 22;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -5;
+               control_flow_repeat = true;
+               break;
+            }
+         case -5:
+            control_flow_pc = 23;
+            control_flow_repeat = true;
+            continue outer;//goto label23
+            control_flow_pc = 23;
+            control_flow_repeat = true;
+            break;
+         case 22:
+            var r31 = new WyJS.Integer(1);
+            var r32 = r3.add(r31);//add %32 = %3, %31 : int
+            var r3 = r32;//assign %3 = %32  : int
+            control_flow_pc = 23;
+            control_flow_repeat = true;
+            break;
+         case 23:
+            var r33 = new WyJS.Integer(1);
+            var r34 = r5.add(r33);//add %34 = %5, %33 : int
+            var r5 = r34;//assign %5 = %34  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+            control_flow_pc = 21;
+            control_flow_repeat = true;
+            break;
+         case 21:
+            var r35 = new WyJS.Integer(1);
+            var r36 = r4.add(r35);//add %36 = %4, %35 : int
+            var r4 = r36;//assign %4 = %36  : int
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
          case 20:
             return r3;//return %3 : int
       }
@@ -237,17 +321,59 @@ function exposeNeighbours$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OF
             var r7 = new WyJS.Integer(0);
             var r8 = new WyJS.Integer(1);
             var r9 = r2.sub(r8);//sub %9 = %2, %8 : int
-            var r6 = new WyJS.Integer(Math.max(r7.val, r9.val));
+            var r6 = max$Y9dFXs1Fs2(r7, r9);//invoke %6 = (%7, %9) whiley/lang/Math:max : function(int,int) -> int
             var r5 = r6;//assign %5 = %6  : int
             var r3 = r5;//assign %3 = %5  : int
-            while(r3.val < Math.min(r0.fieldLoad("height").val, r2.val + 2)){
-            	var c = Math.max(0, r1.val - 1);
-            	while(c < Math.min(r0.fieldLoad("width").val,r1.val + 2)){
-            		exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0, new WyJS.Integer(c), r3);
-            		c = c + 1;
-            	}
-            	r3 = r3.add(new WyJS.Integer(1));
+            control_flow_pc = -6;
+            control_flow_repeat = true;
+            break;
+         case -6:
+            var r11 = r0.fieldLoad("height");//fieldload %11 = %0 height : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r12 = new WyJS.Integer(2);
+            var r13 = r2.add(r12);//add %13 = %2, %12 : int
+            var r10 = min$Y9dFXs1Fs2(r11, r13);//invoke %10 = (%11, %13) whiley/lang/Math:min : function(int,int) -> int
+            if(WyJS.gt(r3, r10, true)){
+               control_flow_pc = 34;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r16 = new WyJS.Integer(0);
+            var r17 = new WyJS.Integer(1);
+            var r18 = r1.sub(r17);//sub %18 = %1, %17 : int
+            var r15 = max$Y9dFXs1Fs2(r16, r18);//invoke %15 = (%16, %18) whiley/lang/Math:max : function(int,int) -> int
+            var r14 = r15;//assign %14 = %15  : int
+            var r4 = r14;//assign %4 = %14  : int
+            control_flow_pc = -7;
+            control_flow_repeat = true;
+            break;
+         case -7:
+            var r20 = r0.fieldLoad("width");//fieldload %20 = %0 width : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r21 = new WyJS.Integer(2);
+            var r22 = r1.add(r21);//add %22 = %1, %21 : int
+            var r19 = min$Y9dFXs1Fs2(r20, r22);//invoke %19 = (%20, %22) whiley/lang/Math:min : function(int,int) -> int
+            if(WyJS.gt(r4, r19, true)){
+               control_flow_pc = 35;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r23 = exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0, r4, r3);//invoke %23 = (%0, %4, %3) Minesweeper:exposeSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Board
+            var r0 = r23;//assign %0 = %23  : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r24 = new WyJS.Integer(1);
+            var r25 = r4.add(r24);//add %25 = %4, %24 : int
+            var r4 = r25;//assign %4 = %25  : int
+            control_flow_pc = -7;
+            control_flow_repeat = true;
+            break;
+            control_flow_pc = 35;
+            control_flow_repeat = true;
+            break;
+         case 35:
+            var r26 = new WyJS.Integer(1);
+            var r27 = r3.add(r26);//add %27 = %3, %26 : int
+            var r3 = r27;//assign %3 = %27  : int
+            control_flow_pc = -6;
+            control_flow_repeat = true;
+            break;
          case 34:
             return r0;//return %0 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
       }
@@ -271,26 +397,116 @@ function isGameOver$_9bF5C930WL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F54D(
             var r10 = new WyJS.Integer(0);
             var r9 = r10;//assign %9 = %10  : int
             var r3 = r9;//assign %3 = %9  : int
-            while(r3.val < r0.fieldLoad("squares").length().val){//loop (%1, %2, %3, %4, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24)
-               var r14 = r0.fieldLoad("squares");//fieldload %14 = %0 squares : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
-               var r15 = r14.getValue(r3);
-               var r13 = r15;//assign %13 = %15  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
-               var r4 = r13;//assign %4 = %13  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
-               if(WyJS.is(r4, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))){
-                  if(!r4.fieldLoad("holdsBomb")){
-                  	r1 = false;
-                  }
-               }else if(WyJS.is(r4, new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()]))){
-               	if(r4.fieldLoad("holdsBomb")){
-               		r1 = true;
-               		r2 = false;
-               		control_flow_pc = 36;
-               		control_flow_repeat = true;
-               		continue outer;
-               	}
-               }
-               r3 = r3.add(new WyJS.Integer(1));
+            control_flow_pc = -8;
+            control_flow_repeat = true;
+            break;
+         case -8:
+            var r11 = r0.fieldLoad("squares");//fieldload %11 = %0 squares : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r12 = r11.length();//lengthof %12 = %11 : [{bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}]
+            if(WyJS.gt(r3, r12, true)){
+               control_flow_pc = 36;
+               control_flow_repeat = true;
+               continue outer;
             }
+            var r14 = r0.fieldLoad("squares");//fieldload %14 = %0 squares : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            var r15 = r14.getValue(r3);
+            var r13 = r15;//assign %13 = %15  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+            var r4 = r13;//assign %4 = %13  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+if(WyJS.is(r4, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))){
+               control_flow_pc = 37;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -9;
+               control_flow_repeat = true;
+               break;
+            }
+         case -9:
+            control_flow_pc = 38;
+            control_flow_repeat = true;
+            continue outer;//goto label38
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            break;
+         case 37:
+            var r16 = r4.fieldLoad("holdsBomb");//fieldload %16 = %4 holdsBomb : {bool flagged,bool holdsBomb}
+            var r17 = true;
+            if(r16 === r17){
+               control_flow_pc = 38;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -10;
+               control_flow_repeat = true;
+               break;
+            }
+         case -10:
+            var r18 = false;
+            var r1 = r18;//assign %1 = %18  : bool
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            continue outer;//goto label39
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            break;
+         case 38:
+if(WyJS.is(r4, new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()]))){
+               control_flow_pc = 40;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -11;
+               control_flow_repeat = true;
+               break;
+            }
+         case -11:
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            continue outer;//goto label39
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            break;
+         case 40:
+            var r19 = r4.fieldLoad("holdsBomb");//fieldload %19 = %4 holdsBomb : {bool holdsBomb,int rank}
+            var r20 = true;
+            if(r19 === r20){
+               control_flow_pc = 41;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -12;
+               control_flow_repeat = true;
+               break;
+            }
+         case -12:
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            continue outer;//goto label39
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            break;
+         case 41:
+            var r21 = true;
+            var r1 = r21;//assign %1 = %21  : bool
+            var r22 = false;
+            var r2 = r22;//assign %2 = %22  : bool
+            control_flow_pc = 36;
+            control_flow_repeat = true;
+            continue outer;//goto label36
+            control_flow_pc = 39;
+            control_flow_repeat = true;
+            break;
+         case 39:
+            var r23 = new WyJS.Integer(1);
+            var r24 = r3.add(r23);//add %24 = %3, %23 : int
+            var r3 = r24;//assign %3 = %24  : int
+            control_flow_pc = -8;
+            control_flow_repeat = true;
+            break;
          case 36:
             var r25 = new WyJS.Tuple([r1, r2], new WyJS.Type.Tuple([new WyJS.Type.Bool(), new WyJS.Type.Bool()]));
             return r25;//return %25 : (bool,bool)

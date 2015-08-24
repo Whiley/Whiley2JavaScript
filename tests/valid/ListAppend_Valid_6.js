@@ -18,36 +18,39 @@ function test$b9dF5X1FVYGWYW0Yk4D(r0, r1){//function([real],[int]) -> bool
          case -2:
             var r8 = r2.length();//lengthof %8 = %2 : [int|real]
             if(WyJS.gt(r3, r8, true)){
-               control_flow_pc = 1693;
+               control_flow_pc = 1704;
                control_flow_repeat = true;
                continue outer;
             }
             var r9 = r2.getValue(r3);
-            if(WyJS.is(r9, new WyJS.Type.Int())){
-               control_flow_pc = 1694;
+if(WyJS.is(r9, new WyJS.Type.Int())){
+               control_flow_pc = 1705;
                control_flow_repeat = true;
-               continue outer;
+               break;
             }
-            control_flow_pc = 1695;
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            control_flow_pc = 1706;
             control_flow_repeat = true;
-            continue outer;//goto label1695
-            control_flow_pc = 1695;
+            continue outer;//goto label1706
+            control_flow_pc = 1706;
             control_flow_repeat = true;
             break;
-         case 1694:
+         case 1705:
             var r10 = true;
             return r10;//return %10 : bool
-            control_flow_pc = 1695;
+            control_flow_pc = 1706;
             control_flow_repeat = true;
             break;
-         case 1695:
+         case 1706:
             var r11 = new WyJS.Integer(1);
             var r12 = r3.add(r11);//add %12 = %3, %11 : int
             var r3 = r12;//assign %3 = %12  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1693:
+         case 1704:
             var r13 = false;
             return r13;//return %13 : bool
       }
@@ -80,12 +83,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = r1;//assign %0 = %1  : bool
             var r16 = true;
             if(r0 === r16){
-               control_flow_pc = 1696;
+               control_flow_pc = 1707;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1696:
+         case 1707:
             var r18 = new WyJS.Real(1.2);
             var r19 = new WyJS.Real(2.3);
             var r20 = new WyJS.Real(3.4);
@@ -95,12 +98,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = r17;//assign %0 = %17  : bool
             var r23 = false;
             if(r0 === r23){
-               control_flow_pc = 1697;
+               control_flow_pc = 1708;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1697:
+         case 1708:
       }
    }
 }

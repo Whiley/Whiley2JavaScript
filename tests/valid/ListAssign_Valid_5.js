@@ -63,12 +63,12 @@ function test$1A_7VkE(){//method() -> void
             var r29 = new WyJS.List([r26, r27, r28], new WyJS.Type.List(new WyJS.Type.Int()));
             var r30 = new WyJS.List([r21, r25, r29], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Union([new WyJS.Type.Null(), new WyJS.Type.Int()]))));
             if(WyJS.equals(r0, r30, true)){
-               control_flow_pc = 2408;
+               control_flow_pc = 2419;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2408:
+         case 2419:
       }
    }
 }

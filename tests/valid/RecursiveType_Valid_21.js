@@ -44,11 +44,11 @@ function test$1A_7VkE(){//method() -> void
             var r3 = r6;//assign %3 = %6  : {int data,null next}
             var r0 = r3;//assign %0 = %3  : X<null|{int data,X next}>
             var r8 = new WyJS.Integer(2);
-            var r9 = new WyJS.Record(["data", "next"], [r8, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()])]));
+            var r9 = new WyJS.Record(["data", "next"], [r8, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])]));
             var r7 = r9;//assign %7 = %9  : {int data,{int data,null next} next}
             var r1 = r7;//assign %1 = %7  : X<null|{int data,X next}>
             var r11 = new WyJS.Integer(3);
-            var r12 = new WyJS.Record(["data", "next"], [r11, r1], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()]), new WyJS.Type.Int()])]));
+            var r12 = new WyJS.Record(["data", "next"], [r11, r1], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])])]));
             var r10 = r12;//assign %10 = %12  : {int data,{int data,{int data,null next} next} next}
             var r2 = r10;//assign %2 = %10  : X<null|{int data,X next}>
             var r13 = sum$Z9bFaA$WL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m$FBP$$I$Z5$i0kP$J5$Z0$I$Z5$n0$SE(r0);//invoke %13 = (%0) RecursiveType_Valid_21:sum : function(RecursiveType_Valid_21:LinkedList) -> int

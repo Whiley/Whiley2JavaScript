@@ -2626,11 +2626,13 @@ public class JavascriptValidTests {
 		public void While_Valid_3() throws IOException {
 			runTest("While_Valid_3");
 		}
-
+		
+		@Test
 		public void While_Valid_5() throws IOException {
 			runTest("While_Valid_5");
 		}
 
+		@Test
 		public void While_Valid_7() throws IOException {
 			runTest("While_Valid_7");
 		}

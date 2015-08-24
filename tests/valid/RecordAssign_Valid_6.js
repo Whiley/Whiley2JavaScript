@@ -17,12 +17,12 @@ function test$1A_7VkE(){//method() -> void
             var r6 = r9;//assign %6 = %9  : {int f1,int f2}
             var r1 = r6;//assign %1 = %6  : {int f1,int f2}
             if(WyJS.equals(r0, r1, false)){
-               control_flow_pc = 1224;
+               control_flow_pc = 1235;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1224:
+         case 1235:
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(1);
             r0.setValue("f1", r11);
@@ -30,29 +30,29 @@ function test$1A_7VkE(){//method() -> void
             var r13 = new WyJS.Integer(3);
             var r14 = new WyJS.Record(["f1", "f2"], [r12, r13], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r14, true)){
-               control_flow_pc = 1225;
+               control_flow_pc = 1236;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1225:
+         case 1236:
             var r15 = new WyJS.Integer(1);
             var r16 = new WyJS.Integer(3);
             var r17 = new WyJS.Record(["f1", "f2"], [r15, r16], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r1, r17, true)){
-               control_flow_pc = 1226;
+               control_flow_pc = 1237;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1226:
+         case 1237:
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 1227;
+               control_flow_pc = 1238;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1227:
+         case 1238:
       }
    }
 }

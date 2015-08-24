@@ -41,9 +41,6 @@ function loop2$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r3 = r10;//assign %3 = %10  : int
             var r11 = r2.add(r1);//add %11 = %2, %1 : int
             var r2 = r11;//assign %2 = %11  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 712:
             var r12 = r1.mul(r0);//mul %12 = %1, %0 : int
             if(WyJS.equals(r2, r12, true)){

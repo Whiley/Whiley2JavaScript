@@ -23,12 +23,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$b9bFaJ533sNJFWJq4a$(r1);//invoke %0 = (%1) NegationType_Valid_4:f : function([int]) -> !(int|null)
             var r2 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1623;
+               control_flow_pc = 1634;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1623:
+         case 1634:
       }
    }
 }

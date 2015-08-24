@@ -11,56 +11,56 @@ function test$1A_7VkE(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r3 = new WyJS.Integer(112233445566778899);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1427;
+               control_flow_pc = 1438;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1427:
+         case 1438:
             var r4 = new WyJS.Integer(1);
             var r5 = r0.add(r4);//add %5 = %0, %4 : int
             var r0 = r5;//assign %0 = %5  : int
             var r6 = new WyJS.Integer(112233445566778900);
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 1428;
+               control_flow_pc = 1439;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1428:
+         case 1439:
             var r7 = new WyJS.Integer(556);
             var r8 = r0.sub(r7);//sub %8 = %0, %7 : int
             var r0 = r8;//assign %0 = %8  : int
             var r9 = new WyJS.Integer(112233445566778344);
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 1429;
+               control_flow_pc = 1440;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1429:
+         case 1440:
             var r10 = new WyJS.Integer(123);
             var r11 = r0.mul(r10);//mul %11 = %0, %10 : int
             var r0 = r11;//assign %0 = %11  : int
             var r12 = new WyJS.Integer(13804713804713736312);
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 1430;
+               control_flow_pc = 1441;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1430:
+         case 1441:
             var r13 = new WyJS.Integer(2);
             var r14 = r0.div(r13);//div %14 = %0, %13 : int
             var r0 = r14;//assign %0 = %14  : int
             var r15 = new WyJS.Integer(6902356902356868156);
             if(WyJS.equals(r0, r15, true)){
-               control_flow_pc = 1431;
+               control_flow_pc = 1442;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1431:
+         case 1442:
       }
    }
 }

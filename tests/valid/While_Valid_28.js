@@ -50,9 +50,6 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r16 = new WyJS.Integer(1);
             var r17 = r1.add(r16);//add %17 = %1, %16 : int
             var r1 = r17;//assign %1 = %17  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 661:
             return r2;//return %2 : int
       }

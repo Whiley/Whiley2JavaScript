@@ -78,9 +78,6 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|nul
             var r18 = new WyJS.Integer(1);
             var r19 = r2.add(r18);//add %19 = %2, %18 : int
             var r2 = r19;//assign %2 = %19  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 740:
             var r20 = new WyJS.Integer(1);
             var r21 = r20.neg();//neg %21 = %20 : int

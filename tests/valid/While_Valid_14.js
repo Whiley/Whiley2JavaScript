@@ -22,9 +22,6 @@ function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r5 = new WyJS.Integer(1);
             var r6 = r1.add(r5);//add %6 = %1, %5 : int
             var r1 = r6;//assign %1 = %6  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 562:
             return r1;//return %1 : int
       }

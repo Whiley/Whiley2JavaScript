@@ -30,9 +30,6 @@ function extract$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r12 = new WyJS.Integer(1);
             var r13 = r1.add(r12);//add %13 = %1, %12 : int
             var r1 = r13;//assign %1 = %13  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 542:
             return r2;//return %2 : [int]
       }

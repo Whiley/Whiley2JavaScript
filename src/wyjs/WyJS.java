@@ -210,7 +210,9 @@ public class WyJS {
 			write((Codes.IndirectInvoke) o);
 		} else if(o instanceof Codes.Convert){
 			write((Codes.Convert) o);
-		}else{
+		} else if(o instanceof Codes.SubList){
+			write((Codes.SubList) o);
+		}else{	
 			throw new Exception("Unknown object " + o.getClass());
 		}
 	}
@@ -335,7 +337,7 @@ public class WyJS {
 	
 	private void write(Codes.Convert o) throws Exception{	
 		String type = getType(o.result);
-		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.Cast(r" + o.operand(0) + ", " + type + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.cast(" + type  + ", r" + o.operand(0) + ");\n");
 	}
 
 	private void write(Codes.Return o) {
@@ -401,7 +403,7 @@ public class WyJS {
 	}
 	
 	private void write(Codes.IfIs o) throws Exception{
-		js.add(getIndentBlock() + "if(WyJS.is(r" + o.operand + ", " + getType(o.rightOperand) + ")){\n");
+		js.add(getIndentBlock() + writeIfIsTop(o));
 		indent++;
 		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
 				+ ";\n");
@@ -409,6 +411,10 @@ public class WyJS {
 		js.add(getIndentBlock() + "continue outer;\n");
 		indent--;
 		js.add(getIndentBlock() + "}\n");
+	}
+	
+	private String writeIfIsTop(Codes.IfIs c) throws Exception{
+		return "if(WyJS.is(r" + c.operand + ", " + getType(c.rightOperand) + ")){\n";
 	}
 
 	private void write(Codes.Goto o) {
@@ -425,35 +431,35 @@ public class WyJS {
 	}
 
 	private void write(Codes.Invoke o) {
-		if(o.name.name().equals("max")){
-			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.max(";
-			int x = 1;
-			for (int i : o.operands()) {
-				if (x == 1) {
-					wat += "r" + i + ".val";
-				} else {
-					wat += ", r" + i + ".val";
-				}
-				x++;
-			}
-			wat += "));\n";
-			js.add(getIndentBlock() + wat);
-			return;
-		}else if(o.name.name().equals("min")){
-			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.min(";
-			int x = 1;
-			for (int i : o.operands()) {
-				if (x == 1) {
-					wat += "r" + i + ".val";
-				} else {
-					wat += ", r" + i + ".val";
-				}
-				x++;
-			}
-			wat += "));\n";
-			js.add(getIndentBlock() + wat);
-			return;
-		}
+//		if(o.name.name().equals("max")){
+//			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.max(";
+//			int x = 1;
+//			for (int i : o.operands()) {
+//				if (x == 1) {
+//					wat += "r" + i + ".val";
+//				} else {
+//					wat += ", r" + i + ".val";
+//				}
+//				x++;
+//			}
+//			wat += "));\n";
+//			js.add(getIndentBlock() + wat);
+//			return;
+//		}else if(o.name.name().equals("min")){
+//			String wat = "var r" + o.target() + " = new WyJS.Integer(Math.min(";
+//			int x = 1;
+//			for (int i : o.operands()) {
+//				if (x == 1) {
+//					wat += "r" + i + ".val";
+//				} else {
+//					wat += ", r" + i + ".val";
+//				}
+//				x++;
+//			}
+//			wat += "));\n";
+//			js.add(getIndentBlock() + wat);
+//			return;
+//		}
 		String str = "";
 		if (o.target() != -1) {
 			str = getIndentBlock() + "var r" + o.target() + " = ";
@@ -546,15 +552,15 @@ public class WyJS {
 		indent--;
 		js.add(getIndentBlock() + "case " + loopLabel + ":\n");
 		indent++;
-		ArrayList<Integer> labels = new ArrayList<Integer>();
+		ArrayList<Integer> labels1 = new ArrayList<Integer>();
 		int currentIndex = -1;
 		
 		Iterator<Code> iter = o.iterator();
 		while(iter.hasNext()){
 			Code c = iter.next();
 			if(c instanceof Codes.If){
-				String top = writeIfTop((If) c);
 				if ((labelMap.get((((Codes.If) c).target)) != null)) {
+					System.out.println("its like it doesnt even come in here");
 					//jumping in the loop
 					js.add(writeIfTop((If) c));
 					indent++;
@@ -567,38 +573,53 @@ public class WyJS {
 					js.add(getIndentBlock() + "}\n");
 					//write else
 					currentIndex++;
-					labels.add(getFreshLabel());
+					labels1.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");
 					indent++;
-					js.add(getIndentBlock() + "control_flow_pc = " + labels.get(currentIndex)
+					js.add(getIndentBlock() + "control_flow_pc = " + labels1.get(currentIndex)
 							+ ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					indent--;
-					js.add(getIndentBlock() + "case " + labels.get(currentIndex) + ":\n");
+					js.add(getIndentBlock() + "case " + labels1.get(currentIndex) + ":\n");
 					indent++;
 				} else{
 					//terminating statement
 					write(c);
 				}
-//					// within the loop
-//					write((Codes.If) c, true, o);
-//				} else {
-//					// jumping out, parse normally
-//					write((Codes.If) c, false, null);
-//				}
-				
-			} 
-//			else if(c instanceof Codes.IfIs){
-//				
-//			} else if(c instanceof Codes.Goto){
-//				
-//			} else if(c instanceof Codes.Loop){
-//				
-//			} 
-			else if(c instanceof Codes.Label){
+			} else if(c instanceof Codes.IfIs){
+				if ((labelMap.get((((Codes.IfIs) c).target)) != null)) {
+					//jumping in the loop
+					js.add(writeIfIsTop((Codes.IfIs) c));
+					indent++;
+					
+					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.IfIs) c).target)
+							+ ";\n");
+					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+					js.add(getIndentBlock() + "break;\n");
+					indent--;
+					js.add(getIndentBlock() + "}\n");
+					//write else
+					currentIndex++;
+					labels1.add(getFreshLabel());
+					js.add(getIndentBlock() + "else{\n");
+					indent++;
+					js.add(getIndentBlock() + "control_flow_pc = " + labels1.get(currentIndex)
+							+ ";\n");
+					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+					js.add(getIndentBlock() + "break;\n");
+					indent--;
+					js.add(getIndentBlock() + "}\n");
+					indent--;
+					js.add(getIndentBlock() + "case " + labels1.get(currentIndex) + ":\n");
+					indent++;
+				} else{
+					//terminating statement
+					write(c);
+				}
+			} else if(c instanceof Codes.Label){
 				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(lastLabel)
 						+ ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
@@ -614,81 +635,6 @@ public class WyJS {
 				+ ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "break;\n");
-		
-		
-		//write new case
-		//if (if|ifis|loop|goto|label)
-		//	write differently
-		//else 
-		//	write bytecode
-		
-		
-		
-		
-//		for(String s: labelMap.keySet()){
-//			System.out.println(s + " " + labelMap.get(s));
-//			
-//		}
-//		for (Code c : o.bytecodes()) {
-//			if (c instanceof Codes.If) {
-//				Index x;
-//				if ((x = labelMap.get(((Codes.If) c).target)) != null) {
-//					// within the loop
-//					write((Codes.If) c, true, o);
-//				} else {
-//					// jumping out, parse normally
-//					write((Codes.If) c, false, null);
-//				}
-//			} else if (c instanceof Codes.Goto) {
-//				Index x;
-//				boolean write = false;
-//				if ((x = labelMap.get(((Codes.Goto) c).target)) != null) {
-//					// jumping within loop, have to write the contents of the
-//					// label we want to jump to
-//					for (Code code : o.bytecodes()) {
-//						if (write) {
-//							write(code);
-//						}
-//						if (c instanceof Label) {
-//							if (((Label) code).label == ((Codes.If) c).target) {
-//								write = true;
-//							} else {
-//								write = false;
-//							}
-//						}
-//					}
-//				} else {
-//					// jumping out the loop, parse normally
-//					write((Codes.Goto) c);
-//				}
-//			}
-////			else if(c instanceof Codes.Loop){
-////				Codes.Loop loop = (Codes.Loop) c;
-////				Map<String, Index> newMap = CodeUtils
-////						.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
-////				for (String s: labelMap.keySet()) {
-////					newMap.put(s, labelMap.get(s));
-////				}
-////				write(loop,newMap);
-////			}
-//			else if (c instanceof Codes.Assert) {
-//				// TODO:
-//			} else if (c instanceof Codes.Assume) {
-//				// TODO:
-//			} else if (c instanceof Codes.Label) {
-//				// should have already been written
-//				break;
-//			} else {
-//				write(c);
-//			}
-//		}
-//		indent--;
-//		js.add(getIndentBlock() + "}\n");
-//		System.out.println("leaving");
-//		for(String s: strings){
-//			labels.remove(s);
-//		}
-
 	}
 
 	private void write(Codes.NewRecord o) throws Exception {
@@ -819,6 +765,13 @@ public class WyJS {
 		default:
 			throw new Exception("Unknown List Operator Kind " + o.kind);
 		}
+	}
+	
+	private void write(Codes.SubList o){
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".sublist(r" + o.operand(1) + ", r" + o.operand(2) + ");\n");
+		o.operand(0);//array
+		o.operand(1);//from
+		o.operand(2);//to
 	}
 	
 	private void write(Codes.NewTuple o) throws Exception{

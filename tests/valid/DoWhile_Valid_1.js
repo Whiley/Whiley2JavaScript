@@ -38,9 +38,6 @@ function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 461:
             return r1;//return %1 : int
       }

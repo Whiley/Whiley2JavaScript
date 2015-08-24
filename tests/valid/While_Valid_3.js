@@ -43,9 +43,6 @@ function sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r0){//fu
             var r12 = new WyJS.Integer(1);
             var r13 = r1.add(r12);//add %13 = %1, %12 : int
             var r1 = r13;//assign %1 = %13  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 1153:
             return r2;//return %2 : int
       }

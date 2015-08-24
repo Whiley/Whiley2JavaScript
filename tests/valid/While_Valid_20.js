@@ -23,9 +23,6 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             var r1 = r5;//assign %1 = %5  : int
             var r6 = r0.fieldLoad("next");//fieldload %6 = %0 next : X<{int data,X|null next}>
             var r0 = r6;//assign %0 = %6  : X<null|{int data,X next}>
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 582:
             return r1;//return %1 : int
       }
@@ -64,7 +61,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 584:
             var r9 = new WyJS.Integer(2324);
-            var r10 = new WyJS.Record(["data", "next"], [r9, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()])]));
+            var r10 = new WyJS.Record(["data", "next"], [r9, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])]));
             var r0 = r10;//assign %0 = %10  : {int data,{int data,null next} next}
             var r11 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %11 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r12 = new WyJS.Integer(2325);
@@ -76,7 +73,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 585:
             var r13 = new WyJS.Integer(2);
-            var r14 = new WyJS.Record(["data", "next"], [r13, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()]), new WyJS.Type.Int()])]));
+            var r14 = new WyJS.Record(["data", "next"], [r13, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])])]));
             var r0 = r14;//assign %0 = %14  : {int data,{int data,{int data,null next} next} next}
             var r15 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %15 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r16 = new WyJS.Integer(2327);

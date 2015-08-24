@@ -38,12 +38,12 @@ function test$1A_7VkE(){//method() -> void
             var r2 = r13;//assign %2 = %13  : int
             var r16 = new WyJS.Integer(6);
             if(WyJS.equals(r2, r16, true)){
-               control_flow_pc = 1950;
+               control_flow_pc = 1961;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1950:
+         case 1961:
       }
    }
 }

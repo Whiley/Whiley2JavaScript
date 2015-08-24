@@ -264,6 +264,16 @@ WyJS.List.prototype.equals = function(other) {
   return true;
 };
 
+WyJS.List.prototype.sublist = function(from, to){
+  var data = [];
+  var index = 0;
+  for(var i = from.val;i <= to.val; i++){
+    data[index] = this.list[i];
+    index++;
+  };
+  return data;
+};
+
 //TUPLE CLASS/METHODS
 WyJS.Tuple = function(values, type) {
 	this.values = values;
@@ -429,6 +439,64 @@ WyJS.is = function(obj, type) {
   		return (obj instanceof WyJS.Tuple && obj.type.subtype(type));
   }
   return false; //obj is not a subtype of type/type unknown
+};
+
+//Casts an object to the given type
+WyJS.cast = function(type, obj) {
+  //Handle the null case
+  if (obj === null)
+      return null;
+      
+  //Handle the boolean case (only case where obj.type is undefined)
+  if (obj.type === undefined)
+      return obj;
+      
+  //Check for type equality (don't cast in that case)
+  if (WyJS.is(obj, type)) {
+    if (obj.clone === undefined)
+        return obj;
+    return obj.clone();
+  }
+  
+  //Handle the case where casting an int
+  if (obj instanceof WyJS.Integer)
+      return obj.cast();
+      
+  //Handle the case where casting a list
+  if (obj instanceof WyJS.List) {
+    var newList = [];
+    var i;
+    for (i = 0; i < obj.list.length; i++) {
+      newList[i] = WyJS.cast(type.elem, obj.list[i]);
+    }
+    return new WyJS.List(newList, type);
+  }
+  
+  //Handle the case where casting a record
+  if (obj instanceof WyJS.Record) {
+    var newNames = [];
+    var newVals = [];
+    var j;
+    for (j = 0; j < obj.names.length; j++) {
+      newNames[j] = obj.names[j];
+      newVals[j] = WyJS.cast(type.types[j], obj.values[j]);
+    }
+    return new WyJS.Record(newNames, newVals, type);
+  }
+  
+  //Handle the case where casting a tuple
+  if (obj instanceof WyJS.Tuple) {
+    var newValList = [];
+    var k;
+    for (k = 0; k < obj.values.length; k++) {
+      newValList[k] = WyJS.cast(type.typeList[k], obj.values[k]);
+    }
+    return new WyJS.Tuple(newValList, type);
+  }
+  
+  //Otherwise, just return the object
+  return obj;
+      
 };
 
 //Gets the type of the given object

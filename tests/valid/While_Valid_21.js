@@ -41,9 +41,6 @@ function create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r
             var r11 = new WyJS.Integer(1);
             var r12 = r3.add(r11);//add %12 = %3, %11 : int
             var r3 = r12;//assign %3 = %12  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 591:
             return r2;//return %2 : [int]
       }

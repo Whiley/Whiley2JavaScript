@@ -41,7 +41,7 @@ function numPieces$_9dF5u1Fc_V6$o3$_0$S$V5$j0$O$w4$L0FN$k5$d0$O$w4$lJ$73$j0FN$76
          case -2:
             var r9 = r0.length();//lengthof %9 = %0 : [int]
             if(WyJS.gt(r3, r9, true)){
-               control_flow_pc = 1190;
+               control_flow_pc = 1201;
                control_flow_repeat = true;
                continue outer;
             }
@@ -49,7 +49,7 @@ function numPieces$_9dF5u1Fc_V6$o3$_0$S$V5$j0$O$w4$L0FN$k5$d0$O$w4$lJ$73$j0FN$76
             var r10 = r11;//assign %10 = %11  : int
             var r4 = r10;//assign %4 = %10  : int
             if(WyJS.equals(r4, r1, false)){
-               control_flow_pc = 1191;
+               control_flow_pc = 1202;
                control_flow_repeat = true;
                break;
             }
@@ -62,17 +62,14 @@ function numPieces$_9dF5u1Fc_V6$o3$_0$S$V5$j0$O$w4$L0FN$k5$d0$O$w4$lJ$73$j0FN$76
             var r12 = new WyJS.Integer(1);
             var r13 = r2.add(r12);//add %13 = %2, %12 : int
             var r2 = r13;//assign %2 = %13  : int
-            control_flow_pc = 1191;
+            control_flow_pc = 1202;
             control_flow_repeat = true;
             break;
-         case 1191:
+         case 1202:
             var r14 = new WyJS.Integer(1);
             var r15 = r3.add(r14);//add %15 = %3, %14 : int
             var r3 = r15;//assign %3 = %15  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1190:
+         case 1201:
             return r2;//return %2 : int
       }
    }
@@ -127,12 +124,12 @@ function test$1A_7VkE(){//method() -> void
             var r12 = new WyJS.Integer(0);
             var r13 = new WyJS.List([r4, r5, r6, r7, r8, r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r13, true)){
-               control_flow_pc = 1192;
+               control_flow_pc = 1203;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1192:
+         case 1203:
       }
    }
 }

@@ -46,9 +46,6 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r15 = new WyJS.List([r14], new WyJS.Type.List(new WyJS.Type.Int()));
             var r16 = r2.append(r15);
             r2 = r16.clone();//assign %2 = %16  : [int]
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 852:
             return r2;//return %2 : [int]
       }

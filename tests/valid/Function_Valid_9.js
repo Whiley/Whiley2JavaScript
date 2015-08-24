@@ -18,14 +18,14 @@ function g$Z9bF1D527oH$4$B1Vu$kC$52$u$7C$T2$r$sA$g1Vk$VC$H2$m$sA$ml$kB$Z2$Q$kC$1
          case -2:
             var r7 = r0.length();//lengthof %7 = %0 : [int]
             if(WyJS.gt(r2, r7, true)){
-               control_flow_pc = 1863;
+               control_flow_pc = 1874;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = r0.getValue(r2);
             var r9 = new WyJS.Integer(1);
             if(WyJS.lt(r8, r9, true)){
-               control_flow_pc = 1864;
+               control_flow_pc = 1875;
                control_flow_repeat = true;
                break;
             }
@@ -39,17 +39,14 @@ function g$Z9bF1D527oH$4$B1Vu$kC$52$u$7C$T2$r$sA$g1Vk$VC$H2$m$sA$ml$kB$Z2$Q$kC$1
             var r11 = new WyJS.List([r10], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = r1.append(r11);
             r1 = r12.clone();//assign %1 = %12  : [int]
-            control_flow_pc = 1864;
+            control_flow_pc = 1875;
             control_flow_repeat = true;
             break;
-         case 1864:
+         case 1875:
             var r13 = new WyJS.Integer(1);
             var r14 = r2.add(r13);//add %14 = %2, %13 : int
             var r2 = r14;//assign %2 = %14  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1863:
+         case 1874:
             return r1;//return %1 : [int]
       }
    }
@@ -96,12 +93,12 @@ function test$1A_7VkE(){//method() -> void
             var r17 = new WyJS.Integer(234987234987234);
             var r18 = new WyJS.List([r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r11, r18, true)){
-               control_flow_pc = 1865;
+               control_flow_pc = 1876;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1865:
+         case 1876:
       }
    }
 }

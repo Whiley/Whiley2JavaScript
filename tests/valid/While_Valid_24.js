@@ -47,9 +47,6 @@ function indexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|null
             var r8 = new WyJS.Integer(1);
             var r9 = r2.add(r8);//add %9 = %2, %8 : int
             var r2 = r9;//assign %2 = %9  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 618:
             var r10 = null;/n            return r10;//return %10 : null|int
       }

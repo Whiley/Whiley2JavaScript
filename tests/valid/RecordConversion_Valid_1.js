@@ -30,12 +30,12 @@ function test$1A_7VkE(){//method() -> void
             var r4 = f$Z9bF5B1Fc_$D$74$_0kN$w5$m0$O$B3$j0VQ$N6$_0VR$B6$d0kQ$s5$U0VK$35$g0FP$F5$U0FB6$m0FO$35$g0$S$J6$kx(r5);//invoke %4 = (%5) RecordConversion_Valid_1:f : function(RecordConversion_Valid_1:realtup) -> real
             var r6 = new WyJS.Real(1.0);
             if(WyJS.equals(r4, r6, true)){
-               control_flow_pc = 1794;
+               control_flow_pc = 1805;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1794:
+         case 1805:
       }
    }
 }

@@ -15,33 +15,30 @@ function strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F
          case -2:
             var r4 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r4, false)){
-               control_flow_pc = 2375;
+               control_flow_pc = 2386;
                control_flow_repeat = true;
                continue outer;
             }
             var r5 = r0.length();//lengthof %5 = %0 : [int]
             if(WyJS.lt(r1, r5, false)){
-               control_flow_pc = 2376;
+               control_flow_pc = 2387;
                control_flow_repeat = true;
                continue outer;
             }
-         case 2375:
+         case 2386:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2376:
+         case 2387:
             var r6 = r0.getValue(r1);
             var r7 = new WyJS.Integer(0);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 2377;
+               control_flow_pc = 2388;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = new WyJS.Integer(1);
             var r9 = r1.add(r8);//add %9 = %1, %8 : int
             var r1 = r9;//assign %1 = %9  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 2377:
+         case 2388:
             return r1;//return %1 : int
       }
    }
@@ -73,12 +70,12 @@ function test$1A_7VkE(){//method() -> void
             var r15 = strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0VB$F25$B3$U0kR$F6$m0FP$s5$bx(r0);//invoke %15 = (%0) ConstrainedInt_Valid_24:strlen : function(ConstrainedInt_Valid_24:C_string) -> int
             var r16 = new WyJS.Integer(10);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 2378;
+               control_flow_pc = 2389;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2378:
+         case 2389:
       }
    }
 }

@@ -45,9 +45,6 @@ function add$Z9dFXVYl$1Ms(r0, r1){//function([int],[int]) -> [int]
             var r15 = new WyJS.Integer(1);
             var r16 = r2.add(r15);//add %16 = %2, %15 : int
             var r2 = r16;//assign %2 = %16  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 557:
             return r0;//return %0 : [int]
       }

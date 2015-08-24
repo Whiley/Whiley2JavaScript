@@ -40,23 +40,23 @@ function test$1A_7VkE(){//method() -> void
             var r2 = r13;//assign %2 = %13  : int
             var r16 = new WyJS.Integer(2);
             if(WyJS.equals(r2, r16, true)){
-               control_flow_pc = 1691;
+               control_flow_pc = 1702;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1691:
+         case 1702:
             var r18 = new WyJS.Integer(4);
             var r17 = f$Z9fFa8P8c1$B0FP$B6$o0FF$$6$k0FO$s5$Z0kM$N4$W0$Q$Z5$Z0kM$Jn$VQ$35$o00D5Wz(r0, r1, r18);//invoke %17 = (%0, %1, %18) ListAppend_Valid_5:f : function([ListAppend_Valid_5:nat],[ListAppend_Valid_5:nat],ListAppend_Valid_5:nat) -> ListAppend_Valid_5:nat
             var r2 = r17;//assign %2 = %17  : int
             var r19 = new WyJS.Integer(6);
             if(WyJS.equals(r2, r19, true)){
-               control_flow_pc = 1692;
+               control_flow_pc = 1703;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1692:
+         case 1703:
       }
    }
 }

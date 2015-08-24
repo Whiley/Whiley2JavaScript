@@ -20,12 +20,12 @@ function test$1A_7VkE(){//method() -> void
             var r1 = r8;//assign %1 = %8  : real
             var r12 = new WyJS.Real(2.0);
             if(WyJS.equals(r1, r12, true)){
-               control_flow_pc = 1640;
+               control_flow_pc = 1651;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1640:
+         case 1651:
       }
    }
 }

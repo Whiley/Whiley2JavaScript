@@ -15,12 +15,12 @@ function test$1A_7VkE(){//method() -> void
             var r6 = r0.add(r1);//add %6 = %0, %1 : int
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1204;
+               control_flow_pc = 1215;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1204:
+         case 1215:
       }
    }
 }

@@ -29,12 +29,12 @@ function test$1A_7VkE(){//method() -> void
             var r8 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r0);//invoke %8 = (%0) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r9 = new WyJS.Integer(3);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 1207;
+               control_flow_pc = 1218;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1207:
+         case 1218:
             var r11 = new WyJS.Integer(1);
             var r12 = new WyJS.Integer(2);
             var r13 = new WyJS.List([r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
@@ -43,12 +43,12 @@ function test$1A_7VkE(){//method() -> void
             var r14 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r1);//invoke %14 = (%1) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r15 = new WyJS.Integer(2);
             if(WyJS.equals(r14, r15, true)){
-               control_flow_pc = 1208;
+               control_flow_pc = 1219;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1208:
+         case 1219:
             var r17 = new WyJS.Real(1.0);
             var r18 = new WyJS.Real(2.0);
             var r19 = new WyJS.Real(3.0);
@@ -59,12 +59,12 @@ function test$1A_7VkE(){//method() -> void
             var r22 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r2);//invoke %22 = (%2) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r23 = new WyJS.Integer(4);
             if(WyJS.equals(r22, r23, true)){
-               control_flow_pc = 1209;
+               control_flow_pc = 1220;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1209:
+         case 1220:
       }
    }
 }

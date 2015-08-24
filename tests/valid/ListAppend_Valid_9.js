@@ -27,12 +27,12 @@ function test$1A_7VkE(){//method() -> void
             var r17 = new WyJS.Real(3.0);
             var r18 = new WyJS.List([r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Real()));
             if(WyJS.equals(r1, r18, true)){
-               control_flow_pc = 1701;
+               control_flow_pc = 1712;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1701:
+         case 1712:
       }
    }
 }

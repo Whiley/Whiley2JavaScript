@@ -59,9 +59,6 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
             var r18 = new WyJS.Integer(1);
             var r19 = r2.add(r18);//add %19 = %2, %18 : int
             var r2 = r19;//assign %2 = %19  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 194:
             control_flow_pc = -4;
             control_flow_repeat = true;
@@ -73,9 +70,6 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -4;
-            control_flow_repeat = true;
-            break;
             control_flow_pc = 197;
             control_flow_repeat = true;
             continue outer;//goto label197

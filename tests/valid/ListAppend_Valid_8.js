@@ -29,23 +29,23 @@ function test$1A_7VkE(){//method() -> void
             var r19 = new WyJS.Integer(4);
             var r20 = new WyJS.List([r16, r17, r18, r19], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r2, r20, true)){
-               control_flow_pc = 1699;
+               control_flow_pc = 1710;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1699:
+         case 1710:
             var r21 = new WyJS.Integer(1);
             var r22 = new WyJS.Integer(2);
             var r23 = new WyJS.Integer(6);
             var r24 = new WyJS.List([r21, r22, r23], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r24, true)){
-               control_flow_pc = 1700;
+               control_flow_pc = 1711;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1700:
+         case 1711:
       }
    }
 }

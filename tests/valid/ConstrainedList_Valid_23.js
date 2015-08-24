@@ -66,9 +66,6 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             var r31 = new WyJS.Integer(1);
             var r32 = r7.add(r31);//add %32 = %7, %31 : int
             var r7 = r32;//assign %7 = %32  : int
-            control_flow_pc = -4;
-            control_flow_repeat = true;
-            break;
             control_flow_pc = 207;
             control_flow_repeat = true;
             break;
@@ -79,9 +76,6 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             var r35 = new WyJS.Integer(1);
             var r36 = r5.add(r35);//add %36 = %5, %35 : int
             var r5 = r36;//assign %5 = %36  : int
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
             control_flow_pc = 206;
             control_flow_repeat = true;
             break;
@@ -92,9 +86,6 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             var r39 = new WyJS.Integer(1);
             var r40 = r3.add(r39);//add %40 = %3, %39 : int
             var r3 = r40;//assign %3 = %40  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 205:
             return r2;//return %2 : [[int]]
       }

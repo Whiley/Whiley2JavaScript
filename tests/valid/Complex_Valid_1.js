@@ -7,20 +7,20 @@ function sign$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
       switch(control_flow_pc){
          case -1 :
             if(WyJS.gt(r0, r1, true)){
-               control_flow_pc = 1480;
+               control_flow_pc = 1491;
                control_flow_repeat = true;
                continue outer;
             }
             var r2 = new WyJS.Integer(1);
             return r2;//return %2 : int
-            control_flow_pc = 1481;
+            control_flow_pc = 1492;
             control_flow_repeat = true;
-            continue outer;//goto label1481
-         case 1480:
+            continue outer;//goto label1492
+         case 1491:
             var r3 = new WyJS.Integer(1);
             var r4 = r3.neg();//neg %4 = %3 : int
             return r4;//return %4 : int
-         case 1481:
+         case 1492:
       }
    }
 }
@@ -36,21 +36,21 @@ function clearRowExcept$_9fFaWc$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$3n$$J
             var r6 = r0.fieldLoad("row");//fieldload %6 = %0 row : {int col,int row}
             var r7 = r1.fieldLoad("row");//fieldload %7 = %1 row : {int col,int row}
             if(WyJS.equals(r6, r7, false)){
-               control_flow_pc = 1482;
+               control_flow_pc = 1493;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = r0.fieldLoad("col");//fieldload %8 = %0 col : {int col,int row}
             var r9 = r1.fieldLoad("col");//fieldload %9 = %1 col : {int col,int row}
             if(WyJS.equals(r8, r9, false)){
-               control_flow_pc = 1483;
+               control_flow_pc = 1494;
                control_flow_repeat = true;
                continue outer;
             }
-         case 1482:
+         case 1493:
             var r10 = false;
             return r10;//return %10 : bool
-         case 1483:
+         case 1494:
             var r13 = r0.fieldLoad("col");//fieldload %13 = %0 col : {int col,int row}
             var r14 = r1.fieldLoad("col");//fieldload %14 = %1 col : {int col,int row}
             var r12 = sign$Y9dFXs1Fs2(r13, r14);//invoke %12 = (%13, %14) Complex_Valid_1:sign : function(int,int) -> int
@@ -69,44 +69,47 @@ function clearRowExcept$_9fFaWc$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$3n$$J
          case -2:
             var r20 = r1.fieldLoad("col");//fieldload %20 = %1 col : {int col,int row}
             if(WyJS.equals(r5, r20, true)){
-               control_flow_pc = 1484;
+               control_flow_pc = 1495;
                control_flow_repeat = true;
                continue outer;
             }
             var r21 = r2.fieldLoad("rows");//fieldload %21 = %2 rows : {bool blackCastleKingSide,bool blackCastleQueenSide,[[null|{bool colour,int kind}]] rows,bool whiteCastleKingSide,bool whiteCastleQueenSide}
             var r22 = r21.getValue(r4);
             var r23 = r22.getValue(r5);
-            if(WyJS.is(r23, new WyJS.Type.Null())){
-               control_flow_pc = 1485;
+if(WyJS.is(r23, new WyJS.Type.Null())){
+               control_flow_pc = 1496;
                control_flow_repeat = true;
-               continue outer;
+               break;
             }
-            control_flow_pc = 1486;
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            control_flow_pc = 1497;
             control_flow_repeat = true;
-            continue outer;//goto label1486
-            control_flow_pc = 1487;
+            continue outer;//goto label1497
+            control_flow_pc = 1498;
             control_flow_repeat = true;
             break;
-         case 1485:
+         case 1496:
             var r24 = r5.add(r3);//add %24 = %5, %3 : int
             var r5 = r24;//assign %5 = %24  : int
-            control_flow_pc = 1487;
+            control_flow_pc = 1498;
             control_flow_repeat = true;
-            continue outer;//goto label1487
-            control_flow_pc = 1487;
+            continue outer;//goto label1498
+            control_flow_pc = 1498;
             control_flow_repeat = true;
             break;
-         case 1486:
+         case 1497:
             var r25 = false;
             return r25;//return %25 : bool
-            control_flow_pc = 1487;
+            control_flow_pc = 1498;
             control_flow_repeat = true;
             break;
-         case 1487:
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1484:
+         case 1498:
+         case 1495:
             var r26 = true;
             return r26;//return %26 : bool
       }
@@ -124,21 +127,21 @@ function test$1A_7VkE(){//method() -> void
             var r1 =             var r2 =             var r3 =             var r0 = clearRowExcept$_9fFaWc$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$3n$$J$w5$npHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$7a1$W$sC$12$t$Vgz(r1, r2, r3);//invoke %0 = (%1, %2, %3) Complex_Valid_1:clearRowExcept : function(Complex_Valid_1:Pos,Complex_Valid_1:Pos,Complex_Valid_1:Board) -> bool
             var r4 = false;
             if(r0 === r4){
-               control_flow_pc = 1488;
+               control_flow_pc = 1499;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1488:
+         case 1499:
             var r6 =             var r7 =             var r8 =             var r5 = clearRowExcept$_9fFaWc$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$3n$$J$w5$npHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$7a1$W$sC$12$t$Vgz(r6, r7, r8);//invoke %5 = (%6, %7, %8) Complex_Valid_1:clearRowExcept : function(Complex_Valid_1:Pos,Complex_Valid_1:Pos,Complex_Valid_1:Board) -> bool
             var r9 = true;
             if(r5 === r9){
-               control_flow_pc = 1489;
+               control_flow_pc = 1500;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1489:
+         case 1500:
       }
    }
 }

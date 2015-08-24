@@ -41,12 +41,12 @@ function test$1A_7VkE(){//method() -> void
             var r3 = f$Z9bFaA$WL1c$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0$C5$a0VR$F2$i0FN$F6(r4);//invoke %3 = (%4) Function_Valid_4:f : function(Function_Valid_4:fr4nat) -> int
             var r5 = new WyJS.Integer(2);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 1850;
+               control_flow_pc = 1861;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1850:
+         case 1861:
       }
    }
 }

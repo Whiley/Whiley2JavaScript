@@ -36,9 +36,6 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
          case 473:
             return r2;//return %2 : int
       }

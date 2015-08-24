@@ -34,23 +34,23 @@ function test$1A_7VkE(){//method() -> void
             var r24 = new WyJS.Integer(3);
             var r25 = new WyJS.List([r22, r23, r24], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r21, r25, true)){
-               control_flow_pc = 2417;
+               control_flow_pc = 2428;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2417:
+         case 2428:
             var r26 = new WyJS.Integer(1);
             var r27 = r0.getValue(r26);
             var r28 = new WyJS.Integer(0);
             var r29 = new WyJS.List([r28], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r27, r29, true)){
-               control_flow_pc = 2418;
+               control_flow_pc = 2429;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2418:
+         case 2429:
             var r30 = new WyJS.Integer(0);
             var r31 = r1.getValue(r30);
             var r32 = new WyJS.Integer(3);
@@ -58,23 +58,23 @@ function test$1A_7VkE(){//method() -> void
             var r34 = new WyJS.Integer(5);
             var r35 = new WyJS.List([r32, r33, r34], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r31, r35, true)){
-               control_flow_pc = 2419;
+               control_flow_pc = 2430;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2419:
+         case 2430:
             var r36 = new WyJS.Integer(1);
             var r37 = r1.getValue(r36);
             var r38 = new WyJS.Integer(0);
             var r39 = new WyJS.List([r38], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r37, r39, true)){
-               control_flow_pc = 2420;
+               control_flow_pc = 2431;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2420:
+         case 2431:
       }
    }
 }

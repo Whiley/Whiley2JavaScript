@@ -18,7 +18,7 @@ function test$1A_7VkE(){//method() -> void
             var r2 = r10;//assign %2 = %10  : X<int|{X left,int op,X right}>
             var r12 = new WyJS.Integer(2);
             var r13 = new WyJS.Integer(2);
-            var r14 = new WyJS.Record(["left", "op", "right"], [r0, r12, r13], new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Record(["op", "left", "right"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Int(), new WyJS.Type.Int()]));
+            var r14 = new WyJS.Record(["left", "op", "right"], [r0, r12, r13], new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r11 = r14;//assign %11 = %14  : {{int left,int op,int right} left,int op,int right}
             var r3 = r11;//assign %3 = %11  : X<int|{X left,int op,X right}>
             var r15 = new WyJS.Integer(1);
@@ -38,7 +38,7 @@ function test$1A_7VkE(){//method() -> void
             var r22 = new WyJS.Record(["left", "op", "right"], [r19, r20, r21], new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r23 = new WyJS.Integer(2);
             var r24 = new WyJS.Integer(2);
-            var r25 = new WyJS.Record(["left", "op", "right"], [r22, r23, r24], new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Record(["op", "left", "right"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Int(), new WyJS.Type.Int()]));
+            var r25 = new WyJS.Record(["left", "op", "right"], [r22, r23, r24], new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Record(["left", "op", "right"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r3, r25, true)){
                control_flow_pc = 313;
                control_flow_repeat = true;

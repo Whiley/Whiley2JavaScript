@@ -106,10 +106,10 @@ function test$1A_7VkE(){//method() -> void
             var r1 = r4;//assign %1 = %4  : {int data,null next}
             var r0 = r1;//assign %0 = %1  : X<null|{int data,X next}>
             var r5 = new WyJS.Integer(2);
-            var r6 = new WyJS.Record(["data", "next"], [r5, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()])]));
+            var r6 = new WyJS.Record(["data", "next"], [r5, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])]));
             var r0 = r6;//assign %0 = %6  : {int data,{int data,null next} next}
             var r7 = new WyJS.Integer(3);
-            var r8 = new WyJS.Record(["data", "next"], [r7, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Record(["next", "data"], [new WyJS.Type.Null(), new WyJS.Type.Int()]), new WyJS.Type.Int()])]));
+            var r8 = new WyJS.Record(["data", "next"], [r7, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])])]));
             var r0 = r8;//assign %0 = %8  : {int data,{int data,{int data,null next} next} next}
             var r9 = sum_1$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %9 = (%0) IfElse_Valid_4:sum_1 : function(IfElse_Valid_4:LinkedList) -> int
             var r10 = new WyJS.Integer(6);

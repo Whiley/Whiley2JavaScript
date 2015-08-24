@@ -18,14 +18,14 @@ function g$Z9bF1D527oH$4$B1Vu$kC$52$u$7C$T2$r$sA$g1Vk$VC$H2$m$sA$il$kB$Z2VP$kC$1
          case -2:
             var r7 = r0.length();//lengthof %7 = %0 : [int]
             if(WyJS.gt(r2, r7, true)){
-               control_flow_pc = 1856;
+               control_flow_pc = 1867;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = r0.getValue(r2);
             var r9 = new WyJS.Integer(1);
             if(WyJS.lt(r8, r9, true)){
-               control_flow_pc = 1857;
+               control_flow_pc = 1868;
                control_flow_repeat = true;
                break;
             }
@@ -39,17 +39,14 @@ function g$Z9bF1D527oH$4$B1Vu$kC$52$u$7C$T2$r$sA$g1Vk$VC$H2$m$sA$il$kB$Z2VP$kC$1
             var r11 = new WyJS.List([r10], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = r1.append(r11);
             r1 = r12.clone();//assign %1 = %12  : [int]
-            control_flow_pc = 1857;
+            control_flow_pc = 1868;
             control_flow_repeat = true;
             break;
-         case 1857:
+         case 1868:
             var r13 = new WyJS.Integer(1);
             var r14 = r2.add(r13);//add %14 = %2, %13 : int
             var r2 = r14;//assign %2 = %14  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1856:
+         case 1867:
             return r1;//return %1 : [int]
       }
    }
@@ -88,12 +85,12 @@ function test$1A_7VkE(){//method() -> void
             var r9 = new WyJS.Integer(3);
             var r10 = new WyJS.List([r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r6, r10, true)){
-               control_flow_pc = 1858;
+               control_flow_pc = 1869;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1858:
+         case 1869:
       }
    }
 }

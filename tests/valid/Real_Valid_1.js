@@ -15,39 +15,39 @@ function test$1A_7VkE(){//method() -> void
             var r6 = r0.add(r1);//add %6 = %0, %1 : real
             var r7 = new WyJS.Real(3.6);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1996;
+               control_flow_pc = 2007;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1996:
+         case 2007:
             var r8 = r1.sub(r0);//sub %8 = %1, %0 : real
             var r9 = new WyJS.Real(1.2);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 1997;
+               control_flow_pc = 2008;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1997:
+         case 2008:
             var r10 = r0.div(r1);//div %10 = %0, %1 : real
             var r11 = new WyJS.Real(0.5);
             if(WyJS.equals(r10, r11, true)){
-               control_flow_pc = 1998;
+               control_flow_pc = 2009;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1998:
+         case 2009:
             var r12 = r0.mul(r1);//mul %12 = %0, %1 : real
             var r13 = new WyJS.Real(2.88);
             if(WyJS.equals(r12, r13, true)){
-               control_flow_pc = 1999;
+               control_flow_pc = 2010;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1999:
+         case 2010:
       }
    }
 }
