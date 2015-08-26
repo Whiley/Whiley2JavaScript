@@ -8,8 +8,8 @@ function test$1A_7VkE(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.List([r2], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r3.clone();//assign %1 = %3  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r3.clone(new WyJS.Type.Int());//assign %1 = %3  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
@@ -19,6 +19,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1267:
+            return;
       }
    }
 }

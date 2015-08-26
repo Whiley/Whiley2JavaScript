@@ -40,6 +40,7 @@ function isLetter$Z9bF59$WA$(r0){//function(int) -> bool
             var r5 = true;
          case 149:
             return r5;//return %5 : bool
+            return;
       }
    }
 }
@@ -81,6 +82,7 @@ function f$Z9bFaA$WL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0k
          case 150:
             var r12 = new WyJS.Integer(32);
             return r12;//return %12 : int
+            return;
       }
    }
 }
@@ -93,7 +95,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([104,101,108,108,111]);
+            var r1 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r2 = new WyJS.Integer(0);
             var r3 = new WyJS.Record(["input", "pos"], [r1, r2], new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             var r0 = f$Z9bFaA$WL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$32$lJ$B6$o0FN$F6$_0(r3);//invoke %0 = (%3) ConstrainedList_Valid_11:f : function(ConstrainedList_Valid_11:state) -> int
@@ -105,6 +107,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 152:
+            return;
       }
    }
 }

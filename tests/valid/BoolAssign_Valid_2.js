@@ -168,6 +168,7 @@ function test$1A_7VkE(){//method() -> void
          case 2084:
             throw {name: 'Assert Failed', message: 'fail'}
          case 2085:
+            return;
       }
    }
 }

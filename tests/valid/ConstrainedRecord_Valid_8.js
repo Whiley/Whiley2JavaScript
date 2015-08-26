@@ -19,6 +19,7 @@ function EmptyBoard$Y9_FP8Z2$20kQ$s5$n0$S$76$W0FP$s5$_0$O$74$_0kN$w5$m0$O$w4$L0F
             var r10 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
             var r11 = new WyJS.Record(["move", "pieces"], [r0, r10], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             return r11;//return %11 : {int move,[int] pieces}
+            return;
       }
    }
 }
@@ -67,6 +68,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1401:
+            return;
       }
    }
 }

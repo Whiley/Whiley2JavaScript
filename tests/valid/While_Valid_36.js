@@ -39,6 +39,7 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
          case 752:
             throw {name: 'Assert Failed', message: 'fail'}
          case 753:
+            return;
             var r13 = new WyJS.Integer(0);
             if(WyJS.gt(r3, r13, true)){
                control_flow_pc = 754;
@@ -57,6 +58,7 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 755:
+            return;
             var r15 = r0.length();//lengthof %15 = %0 : [int]
             if(WyJS.gt(r2, r15, true)){
                control_flow_pc = 756;
@@ -83,8 +85,12 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r17 = new WyJS.Integer(1);
             var r18 = r2.add(r17);//add %18 = %2, %17 : int
             var r2 = r18;//assign %2 = %18  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 756:
             return r3;//return %3 : int
+            return;
       }
    }
 }
@@ -104,8 +110,8 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
             var r8 = new WyJS.List([r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r8.clone();//assign %1 = %8  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r8.clone(new WyJS.Type.Int());//assign %1 = %8  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r10 = new WyJS.Integer(0);
             var r9 = lastIndexOf$Z9dFas1FVYGs(r0, r10);//invoke %9 = (%0, %10) While_Valid_36:lastIndexOf : function([int],int) -> int
             var r11 = new WyJS.Integer(1);
@@ -147,6 +153,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 761:
+            return;
       }
    }
 }

@@ -27,6 +27,7 @@ function sum$Z9bFaA$WL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m
             var r5 = r2.add(r3);//add %5 = %2, %3 : int
             return r5;//return %5 : int
          case 325:
+            return;
       }
    }
 }
@@ -40,7 +41,8 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r4 = new WyJS.Integer(1);
-            var r5 = null;/n            var r6 = new WyJS.Record(["data", "next"], [r4, r5], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()]));
+            var r5 = null;
+            var r6 = new WyJS.Record(["data", "next"], [r4, r5], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()]));
             var r3 = r6;//assign %3 = %6  : {int data,null next}
             var r0 = r3;//assign %0 = %3  : X<null|{int data,X next}>
             var r8 = new WyJS.Integer(2);
@@ -78,6 +80,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 328:
+            return;
       }
    }
 }

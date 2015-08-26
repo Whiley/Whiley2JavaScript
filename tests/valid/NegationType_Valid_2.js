@@ -7,6 +7,7 @@ function f$_9bFaJ533ik3y2(r0){//function(int) -> !null
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : !null
+            return;
       }
    }
 }
@@ -29,6 +30,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1633:
+            return;
       }
    }
 }

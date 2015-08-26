@@ -6,7 +6,7 @@ function f$b9dF5X1FVYGWYWt1N3D(r0, r1){//function([int],[real]) -> bool
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = WyJS.Cast(r0, new WyJS.Type.List(new WyJS.Type.Real()));
+            var r2 = WyJS.cast(new WyJS.Type.List(new WyJS.Type.Real()), r0);
             if(WyJS.equals(r2, r1, false)){
                control_flow_pc = 1922;
                control_flow_repeat = true;
@@ -21,6 +21,7 @@ function f$b9dF5X1FVYGWYWt1N3D(r0, r1){//function([int],[real]) -> bool
             var r4 = false;
             return r4;//return %4 : bool
          case 1923:
+            return;
       }
    }
 }
@@ -74,6 +75,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1926:
+            return;
       }
    }
 }

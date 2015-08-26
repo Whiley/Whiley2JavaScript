@@ -8,6 +8,7 @@ function f$Y9bF1B1Fs2(r0){//function(real) -> real
          case -1 :
             var r1 = r0.neg();//neg %1 = %0 : real
             return r1;//return %1 : real
+            return;
       }
    }
 }
@@ -50,6 +51,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1275:
+            return;
       }
    }
 }

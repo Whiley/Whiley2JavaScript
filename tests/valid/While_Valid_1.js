@@ -10,8 +10,8 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r5 = r6.clone();//assign %5 = %6  : [void]
-            r2 = r5.clone();//assign %2 = %5  : [int]
+            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
@@ -24,6 +24,7 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1118:
+            return;
             var r8 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r8, true)){
                control_flow_pc = 1119;
@@ -36,9 +37,13 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r11 = r0.getValue(r1);
             var r12 = new WyJS.List([r11], new WyJS.Type.List(new WyJS.Type.Int()));
             var r13 = r2.append(r12);
-            r2 = r13.clone();//assign %2 = %13  : [int]
+            var r2 = r13.clone(new WyJS.Type.Int());//assign %2 = %13  : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1119:
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -58,8 +63,8 @@ function test$1A_7VkE(){//method() -> void
             var r7 = new WyJS.Integer(5);
             var r8 = new WyJS.List([r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
             var r2 = reverse$Z9bF1D527RWz(r8);//invoke %2 = (%8) While_Valid_1:reverse : function([int]) -> [int]
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r9 = new WyJS.Integer(5);
             var r10 = new WyJS.Integer(4);
             var r11 = new WyJS.Integer(3);
@@ -73,6 +78,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1120:
+            return;
       }
    }
 }

@@ -7,6 +7,7 @@ function atob$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0F
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -20,6 +21,7 @@ function btoa$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0F
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -53,6 +55,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2364:
+            return;
       }
    }
 }

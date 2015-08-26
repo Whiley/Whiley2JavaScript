@@ -9,6 +9,7 @@ function f$Z9bFaL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m$$B3$
             var r2 = r0;//assign %2 = %0  : X<int|{X lhs,X rhs}>
             var r1 = r2;//assign %1 = %2  : X<int|{X lhs,X rhs}>
             return r1;//return %1 : X<int|{X lhs,X rhs}>
+            return;
       }
    }
 }
@@ -41,6 +42,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 322:
+            return;
       }
    }
 }

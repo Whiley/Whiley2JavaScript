@@ -10,8 +10,8 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r5 = r6.clone();//assign %5 = %6  : [void]
-            r2 = r5.clone();//assign %2 = %5  : [int]
+            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
@@ -24,6 +24,7 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 859:
+            return;
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
@@ -34,12 +35,16 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
             control_flow_pc = 861;
             control_flow_repeat = true;
             continue outer;//goto label861
          case 860:
             throw {name: 'Assert Failed', message: 'fail'}
          case 861:
+            return;
             if(WyJS.gt(r1, r0, true)){
                control_flow_pc = 862;
                control_flow_repeat = true;
@@ -47,12 +52,16 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
             }
             var r10 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
             var r11 = r2.append(r10);
-            r2 = r11.clone();//assign %2 = %11  : [int]
+            var r2 = r11.clone(new WyJS.Type.Int());//assign %2 = %11  : [int]
             var r12 = new WyJS.Integer(1);
             var r13 = r1.add(r12);//add %13 = %1, %12 : int
             var r1 = r13;//assign %1 = %13  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 862:
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -156,6 +165,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 869:
+            return;
       }
    }
 }

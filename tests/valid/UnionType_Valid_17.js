@@ -7,6 +7,7 @@ function f$2AbFXA$W(r0){//method(int) -> int
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -20,6 +21,7 @@ function g$3AbF1D527RWz(r0){//method([int]) -> [int]
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -48,7 +50,7 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.List([r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
-            r0 = r8.clone();//assign %0 = %8  : [int]
+            var r0 = r8.clone(new WyJS.Type.Int());//assign %0 = %8  : [int]
             var r9 = g$3AbF1D527RWz(r0);//invoke %9 = (%0) UnionType_Valid_17:g : method([int]) -> [int]
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(2);
@@ -61,6 +63,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 415:
+            return;
       }
    }
 }

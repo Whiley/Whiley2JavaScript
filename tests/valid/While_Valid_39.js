@@ -21,6 +21,7 @@ function contains$_9dF5X1FVY0t12(r0, r1){//function([int],int) -> bool
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 799:
+            return;
             var r6 = r0.length();//lengthof %6 = %0 : [int]
             if(WyJS.gt(r2, r6, true)){
                control_flow_pc = 800;
@@ -48,9 +49,13 @@ function contains$_9dF5X1FVY0t12(r0, r1){//function([int],int) -> bool
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 800:
             var r11 = false;
             return r11;//return %11 : bool
+            return;
       }
    }
 }
@@ -68,8 +73,8 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.Integer(4);
             var r6 = new WyJS.List([r2, r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r6.clone();//assign %1 = %6  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r6.clone(new WyJS.Type.Int());//assign %1 = %6  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r8 = new WyJS.Integer(0);
             var r7 = contains$_9dF5X1FVY0t12(r0, r8);//invoke %7 = (%0, %8) While_Valid_39:contains : function([int],int) -> bool
             var r9 = false;
@@ -130,6 +135,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 807:
+            return;
       }
    }
 }

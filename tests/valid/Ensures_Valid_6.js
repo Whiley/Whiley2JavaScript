@@ -17,8 +17,10 @@ function abs$_9bF5J720WABW2(r0){//function(int) -> int|null
             control_flow_repeat = true;
             continue outer;//goto label1837
          case 1836:
-            var r2 = null;/n            return r2;//return %2 : null|int
+            var r2 = null;
+            return r2;//return %2 : null|int
          case 1837:
+            return;
       }
    }
 }
@@ -44,13 +46,15 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(1);
             var r5 = r4.neg();//neg %5 = %4 : int
             var r3 = abs$_9bF5J720WABW2(r5);//invoke %3 = (%5) Ensures_Valid_6:abs : function(int) -> int|null
-            var r6 = null;/n            if(WyJS.equals(r3, r6, true)){
+            var r6 = null;
+            if(WyJS.equals(r3, r6, true)){
                control_flow_pc = 1839;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1839:
+            return;
       }
    }
 }

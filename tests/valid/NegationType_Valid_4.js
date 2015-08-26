@@ -7,6 +7,7 @@ function f$b9bFaJ533sNJFWJq4a$(r0){//function([int]) -> !(int|null)
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : !(null|int)
+            return;
       }
    }
 }
@@ -19,9 +20,9 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
+            var r1 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r0 = f$b9bFaJ533sNJFWJq4a$(r1);//invoke %0 = (%1) NegationType_Valid_4:f : function([int]) -> !(int|null)
-            var r2 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
+            var r2 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r2, true)){
                control_flow_pc = 1634;
                control_flow_repeat = true;
@@ -29,6 +30,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1634:
+            return;
       }
    }
 }

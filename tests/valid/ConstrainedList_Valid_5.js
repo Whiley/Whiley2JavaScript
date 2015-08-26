@@ -27,6 +27,7 @@ function g$Y9bFXA$W(r0){//function(int) -> int
          case 1745:
             return r0;//return %0 : int
          case 1746:
+            return;
       }
    }
 }
@@ -42,6 +43,7 @@ function f$Z9bF5D527RWz(r0){//function(int) -> [int]
             var r1 = g$Y9bFXA$W(r0);//invoke %1 = (%0) ConstrainedList_Valid_5:g : function(int) -> int
             var r2 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -56,8 +58,8 @@ function test$1A_7VkE(){//method() -> void
          case -1 :
             var r3 = new WyJS.Integer(0);
             var r2 = f$Z9bF5D527RWz(r3);//invoke %2 = (%3) ConstrainedList_Valid_5:f : function(int) -> [int]
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
@@ -67,6 +69,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1747:
+            return;
       }
    }
 }

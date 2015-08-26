@@ -23,7 +23,7 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.List([r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
-            r0 = r8.clone();//assign %0 = %8  : [int]
+            var r0 = r8.clone(new WyJS.Type.Int());//assign %0 = %8  : [int]
          case 1930:
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(2);
@@ -36,6 +36,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1931:
+            return;
       }
    }
 }

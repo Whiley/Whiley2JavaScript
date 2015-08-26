@@ -24,6 +24,7 @@ function f$a9bF59$0J7JCWAB(r0){//function(null|int) -> bool
             var r2 = false;
             return r2;//return %2 : bool
          case 19:
+            return;
       }
    }
 }
@@ -36,7 +37,8 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = null;/n            var r1 = r2;//assign %1 = %2  : null
+            var r2 = null;
+            var r1 = r2;//assign %1 = %2  : null
             var r0 = r1;//assign %0 = %1  : null|int
             var r3 = f$a9bF59$0J7JCWAB(r0);//invoke %3 = (%0) TypeEquals_Valid_5:f : function(null|int) -> bool
             var r4 = true;
@@ -57,6 +59,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 21:
+            return;
       }
    }
 }

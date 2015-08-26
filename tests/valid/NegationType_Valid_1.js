@@ -23,6 +23,7 @@ function f$_9bFaJ533Xk3y2(r0){//function(any) -> !null
          case 1629:
             return r0;//return %0 : !null
          case 1630:
+            return;
       }
    }
 }
@@ -61,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1632:
+            return;
       }
    }
 }

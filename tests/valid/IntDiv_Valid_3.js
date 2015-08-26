@@ -23,6 +23,7 @@ function f$Z9dFXd_V6$Z3$i0$S$F3$d0VS$w4$L0FN$k5$d0$O$w4$nB$s5$W0$SFs1E(r0, r1){/
             var r2 = r5;//assign %2 = %5  : int
          case 2330:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -46,6 +47,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2331:
+            return;
       }
    }
 }

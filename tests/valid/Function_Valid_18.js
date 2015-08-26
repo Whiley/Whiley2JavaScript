@@ -20,6 +20,7 @@ function abs$Z9bFaL1d$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0FB$Vn$VQ$35$o0WA$(
             var r2 = r0.neg();//neg %2 = %0 : int
             return r2;//return %2 : int
          case 283:
+            return;
       }
    }
 }
@@ -34,6 +35,7 @@ function nop$Y9bFXL1d$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0FB$Vn$VQ$35$o0W(r0
          case -1 :
             var r1 = abs$Z9bFaL1d$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0FB$Vn$VQ$35$o0WA$(r0);//invoke %1 = (%0) Function_Valid_18:abs : function(int) -> Function_Valid_18:nat
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -70,6 +72,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 286:
+            return;
       }
    }
 }

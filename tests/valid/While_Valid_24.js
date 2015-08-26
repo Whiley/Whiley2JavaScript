@@ -21,6 +21,7 @@ function indexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|null
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 617:
+            return;
             var r6 = r0.length();//lengthof %6 = %0 : [int]
             if(WyJS.gt(r2, r6, true)){
                control_flow_pc = 618;
@@ -47,8 +48,13 @@ function indexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|null
             var r8 = new WyJS.Integer(1);
             var r9 = r2.add(r8);//add %9 = %2, %8 : int
             var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 618:
-            var r10 = null;/n            return r10;//return %10 : null|int
+            var r10 = null;
+            return r10;//return %10 : null|int
+            return;
       }
    }
 }
@@ -81,13 +87,15 @@ function test$1A_7VkE(){//method() -> void
             var r11 = new WyJS.List([r8, r9, r10], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = new WyJS.Integer(0);
             var r7 = indexOf$a9dF5141KFVY0t1Is2(r11, r12);//invoke %7 = (%11, %12) While_Valid_24:indexOf : function([int],int) -> int|null
-            var r13 = null;/n            if(WyJS.equals(r7, r13, true)){
+            var r13 = null;
+            if(WyJS.equals(r7, r13, true)){
                control_flow_pc = 621;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 621:
+            return;
       }
    }
 }

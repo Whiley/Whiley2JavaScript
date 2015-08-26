@@ -9,6 +9,7 @@ function g$Y9bF1B1Fs2(r0){//function(real) -> real
             var r1 = new WyJS.Real(3.0);
             var r2 = r0.div(r1);//div %2 = %0, %1 : real
             return r2;//return %2 : real
+            return;
       }
    }
 }
@@ -33,6 +34,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 454:
+            return;
       }
    }
 }

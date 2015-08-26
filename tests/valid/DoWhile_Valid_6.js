@@ -32,6 +32,7 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
          case 479:
             throw {name: 'Assert Failed', message: 'fail'}
          case 480:
+            return;
             var r10 = new WyJS.Integer(0);
             if(WyJS.lt(r2, r10, false)){
                control_flow_pc = 481;
@@ -44,8 +45,12 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 481:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -158,6 +163,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 486:
+            return;
       }
    }
 }

@@ -6,13 +6,14 @@ function sum$Z9bF5B1Fc_$A$74$_0kN$w5$m0$O$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mJ$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = WyJS.Cast(r0, new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Real(), new WyJS.Type.Real()]));
+            var r3 = WyJS.cast(new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Real(), new WyJS.Type.Real()]), r0);
             var r2 = r3;//assign %2 = %3  : {real x,real y}
             var r1 = r2;//assign %1 = %2  : {real x,real y}
             var r4 = r1.fieldLoad("x");//fieldload %4 = %1 x : {real x,real y}
             var r5 = r1.fieldLoad("y");//fieldload %5 = %1 y : {real x,real y}
             var r6 = r4.add(r5);//add %6 = %4, %5 : real
             return r6;//return %6 : real
+            return;
       }
    }
 }
@@ -52,6 +53,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 52:
+            return;
       }
    }
 }

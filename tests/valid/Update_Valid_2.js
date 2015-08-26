@@ -8,6 +8,7 @@ function update$Z9fFXOP8s0$K0$R$F5$W0$S$J5$U0VK$35$g0FP$F5$U0VB3$g0FP$B6$o0WA$(r
          case -1 :
             r0.setValue(r1, r2);
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -24,8 +25,8 @@ function test$1A_7VkE(){//method() -> void
             var r3 = new WyJS.Integer(50);
             var r4 = new WyJS.Integer(51);
             var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r5.clone();//assign %1 = %5  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r5.clone(new WyJS.Type.Int());//assign %1 = %5  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(0);
             var r6 = update$Z9fFXOP8s0$K0$R$F5$W0$S$J5$U0VK$35$g0FP$F5$U0VB3$g0FP$B6$o0WA$(r0, r7, r8);//invoke %6 = (%0, %7, %8) Update_Valid_2:update : function(Update_Valid_2:list,int,int) -> Update_Valid_2:list
@@ -54,8 +55,8 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1331:
-            var r20 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
-            r0 = r20.clone();//assign %0 = %20  : [int+]
+            var r20 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r0 = r20.clone(new WyJS.Type.Int());//assign %0 = %20  : [int+]
             var r22 = new WyJS.Integer(1);
             var r23 = new WyJS.Integer(0);
             var r21 = update$Z9fFXOP8s0$K0$R$F5$W0$S$J5$U0VK$35$g0FP$F5$U0VB3$g0FP$B6$o0WA$(r0, r22, r23);//invoke %21 = (%0, %22, %23) Update_Valid_2:update : function(Update_Valid_2:list,int,int) -> Update_Valid_2:list
@@ -100,6 +101,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1333:
+            return;
       }
    }
 }

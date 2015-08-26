@@ -10,6 +10,7 @@ function f$Z9_FsNBVk4D(){//function() -> [int]
             var r1 = new WyJS.Integer(2);
             var r2 = new WyJS.List([r0, r1], new WyJS.Type.List(new WyJS.Type.Int()));
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -23,11 +24,11 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r3 = f$Z9_FsNBVk4D();//invoke %3 = () ListAssign_Valid_9:f : function() -> [int]
-            r2 = r3.clone();//assign %2 = %3  : [int]
-            r0 = r2.clone();//assign %0 = %2  : [int]
+            var r2 = r3.clone(new WyJS.Type.Int());//assign %2 = %3  : [int]
+            var r0 = r2.clone(new WyJS.Type.Int());//assign %0 = %2  : [int]
             var r5 = f$Z9_FsNBVk4D();//invoke %5 = () ListAssign_Valid_9:f : function() -> [int]
-            r4 = r5.clone();//assign %4 = %5  : [int]
-            r1 = r4.clone();//assign %1 = %4  : [int]
+            var r4 = r5.clone(new WyJS.Type.Int());//assign %4 = %5  : [int]
+            var r1 = r4.clone(new WyJS.Type.Int());//assign %1 = %4  : [int]
             var r6 = new WyJS.Integer(0);
             var r7 = new WyJS.Integer(0);
             var r8 = new WyJS.Integer(0);
@@ -72,6 +73,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2436:
+            return;
       }
    }
 }

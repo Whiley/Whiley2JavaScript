@@ -10,6 +10,7 @@ function f$Z9bFaA$WL1d$VG$J6$i0kN$F6$d0kQ$s5$U0VK$35$g0FP$F5$U0FB$7n$FQ$B6$b0(r0
             var r2 = r0.fieldLoad("s");//fieldload %2 = %0 s : {int op,int s}
             var r3 = r1.add(r2);//add %3 = %1, %2 : int
             return r3;//return %3 : int
+            return;
       }
    }
 }
@@ -23,6 +24,7 @@ function f$Z9bF1D527RWz(r0){//function([int]) -> [int]
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -36,6 +38,7 @@ function f$Z9bF1D527VGs(r0){//function([real]) -> [real]
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : [real]
+            return;
       }
    }
 }
@@ -80,6 +83,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 266:
+            return;
       }
    }
 }

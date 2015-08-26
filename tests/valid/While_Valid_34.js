@@ -9,7 +9,8 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|nul
             var r5 = new WyJS.Integer(0);
             var r4 = r5;//assign %4 = %5  : int
             var r2 = r4;//assign %2 = %4  : int
-            var r7 = null;/n            var r6 = r7;//assign %6 = %7  : null
+            var r7 = null;
+            var r6 = r7;//assign %6 = %7  : null
             var r3 = r6;//assign %3 = %6  : null|int
             control_flow_pc = -2;
             control_flow_repeat = true;
@@ -51,6 +52,7 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|nul
          case 727:
             throw {name: 'Assert Failed', message: 'fail'}
          case 729:
+            return;
             var r12 = r0.length();//lengthof %12 = %0 : [int]
             if(WyJS.gt(r2, r12, true)){
                control_flow_pc = 730;
@@ -77,8 +79,12 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function([int],int) -> int|nul
             var r14 = new WyJS.Integer(1);
             var r15 = r2.add(r14);//add %15 = %2, %14 : int
             var r2 = r15;//assign %2 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 730:
             return r3;//return %3 : null|int
+            return;
       }
    }
 }
@@ -98,11 +104,12 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
             var r8 = new WyJS.List([r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r8.clone();//assign %1 = %8  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r8.clone(new WyJS.Type.Int());//assign %1 = %8  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r10 = new WyJS.Integer(0);
             var r9 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r10);//invoke %9 = (%0, %10) While_Valid_34:lastIndexOf : function([int],int) -> int|null
-            var r11 = null;/n            if(WyJS.equals(r9, r11, true)){
+            var r11 = null;
+            if(WyJS.equals(r9, r11, true)){
                control_flow_pc = 732;
                control_flow_repeat = true;
                continue outer;
@@ -139,6 +146,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 735:
+            return;
       }
    }
 }

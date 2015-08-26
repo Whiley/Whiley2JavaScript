@@ -28,6 +28,7 @@ function f$_9dF5e_V9$J4$i0FP$w5$i0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m$VB4$i0$Q$Z5$n0
             var r5 = r1.getValue(r0);
             return r5;//return %5 : int|[int]
          case 438:
+            return;
       }
    }
 }
@@ -56,6 +57,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 439:
+            return;
       }
    }
 }

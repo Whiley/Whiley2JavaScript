@@ -10,10 +10,10 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Integer(4);
             var r6 = new WyJS.List([r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
-            r2 = r6.clone();//assign %2 = %6  : [int]
-            r0 = r2.clone();//assign %0 = %2  : [int]
-            r7 = r0.clone();//assign %7 = %0  : [int]
-            r1 = r7.clone();//assign %1 = %7  : [int]
+            var r2 = r6.clone(new WyJS.Type.Int());//assign %2 = %6  : [int]
+            var r0 = r2.clone(new WyJS.Type.Int());//assign %0 = %2  : [int]
+            var r7 = r0.clone(new WyJS.Type.Int());//assign %7 = %0  : [int]
+            var r1 = r7.clone(new WyJS.Type.Int());//assign %1 = %7  : [int]
             var r8 = new WyJS.Integer(3);
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(3);
@@ -50,6 +50,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2422:
+            return;
       }
    }
 }

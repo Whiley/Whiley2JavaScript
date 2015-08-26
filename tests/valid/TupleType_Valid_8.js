@@ -6,7 +6,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r0 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r1 = new WyJS.Integer(0);
             var r2 = r0.getValue(r1);
             var r3 = new WyJS.Integer(0);
@@ -19,7 +19,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 83:
-            var r6 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r6 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r7 = new WyJS.Integer(1);
             var r8 = r6.getValue(r7);
             var r9 = new WyJS.Integer(1);
@@ -32,7 +32,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 84:
-            var r12 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r12 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r13 = new WyJS.Integer(2);
             var r14 = r12.getValue(r13);
             var r15 = new WyJS.Integer(0);
@@ -45,7 +45,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 85:
-            var r18 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r18 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r19 = new WyJS.Integer(3);
             var r20 = r18.getValue(r19);
             var r21 = new WyJS.Integer(2);
@@ -58,7 +58,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 86:
-            var r24 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r24 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r25 = new WyJS.Integer(4);
             var r26 = r24.getValue(r25);
             var r27 = new WyJS.Integer(0);
@@ -71,7 +71,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 87:
-            var r30 = new WyJS.List([(0,0),(1,1),(0,1),(2,2),(0,2),(2,2)]);
+            var r30 = new WyJS.List([new WyJS.Tuple([new WyJS.Integer(0)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(1)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])), new WyJS.Tuple([new WyJS.Integer(2)], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]))], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
             var r31 = new WyJS.Integer(5);
             var r32 = r30.getValue(r31);
             var r33 = new WyJS.Integer(2);
@@ -84,6 +84,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 88:
+            return;
       }
    }
 }

@@ -7,6 +7,7 @@ function f$_9bFa7$0D5ZL1e$$I$Z5$n0$S$33$n0kR$Z5$b0VQ$w4$L0FN$k5$d0$O$w4$mR$Z5$i0
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : any
+            return;
       }
    }
 }
@@ -30,7 +31,7 @@ function test$1A_7VkE(){//method() -> void
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
             var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
-            r0 = r7.clone();//assign %0 = %7  : [int]
+            var r0 = r7.clone(new WyJS.Type.Int());//assign %0 = %7  : [int]
             control_flow_pc = 2401;
             control_flow_repeat = true;
             continue outer;//goto label2401
@@ -43,7 +44,7 @@ function test$1A_7VkE(){//method() -> void
             var r13 = new WyJS.Integer(5);
             var r14 = new WyJS.List([r13], new WyJS.Type.List(new WyJS.Type.Int()));
             var r15 = new WyJS.List([r9, r12, r14], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            r0 = r15.clone();//assign %0 = %15  : [[int]]
+            var r0 = r15.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %15  : [[int]]
          case 2401:
             var r16 = new WyJS.Integer(1);
             var r17 = new WyJS.Integer(0);
@@ -61,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2402:
+            return;
       }
    }
 }

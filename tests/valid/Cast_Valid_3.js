@@ -6,8 +6,9 @@ function f$Z9bFaL1R$kF$35$n0$S$w4$L0FN$k5$d0$O$w4$n7$74$l$WL1R$kF$35$n0$S$w4$L0F
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = WyJS.Cast(r0, new WyJS.Type.Record(["x"], [new WyJS.Type.Real()]));
+            var r1 = WyJS.cast(new WyJS.Type.Record(["x"], [new WyJS.Type.Real()]), r0);
             return r1;//return %1 : {real x}
+            return;
       }
    }
 }
@@ -32,6 +33,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2023:
+            return;
       }
    }
 }

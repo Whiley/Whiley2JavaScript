@@ -6,11 +6,12 @@ function divide$Z9dFX0Y$3i$(r0, r1){//function(real,int) -> real
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r4 = WyJS.Cast(r1, new WyJS.Type.Real());
+            var r4 = WyJS.cast(new WyJS.Type.Real(), r1);
             var r3 = r4;//assign %3 = %4  : real
             var r2 = r3;//assign %2 = %3  : real
             var r5 = r0.div(r2);//div %5 = %0, %2 : real
             return r5;//return %5 : real
+            return;
       }
    }
 }
@@ -47,6 +48,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2036:
+            return;
       }
    }
 }

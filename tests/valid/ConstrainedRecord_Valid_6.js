@@ -36,6 +36,7 @@ function parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$
          case 1390:
             return r0;//return %0 : {[int] input,int pos}
          case 1391:
+            return;
       }
    }
 }
@@ -51,6 +52,7 @@ function parseTerm$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$U0VK$3
             var r1 = parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$U0VK$35$g0FP$F5$U0VC4$n0$S$35$o0FOF7(r0);//invoke %1 = (%0) ConstrainedRecord_Valid_6:parseWhiteSpace : function(ConstrainedRecord_Valid_6:state) -> ConstrainedRecord_Valid_6:state
             var r0 = r1;//assign %0 = %1  : {[int] input,int pos}
             return r0;//return %0 : {[int] input,int pos}
+            return;
       }
    }
 }
@@ -63,7 +65,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = new WyJS.List([32,32,72,101,108,108,111]);
+            var r2 = new WyJS.List([new WyJS.Integer(32), new WyJS.Integer(32), new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r3 = new WyJS.Integer(0);
             var r4 = new WyJS.Record(["input", "pos"], [r2, r3], new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             var r1 = r4;//assign %1 = %4  : {[int+] input,int pos}
@@ -86,6 +88,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1392:
+            return;
       }
    }
 }

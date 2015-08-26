@@ -11,6 +11,7 @@ function f$Z9bFaL1T$$G$J5$a0FP$s5$_0kM$N4$W0$Q$Z5$Z0kM$F20kN$w5$Z0FOFc_V6$F3$_0V
             var r2 = r4;//assign %2 = %4  : {int op,[void] payload}
             var r1 = r2;//assign %1 = %2  : {int op,[int] payload}
             return r1;//return %1 : {int op,[int] payload}
+            return;
       }
    }
 }
@@ -35,6 +36,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 541:
+            return;
       }
    }
 }

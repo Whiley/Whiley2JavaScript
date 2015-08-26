@@ -41,6 +41,9 @@ function test$1A_7VkE(){//method() -> void
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 466:
             var r7 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r7, true)){
@@ -50,6 +53,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 467:
+            return;
       }
    }
 }

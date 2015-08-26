@@ -30,14 +30,19 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 472:
+            return;
             var r12 = r0.length();//lengthof %12 = %0 : [int]
             if(WyJS.gt(r1, r12, true)){
                control_flow_pc = 473;
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 473:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -86,6 +91,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 476:
+            return;
       }
    }
 }

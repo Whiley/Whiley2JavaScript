@@ -8,6 +8,7 @@ function get$2A_Fi$3y(){//method() -> int
          case -1 :
             var r0 = new WyJS.Integer(1);
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -23,6 +24,7 @@ function f$3AbFaL1e$FI$J5$o0$P$w5$Z0kF$35$g0$Q$w4$L0FN$k5$d0$O$w4$nV0$r0FQ$B5$m0
             var r1 = get$2A_Fi$3y();//invoke %1 = () MethodCall_Valid_3:get : method() -> int
             var r2 = new WyJS.Record(["x", "y"], [r0, r1], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r2;//return %2 : {int x,int y}
+            return;
       }
    }
 }
@@ -47,6 +49,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1113:
+            return;
       }
    }
 }

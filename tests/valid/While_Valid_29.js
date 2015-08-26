@@ -28,6 +28,7 @@ function find$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
          case 669:
             throw {name: 'Assert Failed', message: 'fail'}
          case 670:
+            return;
             var r7 = r0.length();//lengthof %7 = %0 : [int]
             if(WyJS.gt(r2, r7, true)){
                control_flow_pc = 671;
@@ -71,8 +72,12 @@ function find$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r11 = new WyJS.Integer(1);
             var r12 = r2.add(r11);//add %12 = %2, %11 : int
             var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 671:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -142,6 +147,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 678:
+            return;
       }
    }
 }

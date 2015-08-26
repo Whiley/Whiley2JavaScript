@@ -17,6 +17,7 @@ function EmptyBoard$Y9_FP8s0$C0FO$F6$c0kQ$F5$U0VK$35$g0FP$F5$U0FB4$10kQ$35$m0$OF
             var r8 = new WyJS.Integer(0);
             var r9 = new WyJS.List([r0, r1, r2, r3, r4, r5, r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
             return r9;//return %9 : [int]
+            return;
       }
    }
 }
@@ -69,8 +70,12 @@ function numPieces$_9dF5u1Fc_V6$o3$_0$S$V5$j0$O$w4$L0FN$k5$d0$O$w4$lJ$73$j0FN$76
             var r14 = new WyJS.Integer(1);
             var r15 = r3.add(r14);//add %15 = %3, %14 : int
             var r3 = r15;//assign %3 = %15  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1201:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -96,6 +101,7 @@ function update$2AbFXL1T$FI$J5$o0$P$w5$Z0kM$N4$W0$Q$Z5$Z0kM$3I0VF$w5$W0VR$F531(r
             var r9 = new WyJS.Integer(2);
             r0.setValue(r8, r9);
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -109,10 +115,10 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = EmptyBoard$Y9_FP8s0$C0FO$F6$c0kQ$F5$U0VK$35$g0FP$F5$U0FB4$10kQ$35$m0$OFs2();//invoke %2 = () Method_Valid_1:EmptyBoard : function() -> Method_Valid_1:Board
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r3 = update$2AbFXL1T$FI$J5$o0$P$w5$Z0kM$N4$W0$Q$Z5$Z0kM$3I0VF$w5$W0VR$F531(r0);//invoke %3 = (%0) Method_Valid_1:update : method(Method_Valid_1:Board) -> Method_Valid_1:Board
-            r0 = r3.clone();//assign %0 = %3  : [int]
+            var r0 = r3.clone(new WyJS.Type.Int());//assign %0 = %3  : [int]
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(0);
@@ -130,6 +136,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1203:
+            return;
       }
    }
 }

@@ -23,6 +23,7 @@ function f$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0VB$$
             var r3 = f$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0VB$$I0VN$w4$i0FN$F63P8w1$20kQ$s5$n0$S$76$W0FP$s5$_0$O$Z3$i0$S$w4$L0FN$k5$d0$O$w4$m$$B4$W0kM$s5$W0$S(r5);//invoke %3 = (%5) ConstrainedInt_Valid_20:f : function(ConstrainedInt_Valid_20:a_nat) -> ConstrainedInt_Valid_20:b_nat
             return r3;//return %3 : int
          case 2373:
+            return;
       }
    }
 }
@@ -48,6 +49,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2374:
+            return;
       }
    }
 }

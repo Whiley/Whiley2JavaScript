@@ -24,6 +24,7 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$
             var r2 = r0.length();//lengthof %2 = %0 : [int]
             return r2;//return %2 : int
          case 932:
+            return;
       }
    }
 }
@@ -69,6 +70,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 935:
+            return;
       }
    }
 }

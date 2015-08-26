@@ -7,8 +7,8 @@ function test$b9dF5X1FVYGWYW0Yk4D(r0, r1){//function([real],[int]) -> bool
       switch(control_flow_pc){
          case -1 :
             var r5 = r0.append(r1);
-            r4 = r5.clone();//assign %4 = %5  : [int|real]
-            r2 = r4.clone();//assign %2 = %4  : [int|real]
+            var r4 = r5.clone(new WyJS.Type.Union([new WyJS.Type.Int(), new WyJS.Type.Real()]));//assign %4 = %5  : [int|real]
+            var r2 = r4.clone(new WyJS.Type.Union([new WyJS.Type.Int(), new WyJS.Type.Real()]));//assign %2 = %4  : [int|real]
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
@@ -50,9 +50,13 @@ if(WyJS.is(r9, new WyJS.Type.Int())){
             var r11 = new WyJS.Integer(1);
             var r12 = r3.add(r11);//add %12 = %3, %11 : int
             var r3 = r12;//assign %3 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1704:
             var r13 = false;
             return r13;//return %13 : bool
+            return;
       }
    }
 }
@@ -104,6 +108,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1708:
+            return;
       }
    }
 }

@@ -6,10 +6,11 @@ function g$Z9bF5B1Fs1E(r0){//function(int) -> real
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = WyJS.Cast(r0, new WyJS.Type.Real());
+            var r1 = WyJS.cast(new WyJS.Type.Real(), r0);
             var r2 = new WyJS.Real(3.123);
             var r3 = r1.div(r2);//div %3 = %1, %2 : real
             return r3;//return %3 : real
+            return;
       }
    }
 }
@@ -24,6 +25,7 @@ function f$Z9dFa0Y$3i$(r0, r1){//function(int,int) -> real
          case -1 :
             var r2 = g$Z9bF5B1Fs1E(r0);//invoke %2 = (%0) RealDiv_Valid_2:g : function(int) -> real
             return r2;//return %2 : real
+            return;
       }
    }
 }
@@ -49,6 +51,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 446:
+            return;
       }
    }
 }

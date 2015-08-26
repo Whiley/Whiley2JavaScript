@@ -8,6 +8,7 @@ function sum$Z9bFaA$WL1c$kF$w5$_0VR$B5$d0kQ$s5$U0VK$35$g0FP$F5$U0FD3$B0FP$s5$f0(
          case -1 :
             var r1 = r0.fieldLoad("data");//fieldload %1 = %0 data : {int data}
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -20,9 +21,10 @@ function sum2$Z9bFaA$WL1c$kF$w5$_0VR$B5$d0kQ$s5$U0VK$35$g0FP$F5$U0FD6$10FP$R5$B0
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = WyJS.Cast(r0, new WyJS.Type.Record(["data"], [new WyJS.Type.Int()]));
+            var r2 = WyJS.cast(new WyJS.Type.Record(["data"], [new WyJS.Type.Int()]), r0);
             var r1 = sum$Z9bFaA$WL1c$kF$w5$_0VR$B5$d0kQ$s5$U0VK$35$g0FP$F5$U0FD3$B0FP$s5$f0(r2);//invoke %1 = (%2) Coercion_Valid_9:sum : function(Coercion_Valid_9:Link) -> int
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -49,6 +51,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1371:
+            return;
       }
    }
 }

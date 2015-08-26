@@ -6,7 +6,9 @@ function BTree$Y9_FP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$FI0VF$F4$m0FO$J53y(
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = null;/n            return r0;//return %0 : X<null|{int item,X left,X right}>
+            var r0 = null;
+            return r0;//return %0 : X<null|{int item,X left,X right}>
+            return;
       }
    }
 }
@@ -28,7 +30,9 @@ function add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$C4$10$K$76$_0FOFs1E
             control_flow_repeat = true;
             continue outer;//goto label1521
          case 1520:
-            var r2 = null;/n            var r3 = null;/n            var r4 = new WyJS.Record(["item", "left", "right"], [r1, r2, r3], new WyJS.Type.Record(["item", "left", "right"], [new WyJS.Type.Int(), new WyJS.Type.Null(), new WyJS.Type.Null()]));
+            var r2 = null;
+            var r3 = null;
+            var r4 = new WyJS.Record(["item", "left", "right"], [r1, r2, r3], new WyJS.Type.Record(["item", "left", "right"], [new WyJS.Type.Int(), new WyJS.Type.Null(), new WyJS.Type.Null()]));
             var r0 = r4;//assign %0 = %4  : {int item,null left,null right}
             control_flow_pc = 1522;
             control_flow_repeat = true;
@@ -56,6 +60,7 @@ function add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$C4$10$K$76$_0FOFs1E
             r0.setValue("right", r12);
          case 1522:
             return r0;//return %0 : X<null|{int item,X left,X right}>
+            return;
       }
    }
 }
@@ -112,6 +117,7 @@ function contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$C4$10$K$76$
             var r8 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$C4$10$K$76$_0FOMs(r9, r1);//invoke %8 = (%9, %1) Complex_Valid_4:contains : function(Complex_Valid_4:BTree,int) -> bool
             return r8;//return %8 : bool
          case 1526:
+            return;
       }
    }
 }
@@ -235,6 +241,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1537:
+            return;
       }
    }
 }

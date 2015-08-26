@@ -10,8 +10,8 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r5 = r6.clone();//assign %5 = %6  : [void]
-            r2 = r5.clone();//assign %2 = %5  : [int]
+            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
@@ -33,6 +33,7 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
          case 850:
             throw {name: 'Assert Failed', message: 'fail'}
          case 851:
+            return;
             var r11 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r11, true)){
                control_flow_pc = 852;
@@ -45,9 +46,13 @@ function reverse$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r14 = r0.getValue(r1);
             var r15 = new WyJS.List([r14], new WyJS.Type.List(new WyJS.Type.Int()));
             var r16 = r2.append(r15);
-            r2 = r16.clone();//assign %2 = %16  : [int]
+            var r2 = r16.clone(new WyJS.Type.Int());//assign %2 = %16  : [int]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 852:
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -150,6 +155,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 858:
+            return;
       }
    }
 }

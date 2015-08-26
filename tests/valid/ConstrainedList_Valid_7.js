@@ -17,6 +17,7 @@ function f$Z9bF1D527RWz(r0){//function([int]) -> [int]
             throw {name: 'Assert Failed', message: 'fail'}
          case 1761:
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -39,6 +40,7 @@ function g$Z9bF1D527RWz(r0){//function([int]) -> [int]
             throw {name: 'Assert Failed', message: 'fail'}
          case 1763:
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -95,6 +97,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1766:
+            return;
       }
    }
 }

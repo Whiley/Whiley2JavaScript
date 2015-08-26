@@ -36,6 +36,7 @@ function abs$_9bFaA$0J70CW2(r0){//function(int|null) -> int
             var r3 = new WyJS.Integer(0);
             return r3;//return %3 : int
          case 1847:
+            return;
       }
    }
 }
@@ -69,7 +70,8 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1849:
-            var r8 = null;/n            var r7 = abs$_9bFaA$0J70CW2(r8);//invoke %7 = (%8) Ensures_Valid_7:abs : function(int|null) -> int
+            var r8 = null;
+            var r7 = abs$_9bFaA$0J70CW2(r8);//invoke %7 = (%8) Ensures_Valid_7:abs : function(int|null) -> int
             var r9 = new WyJS.Integer(0);
             if(WyJS.equals(r7, r9, true)){
                control_flow_pc = 1850;
@@ -78,6 +80,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1850:
+            return;
       }
    }
 }

@@ -28,8 +28,12 @@ function toInt$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r10 = new WyJS.Integer(1);
             var r11 = r2.add(r10);//add %11 = %2, %10 : int
             var r2 = r11;//assign %2 = %11  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1213:
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -47,8 +51,8 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.Integer(4);
             var r6 = new WyJS.List([r2, r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r6.clone();//assign %1 = %6  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r6.clone(new WyJS.Type.Int());//assign %1 = %6  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r7 = toInt$Z9bFaA$0D5Wz(r0);//invoke %7 = (%0) Import_Valid_3:toInt : function([int]) -> int
             var r8 = new WyJS.Integer(10);
             if(WyJS.equals(r7, r8, true)){
@@ -58,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1214:
+            return;
       }
    }
 }

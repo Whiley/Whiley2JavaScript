@@ -10,10 +10,10 @@ function f$Z9bF5D527RWz(r0){//function(int) -> [int]
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(64);
             var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
-            r3 = r7.clone();//assign %3 = %7  : [int]
-            r1 = r3.clone();//assign %1 = %3  : [int]
-            r8 = r1.clone();//assign %8 = %1  : [int]
-            r2 = r8.clone();//assign %2 = %8  : [int]
+            var r3 = r7.clone(new WyJS.Type.Int());//assign %3 = %7  : [int]
+            var r1 = r3.clone(new WyJS.Type.Int());//assign %1 = %3  : [int]
+            var r8 = r1.clone(new WyJS.Type.Int());//assign %8 = %1  : [int]
+            var r2 = r8.clone(new WyJS.Type.Int());//assign %2 = %8  : [int]
             var r9 = r1.length();//lengthof %9 = %1 : [int]
             if(WyJS.equals(r0, r9, true)){
                control_flow_pc = 2423;
@@ -43,6 +43,7 @@ function f$Z9bF5D527RWz(r0){//function(int) -> [int]
          case 2425:
             var r17 = r1.append(r2);
             return r17;//return %17 : [int]
+            return;
       }
    }
 }
@@ -87,6 +88,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2427:
+            return;
       }
    }
 }

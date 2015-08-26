@@ -8,6 +8,7 @@ function f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$tN$F6$p0$R$
          case -1 :
             var r1 = r0.fieldLoad("op");//fieldload %1 = %0 op : {int|[int] il,int op}
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -34,6 +35,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 421:
+            return;
       }
    }
 }

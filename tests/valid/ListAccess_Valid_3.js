@@ -35,6 +35,7 @@ function f$Z9d7Z01RB5Ms(r0, r1){//function([int],int) -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1641:
+            return;
       }
    }
 }
@@ -51,8 +52,8 @@ function test$1A_7VkE(){//method() -> void
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r5.clone();//assign %1 = %5  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r5.clone(new WyJS.Type.Int());//assign %1 = %5  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r6 = new WyJS.Integer(1);
             f$Z9d7Z01RB5Ms(r0, r6);//invoke %(%0, %6) ListAccess_Valid_3:f : function([int],int) -> void
             var r7 = new WyJS.Integer(1);
@@ -108,6 +109,7 @@ function test$1A_7VkE(){//method() -> void
          case 1645:
             var r27 = new WyJS.Integer(4);
             f$Z9d7Z01RB5Ms(r0, r27);//invoke %(%0, %27) ListAccess_Valid_3:f : function([int],int) -> void
+            return;
       }
    }
 }

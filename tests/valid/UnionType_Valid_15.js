@@ -7,6 +7,7 @@ function f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$pR$o5$n0kO$F4$
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : {[int] data,int op}|{[{int dum}] data,int op}
+            return;
       }
    }
 }
@@ -42,8 +43,8 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 410:
             var r17 = r0.fieldLoad("data");//fieldload %17 = %0 data : {[int] data,int op}
-            r16 = r17.clone();//assign %16 = %17  : [int]
-            r1 = r16.clone();//assign %1 = %16  : [int]
+            var r16 = r17.clone(new WyJS.Type.Int());//assign %16 = %17  : [int]
+            var r1 = r16.clone(new WyJS.Type.Int());//assign %1 = %16  : [int]
             var r18 = new WyJS.Integer(1);
             var r19 = new WyJS.Integer(2);
             var r20 = new WyJS.Integer(3);
@@ -55,6 +56,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 411:
+            return;
       }
    }
 }

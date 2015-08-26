@@ -10,6 +10,7 @@ function f$Y9bFXL1g$VJ$J5$Y0kQ$76$Z0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$720VR$J5$
             var r2 = new WyJS.Integer(1);
             r0.fieldLoad("current").setValue("x", r2);
             return r0;//return %0 : {{int x} current}
+            return;
       }
    }
 }
@@ -38,6 +39,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1226:
+            return;
       }
    }
 }

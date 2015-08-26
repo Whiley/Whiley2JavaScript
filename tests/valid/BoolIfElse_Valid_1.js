@@ -25,6 +25,7 @@ function f$Y9bF19$W(r0){//function(bool) -> bool
             var r3 = false;
             return r3;//return %3 : bool
          case 1278:
+            return;
       }
    }
 }
@@ -61,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
          case 1280:
             throw {name: 'Assert Failed', message: 'fail'}
          case 1281:
+            return;
       }
    }
 }

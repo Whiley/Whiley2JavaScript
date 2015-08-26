@@ -25,6 +25,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 622:
+            return;
             if(WyJS.gt(r1, r0, true)){
                control_flow_pc = 623;
                control_flow_repeat = true;
@@ -36,9 +37,13 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             var r11 = new WyJS.Integer(2);
             var r12 = r2.add(r11);//add %12 = %2, %11 : int
             var r2 = r12;//assign %2 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 623:
             var r13 = r1.add(r2);//add %13 = %1, %2 : int
             return r13;//return %13 : int
+            return;
       }
    }
 }
@@ -61,6 +66,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 624:
+            return;
       }
    }
 }

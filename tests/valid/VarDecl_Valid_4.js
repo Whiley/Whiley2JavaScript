@@ -8,6 +8,7 @@ function constantPool$Y9_Fi$3y(){//function() -> int
          case -1 :
             var r0 = new WyJS.Integer(12478623847120981);
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -31,6 +32,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1107:
+            return;
       }
    }
 }

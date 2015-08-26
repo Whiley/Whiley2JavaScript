@@ -7,6 +7,7 @@ function f$Z9bF1D527RWz(r0){//function([int]) -> [int]
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -19,7 +20,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
+            var r1 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r0 = f$Z9bF1D527RWz(r1);//invoke %0 = (%1) Coercion_Valid_2:f : function([int]) -> [int]
             var r2 = new WyJS.Integer(72);
             var r3 = new WyJS.Integer(101);
@@ -40,6 +41,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1364:
+            return;
       }
    }
 }

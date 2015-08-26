@@ -23,6 +23,7 @@ function f$_9bFaA$0J70GW2(r0){//function(int|bool) -> int
             var r1 = new WyJS.Integer(1);
             return r1;//return %1 : int
          case 1368:
+            return;
       }
    }
 }
@@ -55,6 +56,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1370:
+            return;
       }
    }
 }

@@ -16,6 +16,7 @@ function abs$Y9bFXA$W(r0){//function(int) -> int
             var r0 = r2;//assign %0 = %2  : int
          case 1852:
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -49,6 +50,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1854:
+            return;
       }
    }
 }

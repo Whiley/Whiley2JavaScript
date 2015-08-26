@@ -23,6 +23,7 @@ function f$Z9dFaGYmBFs1(r0, r1){//function(int,int) -> (int,int)
          case 2334:
             var r8 = new WyJS.Tuple([r0, r1], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r8;//return %8 : (int,int)
+            return;
       }
    }
 }
@@ -48,6 +49,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2335:
+            return;
       }
    }
 }

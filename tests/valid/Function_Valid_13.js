@@ -7,6 +7,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -38,6 +39,7 @@ function Point$Z9dFad_F9$N3$p0VQ$B5$o0FP$w5$i0kM$N4$W0$Q$Z5$Z0kM$32$nJ$$4$j0FP$s
             var r8 = new WyJS.Record(["x", "y"], [r5, r7], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r8;//return %8 : {int x,int y}
          case 269:
+            return;
       }
    }
 }
@@ -80,6 +82,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 271:
+            return;
       }
    }
 }

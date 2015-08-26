@@ -10,6 +10,7 @@ function f$_9bF5D537oH76$51Vr$kC$a2$u$FD$12Vo$kC$92$m$F9$92Vl$sC$Z2$m$sA$g1Vk$VC
             var r2 = r0.fieldLoad("index");//fieldload %2 = %0 index : {int index,int op}
             var r3 = new WyJS.List([r1, r2], new WyJS.Type.List(new WyJS.Type.Int()));
             return r3;//return %3 : [int]
+            return;
       }
    }
 }
@@ -36,6 +37,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1381:
+            return;
       }
    }
 }

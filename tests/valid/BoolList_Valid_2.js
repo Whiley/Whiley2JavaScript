@@ -6,8 +6,8 @@ function play$Z9bF1D527FWz(r0){//function([bool]) -> [bool]
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            r3 = r0.clone();//assign %3 = %0  : [bool]
-            r1 = r3.clone();//assign %1 = %3  : [bool]
+            var r3 = r0.clone(new WyJS.Type.Bool());//assign %3 = %0  : [bool]
+            var r1 = r3.clone(new WyJS.Type.Bool());//assign %1 = %3  : [bool]
             var r5 = new WyJS.Integer(0);
             var r4 = r5;//assign %4 = %5  : int
             var r2 = r4;//assign %2 = %4  : int
@@ -61,8 +61,12 @@ function play$Z9bF1D527FWz(r0){//function([bool]) -> [bool]
             var r13 = new WyJS.Integer(1);
             var r14 = r2.add(r13);//add %14 = %2, %13 : int
             var r2 = r14;//assign %2 = %14  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1302:
             return r1;//return %1 : [bool]
+            return;
       }
    }
 }
@@ -124,6 +128,7 @@ function isAlive$_9dF5X1Fs1RB12(r0, r1){//function(int,[bool]) -> bool
             var r15 = false;
             return r15;//return %15 : bool
          case 1309:
+            return;
       }
    }
 }
@@ -144,8 +149,8 @@ function test$1A_7VkE(){//method() -> void
             var r7 = true;
             var r8 = true;
             var r9 = new WyJS.List([r2, r3, r4, r5, r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Bool()));
-            r1 = r9.clone();//assign %1 = %9  : [bool]
-            r0 = r1.clone();//assign %0 = %1  : [bool]
+            var r1 = r9.clone(new WyJS.Type.Bool());//assign %1 = %9  : [bool]
+            var r0 = r1.clone(new WyJS.Type.Bool());//assign %0 = %1  : [bool]
             var r10 = true;
             var r11 = true;
             var r12 = true;
@@ -162,7 +167,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 1310:
             var r18 = play$Z9bF1D527FWz(r0);//invoke %18 = (%0) BoolList_Valid_2:play : function([bool]) -> [bool]
-            r0 = r18.clone();//assign %0 = %18  : [bool]
+            var r0 = r18.clone(new WyJS.Type.Bool());//assign %0 = %18  : [bool]
             var r19 = false;
             var r20 = true;
             var r21 = true;
@@ -179,7 +184,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 1311:
             var r27 = play$Z9bF1D527FWz(r0);//invoke %27 = (%0) BoolList_Valid_2:play : function([bool]) -> [bool]
-            r0 = r27.clone();//assign %0 = %27  : [bool]
+            var r0 = r27.clone(new WyJS.Type.Bool());//assign %0 = %27  : [bool]
             var r28 = false;
             var r29 = false;
             var r30 = true;
@@ -196,7 +201,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 1312:
             var r36 = play$Z9bF1D527FWz(r0);//invoke %36 = (%0) BoolList_Valid_2:play : function([bool]) -> [bool]
-            r0 = r36.clone();//assign %0 = %36  : [bool]
+            var r0 = r36.clone(new WyJS.Type.Bool());//assign %0 = %36  : [bool]
             var r37 = false;
             var r38 = false;
             var r39 = false;
@@ -213,7 +218,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 1313:
             var r45 = play$Z9bF1D527FWz(r0);//invoke %45 = (%0) BoolList_Valid_2:play : function([bool]) -> [bool]
-            r0 = r45.clone();//assign %0 = %45  : [bool]
+            var r0 = r45.clone(new WyJS.Type.Bool());//assign %0 = %45  : [bool]
             var r46 = false;
             var r47 = false;
             var r48 = false;
@@ -229,6 +234,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1314:
+            return;
       }
    }
 }

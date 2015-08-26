@@ -10,8 +10,8 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r5 = r6.clone();//assign %5 = %6  : [void]
-            r2 = r5.clone();//assign %2 = %5  : [int]
+            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
@@ -32,12 +32,16 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
             control_flow_pc = 547;
             control_flow_repeat = true;
             continue outer;//goto label547
          case 546:
             throw {name: 'Assert Failed', message: 'fail'}
          case 547:
+            return;
             var r10 = r0.length();//lengthof %10 = %0 : [int]
             if(WyJS.gt(r1, r10, true)){
                control_flow_pc = 548;
@@ -61,7 +65,7 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
             var r14 = r13.neg();//neg %14 = %13 : int
             var r15 = new WyJS.List([r14], new WyJS.Type.List(new WyJS.Type.Int()));
             var r16 = r2.append(r15);
-            r2 = r16.clone();//assign %2 = %16  : [int]
+            var r2 = r16.clone(new WyJS.Type.Int());//assign %2 = %16  : [int]
             control_flow_pc = 550;
             control_flow_repeat = true;
             continue outer;//goto label550
@@ -72,7 +76,7 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
             var r17 = r0.getValue(r1);
             var r18 = new WyJS.List([r17], new WyJS.Type.List(new WyJS.Type.Int()));
             var r19 = r2.append(r18);
-            r2 = r19.clone();//assign %2 = %19  : [int]
+            var r2 = r19.clone(new WyJS.Type.Int());//assign %2 = %19  : [int]
             control_flow_pc = 550;
             control_flow_repeat = true;
             break;
@@ -80,8 +84,12 @@ function extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViA
             var r20 = new WyJS.Integer(1);
             var r21 = r1.add(r20);//add %21 = %1, %20 : int
             var r1 = r21;//assign %1 = %21  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 548:
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -114,8 +122,8 @@ function test$1A_7VkE(){//method() -> void
             var r20 = r19.neg();//neg %20 = %19 : int
             var r21 = new WyJS.List([r4, r5, r6, r8, r9, r10, r11, r12, r14, r15, r17, r18, r20], new WyJS.Type.List(new WyJS.Type.Int()));
             var r2 = extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViAw(r21);//invoke %2 = (%21) While_Valid_11:extract : function([int]) -> [While_Valid_11:nat]
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r22 = new WyJS.Integer(1);
             var r23 = new WyJS.Integer(2);
             var r24 = new WyJS.Integer(3);
@@ -139,7 +147,7 @@ function test$1A_7VkE(){//method() -> void
          case 551:
             var r37 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             var r36 = extract$a9bF5D537klcoHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0VN5$R2Vk$ViAw(r37);//invoke %36 = (%37) While_Valid_11:extract : function([int]) -> [While_Valid_11:nat]
-            r0 = r36.clone();//assign %0 = %36  : [int]
+            var r0 = r36.clone(new WyJS.Type.Int());//assign %0 = %36  : [int]
             var r38 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             if(WyJS.equals(r0, r38, true)){
                control_flow_pc = 552;
@@ -148,6 +156,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 552:
+            return;
       }
    }
 }

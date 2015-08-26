@@ -9,6 +9,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             var r1 = new WyJS.Integer(1);
             var r2 = r0.add(r1);//add %2 = %0, %1 : int
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -23,6 +24,7 @@ function g$Z9dFaGYmBFs1(r0, r1){//function(int,int) -> (int,int)
          case -1 :
             var r2 = new WyJS.Tuple([r0, r1], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r2;//return %2 : (int,int)
+            return;
       }
    }
 }
@@ -60,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1208:
+            return;
       }
    }
 }

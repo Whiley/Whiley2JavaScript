@@ -13,8 +13,8 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(8);
             var r7 = new WyJS.Record(["f", "g"], [r5, r6], new WyJS.Type.Record(["f", "g"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r8 = new WyJS.List([r4, r7], new WyJS.Type.List(new WyJS.Type.Record(["f", "g"], [new WyJS.Type.Int(), new WyJS.Type.Int()])));
-            r1 = r8.clone();//assign %1 = %8  : [{int f,int g}]
-            r0 = r1.clone();//assign %0 = %1  : [{int f,int g}]
+            var r1 = r8.clone(new WyJS.Type.Record(["f", "g"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));//assign %1 = %8  : [{int f,int g}]
+            var r0 = r1.clone(new WyJS.Type.Record(["f", "g"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));//assign %0 = %1  : [{int f,int g}]
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(0);
             var r11 = new WyJS.Integer(2);
@@ -33,6 +33,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1263:
+            return;
       }
    }
 }

@@ -23,6 +23,7 @@ function f$Z9bFaL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$72$lJ$s5$g0FP$B6$
             var r3 = f$Z9bFaL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$72$lJ$s5$g0FP$B6$o0WA$(r5);//invoke %3 = (%5) UnionType_Valid_21:f : function(int) -> UnionType_Valid_21:nlist
             return r3;//return %3 : int|[int]
          case 433:
+            return;
       }
    }
 }
@@ -47,6 +48,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 434:
+            return;
       }
    }
 }

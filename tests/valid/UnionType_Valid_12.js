@@ -7,6 +7,7 @@ function f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$mR$Z3$i0$S$k3$
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : {int mode,int op}|{int op,[real] rest}
+            return;
       }
    }
 }
@@ -20,6 +21,7 @@ function g$_9bFaL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$mR$Z3$i0$S$k3$
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : {int mode,int op}|{int op,[real] rest}
+            return;
       }
    }
 }
@@ -65,6 +67,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 398:
+            return;
       }
    }
 }

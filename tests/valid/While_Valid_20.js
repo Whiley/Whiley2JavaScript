@@ -23,8 +23,12 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             var r1 = r5;//assign %1 = %5  : int
             var r6 = r0.fieldLoad("next");//fieldload %6 = %0 next : X<{int data,X|null next}>
             var r0 = r6;//assign %0 = %6  : X<null|{int data,X next}>
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 582:
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -37,7 +41,8 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = null;/n            var r1 = r2;//assign %1 = %2  : null
+            var r2 = null;
+            var r1 = r2;//assign %1 = %2  : null
             var r0 = r1;//assign %0 = %1  : X<null|{int data,X next}>
             var r3 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %3 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r4 = new WyJS.Integer(0);
@@ -84,6 +89,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 586:
+            return;
       }
    }
 }

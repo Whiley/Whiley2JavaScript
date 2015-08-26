@@ -7,6 +7,7 @@ function f$Z9bF1D527FWz(r0){//function([bool]) -> [bool]
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : [bool]
+            return;
       }
    }
 }
@@ -61,6 +62,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1376:
+            return;
       }
    }
 }

@@ -27,6 +27,7 @@ function sum_1$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
             var r5 = r2.add(r3);//add %5 = %2, %3 : int
             return r5;//return %5 : int
          case 246:
+            return;
       }
    }
 }
@@ -60,6 +61,7 @@ function sum_2$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
             var r5 = r2.add(r3);//add %5 = %2, %3 : int
             return r5;//return %5 : int
          case 249:
+            return;
       }
    }
 }
@@ -89,6 +91,7 @@ function sum_3$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
             var r5 = new WyJS.Integer(0);
             return r5;//return %5 : int
          case 251:
+            return;
       }
    }
 }
@@ -102,7 +105,8 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.Integer(1);
-            var r3 = null;/n            var r4 = new WyJS.Record(["data", "next"], [r2, r3], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()]));
+            var r3 = null;
+            var r4 = new WyJS.Record(["data", "next"], [r2, r3], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()]));
             var r1 = r4;//assign %1 = %4  : {int data,null next}
             var r0 = r1;//assign %0 = %1  : X<null|{int data,X next}>
             var r5 = new WyJS.Integer(2);
@@ -138,6 +142,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 254:
+            return;
       }
    }
 }

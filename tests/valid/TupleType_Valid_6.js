@@ -25,6 +25,7 @@ function f$Z9bFaL1d$$K$J6$k0$Q$J5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$N20FO$F6$p0$RFs1(
             var r7 = new WyJS.Tuple([r5, r6], new WyJS.Type.Tuple([new WyJS.Type.Real(), new WyJS.Type.Real()]));
             return r7;//return %7 : (int,int)|(real,real)
          case 72:
+            return;
       }
    }
 }
@@ -79,6 +80,7 @@ function test$1A_7VkE(){//method() -> void
          case 75:
             throw {name: 'Assert Failed', message: 'fail'}
          case 76:
+            return;
       }
    }
 }

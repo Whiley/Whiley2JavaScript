@@ -8,6 +8,7 @@ function getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$lc0$
          case -1 :
             var r1 = r0.fieldLoad("field");//fieldload %1 = %0 field : {int field,...}
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -34,7 +35,7 @@ function test$1A_7VkE(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 1877:
             var r6 = new WyJS.Integer(2);
-            var r7 = new WyJS.List([104,101,108,108,111]);
+            var r7 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r8 = new WyJS.Record(["field", "x"], [r6, r7], new WyJS.Type.Record(["field", "x"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r0 = r8;//assign %0 = %8  : {int field,[int+] x}
             var r9 = getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$lc0$E0$R$J5$i0VJ$J5$Y0kQ$76$Zx(r0);//invoke %9 = (%0) OpenRecord_Valid_1:getField : function(OpenRecord_Valid_1:OpenRecord) -> int
@@ -60,6 +61,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1879:
+            return;
       }
    }
 }

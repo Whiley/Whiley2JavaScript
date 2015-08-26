@@ -20,6 +20,7 @@ function abs$Y9bFXA$W(r0){//function(int) -> int
             var r2 = r0.neg();//neg %2 = %0 : int
             return r2;//return %2 : int
          case 60:
+            return;
       }
    }
 }
@@ -72,6 +73,7 @@ function conflict$_9fF5Xc$3P8Z1$J0FS$$6$g0FO$F4$t0$R$J5$U0VK$35$g0FP$F5$U0FC2$F0
             var r17 = true;
          case 64:
             return r17;//return %17 : bool
+            return;
       }
    }
 }
@@ -148,6 +150,7 @@ function test$1A_7VkE(){//method() -> void
          case 69:
             throw {name: 'Assert Failed', message: 'fail'}
          case 70:
+            return;
       }
    }
 }

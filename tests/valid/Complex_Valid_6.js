@@ -18,6 +18,7 @@ function max$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
          case 1550:
             return r0;//return %0 : int
          case 1551:
+            return;
       }
    }
 }
@@ -45,6 +46,7 @@ function diff$Z9dFad_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0VC2$i0FN$F63ik2(r0,
             var r2 = r5;//assign %2 = %5  : int
          case 1554:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -122,6 +124,9 @@ function test$1A_7VkE(){//method() -> void
             var r20 = new WyJS.Integer(1);
             var r21 = r1.add(r20);//add %21 = %1, %20 : int
             var r1 = r21;//assign %1 = %21  : int
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
             control_flow_pc = 1556;
             control_flow_repeat = true;
             break;
@@ -129,7 +134,11 @@ function test$1A_7VkE(){//method() -> void
             var r22 = new WyJS.Integer(1);
             var r23 = r0.add(r22);//add %23 = %0, %22 : int
             var r0 = r23;//assign %0 = %23  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1555:
+            return;
       }
    }
 }

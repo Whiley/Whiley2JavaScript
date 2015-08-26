@@ -18,6 +18,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
          case 2013:
             var r4 = new WyJS.Integer(0);
             return r4;//return %4 : int
+            return;
       }
    }
 }
@@ -60,6 +61,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2016:
+            return;
       }
    }
 }

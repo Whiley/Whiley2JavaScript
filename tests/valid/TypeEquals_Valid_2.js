@@ -26,6 +26,7 @@ function f$Z9bFaA$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$mF$J5$s0$R$
             var r4 = r3.neg();//neg %4 = %3 : int
             return r4;//return %4 : int
          case 8:
+            return;
       }
    }
 }
@@ -38,7 +39,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
+            var r3 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r4 = new WyJS.Record(["err"], [r3], new WyJS.Type.Record(["err"], [new WyJS.Type.List(new WyJS.Type.Int())]));
             var r2 = f$Z9bFaA$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$mF$J5$s0$R$76(r4);//invoke %2 = (%4) TypeEquals_Valid_2:f : function(TypeEquals_Valid_2:expr) -> int
             var r1 = r2;//assign %1 = %2  : int
@@ -51,7 +52,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 9:
-            var r7 = new WyJS.List([71,111,116,99,104,97]);
+            var r7 = new WyJS.List([new WyJS.Integer(71), new WyJS.Integer(111), new WyJS.Integer(116), new WyJS.Integer(99), new WyJS.Integer(104), new WyJS.Integer(97)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r8 = new WyJS.Record(["err"], [r7], new WyJS.Type.Record(["err"], [new WyJS.Type.List(new WyJS.Type.Int())]));
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Record(["lhs", "op"], [r8, r9], new WyJS.Type.Record(["lhs", "op"], [new WyJS.Type.Record(["err"], [new WyJS.Type.List(new WyJS.Type.Int())]), new WyJS.Type.Int()]));
@@ -66,6 +67,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 10:
+            return;
       }
    }
 }

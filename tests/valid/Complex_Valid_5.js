@@ -19,6 +19,7 @@ function EmptyBoard$Y9_FP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$JY5$J3$h0$R$F6
             var r10 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
             var r11 = new WyJS.Record(["move", "pieces"], [r0, r10], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             return r11;//return %11 : {int move,[int] pieces}
+            return;
       }
    }
 }
@@ -33,6 +34,7 @@ function play$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$JI0VF$w5$W0VR$F53P
          case -1 :
             r0.fieldLoad("pieces").setValue(r2, r1);
             return r0;//return %0 : {int move,[int] pieces}
+            return;
       }
    }
 }
@@ -71,6 +73,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1545:
+            return;
       }
    }
 }

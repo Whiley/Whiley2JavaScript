@@ -7,8 +7,8 @@ function pred$_9bF59$0D5ZAw2(r0){//function([int]) -> bool
       switch(control_flow_pc){
          case -1 :
             var r4 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r3 = r4.clone();//assign %3 = %4  : [void]
-            r1 = r3.clone();//assign %1 = %3  : [int]
+            var r3 = r4.clone(new WyJS.Type.Void());//assign %3 = %4  : [void]
+            var r1 = r3.clone(new WyJS.Type.Int());//assign %1 = %3  : [int]
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
@@ -38,7 +38,7 @@ function pred$_9bF59$0D5ZAw2(r0){//function([int]) -> bool
             var r10 = r0.getValue(r2);
             var r11 = new WyJS.List([r10], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = r1.append(r11);
-            r1 = r12.clone();//assign %1 = %12  : [int]
+            var r1 = r12.clone(new WyJS.Type.Int());//assign %1 = %12  : [int]
             control_flow_pc = 1819;
             control_flow_repeat = true;
             break;
@@ -46,6 +46,9 @@ function pred$_9bF59$0D5ZAw2(r0){//function([int]) -> bool
             var r13 = new WyJS.Integer(1);
             var r14 = r2.add(r13);//add %14 = %2, %13 : int
             var r2 = r14;//assign %2 = %14  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1818:
             var r15 = r1.length();//lengthof %15 = %1 : [int]
             var r16 = new WyJS.Integer(0);
@@ -62,6 +65,7 @@ function pred$_9bF59$0D5ZAw2(r0){//function([int]) -> bool
             var r17 = true;
          case 1821:
             return r17;//return %17 : bool
+            return;
       }
    }
 }
@@ -75,8 +79,8 @@ function countOver$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
       switch(control_flow_pc){
          case -1 :
             var r5 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r4 = r5.clone();//assign %4 = %5  : [void]
-            r2 = r4.clone();//assign %2 = %4  : [int]
+            var r4 = r5.clone(new WyJS.Type.Void());//assign %4 = %5  : [void]
+            var r2 = r4.clone(new WyJS.Type.Int());//assign %2 = %4  : [int]
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
@@ -105,7 +109,7 @@ function countOver$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r10 = r0.getValue(r3);
             var r11 = new WyJS.List([r10], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = r2.append(r11);
-            r2 = r12.clone();//assign %2 = %12  : [int]
+            var r2 = r12.clone(new WyJS.Type.Int());//assign %2 = %12  : [int]
             control_flow_pc = 1824;
             control_flow_repeat = true;
             break;
@@ -113,9 +117,13 @@ function countOver$Z9dFas1FVYGs(r0, r1){//function([int],int) -> int
             var r13 = new WyJS.Integer(1);
             var r14 = r3.add(r13);//add %14 = %3, %13 : int
             var r3 = r14;//assign %3 = %14  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
          case 1823:
             var r15 = r2.length();//lengthof %15 = %2 : [int]
             return r15;//return %15 : int
+            return;
       }
    }
 }
@@ -162,6 +170,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1826:
+            return;
       }
    }
 }

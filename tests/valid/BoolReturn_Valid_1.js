@@ -8,6 +8,7 @@ function pred$Y9_Fc$3y(){//function() -> bool
          case -1 :
             var r0 = false;
             return r0;//return %0 : bool
+            return;
       }
    }
 }
@@ -33,6 +34,7 @@ function test$1A_7VkE(){//method() -> void
          case 1197:
             throw {name: 'Assert Failed', message: 'fail'}
          case 1198:
+            return;
       }
    }
 }

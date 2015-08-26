@@ -10,8 +10,8 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
             var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r5 = r6.clone();//assign %5 = %6  : [void]
-            r2 = r5.clone();//assign %2 = %5  : [int]
+            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
@@ -32,12 +32,16 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
             control_flow_pc = 1159;
             control_flow_repeat = true;
             continue outer;//goto label1159
          case 1158:
             throw {name: 'Assert Failed', message: 'fail'}
          case 1159:
+            return;
             var r10 = r0.length();//lengthof %10 = %0 : [int]
             if(WyJS.gt(r1, r10, true)){
                control_flow_pc = 1160;
@@ -60,7 +64,7 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
             var r13 = r0.getValue(r1);
             var r14 = new WyJS.List([r13], new WyJS.Type.List(new WyJS.Type.Int()));
             var r15 = r2.append(r14);
-            r2 = r15.clone();//assign %2 = %15  : [int]
+            var r2 = r15.clone(new WyJS.Type.Int());//assign %2 = %15  : [int]
             control_flow_pc = 1161;
             control_flow_repeat = true;
             break;
@@ -68,8 +72,12 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
             var r16 = new WyJS.Integer(1);
             var r17 = r1.add(r16);//add %17 = %1, %16 : int
             var r1 = r17;//assign %1 = %17  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 1160:
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -96,8 +104,8 @@ function test$1A_7VkE(){//method() -> void
             var r14 = new WyJS.Integer(5);
             var r15 = new WyJS.List([r4, r6, r7, r8, r10, r11, r12, r13, r14], new WyJS.Type.List(new WyJS.Type.Int()));
             var r2 = extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(r15);//invoke %2 = (%15) While_Valid_5:extract : function([int]) -> [While_Valid_5:nat]
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r16 = new WyJS.Integer(1);
             var r17 = new WyJS.Integer(2);
             var r18 = new WyJS.Integer(3);
@@ -112,6 +120,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1162:
+            return;
       }
    }
 }

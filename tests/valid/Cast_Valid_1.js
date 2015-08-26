@@ -6,8 +6,9 @@ function f$Z9bF5B1Fs1E(r0){//function(int) -> real
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = WyJS.Cast(r0, new WyJS.Type.Real());
+            var r1 = WyJS.cast(new WyJS.Type.Real(), r0);
             return r1;//return %1 : real
+            return;
       }
    }
 }
@@ -30,6 +31,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2021:
+            return;
       }
    }
 }

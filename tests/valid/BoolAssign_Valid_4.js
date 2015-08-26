@@ -39,6 +39,7 @@ function f$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r7 = r0.add(r1);//add %7 = %0, %1 : int
             return r7;//return %7 : int
          case 2111:
+            return;
       }
    }
 }
@@ -80,6 +81,7 @@ function g$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r7 = new WyJS.Integer(1);
             return r7;//return %7 : int
          case 2115:
+            return;
       }
    }
 }
@@ -158,6 +160,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2121:
+            return;
       }
    }
 }

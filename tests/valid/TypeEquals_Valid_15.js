@@ -24,6 +24,7 @@ function f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$FC2$n0VR$
             var r2 = false;
             return r2;//return %2 : bool
          case 919:
+            return;
       }
    }
 }
@@ -73,6 +74,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 922:
+            return;
       }
    }
 }

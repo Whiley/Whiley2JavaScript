@@ -8,6 +8,7 @@ function f$Z9bFaA$0D5Wz(r0){//function([int]) -> int
          case -1 :
             var r1 = r0.length();//lengthof %1 = %0 : [int]
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -21,8 +22,8 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r1 = r2.clone();//assign %1 = %2  : [void]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Void());//assign %1 = %2  : [void]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r3 = f$Z9bFaA$0D5Wz(r0);//invoke %3 = (%0) ListGenerator_Valid_5:f : function([int]) -> int
             var r4 = new WyJS.Integer(0);
             if(WyJS.equals(r3, r4, true)){
@@ -32,6 +33,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1196:
+            return;
       }
    }
 }

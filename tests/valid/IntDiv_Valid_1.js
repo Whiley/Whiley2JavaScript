@@ -8,6 +8,7 @@ function f$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
          case -1 :
             var r2 = r0.div(r1);//div %2 = %0, %1 : int
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -53,6 +54,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2325:
+            return;
       }
    }
 }

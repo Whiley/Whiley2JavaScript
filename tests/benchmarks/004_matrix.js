@@ -7,8 +7,8 @@ function buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0
       switch(control_flow_pc){
          case -1 :
             var r7 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r6 = r7.clone();//assign %6 = %7  : [void]
-            r4 = r6.clone();//assign %4 = %6  : [[int]]
+            var r6 = r7.clone(new WyJS.Type.Void());//assign %6 = %7  : [void]
+            var r4 = r6.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %4 = %6  : [[int]]
             var r9 = new WyJS.Integer(0);
             var r8 = r9;//assign %8 = %9  : int
             var r5 = r8;//assign %5 = %8  : int
@@ -25,7 +25,7 @@ function buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0
             var r11 = r2.sublist(r3, r10);
             var r12 = new WyJS.List([r11], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
             var r13 = r4.append(r12);
-            r4 = r13.clone();//assign %4 = %13  : [[int]]
+            var r4 = r13.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %4 = %13  : [[int]]
             var r14 = new WyJS.Integer(1);
             var r15 = r5.add(r14);//add %15 = %5, %14 : int
             var r5 = r15;//assign %5 = %15  : int
@@ -64,8 +64,8 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
       switch(control_flow_pc){
          case -1 :
             var r9 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r8 = r9.clone();//assign %8 = %9  : [void]
-            r2 = r8.clone();//assign %2 = %8  : [[int]]
+            var r8 = r9.clone(new WyJS.Type.Void());//assign %8 = %9  : [void]
+            var r2 = r8.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %2 = %8  : [[int]]
             var r11 = new WyJS.Integer(0);
             var r10 = r11;//assign %10 = %11  : int
             var r3 = r10;//assign %3 = %10  : int
@@ -88,8 +88,8 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
                continue outer;
             }
             var r15 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r14 = r15.clone();//assign %14 = %15  : [void]
-            r4 = r14.clone();//assign %4 = %14  : [int]
+            var r14 = r15.clone(new WyJS.Type.Void());//assign %14 = %15  : [void]
+            var r4 = r14.clone(new WyJS.Type.Int());//assign %4 = %14  : [int]
             var r17 = new WyJS.Integer(0);
             var r16 = r17;//assign %16 = %17  : int
             var r5 = r16;//assign %5 = %16  : int
@@ -156,7 +156,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
          case 18:
             var r36 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
             var r37 = r4.append(r36);
-            r4 = r37.clone();//assign %4 = %37  : [int]
+            var r4 = r37.clone(new WyJS.Type.Int());//assign %4 = %37  : [int]
             var r38 = new WyJS.Integer(1);
             var r39 = r5.add(r38);//add %39 = %5, %38 : int
             var r5 = r39;//assign %5 = %39  : int
@@ -169,7 +169,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
          case 16:
             var r40 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
             var r41 = r2.append(r40);
-            r2 = r41.clone();//assign %2 = %41  : [[int]]
+            var r2 = r41.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %2 = %41  : [[int]]
             var r42 = new WyJS.Integer(1);
             var r43 = r3.add(r42);//add %43 = %3, %42 : int
             var r3 = r43;//assign %3 = %43  : int

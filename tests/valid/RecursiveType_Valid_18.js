@@ -13,6 +13,7 @@ function parse$_9bFaL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$l$
             var r1 = r2;//assign %1 = %2  : {X<{[int] err}|{int num}|{X lhs,int op,X rhs}> e,{[int] input,int pos} st}
             var r6 = r1.fieldLoad("e");//fieldload %6 = %1 e : {X<{[int] err}|{int num}|{X lhs,int op,X rhs}> e,{[int] input,int pos} st}
             return r6;//return %6 : X<{[int] err}|{int num}|{X lhs,int op,X rhs}>
+            return;
       }
    }
 }
@@ -29,6 +30,7 @@ function parseAddSubExpr$_9bFaE9oF1$9I$ND$c21h3R0$d$cB$52Vu$FD$a2Vo$kD$92$e$7E$V
             var r2 = new WyJS.Record(["num"], [r1], new WyJS.Type.Record(["num"], [new WyJS.Type.Int()]));
             var r3 = new WyJS.Record(["e", "st"], [r2, r0], new WyJS.Type.Record(["e", "st"], [new WyJS.Type.Record(["num"], [new WyJS.Type.Int()]), new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()])]));
             return r3;//return %3 : {X<{[int] err}|{int num}|{X lhs,int op,X rhs}> e,{[int] input,int pos} st}
+            return;
       }
    }
 }
@@ -41,7 +43,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = new WyJS.List([72,101,108,108,111]);
+            var r3 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r2 = parse$_9bFaL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$l$$D3$40$T$$6$m00D5ZAw2(r3);//invoke %2 = (%3) RecursiveType_Valid_18:parse : function([int]) -> RecursiveType_Valid_18:Expr
             var r1 = r2;//assign %1 = %2  : X<{[int] err}|{int num}|{X lhs,int op,X rhs}>
             var r0 = r1;//assign %0 = %1  : X<{[int] err}|{int num}|{X lhs,int op,X rhs}>
@@ -54,6 +56,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 318:
+            return;
       }
    }
 }

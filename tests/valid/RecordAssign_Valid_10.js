@@ -12,6 +12,7 @@ function f$Z9bFaL1h$VJ$J5$Y0kQ$76$Z0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$32$kJ$75$
             var r2 = r5;//assign %2 = %5  : {int b1,int b2}
             var r1 = r2;//assign %1 = %2  : {int b1,int b2}
             return r1;//return %1 : {int b1,int b2}
+            return;
       }
    }
 }
@@ -60,6 +61,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2176:
+            return;
       }
    }
 }

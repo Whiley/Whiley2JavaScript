@@ -8,6 +8,7 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$n$FB4$m0FO$
          case -1 :
             var r1 = new WyJS.Integer(1);
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -20,7 +21,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = new WyJS.List([104,101,108,108,111]);
+            var r3 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Record(["f1", "f2"], [r3, r4], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             var r2 = r5;//assign %2 = %5  : {[int+] f1,int f2}
@@ -48,6 +49,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1024:
+            return;
       }
    }
 }

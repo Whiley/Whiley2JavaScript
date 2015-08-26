@@ -21,6 +21,7 @@ function f$Z9bF1D527RWz(r0){//function([int]) -> [int]
             var r3 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             return r3;//return %3 : [int]
          case 211:
+            return;
       }
    }
 }
@@ -42,8 +43,8 @@ function test$1A_7VkE(){//method() -> void
             var r8 = new WyJS.Integer(8);
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.List([r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r10.clone();//assign %1 = %10  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r10.clone(new WyJS.Type.Int());//assign %1 = %10  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r11 = f$Z9bF1D527RWz(r0);//invoke %11 = (%0) ConstrainedList_Valid_26:f : function([int]) -> [int]
             var r12 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             if(WyJS.equals(r11, r12, true)){
@@ -63,6 +64,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 213:
+            return;
       }
    }
 }

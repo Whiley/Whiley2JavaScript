@@ -10,6 +10,7 @@ function f$Z9bF5C9n$WAw(r0){//function(int) -> (int,int)
             var r2 = r0.add(r1);//add %2 = %0, %1 : int
             var r3 = new WyJS.Tuple([r0, r2], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r3;//return %3 : (int,int)
+            return;
       }
    }
 }
@@ -45,6 +46,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 54:
+            return;
       }
    }
 }

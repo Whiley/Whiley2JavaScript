@@ -20,6 +20,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
          case 1209:
             return r0;//return %0 : int
          case 1210:
+            return;
       }
    }
 }
@@ -42,6 +43,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1211:
+            return;
       }
    }
 }

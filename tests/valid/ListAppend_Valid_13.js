@@ -8,6 +8,7 @@ function f$Z9bFaA$WL1f$$I$Z5$n0$S$33$k0$R$J5$i0$O$w4$L0FN$k5$d0$O$w4$l$kB6$k0$Q$
          case -1 :
             var r1 = r0.length();//lengthof %1 = %0 : [int]
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -23,6 +24,7 @@ function g$Z9dFat1Fc_k9$k3$d0kR$F6$00$R$$6$_0VQ$F5$U0VK$35$g0FP$F5$U0FB$Bn0$R$k5
             var r3 = r0.append(r1);
             var r2 = f$Z9bFaA$WL1f$$I$Z5$n0$S$33$k0$R$J5$i0$O$w4$L0FN$k5$d0$O$w4$l$kB6$k0$Q$Z5$n0$S$N6$q$(r3);//invoke %2 = (%3) ListAppend_Valid_13:f : function(ListAppend_Valid_13:plistv6) -> int
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -54,6 +56,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1962:
+            return;
       }
    }
 }

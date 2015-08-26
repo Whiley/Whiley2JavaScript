@@ -10,6 +10,7 @@ function f$Y9_FP8k1$H0FO$B5$j0VR$F5$00kR$B6$d0kO$s5$U0VK$35$g0FP$F5$U0kB6$o0FN$B
             var r1 = new WyJS.Integer(3);
             var r2 = new WyJS.Record(["f1", "f2"], [r0, r1], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             return r2;//return %2 : {int f1,int f2}
+            return;
       }
    }
 }
@@ -51,6 +52,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1228:
+            return;
       }
    }
 }

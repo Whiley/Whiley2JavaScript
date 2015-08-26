@@ -31,6 +31,7 @@ function duplicate$Y9bFXA$W(r0){//function(int) -> int
          case 681:
             throw {name: 'Assert Failed', message: 'fail'}
          case 682:
+            return;
             if(WyJS.gt(r1, r0, true)){
                control_flow_pc = 683;
                control_flow_repeat = true;
@@ -42,8 +43,12 @@ function duplicate$Y9bFXA$W(r0){//function(int) -> int
             var r11 = new WyJS.Integer(1);
             var r12 = r1.add(r11);//add %12 = %1, %11 : int
             var r1 = r12;//assign %1 = %12  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 683:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -156,6 +161,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 693:
+            return;
       }
    }
 }

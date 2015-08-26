@@ -38,6 +38,7 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 660:
+            return;
             var r13 = r0.length();//lengthof %13 = %0 : [int]
             if(WyJS.gt(r1, r13, true)){
                control_flow_pc = 661;
@@ -50,8 +51,12 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             var r16 = new WyJS.Integer(1);
             var r17 = r1.add(r16);//add %17 = %1, %16 : int
             var r1 = r17;//assign %1 = %17  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 661:
             return r2;//return %2 : int
+            return;
       }
    }
 }
@@ -100,6 +105,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 664:
+            return;
       }
    }
 }

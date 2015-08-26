@@ -9,6 +9,7 @@ function f$Y9bF1B1Fs2(r0){//function(real) -> real
             var r1 = new WyJS.Real(0.0);
             var r2 = r1.sub(r0);//sub %2 = %1, %0 : real
             return r2;//return %2 : real
+            return;
       }
    }
 }
@@ -31,6 +32,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1781:
+            return;
       }
    }
 }

@@ -6,7 +6,7 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = new WyJS.List([-1,2,3]);
+            var r0 = new WyJS.List([new WyJS.Integer(-1), new WyJS.Integer(2), new WyJS.Integer(3)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r1 = new WyJS.Integer(1);
             var r2 = r1.neg();//neg %2 = %1 : int
             var r3 = new WyJS.Integer(2);
@@ -19,6 +19,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1927:
+            return;
       }
    }
 }

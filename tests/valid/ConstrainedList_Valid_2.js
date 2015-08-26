@@ -9,6 +9,7 @@ function abs$a9bF5D537klcoHs4$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2
             var r2 = new WyJS.Integer(0);
             var r1 = abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Fa0$r$7B$cv1(r0, r2);//invoke %1 = (%0, %2) ConstrainedList_Valid_2:abs : function([int],ConstrainedList_Valid_2:nat) -> [ConstrainedList_Valid_2:nat]
             return r1;//return %1 : [int]
+            return;
       }
    }
 }
@@ -42,6 +43,7 @@ function abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q
             var r7 = abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Fa0$r$7B$cv1(r0, r9);//invoke %7 = (%0, %9) ConstrainedList_Valid_2:abs : function([int],ConstrainedList_Valid_2:nat) -> [ConstrainedList_Valid_2:nat]
             return r7;//return %7 : [int]
          case 1722:
+            return;
       }
    }
 }
@@ -68,6 +70,7 @@ function abs$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM
             var r2 = r0.neg();//neg %2 = %0 : int
             return r2;//return %2 : int
          case 1724:
+            return;
       }
    }
 }
@@ -90,10 +93,10 @@ function test$1A_7VkE(){//method() -> void
             var r9 = r8.neg();//neg %9 = %8 : int
             var r10 = new WyJS.Integer(11);
             var r11 = new WyJS.List([r2, r4, r6, r7, r9, r10], new WyJS.Type.List(new WyJS.Type.Int()));
-            r1 = r11.clone();//assign %1 = %11  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r11.clone(new WyJS.Type.Int());//assign %1 = %11  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r12 = abs$a9bF5D537klcoHs4$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$VB$y1$O5$R2Vk$ViAw(r0);//invoke %12 = (%0) ConstrainedList_Valid_2:abs : function([int]) -> [ConstrainedList_Valid_2:nat]
-            r0 = r12.clone();//assign %0 = %12  : [int]
+            var r0 = r12.clone(new WyJS.Type.Int());//assign %0 = %12  : [int]
             var r13 = new WyJS.Integer(1);
             var r14 = new WyJS.Integer(3);
             var r15 = new WyJS.Integer(5);
@@ -108,6 +111,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1725:
+            return;
       }
    }
 }

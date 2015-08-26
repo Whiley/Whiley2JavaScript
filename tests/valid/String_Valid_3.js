@@ -40,9 +40,13 @@ function has$_9dF5X1Fs1RB52(r0, r1){//function(int,[int]) -> bool
             var r8 = new WyJS.Integer(1);
             var r9 = r2.add(r8);//add %9 = %2, %8 : int
             var r2 = r9;//assign %2 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 2205:
             var r10 = false;
             return r10;//return %10 : bool
+            return;
       }
    }
 }
@@ -55,9 +59,9 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
-            r1 = r2.clone();//assign %1 = %2  : [int+]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r2 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int+]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r4 = new WyJS.Integer(108);
             var r3 = has$_9dF5X1Fs1RB52(r4, r0);//invoke %3 = (%4, %0) String_Valid_3:has : function(int,[int]) -> bool
             var r5 = true;
@@ -108,6 +112,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2211:
+            return;
       }
    }
 }

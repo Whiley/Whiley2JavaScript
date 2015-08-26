@@ -9,6 +9,7 @@ function f$_9bF5D537kl7oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo
             var r1 = new WyJS.Integer(0);
             var r2 = r0.getValue(r1);
             return r2;//return %2 : [int]
+            return;
       }
    }
 }
@@ -31,8 +32,8 @@ function test$1A_7VkE(){//method() -> void
             var r10 = new WyJS.List([r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
             var r11 = new WyJS.List([r6, r10], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
             var r2 = f$_9bF5D537kl7oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$VB$y1VN$sa0$r$7B$cv2(r11);//invoke %2 = (%11) ConstrainedList_Valid_17:f : function([[ConstrainedList_Valid_17:nat]]) -> [ConstrainedList_Valid_17:nat]
-            r1 = r2.clone();//assign %1 = %2  : [int]
-            r0 = r1.clone();//assign %0 = %1  : [int]
+            var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : [int]
+            var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : [int]
             var r12 = new WyJS.Integer(1);
             var r13 = new WyJS.Integer(2);
             var r14 = new WyJS.Integer(3);
@@ -44,6 +45,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 163:
+            return;
       }
    }
 }

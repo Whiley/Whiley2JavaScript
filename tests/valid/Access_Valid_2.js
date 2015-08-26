@@ -8,6 +8,7 @@ function index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$
          case -1 :
             var r2 = r0.getValue(r1);
             return r2;//return %2 : any
+            return;
       }
    }
 }
@@ -24,8 +25,8 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Integer(3);
             var r6 = new WyJS.List([r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
-            r2 = r6.clone();//assign %2 = %6  : [int]
-            r0 = r2.clone();//assign %0 = %2  : [int]
+            var r2 = r6.clone(new WyJS.Type.Int());//assign %2 = %6  : [int]
+            var r0 = r2.clone(new WyJS.Type.Int());//assign %0 = %2  : [int]
             var r8 = new WyJS.Integer(0);
             var r7 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r0, r8);//invoke %7 = (%0, %8) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r9 = new WyJS.Integer(1);
@@ -56,9 +57,9 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 503:
-            var r17 = new WyJS.List([72,101,108,108,111,32,87,111,114,108,100]);
-            r16 = r17.clone();//assign %16 = %17  : [int+]
-            r1 = r16.clone();//assign %1 = %16  : [int]
+            var r17 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r16 = r17.clone(new WyJS.Type.Int());//assign %16 = %17  : [int+]
+            var r1 = r16.clone(new WyJS.Type.Int());//assign %1 = %16  : [int]
             var r19 = new WyJS.Integer(0);
             var r18 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r1, r19);//invoke %18 = (%1, %19) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r20 = new WyJS.Integer(72);
@@ -89,6 +90,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 506:
+            return;
       }
    }
 }

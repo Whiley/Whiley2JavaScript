@@ -27,6 +27,7 @@ function f$_9bFaA$0D53D5WE(r0){//function([[int]]) -> int
             var r9 = new WyJS.Integer(0);
             return r9;//return %9 : int
          case 1194:
+            return;
       }
    }
 }
@@ -46,8 +47,8 @@ function test$1A_7VkE(){//method() -> void
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
             var r8 = new WyJS.List([r5, r7], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            r1 = r8.clone();//assign %1 = %8  : [[int]]
-            r0 = r1.clone();//assign %0 = %1  : [[int]]
+            var r1 = r8.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %8  : [[int]]
+            var r0 = r1.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %1  : [[int]]
             var r9 = f$_9bFaA$0D53D5WE(r0);//invoke %9 = (%0) ListGenerator_Valid_3:f : function([[int]]) -> int
             var r10 = new WyJS.Integer(2);
             if(WyJS.equals(r9, r10, true)){
@@ -57,6 +58,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1195:
+            return;
       }
    }
 }

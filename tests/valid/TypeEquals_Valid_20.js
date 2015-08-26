@@ -25,6 +25,7 @@ function f$a9bFaA$0D53C9G4W(r0){//function([(int,any)]) -> int
             var r3 = r2.neg();//neg %3 = %2 : int
             return r3;//return %3 : int
          case 952:
+            return;
       }
    }
 }
@@ -38,29 +39,29 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r6 = new WyJS.Integer(1);
-            var r7 = new WyJS.List([72,101,108,108,111]);
+            var r7 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r8 = new WyJS.Tuple([r6, r7], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r9 = new WyJS.List([r8], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())])));
-            r5 = r9.clone();//assign %5 = %9  : [(int,[int+])]
-            r0 = r5.clone();//assign %0 = %5  : [(int,any)]
+            var r5 = r9.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));//assign %5 = %9  : [(int,[int+])]
+            var r0 = r5.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), ]));//assign %0 = %5  : [(int,any)]
             var r11 = new WyJS.Integer(1);
-            var r12 = new WyJS.List([72,101,108,108,111]);
+            var r12 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r13 = new WyJS.Tuple([r11, r12], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r14 = new WyJS.Integer(1);
-            var r15 = new WyJS.List([87,111,114,108,100]);
+            var r15 = new WyJS.List([new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r16 = new WyJS.Tuple([r14, r15], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r17 = new WyJS.List([r13, r16], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())])));
-            r10 = r17.clone();//assign %10 = %17  : [(int,[int+])]
-            r1 = r10.clone();//assign %1 = %10  : [(int,any)]
+            var r10 = r17.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));//assign %10 = %17  : [(int,[int+])]
+            var r1 = r10.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), ]));//assign %1 = %10  : [(int,any)]
             var r19 = new WyJS.Integer(1);
-            var r20 = new WyJS.List([72,101,108,108,111]);
+            var r20 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r21 = new WyJS.Tuple([r19, r20], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r22 = new WyJS.Integer(2);
-            var r23 = new WyJS.List([72,101,108,108,111]);
+            var r23 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r24 = new WyJS.Tuple([r22, r23], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r25 = new WyJS.List([r21, r24], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())])));
-            r18 = r25.clone();//assign %18 = %25  : [(int,[int+])]
-            r2 = r18.clone();//assign %2 = %18  : [(int,any)]
+            var r18 = r25.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));//assign %18 = %25  : [(int,[int+])]
+            var r2 = r18.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), ]));//assign %2 = %18  : [(int,any)]
             var r27 = new WyJS.Integer(1);
             var r28 = new WyJS.Integer(1);
             var r29 = new WyJS.Tuple([r27, r28], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
@@ -68,17 +69,17 @@ function test$1A_7VkE(){//method() -> void
             var r31 = new WyJS.Integer(2);
             var r32 = new WyJS.Tuple([r30, r31], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r33 = new WyJS.List([r29, r32], new WyJS.Type.List(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()])));
-            r26 = r33.clone();//assign %26 = %33  : [(int,int)]
-            r3 = r26.clone();//assign %3 = %26  : [(int,any)]
+            var r26 = r33.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));//assign %26 = %33  : [(int,int)]
+            var r3 = r26.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), ]));//assign %3 = %26  : [(int,any)]
             var r35 = new WyJS.Integer(1);
             var r36 = new WyJS.Integer(1);
             var r37 = new WyJS.Tuple([r35, r36], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r38 = new WyJS.Integer(2);
-            var r39 = new WyJS.List([72,101,108,108,111]);
+            var r39 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r40 = new WyJS.Tuple([r38, r39], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
             var r41 = new WyJS.List([r37, r40], new WyJS.Type.List(new WyJS.Type.Union([new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())])])));
-            r34 = r41.clone();//assign %34 = %41  : [(int,int)|(int,[int+])]
-            r4 = r34.clone();//assign %4 = %34  : [(int,any)]
+            var r34 = r41.clone(new WyJS.Type.Union([new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())])]));//assign %34 = %41  : [(int,int)|(int,[int+])]
+            var r4 = r34.clone(new WyJS.Type.Tuple([new WyJS.Type.Int(), ]));//assign %4 = %34  : [(int,any)]
             var r42 = f$a9bFaA$0D53C9G4W(r0);//invoke %42 = (%0) TypeEquals_Valid_20:f : function([(int,any)]) -> int
             var r43 = new WyJS.Integer(1);
             if(WyJS.equals(r42, r43, true)){
@@ -126,6 +127,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 957:
+            return;
       }
    }
 }

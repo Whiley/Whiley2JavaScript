@@ -8,6 +8,7 @@ function f$Y9_FP8s1$20kQ$s5$n0$S$76$W0FP$s5$_0$O$Z3$i0$S$w4$L0FN$k5$d0$O$w4$pB$s
          case -1 :
             var r0 = new WyJS.Integer(1);
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -29,6 +30,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 516:
+            return;
       }
    }
 }

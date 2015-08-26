@@ -11,6 +11,7 @@ function f$_9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$3
             var r3 = new WyJS.Integer(1);
             r0.setValue(r2, r3);
             return r0;//return %0 : [int]
+            return;
       }
    }
 }
@@ -40,6 +41,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 156:
+            return;
       }
    }
 }

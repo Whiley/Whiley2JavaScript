@@ -30,6 +30,7 @@ function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 460:
+            return;
             var r12 = new WyJS.Integer(1);
             var r13 = r2.add(r12);//add %13 = %2, %12 : int
             var r14 = r0.length();//lengthof %14 = %0 : [int]
@@ -38,8 +39,12 @@ function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
                control_flow_repeat = true;
                continue outer;
             }
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
          case 461:
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -93,6 +98,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 464:
+            return;
       }
    }
 }

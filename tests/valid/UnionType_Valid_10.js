@@ -7,6 +7,7 @@ function f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$kR$o5$n0kO$F4$
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : {int index}|{[int] data,int op}
+            return;
       }
    }
 }
@@ -35,6 +36,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 393:
+            return;
       }
    }
 }

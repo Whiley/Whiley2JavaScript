@@ -12,13 +12,16 @@ function move$a9fFa8sNFVk4sNJP8c1$B0FP$B6$o0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$J
             var r8 = r5.getValue(r7);
             var r4 = r8;//assign %4 = %8  : null|int
             var r3 = r4;//assign %3 = %4  : null|int
-            var r9 = null;/n            var r10 = new WyJS.Integer(1);
+            var r9 = null;
+            var r10 = new WyJS.Integer(1);
             var r11 = r0.add(r10);//add %11 = %0, %10 : int
-            var r12 = null;/n            r2 = r0.getValue(r0).setValue(r11, r12);
+            var r12 = null;
+            r2 = r0.getValue(r0).setValue(r11, r12);
             var r13 = new WyJS.Integer(1);
             var r14 = r1.add(r13);//add %14 = %1, %13 : int
             r2 = r1.getValue(r1).setValue(r14, r3);
             return r2;//return %2 : [[null|int]]
+            return;
       }
    }
 }
@@ -44,14 +47,15 @@ function test$1A_7VkE(){//method() -> void
             var r12 = new WyJS.Integer(9);
             var r13 = new WyJS.List([r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             var r14 = new WyJS.List([r5, r9, r13], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            r1 = r14.clone();//assign %1 = %14  : [[int]]
-            r0 = r1.clone();//assign %0 = %1  : [[null|int]]
+            var r1 = r14.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %14  : [[int]]
+            var r0 = r1.clone(new WyJS.Type.List(new WyJS.Type.Union([new WyJS.Type.Null(), new WyJS.Type.Int()])));//assign %0 = %1  : [[null|int]]
             var r16 = new WyJS.Integer(0);
             var r17 = new WyJS.Integer(1);
             var r15 = move$a9fFa8sNFVk4sNJP8c1$B0FP$B6$o0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$J20VQ$Z5$i0$SE(r16, r17, r0);//invoke %15 = (%16, %17, %0) ListAssign_Valid_5:move : function(int,int,[[ListAssign_Valid_5:nint]]) -> [[ListAssign_Valid_5:nint]]
-            r0 = r15.clone();//assign %0 = %15  : [[null|int]]
+            var r0 = r15.clone(new WyJS.Type.List(new WyJS.Type.Union([new WyJS.Type.Null(), new WyJS.Type.Int()])));//assign %0 = %15  : [[null|int]]
             var r18 = new WyJS.Integer(1);
-            var r19 = null;/n            var r20 = new WyJS.Integer(3);
+            var r19 = null;
+            var r20 = new WyJS.Integer(3);
             var r21 = new WyJS.List([r18, r19, r20], new WyJS.Type.List(new WyJS.Type.Union([new WyJS.Type.Null(), new WyJS.Type.Int()])));
             var r22 = new WyJS.Integer(4);
             var r23 = new WyJS.Integer(5);
@@ -69,6 +73,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 2419:
+            return;
       }
    }
 }

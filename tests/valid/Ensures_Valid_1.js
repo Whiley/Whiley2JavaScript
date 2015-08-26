@@ -20,6 +20,7 @@ function add$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r3 = r0.add(r1);//add %3 = %0, %1 : int
             return r3;//return %3 : int
          case 1810:
+            return;
       }
    }
 }
@@ -54,6 +55,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1812:
+            return;
       }
    }
 }

@@ -7,6 +7,7 @@ function g$Y9bFXA$W(r0){//function(int) -> int
       switch(control_flow_pc){
          case -1 :
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -25,6 +26,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             var r1 = r2;//assign %1 = %2  : int
             var r5 = g$Y9bFXA$W(r1);//invoke %5 = (%1) VarDecl_Valid_3:g : function(int) -> int
             return r5;//return %5 : int
+            return;
       }
    }
 }
@@ -47,6 +49,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1106:
+            return;
       }
    }
 }

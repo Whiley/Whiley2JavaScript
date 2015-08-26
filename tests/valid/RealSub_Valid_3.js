@@ -9,6 +9,7 @@ function suber$Y9fFX7k7$WE(r0, r1, r2){//function(real,real,real) -> real
             var r3 = r0.sub(r1);//sub %3 = %0, %1 : real
             var r4 = r3.sub(r2);//sub %4 = %3, %2 : real
             return r4;//return %4 : real
+            return;
       }
    }
 }
@@ -45,6 +46,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 1784:
+            return;
       }
    }
 }

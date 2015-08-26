@@ -13,6 +13,7 @@ function f$Z9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$J0FS$$6$g0FO$w4$L0FN$k5$d0$O$w
             var r2 = r5;//assign %2 = %5  : int
             var r6 = r1.add(r2);//add %6 = %1, %2 : int
             return r6;//return %6 : int
+            return;
       }
    }
 }
@@ -39,6 +40,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 881:
+            return;
       }
    }
 }

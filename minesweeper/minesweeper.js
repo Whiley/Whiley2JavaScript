@@ -1,4 +1,4 @@
-function ExposedSquare$_9dF5e_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mp0$40$T$$6$j0kR$J5$Z0kJ$36$p0FN$76$_0WAFWz(r0, r1){//function(int,bool) -> Minesweeper:ExposedSquare
+function ExposedSquare(r0, r1){//function(int,bool) -> Minesweeper:ExposedSquare
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -8,11 +8,12 @@ function ExposedSquare$_9dF5e_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mp0$40$T$$6$j0kR$J5$
          case -1 :
             var r2 = new WyJS.Record(["holdsBomb", "rank"], [r1, r0], new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()]));
             return r2;//return %2 : {bool holdsBomb,int rank}
+            return;
       }
    }
 }
 
-function HiddenSquare$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$ml0$70FP$F5$Z0FO$s5$I0FR$J6$W0VR$J53c$(r0, r1){//function(bool,bool) -> Minesweeper:HiddenSquare
+function HiddenSquare(r0, r1){//function(bool,bool) -> Minesweeper:HiddenSquare
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,11 +23,12 @@ function HiddenSquare$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$ml0$70FP$F5$Z0FO$s5$I
          case -1 :
             var r2 = new WyJS.Record(["flagged", "holdsBomb"], [r1, r0], new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]));
             return r2;//return %2 : {bool flagged,bool holdsBomb}
+            return;
       }
    }
 }
 
-function Board$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mK$73$j0FN$76$Z0WAw(r0, r1){//function(int,int) -> Minesweeper:Board
+function Board(r0, r1){//function(int,int) -> Minesweeper:Board
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -35,8 +37,8 @@ function Board$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mK$73$j0FN$76$Z0WAw(r0, r1){
       switch(control_flow_pc){
          case -1 :
             var r5 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            r4 = r5.clone();//assign %4 = %5  : [void]
-            r2 = r4.clone();//assign %2 = %4  : [{bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}]
+            var r4 = r5.clone(new WyJS.Type.Void());//assign %4 = %5  : [void]
+            var r2 = r4.clone(new WyJS.Type.Union([new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]), new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()])]));//assign %2 = %4  : [{bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}]
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
@@ -52,10 +54,10 @@ function Board$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mK$73$j0FN$76$Z0WAw(r0, r1){
             }
             var r10 = false;
             var r11 = false;
-            var r9 = HiddenSquare$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$ml0$70FP$F5$Z0FO$s5$I0FR$J6$W0VR$J53c$(r10, r11);//invoke %9 = (%10, %11) Minesweeper:HiddenSquare : function(bool,bool) -> Minesweeper:HiddenSquare
+            var r9 = HiddenSquare(r10, r11);//invoke %9 = (%10, %11) Minesweeper:HiddenSquare : function(bool,bool) -> Minesweeper:HiddenSquare
             var r12 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()])));
             var r13 = r2.append(r12);
-            r2 = r13.clone();//assign %2 = %13  : [{bool flagged,bool holdsBomb}]
+            var r2 = r13.clone(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]));//assign %2 = %13  : [{bool flagged,bool holdsBomb}]
             var r14 = new WyJS.Integer(1);
             var r15 = r3.add(r14);//add %15 = %3, %14 : int
             var r3 = r15;//assign %3 = %15  : int
@@ -65,11 +67,12 @@ function Board$Z9dFad_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mK$73$j0FN$76$Z0WAw(r0, r1){
          case 1:
             var r16 = new WyJS.Record(["height", "squares", "width"], [r1, r2, r0], new WyJS.Type.Record(["height", "squares", "width"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()])), new WyJS.Type.Int()]));
             return r16;//return %16 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            return;
       }
    }
 }
 
-function getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Square
+function getSquare(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Square
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -85,11 +88,12 @@ function getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0
             var r8 = r3.add(r1);//add %8 = %3, %1 : int
             var r9 = r7.getValue(r8);
             return r9;//return %9 : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
+            return;
       }
    }
 }
 
-function setSquare$_9hFXOcL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F53iFAWC$c8$H2$r$cB$a2Vv$cB$92$s$cB$Zn$N9$X2Vu$7B$Z2VmD(r0, r1, r2, r3){//function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
+function setSquare(r0, r1, r2, r3){//function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -104,11 +108,12 @@ function setSquare$_9hFXOcL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F53iFAWC$
             var r8 = r4.add(r1);//add %8 = %4, %1 : int
             r0.fieldLoad("squares").setValue(r8, r3);
             return r0;//return %0 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            return;
       }
    }
 }
 
-function flagSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Board
+function flagSquare(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Board
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -116,7 +121,7 @@ function flagSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0,
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r5 = getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, r1, r2);//invoke %5 = (%0, %1, %2) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
+            var r5 = getSquare(r0, r1, r2);//invoke %5 = (%0, %1, %2) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
             var r4 = r5;//assign %4 = %5  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r3 = r4;//assign %3 = %4  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             if(WyJS.is(r3, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))){
@@ -159,10 +164,11 @@ function flagSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0,
             var r11 = false;
          case 19:
             r3.setValue("flagged", r11);
-            var r14 = setSquare$_9hFXOcL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F53iFAWC$c8$H2$r$cB$a2Vv$cB$92$s$cB$Zn$N9$X2Vu$7B$Z2VmD(r0, r1, r2, r3);//invoke %14 = (%0, %1, %2, %3) Minesweeper:setSquare : function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
+            var r14 = setSquare(r0, r1, r2, r3);//invoke %14 = (%0, %1, %2, %3) Minesweeper:setSquare : function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
             var r0 = r14;//assign %0 = %14  : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
          case 15:
             return r0;//return %0 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            return;
       }
    }
 }
@@ -216,7 +222,7 @@ function determineRank$Z9fFa7i$3P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$O(
                control_flow_repeat = true;
                continue outer;
             }
-            var r28 = getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, r5, r4);//invoke %28 = (%0, %5, %4) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
+            var r28 = getSquare(r0, r5, r4);//invoke %28 = (%0, %5, %4) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
             var r27 = r28;//assign %27 = %28  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r6 = r27;//assign %6 = %27  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r29 = r6.fieldLoad("holdsBomb");//fieldload %29 = %6 holdsBomb : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
@@ -264,11 +270,12 @@ function determineRank$Z9fFa7i$3P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$O(
             break;
          case 20:
             return r3;//return %3 : int
+            return;
       }
    }
 }
 
-function exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Board
+function exposeSquare(r0, r1, r2){//function(Minesweeper:Board,int,int) -> Minesweeper:Board
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -276,7 +283,7 @@ function exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r6 = getSquare$_9fF5XP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR5$I0FR$J6$W0VR$J53P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OMsE(r0, r1, r2);//invoke %6 = (%0, %1, %2) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
+            var r6 = getSquare(r0, r1, r2);//invoke %6 = (%0, %1, %2) Minesweeper:getSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Square
             var r5 = r6;//assign %5 = %6  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r3 = r5;//assign %3 = %5  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r8 = determineRank$Z9fFa7i$3P8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$O(r0, r1, r2);//invoke %8 = (%0, %1, %2) Minesweeper:determineRank : function(Minesweeper:Board,int,int) -> int
@@ -292,9 +299,9 @@ function exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r
             continue outer;//goto label29
          case 28:
             var r10 = r3.fieldLoad("holdsBomb");//fieldload %10 = %3 holdsBomb : {bool flagged,bool holdsBomb}
-            var r9 = ExposedSquare$_9dF5e_k5$o3$d0VQ$J5$n0kS$J5$_0$R$J5$mp0$40$T$$6$j0kR$J5$Z0kJ$36$p0FN$76$_0WAFWz(r4, r10);//invoke %9 = (%4, %10) Minesweeper:ExposedSquare : function(int,bool) -> Minesweeper:ExposedSquare
+            var r9 = ExposedSquare(r4, r10);//invoke %9 = (%4, %10) Minesweeper:ExposedSquare : function(int,bool) -> Minesweeper:ExposedSquare
             var r3 = r9;//assign %3 = %9  : {bool holdsBomb,int rank}
-            var r11 = setSquare$_9hFXOcL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F53iFAWC$c8$H2$r$cB$a2Vv$cB$92$s$cB$Zn$N9$X2Vu$7B$Z2VmD(r0, r1, r2, r3);//invoke %11 = (%0, %1, %2, %3) Minesweeper:setSquare : function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
+            var r11 = setSquare(r0, r1, r2, r3);//invoke %11 = (%0, %1, %2, %3) Minesweeper:setSquare : function(Minesweeper:Board,int,int,Minesweeper:Square) -> Minesweeper:Board
             var r0 = r11;//assign %0 = %11  : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
             var r12 = new WyJS.Integer(0);
             if(WyJS.equals(r4, r12, false)){
@@ -306,6 +313,7 @@ function exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r
             return r13;//return %13 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
          case 29:
             return r0;//return %0 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            return;
       }
    }
 }
@@ -356,7 +364,7 @@ function exposeNeighbours$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OF
                control_flow_repeat = true;
                continue outer;
             }
-            var r23 = exposeSquare$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OFs1(r0, r4, r3);//invoke %23 = (%0, %4, %3) Minesweeper:exposeSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Board
+            var r23 = exposeSquare(r0, r4, r3);//invoke %23 = (%0, %4, %3) Minesweeper:exposeSquare : function(Minesweeper:Board,int,int) -> Minesweeper:Board
             var r0 = r23;//assign %0 = %23  : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
             var r24 = new WyJS.Integer(1);
             var r25 = r4.add(r24);//add %25 = %4, %24 : int
@@ -376,11 +384,12 @@ function exposeNeighbours$Z9fFXOP8g0$C0FP$s5$_0kR$R6$_0FO$$6$_0VR4$10kQ$35$m0$OF
             break;
          case 34:
             return r0;//return %0 : {int height,[{bool holdsBomb,int rank}|{bool flagged,bool holdsBomb}] squares,int width}
+            return;
       }
    }
 }
 
-function isGameOver$_9bF5C930WL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F54D(r0){//function(Minesweeper:Board) -> (bool,bool)
+function isGameOver(r0){//function(Minesweeper:Board) -> (bool,bool)
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -412,7 +421,7 @@ function isGameOver$_9bF5C930WL1Q$FI$Z5$i0FO$B6$r0FO$J5$k0FO$7M0VF$w5$W0VR$F54D(
             var r15 = r14.getValue(r3);
             var r13 = r15;//assign %13 = %15  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
             var r4 = r13;//assign %4 = %13  : {bool flagged,bool holdsBomb}|{bool holdsBomb,int rank}
-if(WyJS.is(r4, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))){
+            if(WyJS.is(r4, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Bool(), new WyJS.Type.Bool()]))){
                control_flow_pc = 37;
                control_flow_repeat = true;
                break;
@@ -452,7 +461,7 @@ if(WyJS.is(r4, new WyJS.Type.Record(["flagged", "holdsBomb"], [new WyJS.Type.Boo
             control_flow_repeat = true;
             break;
          case 38:
-if(WyJS.is(r4, new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()]))){
+            if(WyJS.is(r4, new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool(), new WyJS.Type.Int()]))){
                control_flow_pc = 40;
                control_flow_repeat = true;
                break;
@@ -510,6 +519,8 @@ if(WyJS.is(r4, new WyJS.Type.Record(["holdsBomb", "rank"], [new WyJS.Type.Bool()
          case 36:
             var r25 = new WyJS.Tuple([r1, r2], new WyJS.Type.Tuple([new WyJS.Type.Bool(), new WyJS.Type.Bool()]));
             return r25;//return %25 : (bool,bool)
+            return;
       }
    }
 }
+

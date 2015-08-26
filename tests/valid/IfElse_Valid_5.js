@@ -38,6 +38,7 @@ function getFlag$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$JY0VJ$J5$Y0kQ$76
             var r12 = new WyJS.Integer(1);
             var r13 = r12.neg();//neg %13 = %12 : int
             return r13;//return %13 : int
+            return;
       }
    }
 }
@@ -89,6 +90,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 260:
+            return;
       }
    }
 }
