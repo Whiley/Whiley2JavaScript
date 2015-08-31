@@ -285,7 +285,10 @@ public class WyJS {
 			Type.List list = (Type.List) o.type();
 			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 					+ ".clone(" + getType(list.element()) + ");//" + o.toString() + "\n");
-		} else{
+		} else if(o.type() instanceof Type.Record){
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
+					+ ".clone();//" + o.toString() + "\n");
+		}else{
 			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 					+ ";//" + o.toString() + "\n");
 		}
@@ -463,7 +466,7 @@ public class WyJS {
 					codes.clear();
 				}else{
 					name = ((Codes.Label)c).label;
-					System.out.println(name);
+					//System.out.println(name);
 					yo = true;
 				}
 			}
@@ -490,7 +493,6 @@ public class WyJS {
 			Code c = iter.next();
 			if(c instanceof Codes.If){
 				if ((labelMap.get((((Codes.If) c).target)) != null)) {
-					System.out.println("its like it doesnt even come in here");
 					//jumping in the loop
 					js.add(writeIfTop((If) c));
 					indent++;
@@ -557,6 +559,9 @@ public class WyJS {
 				indent--;
 				js.add(getIndentBlock() + "case " + parseLabel(((Codes.Label) c).label) + ":\n");
 				indent++;
+			}else if(c instanceof Codes.Invariant){
+				//Ignore it i think..
+				
 			} else{
 				write(c);
 			}

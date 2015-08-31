@@ -18,14 +18,6 @@ function gcd$Y9dFXc_k0$B$$2$n$kM$R5$Y0$O2$i0FN$F631(r0, r1){//function(003_gcd:n
             control_flow_repeat = true;
             break;
          case -2:
-            var r3 = new WyJS.Integer(0);
-            if(WyJS.gt(r0, r3, true)){
-               control_flow_pc = 2;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
             var r4 = new WyJS.Integer(0);
             if(WyJS.equals(r1, r4, true)){
                control_flow_pc = 3;
@@ -63,6 +55,7 @@ function gcd$Y9dFXc_k0$B$$2$n$kM$R5$Y0$O2$i0FN$F631(r0, r1){//function(003_gcd:n
             break;
          case 3:
             return r0;//return %0 : int
+            return;
       }
    }
 }
@@ -108,6 +101,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 8:
+            return;
       }
    }
 }

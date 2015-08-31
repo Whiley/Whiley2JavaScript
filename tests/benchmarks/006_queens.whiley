@@ -39,7 +39,7 @@ requires dim == |queens|:
             col = col + 1
         return solutions
 
-method test() -> void:
+public export method test() -> void:
     int dim = 10
     [(int,int)] init = []
     //

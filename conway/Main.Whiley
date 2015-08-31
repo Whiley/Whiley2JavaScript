@@ -1,13 +1,14 @@
 import whiley.lang.*
 import whiley.io.File
 import string from whiley.lang.ASCII
+import char from whiley.lang.ASCII
 import nat from whiley.lang.Int
-
-import wybench.Parser
 
 // ============================================
 // Game Logic
 // ============================================
+
+public type nat is (int x) where x >= 0
 
 type Board is {
     [[bool]] cells,
@@ -118,15 +119,52 @@ function parseConfig([int] data) -> (Board,int):
     //
     return board,niters
 
+    // Parse list of integers whilst ignoring whitespace
+function parseInts(string input) -> [int]|null:
+    //    
+    [int] data = []
+    nat pos = skipWhiteSpace(0,input)
+    // first, read data
+    while pos < |input|:
+        int|null i
+        i,pos = parseInt(pos,input)
+        if i != null:
+            data = data ++ [i]
+            pos = skipWhiteSpace(pos,input)
+        else:
+            return null
+    //
+    return data
+
+function parseInt(nat pos, string input) -> (null|int,nat):
+    //
+    int start = pos
+    while pos < |input| && ASCII.isDigit(input[pos]):
+        pos = pos + 1
+    if pos == start:
+        return null,pos
+    return Int.parse(input[start..pos]), pos
+
+
+function skipWhiteSpace(nat index, string input) -> nat:
+    //
+    while index < |input| && isWhiteSpace(input[index]):
+        index = index + 1
+    //
+    return index
+
+function isWhiteSpace(char c) -> bool:
+    return c == ' ' || c == '\t' || c == '\n' || c == '\r'
+
 // ============================================
 // Main
 // ============================================
 
 method main(System.Console sys):
     // First, parse input file
-    File.Reader file = File.Reader(sys.args[0])
+    File.Reader file = File.Reader("small.in")
     string input = ASCII.fromBytes(file.readAll())
-    [int]|null data = Parser.parseInts(input)
+    [int]|null data = parseInts(input)
     // Second, construct and iterate board
     if data != null:
         Board board, int niters = parseConfig(data)
@@ -142,18 +180,27 @@ method main(System.Console sys):
 method printBoard(System.Console sys, Board board):
     int ncols = board.width
     sys.out.print_s("+")
-    for i in 0..ncols:
+    int i = 0
+    while i < ncols:
+        i = i + 1
         sys.out.print_s("-")
     sys.out.println_s("+")
-    for row in board.cells:
+    i = 0
+    while i < |board.cells|:
+        [bool] row = board.cells[i]
+        i = i + 1
         sys.out.print_s("|")
-        for cell in row:
-            if cell:
+        int x = 0
+        while x < |row|:
+            bool temp = row[x]
+            x = x + 1
+            if temp:
                 sys.out.print_s("#")
             else:
                 sys.out.print_s(" ")
         sys.out.println_s("|")
     sys.out.print_s("+")
-    for i in 0..ncols:
+    i = 0
+    while i < ncols:
         sys.out.print_s("-")
     sys.out.println_s("+")

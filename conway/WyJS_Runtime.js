@@ -224,9 +224,6 @@ WyJS.List.prototype.append = function(other) {
   for (i = 0; i < other.list.length; i++) {
     result[count++] = other.list[i];
   }
-  if(this.type instanceof WyJS.Type.Void){
-    return new WyJS.List(result, other.type);
-  }
   return new WyJS.List(result, this.type);
 };
 
@@ -244,7 +241,9 @@ WyJS.List.prototype.clone = function(type) {
     }
     clist[i] = elem;
   }
-  if(this.type.val instanceof WyJS.Type.Void){
+  //console.log(this.type);
+  //console.log(type);
+  if(this.type instanceof WyJS.Type.Void){
     return new WyJS.List(clist, type);
   }
   return new WyJS.List(clist, this.type);
@@ -271,7 +270,7 @@ WyJS.List.prototype.equals = function(other) {
 WyJS.List.prototype.sublist = function(from, to){
   var data = [];
   var index = 0;
-  for(var i = from.val;i < to.val; i++){
+  for(var i = from.val;i <= to.val; i++){
     data[index] = this.list[i];
     index++;
   };
