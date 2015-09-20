@@ -1,3 +1,46 @@
+function append$Z9dFXWYl$1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kG2$c1$t$7B$R2Vt$7C$c2Vo$sC$RvE(r0, r1){//function(Complex_Valid_8:Transition[],Complex_Valid_8:Transition) -> Complex_Valid_8:Transition[]
+   var control_flow_repeat = true;
+   var control_flow_pc = -1;
+   outer:
+   while(control_flow_repeat){
+      control_flow_repeat = false
+      switch(control_flow_pc){
+         case -1 :
+            var r5 = r0.length();//lengthof %5 = %0 : {int character,int from,int to}[]
+            var r6 = new WyJS.Integer(1);
+            var r7 = r5.add(r6);//add %7 = %5, %6 : int
+            var r8 = WyJS.ListGen(r1, r7, new WyJS.Type.List(new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()])));
+            var r4 = r8.clone(new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]));//assign %4 = %8  : {int character,int from,int to}[]
+            var r2 = r4.clone(new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]));//assign %2 = %4  : {int character,int from,int to}[]
+            var r10 = new WyJS.Integer(0);
+            var r9 = r10;//assign %9 = %10  : int
+            var r3 = r9;//assign %3 = %9  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r12 = r0.length();//lengthof %12 = %0 : {int character,int from,int to}[]
+            if(WyJS.gt(r3, r12, true)){
+               control_flow_pc = 1470;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r13 = r0.getValue(r3);
+            var r14 = r0.getValue(r3);
+            r2.setValue(r3, r14);
+            var r15 = new WyJS.Integer(1);
+            var r16 = r3.add(r15);//add %16 = %3, %15 : int
+            var r3 = r16;//assign %3 = %16  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case 1470:
+            return r2;//return %2 : {int character,int from,int to}[]
+            return;
+      }
+   }
+}
+
 function add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_0WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sN$B6$o0VR$Z5$i0kOE(r0, r1){//function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> Complex_Valid_8:Trie
    var control_flow_repeat = true;
    var control_flow_pc = -1;
@@ -7,14 +50,15 @@ function add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_0WL1U$k
       switch(control_flow_pc){
          case -1 :
             var r3 = new WyJS.Integer(0);
-            var r2 = add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kl$ND$c2$t$7C$R2Vny2(r0, r3, r1);//invoke %2 = (%0, %3, %1) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            return r2;//return %2 : {[{int character,int from,int to}] transitions}
+            var r4 = new WyJS.Integer(0);
+            var r2 = add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r3, r1, r4);//invoke %2 = (%0, %3, %1, %4) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
+            return r2;//return %2 : {{int character,int from,int to}[] transitions}
             return;
       }
    }
 }
 
-function add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kl$ND$c2$t$7C$R2Vny2(r0, r1, r2){//function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> Complex_Valid_8:Trie
+function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r1, r2, r3){//function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,64 +66,41 @@ function add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r8 = r2.length();//lengthof %8 = %2 : [int]
-            var r9 = new WyJS.Integer(0);
-            if(WyJS.equals(r8, r9, false)){
-               control_flow_pc = 1591;
+            var r9 = r2.length();//lengthof %9 = %2 : int[]
+            if(WyJS.equals(r9, r3, false)){
+               control_flow_pc = 1472;
                control_flow_repeat = true;
                continue outer;
             }
-            return r0;//return %0 : {[{int character,int from,int to}] transitions}
-            control_flow_pc = 1592;
+            return r0;//return %0 : {{int character,int from,int to}[] transitions}
+            control_flow_pc = 1473;
             control_flow_repeat = true;
-            continue outer;//goto label1592
-         case 1591:
-            var r11 = new WyJS.Integer(0);
-            var r12 = r2.getValue(r11);
-            var r10 = r12;//assign %10 = %12  : int
-            var r3 = r10;//assign %3 = %10  : int
-            var r14 = new WyJS.Integer(0);
-            var r13 = r14;//assign %13 = %14  : int
-            var r4 = r13;//assign %4 = %13  : int
-            control_flow_pc = -2;
+            continue outer;//goto label1473
+         case 1472:
+            var r11 = r2.getValue(r3);
+            var r10 = r11;//assign %10 = %11  : int
+            var r4 = r10;//assign %4 = %10  : int
+            var r13 = new WyJS.Integer(0);
+            var r12 = r13;//assign %12 = %13  : int
+            var r5 = r12;//assign %5 = %12  : int
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
-            var r15 = new WyJS.Integer(0);
-            if(WyJS.gt(r4, r15, true)){
-               control_flow_pc = 1593;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 1593:
-            return;
-            var r16 = r0.fieldLoad("transitions");//fieldload %16 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r17 = r16.length();//lengthof %17 = %16 : [{int character,int from,int to}]
-            if(WyJS.gt(r4, r17, true)){
-               control_flow_pc = 1594;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            var r19 = r0.fieldLoad("transitions");//fieldload %19 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r20 = r19.getValue(r4);
-            var r18 = r20;//assign %18 = %20  : {int character,int from,int to}
-            var r7 = r18;//assign %7 = %18  : {int character,int from,int to}
-            var r21 = r7.fieldLoad("from");//fieldload %21 = %7 from : {int character,int from,int to}
-            if(WyJS.equals(r21, r1, false)){
-               control_flow_pc = 1595;
-               control_flow_repeat = true;
-               break;
-            }
-            else{
-               control_flow_pc = -3;
-               control_flow_repeat = true;
-               break;
-            }
          case -3:
-            var r22 = r7.fieldLoad("character");//fieldload %22 = %7 character : {int character,int from,int to}
-            if(WyJS.equals(r22, r3, false)){
-               control_flow_pc = 1595;
+            var r15 = r0.fieldLoad("transitions");//fieldload %15 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r16 = r15.length();//lengthof %16 = %15 : {int character,int from,int to}[]
+            if(WyJS.gt(r5, r16, true)){
+               control_flow_pc = 1475;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r18 = r0.fieldLoad("transitions");//fieldload %18 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r19 = r18.getValue(r5);
+            var r17 = r19.clone();//assign %17 = %19  : {int character,int from,int to}
+            var r8 = r17.clone();//assign %8 = %17  : {int character,int from,int to}
+            var r20 = r8.fieldLoad("from");//fieldload %20 = %8 from : {int character,int from,int to}
+            if(WyJS.equals(r20, r1, false)){
+               control_flow_pc = 1476;
                control_flow_repeat = true;
                break;
             }
@@ -89,45 +110,53 @@ function add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y
                break;
             }
          case -4:
-            var r24 = r7.fieldLoad("to");//fieldload %24 = %7 to : {int character,int from,int to}
-            var r25 = new WyJS.Integer(1);
-            var r26 = r2.length();//lengthof %26 = %2 : [int]
-            var r27 = r2.sublist(r25, r26);
-            var r23 = add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kl$ND$c2$t$7C$R2Vny2(r0, r24, r27);//invoke %23 = (%0, %24, %27) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            return r23;//return %23 : {[{int character,int from,int to}] transitions}
-            control_flow_pc = 1595;
+            var r21 = r8.fieldLoad("character");//fieldload %21 = %8 character : {int character,int from,int to}
+            if(WyJS.equals(r21, r4, false)){
+               control_flow_pc = 1476;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -5;
+               control_flow_repeat = true;
+               break;
+            }
+         case -5:
+            var r23 = r8.fieldLoad("to");//fieldload %23 = %8 to : {int character,int from,int to}
+            var r24 = new WyJS.Integer(1);
+            var r25 = r3.add(r24);//add %25 = %3, %24 : int
+            var r22 = add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r23, r2, r25);//invoke %22 = (%0, %23, %2, %25) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
+            return r22;//return %22 : {{int character,int from,int to}[] transitions}
+            control_flow_pc = 1476;
             control_flow_repeat = true;
             break;
-         case 1595:
-            var r28 = new WyJS.Integer(1);
-            var r29 = r4.add(r28);//add %29 = %4, %28 : int
-            var r4 = r29;//assign %4 = %29  : int
-            control_flow_pc = -2;
+         case 1476:
+            var r26 = new WyJS.Integer(1);
+            var r27 = r5.add(r26);//add %27 = %5, %26 : int
+            var r5 = r27;//assign %5 = %27  : int
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1594:
-            var r31 = r0.fieldLoad("transitions");//fieldload %31 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r32 = r31.length();//lengthof %32 = %31 : [{int character,int from,int to}]
-            var r33 = new WyJS.Integer(1);
-            var r34 = r32.add(r33);//add %34 = %32, %33 : int
-            var r30 = r34;//assign %30 = %34  : int
-            var r6 = r30;//assign %6 = %30  : int
-            var r36 = new WyJS.Record(["character", "from", "to"], [r3, r1, r6], new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]));
-            var r35 = r36;//assign %35 = %36  : {int character,int from,int to}
-            var r7 = r35;//assign %7 = %35  : {int character,int from,int to}
-            var r37 = r0.fieldLoad("transitions");//fieldload %37 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r38 = new WyJS.List([r7], new WyJS.Type.List(new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()])));
-            var r39 = r37.append(r38);
-            var r40 = r0.fieldLoad("transitions");//fieldload %40 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r41 = new WyJS.List([r7], new WyJS.Type.List(new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()])));
-            var r42 = r40.append(r41);
-            r0.setValue("transitions", r42);
-            var r44 = new WyJS.Integer(1);
-            var r45 = r2.length();//lengthof %45 = %2 : [int]
-            var r46 = r2.sublist(r44, r45);
-            var r43 = add$_9fFXWP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOFs1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kl$ND$c2$t$7C$R2Vny2(r0, r6, r46);//invoke %43 = (%0, %6, %46) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            return r43;//return %43 : {[{int character,int from,int to}] transitions}
-         case 1592:
+         case 1475:
+            var r29 = r0.fieldLoad("transitions");//fieldload %29 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r30 = r29.length();//lengthof %30 = %29 : {int character,int from,int to}[]
+            var r31 = new WyJS.Integer(1);
+            var r32 = r30.add(r31);//add %32 = %30, %31 : int
+            var r28 = r32;//assign %28 = %32  : int
+            var r7 = r28;//assign %7 = %28  : int
+            var r34 = new WyJS.Record(["character", "from", "to"], [r4, r1, r7], new WyJS.Type.Record(["character", "from", "to"], [new WyJS.Type.Int(), new WyJS.Type.Int(), new WyJS.Type.Int()]));
+            var r33 = r34.clone();//assign %33 = %34  : {int character,int from,int to}
+            var r8 = r33.clone();//assign %8 = %33  : {int character,int from,int to}
+            var r36 = r0.fieldLoad("transitions");//fieldload %36 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r35 = append$Z9dFXWYl$1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kG2$c1$t$7B$R2Vt$7C$c2Vo$sC$RvE(r36, r8);//invoke %35 = (%36, %8) Complex_Valid_8:append : function(Complex_Valid_8:Transition[],Complex_Valid_8:Transition) -> Complex_Valid_8:Transition[]
+            var r38 = r0.fieldLoad("transitions");//fieldload %38 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r37 = append$Z9dFXWYl$1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kG2$c1$t$7B$R2Vt$7C$c2Vo$sC$RvE(r38, r8);//invoke %37 = (%38, %8) Complex_Valid_8:append : function(Complex_Valid_8:Transition[],Complex_Valid_8:Transition) -> Complex_Valid_8:Transition[]
+            r0.setValue("transitions", r37);
+            var r40 = new WyJS.Integer(1);
+            var r41 = r3.add(r40);//add %41 = %3, %40 : int
+            var r39 = add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r7, r2, r41);//invoke %39 = (%0, %7, %2, %41) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
+            return r39;//return %39 : {{int character,int from,int to}[] transitions}
+         case 1473:
             return;
       }
    }
@@ -142,14 +171,15 @@ function contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$
       switch(control_flow_pc){
          case -1 :
             var r3 = new WyJS.Integer(0);
-            var r2 = contains$a9fF5ec$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOMc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D5$n0$S$76$d0VQ$RqE(r0, r3, r1);//invoke %2 = (%0, %3, %1) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> bool
+            var r4 = new WyJS.Integer(0);
+            var r2 = contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$Jq4P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$VY0kR$F6$m0FP$s5$bC(r0, r3, r1, r4);//invoke %2 = (%0, %3, %1, %4) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> bool
             return r2;//return %2 : bool
             return;
       }
    }
 }
 
-function contains$a9fF5ec$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOMc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D5$n0$S$76$d0VQ$RqE(r0, r1, r2){//function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> bool
+function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$Jq4P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$VY0kR$F6$m0FP$s5$bC(r0, r1, r2, r3){//function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> bool
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -157,65 +187,42 @@ function contains$a9fF5ec$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r6 = r2.length();//lengthof %6 = %2 : [int]
-            var r7 = new WyJS.Integer(0);
-            if(WyJS.equals(r6, r7, false)){
-               control_flow_pc = 1597;
+            var r7 = r2.length();//lengthof %7 = %2 : int[]
+            if(WyJS.equals(r7, r3, false)){
+               control_flow_pc = 1478;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = true;
             return r8;//return %8 : bool
-            control_flow_pc = 1598;
+            control_flow_pc = 1479;
             control_flow_repeat = true;
-            continue outer;//goto label1598
-         case 1597:
-            var r10 = new WyJS.Integer(0);
-            var r11 = r2.getValue(r10);
-            var r9 = r11;//assign %9 = %11  : int
-            var r3 = r9;//assign %3 = %9  : int
-            var r13 = new WyJS.Integer(0);
-            var r12 = r13;//assign %12 = %13  : int
-            var r4 = r12;//assign %4 = %12  : int
-            control_flow_pc = -5;
+            continue outer;//goto label1479
+         case 1478:
+            var r10 = r2.getValue(r3);
+            var r9 = r10;//assign %9 = %10  : int
+            var r4 = r9;//assign %4 = %9  : int
+            var r12 = new WyJS.Integer(0);
+            var r11 = r12;//assign %11 = %12  : int
+            var r5 = r11;//assign %5 = %11  : int
+            control_flow_pc = -6;
             control_flow_repeat = true;
             break;
-         case -5:
-            var r14 = new WyJS.Integer(0);
-            if(WyJS.gt(r4, r14, true)){
-               control_flow_pc = 1599;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 1599:
-            return;
-            var r15 = r0.fieldLoad("transitions");//fieldload %15 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r16 = r15.length();//lengthof %16 = %15 : [{int character,int from,int to}]
-            if(WyJS.gt(r4, r16, true)){
-               control_flow_pc = 1600;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            var r18 = r0.fieldLoad("transitions");//fieldload %18 = %0 transitions : {[{int character,int from,int to}] transitions}
-            var r19 = r18.getValue(r4);
-            var r17 = r19;//assign %17 = %19  : {int character,int from,int to}
-            var r5 = r17;//assign %5 = %17  : {int character,int from,int to}
-            var r20 = r5.fieldLoad("from");//fieldload %20 = %5 from : {int character,int from,int to}
-            if(WyJS.equals(r20, r1, false)){
-               control_flow_pc = 1601;
-               control_flow_repeat = true;
-               break;
-            }
-            else{
-               control_flow_pc = -6;
-               control_flow_repeat = true;
-               break;
-            }
          case -6:
-            var r21 = r5.fieldLoad("character");//fieldload %21 = %5 character : {int character,int from,int to}
-            if(WyJS.equals(r21, r3, false)){
-               control_flow_pc = 1601;
+            var r14 = r0.fieldLoad("transitions");//fieldload %14 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r15 = r14.length();//lengthof %15 = %14 : {int character,int from,int to}[]
+            if(WyJS.gt(r5, r15, true)){
+               control_flow_pc = 1481;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            var r17 = r0.fieldLoad("transitions");//fieldload %17 = %0 transitions : {{int character,int from,int to}[] transitions}
+            var r18 = r17.getValue(r5);
+            var r16 = r18.clone();//assign %16 = %18  : {int character,int from,int to}
+            var r6 = r16.clone();//assign %6 = %16  : {int character,int from,int to}
+            var r19 = r6.fieldLoad("from");//fieldload %19 = %6 from : {int character,int from,int to}
+            if(WyJS.equals(r19, r1, false)){
+               control_flow_pc = 1482;
                control_flow_repeat = true;
                break;
             }
@@ -225,32 +232,43 @@ function contains$a9fF5ec$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0
                break;
             }
          case -7:
-            var r23 = r5.fieldLoad("to");//fieldload %23 = %5 to : {int character,int from,int to}
-            var r24 = new WyJS.Integer(1);
-            var r25 = r2.length();//lengthof %25 = %2 : [int]
-            var r26 = r2.sublist(r24, r25);
-            var r22 = contains$a9fF5ec$3P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$V20$K$76$d0FOMc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D5$n0$S$76$d0VQ$RqE(r0, r23, r26);//invoke %22 = (%0, %23, %26) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string) -> bool
-            return r22;//return %22 : bool
-            control_flow_pc = 1601;
+            var r20 = r6.fieldLoad("character");//fieldload %20 = %6 character : {int character,int from,int to}
+            if(WyJS.equals(r20, r4, false)){
+               control_flow_pc = 1482;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -8;
+               control_flow_repeat = true;
+               break;
+            }
+         case -8:
+            var r22 = r6.fieldLoad("to");//fieldload %22 = %6 to : {int character,int from,int to}
+            var r23 = new WyJS.Integer(1);
+            var r24 = r3.add(r23);//add %24 = %3, %23 : int
+            var r21 = contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$Jq4P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$VY0kR$F6$m0FP$s5$bC(r0, r22, r2, r24);//invoke %21 = (%0, %22, %2, %24) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> bool
+            return r21;//return %21 : bool
+            control_flow_pc = 1482;
             control_flow_repeat = true;
             break;
-         case 1601:
-            var r27 = new WyJS.Integer(1);
-            var r28 = r4.add(r27);//add %28 = %4, %27 : int
-            var r4 = r28;//assign %4 = %28  : int
-            control_flow_pc = -5;
+         case 1482:
+            var r25 = new WyJS.Integer(1);
+            var r26 = r5.add(r25);//add %26 = %5, %25 : int
+            var r5 = r26;//assign %5 = %26  : int
+            control_flow_pc = -6;
             control_flow_repeat = true;
             break;
-         case 1600:
-            var r29 = false;
-            return r29;//return %29 : bool
-         case 1598:
+         case 1481:
+            var r27 = false;
+            return r27;//return %27 : bool
+         case 1479:
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -259,65 +277,65 @@ function test$1A_7VkE(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r2 = new WyJS.Record([transitions] ,[new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()))] ,new WyJS.Type.Record(["transitions"], [new WyJS.Type.List(new WyJS.Type.Void())]));
-            var r1 = r2;//assign %1 = %2  : {[void] transitions}
-            var r0 = r1;//assign %0 = %1  : {[{int character,int from,int to}] transitions}
+            var r1 = r2.clone();//assign %1 = %2  : {void[] transitions}
+            var r0 = r1.clone();//assign %0 = %1  : {{int character,int from,int to}[] transitions}
             var r4 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r3 = add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_0WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sN$B6$o0VR$Z5$i0kOE(r0, r4);//invoke %3 = (%0, %4) Complex_Valid_8:add : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            var r0 = r3;//assign %0 = %3  : {[{int character,int from,int to}] transitions}
+            var r0 = r3.clone();//assign %0 = %3  : {{int character,int from,int to}[] transitions}
             var r6 = new WyJS.List([new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r5 = add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_0WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sN$B6$o0VR$Z5$i0kOE(r0, r6);//invoke %5 = (%0, %6) Complex_Valid_8:add : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            var r0 = r5;//assign %0 = %5  : {[{int character,int from,int to}] transitions}
+            var r0 = r5.clone();//assign %0 = %5  : {{int character,int from,int to}[] transitions}
             var r8 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(112)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r7 = add$Z9dFXd_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_0WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sN$B6$o0VR$Z5$i0kOE(r0, r8);//invoke %7 = (%0, %8) Complex_Valid_8:add : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> Complex_Valid_8:Trie
-            var r0 = r7;//assign %0 = %7  : {[{int character,int from,int to}] transitions}
+            var r0 = r7.clone();//assign %0 = %7  : {{int character,int from,int to}[] transitions}
             var r10 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r9 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r10);//invoke %9 = (%0, %10) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r11 = true;
             if(r9 === r11){
-               control_flow_pc = 1602;
+               control_flow_pc = 1483;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1602:
+         case 1483:
             var r13 = new WyJS.List([new WyJS.Integer(98), new WyJS.Integer(108), new WyJS.Integer(97), new WyJS.Integer(104)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r13);//invoke %12 = (%0, %13) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r14 = true;
             if(r12 === r14){
-               control_flow_pc = 1603;
+               control_flow_pc = 1484;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1604;
+            control_flow_pc = 1485;
             control_flow_repeat = true;
-            continue outer;//goto label1604
-         case 1603:
+            continue outer;//goto label1485
+         case 1484:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1604:
+         case 1485:
             var r16 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r15 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r16);//invoke %15 = (%0, %16) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r17 = true;
             if(r15 === r17){
-               control_flow_pc = 1605;
+               control_flow_pc = 1486;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1605:
+         case 1486:
             var r19 = new WyJS.List([new WyJS.Integer(100), new WyJS.Integer(97), new WyJS.Integer(118), new WyJS.Integer(101)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r18 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r19);//invoke %18 = (%0, %19) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r20 = true;
             if(r18 === r20){
-               control_flow_pc = 1606;
+               control_flow_pc = 1487;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1607;
+            control_flow_pc = 1488;
             control_flow_repeat = true;
-            continue outer;//goto label1607
-         case 1606:
+            continue outer;//goto label1488
+         case 1487:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1607:
+         case 1488:
             return;
       }
    }

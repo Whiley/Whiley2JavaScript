@@ -1,4 +1,4 @@
-function f$Z9bFaA$0D5Wz(r0){//function([int]) -> int
+function f$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -6,14 +6,14 @@ function f$Z9bFaA$0D5Wz(r0){//function([int]) -> int
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = r0.length();//lengthof %1 = %0 : [int]
+            var r1 = r0.length();//lengthof %1 = %0 : int[]
             return r1;//return %1 : int
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -26,19 +26,19 @@ function test$1A_7VkE(){//method() -> void
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
             var r6 = new WyJS.List([r5], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r1 = r6.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %6  : [[int]]
-            var r0 = r1.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %1  : [[int]]
+            var r1 = r6.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %6  : int[][]
+            var r0 = r1.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %1  : int[][]
             var r8 = new WyJS.Integer(0);
             var r9 = r0.getValue(r8);
-            var r7 = f$Z9bFaA$0D5Wz(r9);//invoke %7 = (%9) ListAccess_Valid_5:f : function([int]) -> int
+            var r7 = f$Z9bFaA$0D5Wz(r9);//invoke %7 = (%9) ListAccess_Valid_5:f : function(int[]) -> int
             var r10 = new WyJS.Integer(3);
             if(WyJS.equals(r7, r10, true)){
-               control_flow_pc = 1646;
+               control_flow_pc = 1523;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1646:
+         case 1523:
             return;
       }
    }

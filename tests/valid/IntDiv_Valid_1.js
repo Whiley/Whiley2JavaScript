@@ -13,7 +13,7 @@ function f$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -26,34 +26,34 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Y9dFXs1Fs2(r1, r2);//invoke %0 = (%1, %2) IntDiv_Valid_1:f : function(int,int) -> int
             var r3 = new WyJS.Integer(5);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 2323;
+               control_flow_pc = 2127;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2323:
+         case 2127:
             var r5 = new WyJS.Integer(9);
             var r6 = new WyJS.Integer(3);
             var r4 = f$Y9dFXs1Fs2(r5, r6);//invoke %4 = (%5, %6) IntDiv_Valid_1:f : function(int,int) -> int
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r4, r7, true)){
-               control_flow_pc = 2324;
+               control_flow_pc = 2128;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2324:
+         case 2128:
             var r9 = new WyJS.Integer(10);
             var r10 = new WyJS.Integer(3);
             var r8 = f$Y9dFXs1Fs2(r9, r10);//invoke %8 = (%9, %10) IntDiv_Valid_1:f : function(int,int) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r8, r11, true)){
-               control_flow_pc = 2325;
+               control_flow_pc = 2129;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2325:
+         case 2129:
             return;
       }
    }

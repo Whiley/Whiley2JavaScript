@@ -14,7 +14,7 @@ function f$Z9bFaA$WL1i$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0F
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -26,12 +26,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Z9bFaA$WL1i$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0FB5$Y0VR$32$i0FN$F6(r1);//invoke %0 = (%1) ConstrainedInt_Valid_1:f : function(ConstrainedInt_Valid_1:cr1nat) -> int
             var r2 = new WyJS.Integer(9);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 510;
+               control_flow_pc = 442;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 510:
+         case 442:
             return;
       }
    }

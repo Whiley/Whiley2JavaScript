@@ -29,7 +29,7 @@ function f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$lF$J5$s0$R$
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -52,7 +52,7 @@ function test$1A_7VkE(){//method() -> void
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Record(["x", "y"], [r5, r6], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
-            var r0 = r7;//assign %0 = %7  : {int x,int y}
+            var r0 = r7.clone();//assign %0 = %7  : {int x,int y}
             var r8 = f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$lF$J5$s0$R$76(r0);//invoke %8 = (%0) TypeEquals_Valid_1:f : function(TypeEquals_Valid_1:expr) -> bool
             var r9 = false;
             if(r8 === r9){

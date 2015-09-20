@@ -36,6 +36,7 @@ function average$Z9bF5B1FVYGs(r0){//function([real]) -> real
             var r13 = WyJS.cast(new WyJS.Type.Real(), r12);
             var r14 = r1.div(r13);//div %14 = %1, %13 : real
             return r14;//return %14 : real
+            return;
       }
    }
 }
@@ -92,6 +93,7 @@ function test$1A_7VkE(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 4:
+            return;
       }
    }
 }

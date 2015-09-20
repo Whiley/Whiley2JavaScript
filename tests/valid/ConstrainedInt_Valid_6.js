@@ -29,7 +29,7 @@ function g$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -42,12 +42,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = g$Y9dFXs1Fs2(r1, r2);//invoke %0 = (%1, %2) ConstrainedInt_Valid_6:g : function(int,int) -> int
             var r3 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 522;
+               control_flow_pc = 454;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 522:
+         case 454:
             return;
       }
    }

@@ -1,4 +1,4 @@
-function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
+function buildNatList$Z9bF5D527RWz(r0){//function(int) -> int[]
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -9,64 +9,34 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> [int]
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
-            var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            var r5 = r6.clone(new WyJS.Type.Void());//assign %5 = %6  : [void]
-            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : [int]
+            var r6 = new WyJS.Integer(0);
+            var r7 = WyJS.ListGen(r6, r0, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = r7.clone(new WyJS.Type.Int());//assign %5 = %7  : int[]
+            var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : int[]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
          case -2:
-            var r7 = new WyJS.Integer(0);
-            if(WyJS.gt(r1, r7, true)){
-               control_flow_pc = 859;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 859:
-            return;
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
-         case -3:
-            var r9 = new WyJS.Integer(0);
-            if(WyJS.lt(r8, r9, false)){
-               control_flow_pc = 860;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
-            control_flow_pc = 861;
-            control_flow_repeat = true;
-            continue outer;//goto label861
-         case 860:
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 861:
-            return;
             if(WyJS.gt(r1, r0, true)){
-               control_flow_pc = 862;
+               control_flow_pc = 808;
                control_flow_repeat = true;
                continue outer;
             }
-            var r10 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r11 = r2.append(r10);
-            var r2 = r11.clone(new WyJS.Type.Int());//assign %2 = %11  : [int]
-            var r12 = new WyJS.Integer(1);
-            var r13 = r1.add(r12);//add %13 = %1, %12 : int
-            var r1 = r13;//assign %1 = %13  : int
+            r2.setValue(r1, r1);
+            var r14 = new WyJS.Integer(1);
+            var r15 = r1.add(r14);//add %15 = %1, %14 : int
+            var r1 = r15;//assign %1 = %15  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 862:
-            return r2;//return %2 : [int]
+         case 808:
+            return r2;//return %2 : int[]
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -74,97 +44,88 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.Integer(1);
-            var r2 = r1.neg();//neg %2 = %1 : int
-            var r0 = buildNatList$Z9bF5D527RWz(r2);//invoke %0 = (%2) While_Valid_45:buildNatList : function(int) -> [int]
-            var r3 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 863;
+            var r1 = new WyJS.Integer(0);
+            var r0 = buildNatList$Z9bF5D527RWz(r1);//invoke %0 = (%1) While_Valid_45:buildNatList : function(int) -> int[]
+            var r2 = new WyJS.Integer(0);
+            var r3 = new WyJS.Integer(0);
+            var r4 = WyJS.ListGen(r2, r3, new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r0, r4, true)){
+               control_flow_pc = 809;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 863:
-            var r5 = new WyJS.Integer(0);
-            var r4 = buildNatList$Z9bF5D527RWz(r5);//invoke %4 = (%5) While_Valid_45:buildNatList : function(int) -> [int]
-            var r6 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            if(WyJS.equals(r4, r6, true)){
-               control_flow_pc = 864;
+         case 809:
+            var r6 = new WyJS.Integer(1);
+            var r5 = buildNatList$Z9bF5D527RWz(r6);//invoke %5 = (%6) While_Valid_45:buildNatList : function(int) -> int[]
+            var r7 = new WyJS.Integer(0);
+            var r8 = new WyJS.List([r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r5, r8, true)){
+               control_flow_pc = 810;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 864:
-            var r8 = new WyJS.Integer(1);
-            var r7 = buildNatList$Z9bF5D527RWz(r8);//invoke %7 = (%8) While_Valid_45:buildNatList : function(int) -> [int]
-            var r9 = new WyJS.Integer(0);
-            var r10 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Int()));
-            if(WyJS.equals(r7, r10, true)){
-               control_flow_pc = 865;
+         case 810:
+            var r10 = new WyJS.Integer(2);
+            var r9 = buildNatList$Z9bF5D527RWz(r10);//invoke %9 = (%10) While_Valid_45:buildNatList : function(int) -> int[]
+            var r11 = new WyJS.Integer(0);
+            var r12 = new WyJS.Integer(1);
+            var r13 = new WyJS.List([r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r9, r13, true)){
+               control_flow_pc = 811;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 865:
-            var r12 = new WyJS.Integer(2);
-            var r11 = buildNatList$Z9bF5D527RWz(r12);//invoke %11 = (%12) While_Valid_45:buildNatList : function(int) -> [int]
-            var r13 = new WyJS.Integer(0);
-            var r14 = new WyJS.Integer(1);
-            var r15 = new WyJS.List([r13, r14], new WyJS.Type.List(new WyJS.Type.Int()));
-            if(WyJS.equals(r11, r15, true)){
-               control_flow_pc = 866;
+         case 811:
+            var r15 = new WyJS.Integer(3);
+            var r14 = buildNatList$Z9bF5D527RWz(r15);//invoke %14 = (%15) While_Valid_45:buildNatList : function(int) -> int[]
+            var r16 = new WyJS.Integer(0);
+            var r17 = new WyJS.Integer(1);
+            var r18 = new WyJS.Integer(2);
+            var r19 = new WyJS.List([r16, r17, r18], new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r14, r19, true)){
+               control_flow_pc = 812;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 866:
-            var r17 = new WyJS.Integer(3);
-            var r16 = buildNatList$Z9bF5D527RWz(r17);//invoke %16 = (%17) While_Valid_45:buildNatList : function(int) -> [int]
-            var r18 = new WyJS.Integer(0);
-            var r19 = new WyJS.Integer(1);
-            var r20 = new WyJS.Integer(2);
-            var r21 = new WyJS.List([r18, r19, r20], new WyJS.Type.List(new WyJS.Type.Int()));
-            if(WyJS.equals(r16, r21, true)){
-               control_flow_pc = 867;
+         case 812:
+            var r21 = new WyJS.Integer(4);
+            var r20 = buildNatList$Z9bF5D527RWz(r21);//invoke %20 = (%21) While_Valid_45:buildNatList : function(int) -> int[]
+            var r22 = new WyJS.Integer(0);
+            var r23 = new WyJS.Integer(1);
+            var r24 = new WyJS.Integer(2);
+            var r25 = new WyJS.Integer(3);
+            var r26 = new WyJS.List([r22, r23, r24, r25], new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r20, r26, true)){
+               control_flow_pc = 813;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 867:
-            var r23 = new WyJS.Integer(4);
-            var r22 = buildNatList$Z9bF5D527RWz(r23);//invoke %22 = (%23) While_Valid_45:buildNatList : function(int) -> [int]
-            var r24 = new WyJS.Integer(0);
-            var r25 = new WyJS.Integer(1);
-            var r26 = new WyJS.Integer(2);
-            var r27 = new WyJS.Integer(3);
-            var r28 = new WyJS.List([r24, r25, r26, r27], new WyJS.Type.List(new WyJS.Type.Int()));
-            if(WyJS.equals(r22, r28, true)){
-               control_flow_pc = 868;
+         case 813:
+            var r28 = new WyJS.Integer(10);
+            var r27 = buildNatList$Z9bF5D527RWz(r28);//invoke %27 = (%28) While_Valid_45:buildNatList : function(int) -> int[]
+            var r29 = new WyJS.Integer(0);
+            var r30 = new WyJS.Integer(1);
+            var r31 = new WyJS.Integer(2);
+            var r32 = new WyJS.Integer(3);
+            var r33 = new WyJS.Integer(4);
+            var r34 = new WyJS.Integer(5);
+            var r35 = new WyJS.Integer(6);
+            var r36 = new WyJS.Integer(7);
+            var r37 = new WyJS.Integer(8);
+            var r38 = new WyJS.Integer(9);
+            var r39 = new WyJS.List([r29, r30, r31, r32, r33, r34, r35, r36, r37, r38], new WyJS.Type.List(new WyJS.Type.Int()));
+            if(WyJS.equals(r27, r39, true)){
+               control_flow_pc = 814;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 868:
-            var r30 = new WyJS.Integer(10);
-            var r29 = buildNatList$Z9bF5D527RWz(r30);//invoke %29 = (%30) While_Valid_45:buildNatList : function(int) -> [int]
-            var r31 = new WyJS.Integer(0);
-            var r32 = new WyJS.Integer(1);
-            var r33 = new WyJS.Integer(2);
-            var r34 = new WyJS.Integer(3);
-            var r35 = new WyJS.Integer(4);
-            var r36 = new WyJS.Integer(5);
-            var r37 = new WyJS.Integer(6);
-            var r38 = new WyJS.Integer(7);
-            var r39 = new WyJS.Integer(8);
-            var r40 = new WyJS.Integer(9);
-            var r41 = new WyJS.List([r31, r32, r33, r34, r35, r36, r37, r38, r39, r40], new WyJS.Type.List(new WyJS.Type.Int()));
-            if(WyJS.equals(r29, r41, true)){
-               control_flow_pc = 869;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 869:
+         case 814:
             return;
       }
    }

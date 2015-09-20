@@ -12,7 +12,7 @@ function f$Z9bFa7$WL1d$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$Jn0kS$J6$m0$C$
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -24,12 +24,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Z9bFa7$WL1d$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$Jn0kS$J6$m0$C$s5$W0$S(r1);//invoke %0 = (%1) UnionType_Valid_5:f : function(UnionType_Valid_5:wur4nat) -> any
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1953;
+               control_flow_pc = 1780;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1953:
+         case 1780:
             return;
       }
    }

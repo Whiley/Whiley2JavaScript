@@ -1,4 +1,4 @@
-function max(r0, r1){//function(int,int) -> int
+function max$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -7,22 +7,23 @@ function max(r0, r1){//function(int,int) -> int
       switch(control_flow_pc){
          case -1 :
             if(WyJS.lt(r0, r1, false)){
-               control_flow_pc = 603;
+               control_flow_pc = 539;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : int
-            control_flow_pc = 604;
+            control_flow_pc = 540;
             control_flow_repeat = true;
-            continue outer;//goto label604
-         case 603:
+            continue outer;//goto label540
+         case 539:
             return r1;//return %1 : int
-         case 604:
+         case 540:
+            return;
       }
    }
 }
 
-function max(r0){//function([int]) -> int
+function max$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -31,28 +32,34 @@ function max(r0){//function([int]) -> int
       switch(control_flow_pc){
          case -1 :
             var r4 = new WyJS.Integer(0);
-            var r5 = r0[r4];
+            var r5 = r0.getValue(r4);
             var r3 = r5;//assign %3 = %5  : int
             var r1 = r3;//assign %1 = %3  : int
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r2 = r6;//assign %2 = %6  : int
-            while(true){//loop (%1, %2, %9, %10, %11, %12, %13, %14, %15, %16)
-               var r12 = r0.length;//lengthof %12 = %0 : [int]
-               if(WyJS.gt(r2, r12, true)){
-                  control_flow_pc = 612;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r14 = r0[r2];
-               var r13 = max(r1, r14);//invoke %13 = (%1, %14) While_Valid_22:max : function(int,int) -> int
-               var r1 = r13;//assign %1 = %13  : int
-               var r15 = new WyJS.Integer(1);
-               var r16 = r2.add(r15);//add %16 = %2, %15 : int
-               var r2 = r16;//assign %2 = %16  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r15 = r0.length();//lengthof %15 = %0 : int[]
+            if(WyJS.gt(r2, r15, true)){
+               control_flow_pc = 548;
+               control_flow_repeat = true;
+               continue outer;
             }
-         case 612:
+            var r17 = r0.getValue(r2);
+            var r16 = max$Y9dFXs1Fs2(r1, r17);//invoke %16 = (%1, %17) While_Valid_22:max : function(int,int) -> int
+            var r1 = r16;//assign %1 = %16  : int
+            var r18 = new WyJS.Integer(1);
+            var r19 = r2.add(r18);//add %19 = %2, %18 : int
+            var r2 = r19;//assign %2 = %19  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case 548:
             return r1;//return %1 : int
+            return;
       }
    }
 }
@@ -75,16 +82,16 @@ function test(){//method() -> void
             var r8 = new WyJS.Integer(8);
             var r9 = new WyJS.Integer(9);
             var r10 = new WyJS.Integer(10);
-            var r11 = [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10];
-            var r0 = max(r11);//invoke %0 = (%11) While_Valid_22:max : function([int]) -> int
+            var r11 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r0 = max$Z9bFaA$0D5Wz(r11);//invoke %0 = (%11) While_Valid_22:max : function(int[]) -> int
             var r12 = new WyJS.Integer(10);
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 613;
+               control_flow_pc = 549;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 613:
+         case 549:
             var r14 = new WyJS.Integer(8);
             var r15 = r14.neg();//neg %15 = %14 : int
             var r16 = new WyJS.Integer(7);
@@ -98,27 +105,28 @@ function test(){//method() -> void
             var r24 = new WyJS.Integer(200);
             var r25 = r24.neg();//neg %25 = %24 : int
             var r26 = new WyJS.Integer(4);
-            var r27 = [r15, r16, r17, r18, r20, r21, r22, r23, r25, r26];
-            var r13 = max(r27);//invoke %13 = (%27) While_Valid_22:max : function([int]) -> int
+            var r27 = new WyJS.List([r15, r16, r17, r18, r20, r21, r22, r23, r25, r26], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = max$Z9bFaA$0D5Wz(r27);//invoke %13 = (%27) While_Valid_22:max : function(int[]) -> int
             var r28 = new WyJS.Integer(9);
             if(WyJS.equals(r13, r28, true)){
-               control_flow_pc = 614;
+               control_flow_pc = 550;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 614:
+         case 550:
             var r30 = new WyJS.Integer(1);
-            var r31 = [r30];
-            var r29 = max(r31);//invoke %29 = (%31) While_Valid_22:max : function([int]) -> int
+            var r31 = new WyJS.List([r30], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r29 = max$Z9bFaA$0D5Wz(r31);//invoke %29 = (%31) While_Valid_22:max : function(int[]) -> int
             var r32 = new WyJS.Integer(1);
             if(WyJS.equals(r29, r32, true)){
-               control_flow_pc = 615;
+               control_flow_pc = 551;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 615:
+         case 551:
+            return;
       }
    }
 }

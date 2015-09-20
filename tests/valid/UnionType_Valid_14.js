@@ -7,43 +7,43 @@ function f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Int())){
-               control_flow_pc = 402;
+               control_flow_pc = 351;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 403;
+            control_flow_pc = 352;
             control_flow_repeat = true;
-            continue outer;//goto label403
-         case 402:
+            continue outer;//goto label352
+         case 351:
             return r0;//return %0 : int
-            control_flow_pc = 404;
+            control_flow_pc = 353;
             control_flow_repeat = true;
-            continue outer;//goto label404
-         case 403:
+            continue outer;//goto label353
+         case 352:
             if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
-               control_flow_pc = 405;
+               control_flow_pc = 354;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 406;
+            control_flow_pc = 355;
             control_flow_repeat = true;
-            continue outer;//goto label406
-         case 405:
-            var r1 = r0.length();//lengthof %1 = %0 : [int]
+            continue outer;//goto label355
+         case 354:
+            var r1 = r0.length();//lengthof %1 = %0 : int[]
             return r1;//return %1 : int
-            control_flow_pc = 404;
+            control_flow_pc = 353;
             control_flow_repeat = true;
-            continue outer;//goto label404
-         case 406:
+            continue outer;//goto label353
+         case 355:
             var r2 = new WyJS.Integer(1);
             return r2;//return %2 : int
-         case 404:
+         case 353:
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -55,12 +55,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r1);//invoke %0 = (%1) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 407;
+               control_flow_pc = 356;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 407:
+         case 356:
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
@@ -68,12 +68,12 @@ function test$1A_7VkE(){//method() -> void
             var r3 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r7);//invoke %3 = (%7) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r3, r8, true)){
-               control_flow_pc = 408;
+               control_flow_pc = 357;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 408:
+         case 357:
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(0);
             var r12 = new WyJS.Integer(2);
@@ -81,12 +81,12 @@ function test$1A_7VkE(){//method() -> void
             var r9 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r13);//invoke %9 = (%13) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r14 = new WyJS.Integer(1);
             if(WyJS.equals(r9, r14, true)){
-               control_flow_pc = 409;
+               control_flow_pc = 358;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 409:
+         case 358:
             return;
       }
    }

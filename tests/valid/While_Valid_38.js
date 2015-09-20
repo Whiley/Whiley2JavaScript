@@ -1,4 +1,4 @@
-function isSorted(r0){//function([int]) -> bool
+function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -6,35 +6,50 @@ function isSorted(r0){//function([int]) -> bool
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = 1;//const %3 = 1 : int
+            var r3 = new WyJS.Integer(1);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            while(true){//loop (%1, %4, %5, %7, %8, %9, %10, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20)
-               var r13 = r0.length;//lengthof %13 = %0 : [int]
-               if(r1  >=  r13){//ifge %1, %13 goto label795 : int
-                  control_flow_pc = 795;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r14 = 1;//const %14 = 1 : int
-               var r15 = r1 - r14;//sub %15 = %1, %14 : int
-               var r16 = r0[r15];
-               var r17 = r0[r1];
-               if(r16  <=  r17){
-                  var r19 = 1;//const %19 = 1 : int
-                  var r20 = r1 + r19;//add %20 = %1, %19 : int
-                  var r1 = r20;//assign %1 = %20  : int
-                  continue;
-               }
-               var r18 = false;//const %18 = false : bool
-               return r18;//return %18 : bool
-               var r19 = 1;//const %19 = 1 : int
-               var r20 = r1 + r19;//add %20 = %1, %19 : int
-               var r1 = r20;//assign %1 = %20  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r12 = r0.length();//lengthof %12 = %0 : int[]
+            if(WyJS.gt(r1, r12, true)){
+               control_flow_pc = 733;
+               control_flow_repeat = true;
+               continue outer;
             }
-         case 795:
-            var r21 = true;//const %21 = true : bool
-            return r21;//return %21 : bool
+            var r13 = new WyJS.Integer(1);
+            var r14 = r1.sub(r13);//sub %14 = %1, %13 : int
+            var r15 = r0.getValue(r14);
+            var r16 = r0.getValue(r1);
+            if(WyJS.lt(r15, r16, false)){
+               control_flow_pc = 734;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r17 = false;
+            return r17;//return %17 : bool
+            control_flow_pc = 734;
+            control_flow_repeat = true;
+            break;
+         case 734:
+            var r18 = new WyJS.Integer(1);
+            var r19 = r1.add(r18);//add %19 = %1, %18 : int
+            var r1 = r19;//assign %1 = %19  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case 733:
+            var r20 = true;
+            return r20;//return %20 : bool
+            return;
       }
    }
 }
@@ -47,68 +62,70 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = 1;//const %1 = 1 : int
-            var r2 = 2;//const %2 = 2 : int
-            var r3 = 3;//const %3 = 3 : int
-            var r4 = 4;//const %4 = 4 : int
-            var r5 = [r1, r2, r3, r4];
-            var r0 = isSorted(r5);//invoke %0 = (%5) While_Valid_38:isSorted : function([int]) -> bool
-            var r6 = true;//const %6 = true : bool
-            if(r0  ==  r6){//ifeq %0, %6 goto label797 : bool
-               control_flow_pc = 797;
+            var r1 = new WyJS.Integer(1);
+            var r2 = new WyJS.Integer(2);
+            var r3 = new WyJS.Integer(3);
+            var r4 = new WyJS.Integer(4);
+            var r5 = new WyJS.List([r1, r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r0 = isSorted$_9bF59$0D5ZAw2(r5);//invoke %0 = (%5) While_Valid_38:isSorted : function(int[]) -> bool
+            var r6 = true;
+            if(r0 === r6){
+               control_flow_pc = 735;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 797:
-            var r8 = 1;//const %8 = 1 : int
-            var r9 = 2;//const %9 = 2 : int
-            var r10 = 4;//const %10 = 4 : int
-            var r11 = 3;//const %11 = 3 : int
-            var r12 = [r8, r9, r10, r11];
-            var r7 = isSorted(r12);//invoke %7 = (%12) While_Valid_38:isSorted : function([int]) -> bool
-            var r13 = true;//const %13 = true : bool
-            if(r7  ==  r13){//ifeq %7, %13 goto label798 : bool
-               control_flow_pc = 798;
+         case 735:
+            var r8 = new WyJS.Integer(1);
+            var r9 = new WyJS.Integer(2);
+            var r10 = new WyJS.Integer(4);
+            var r11 = new WyJS.Integer(3);
+            var r12 = new WyJS.List([r8, r9, r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = isSorted$_9bF59$0D5ZAw2(r12);//invoke %7 = (%12) While_Valid_38:isSorted : function(int[]) -> bool
+            var r13 = true;
+            if(r7 === r13){
+               control_flow_pc = 736;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 799;
+            control_flow_pc = 737;
             control_flow_repeat = true;
-            continue outer;//goto label799
-         case 798:
+            continue outer;//goto label737
+         case 736:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 799:
-            var r15 = 4;//const %15 = 4 : int
-            var r16 = 2;//const %16 = 2 : int
-            var r17 = 3;//const %17 = 3 : int
-            var r18 = 5;//const %18 = 5 : int
-            var r19 = [r15, r16, r17, r18];
-            var r14 = isSorted(r19);//invoke %14 = (%19) While_Valid_38:isSorted : function([int]) -> bool
-            var r20 = true;//const %20 = true : bool
-            if(r14  ==  r20){//ifeq %14, %20 goto label800 : bool
-               control_flow_pc = 800;
+         case 737:
+            var r15 = new WyJS.Integer(4);
+            var r16 = new WyJS.Integer(2);
+            var r17 = new WyJS.Integer(3);
+            var r18 = new WyJS.Integer(5);
+            var r19 = new WyJS.List([r15, r16, r17, r18], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r14 = isSorted$_9bF59$0D5ZAw2(r19);//invoke %14 = (%19) While_Valid_38:isSorted : function(int[]) -> bool
+            var r20 = true;
+            if(r14 === r20){
+               control_flow_pc = 738;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 801;
+            control_flow_pc = 739;
             control_flow_repeat = true;
-            continue outer;//goto label801
-         case 800:
+            continue outer;//goto label739
+         case 738:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 801:
-            var r22 = [];
-            var r21 = isSorted(r22);//invoke %21 = (%22) While_Valid_38:isSorted : function([int]) -> bool
-            var r23 = true;//const %23 = true : bool
-            if(r21  ==  r23){//ifeq %21, %23 goto label802 : bool
-               control_flow_pc = 802;
+         case 739:
+            var r22 = new WyJS.Integer(0);
+            var r23 = new WyJS.Integer(0);
+            var r24 = WyJS.ListGen(r22, r23, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r21 = isSorted$_9bF59$0D5ZAw2(r24);//invoke %21 = (%24) While_Valid_38:isSorted : function(int[]) -> bool
+            var r25 = true;
+            if(r21 === r25){
+               control_flow_pc = 740;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 802:
+         case 740:
+            return;
       }
    }
 }
 
-test();

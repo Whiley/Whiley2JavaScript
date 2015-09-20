@@ -12,7 +12,7 @@ import org.mozilla.javascript.ScriptableObject;
 
 public class TestUtils {
 	
-	private static String whileyBuild = "wyjc-all-v0.3.35.jar";
+	private static String whileyBuild = "wyjc-all-v0.3.36.jar";
 	private static String wyilFolder = '"' + "wyil" +'"';
 	
 	public static String exec(String filename, String srcDir) {

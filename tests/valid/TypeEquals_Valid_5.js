@@ -29,7 +29,7 @@ function f$a9bF59$0J7JCWAB(r0){//function(null|int) -> bool
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:

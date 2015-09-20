@@ -1,4 +1,4 @@
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -9,12 +9,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = true;
             var r1 = true;
             if(r0 === r1){
-               control_flow_pc = 532;
+               control_flow_pc = 469;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 532:
+         case 469:
             return;
       }
    }

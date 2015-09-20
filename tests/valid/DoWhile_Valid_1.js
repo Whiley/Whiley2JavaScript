@@ -1,4 +1,4 @@
-function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
+function f$3AbFaA$0D5Wz(r0){//method(int[]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -22,34 +22,25 @@ function f$3AbFaA$0D5Wz(r0){//method([int]) -> int
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
-            var r11 = new WyJS.Integer(0);
-            if(WyJS.gt(r2, r11, true)){
-               control_flow_pc = 460;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 460:
-            return;
             var r12 = new WyJS.Integer(1);
             var r13 = r2.add(r12);//add %13 = %2, %12 : int
-            var r14 = r0.length();//lengthof %14 = %0 : [int]
+            var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.gt(r13, r14, true)){
-               control_flow_pc = 461;
+               control_flow_pc = 391;
                control_flow_repeat = true;
                continue outer;
             }
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 461:
+         case 391:
             return r1;//return %1 : int
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -61,27 +52,27 @@ function test$1A_7VkE(){//method() -> void
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
             var r4 = new WyJS.List([r1, r2, r3], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r0 = f$3AbFaA$0D5Wz(r4);//invoke %0 = (%4) DoWhile_Valid_1:f : method([int]) -> int
+            var r0 = f$3AbFaA$0D5Wz(r4);//invoke %0 = (%4) DoWhile_Valid_1:f : method(int[]) -> int
             var r5 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 462;
+               control_flow_pc = 392;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 462:
+         case 392:
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.List([r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r6 = f$3AbFaA$0D5Wz(r9);//invoke %6 = (%9) DoWhile_Valid_1:f : method([int]) -> int
+            var r6 = f$3AbFaA$0D5Wz(r9);//invoke %6 = (%9) DoWhile_Valid_1:f : method(int[]) -> int
             var r10 = new WyJS.Integer(1);
             if(WyJS.equals(r6, r10, true)){
-               control_flow_pc = 463;
+               control_flow_pc = 393;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 463:
+         case 393:
             var r12 = new WyJS.Integer(1);
             var r13 = new WyJS.Integer(2);
             var r14 = new WyJS.Integer(3);
@@ -89,15 +80,15 @@ function test$1A_7VkE(){//method() -> void
             var r16 = new WyJS.Integer(5);
             var r17 = new WyJS.Integer(6);
             var r18 = new WyJS.List([r12, r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r11 = f$3AbFaA$0D5Wz(r18);//invoke %11 = (%18) DoWhile_Valid_1:f : method([int]) -> int
+            var r11 = f$3AbFaA$0D5Wz(r18);//invoke %11 = (%18) DoWhile_Valid_1:f : method(int[]) -> int
             var r19 = new WyJS.Integer(15);
             if(WyJS.equals(r11, r19, true)){
-               control_flow_pc = 464;
+               control_flow_pc = 394;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 464:
+         case 394:
             return;
       }
    }

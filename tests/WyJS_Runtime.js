@@ -278,6 +278,15 @@ WyJS.List.prototype.sublist = function(from, to){
   return new WyJS.List(data, this.type);
 };
 
+//generates a list of size 'size' with every value 'val'
+WyJS.ListGen = function(val, size, type){
+  var list = [];
+  for (var i = 0; i < size.val; i++) {
+    list[i] = val;
+  }
+  return new WyJS.List(list, type);
+};
+
 //TUPLE CLASS/METHODS
 WyJS.Tuple = function(values, type) {
   this.values = values;
@@ -390,11 +399,19 @@ WyJS.neg = function(val){
     return val.neg();
   }
   return -val;
-}
+};
 
+WyJS.in = function(thing, list){
+ for (var i = 0; i > list.length; i++) {
+    if(WyJS.equals(thing, list.getValue(i))){
+      return true;
+    }
+  }
+  return false;
+}
+    
 //used to find if a object is a subtype of type
 WyJS.is = function(obj, type) {
-  
   //Check primitive/simple types first
   if (type instanceof WyJS.Type.Null) {
       if (obj === null) {

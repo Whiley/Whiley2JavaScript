@@ -7,28 +7,28 @@ function getMessage$Z9bFa7$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$o$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Record(["msg"], [new WyJS.Type.List(new WyJS.Type.Int())]))){
-               control_flow_pc = 1072;
+               control_flow_pc = 976;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1073;
+            control_flow_pc = 977;
             control_flow_repeat = true;
-            continue outer;//goto label1073
-         case 1072:
-            var r1 = r0.fieldLoad("msg");//fieldload %1 = %0 msg : {[int] msg}
+            continue outer;//goto label977
+         case 976:
+            var r1 = r0.fieldLoad("msg");//fieldload %1 = %0 msg : {int[] msg}
             return r1;//return %1 : any
-            control_flow_pc = 1074;
+            control_flow_pc = 978;
             control_flow_repeat = true;
-            continue outer;//goto label1074
-         case 1073:
+            continue outer;//goto label978
+         case 977:
             return r0;//return %0 : any
-         case 1074:
+         case 978:
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -41,22 +41,22 @@ function test$1A_7VkE(){//method() -> void
             var r0 = getMessage$Z9bFa7$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$o$kB3$d0FQ$B6$b0(r2);//invoke %0 = (%2) TypeEquals_Valid_43:getMessage : function(TypeEquals_Valid_43:imsg) -> any
             var r3 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(69), new WyJS.Integer(76), new WyJS.Integer(76), new WyJS.Integer(79), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(79), new WyJS.Integer(82), new WyJS.Integer(76), new WyJS.Integer(68)], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1075;
+               control_flow_pc = 979;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1075:
+         case 979:
             var r5 = new WyJS.Integer(1);
             var r4 = getMessage$Z9bFa7$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$o$kB3$d0FQ$B6$b0(r5);//invoke %4 = (%5) TypeEquals_Valid_43:getMessage : function(TypeEquals_Valid_43:imsg) -> any
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r4, r6, true)){
-               control_flow_pc = 1076;
+               control_flow_pc = 980;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1076:
+         case 980:
             return;
       }
    }

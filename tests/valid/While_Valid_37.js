@@ -1,4 +1,4 @@
-function invertByte(r0){//function([bool]) -> [bool]
+function invertByte$Z9bF1D527FWz(r0){//function(bool[]) -> bool[]
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -9,42 +9,82 @@ function invertByte(r0){//function([bool]) -> [bool]
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r1 = r3;//assign %1 = %3  : int
-            var r5 = r0;//assign %5 = %0  : [bool]
-            var r2 = r5;//assign %2 = %5  : [bool]
-            while(true){//loop (%1, %2, %6, %7, %8, %9, %11, %12, %13, %14, %15, %16, %17, %18, %19, %20, %21, %22, %23, %24, %25, %26, %27, %28)
-               var r18 = new WyJS.Integer(8);
-               if(WyJS.gt(r1, r18, true)){
-                  control_flow_pc = 780;
-                  control_flow_repeat = true;
-                  continue outer;
-               }
-               var r19 = r0[r1];
-               var r21 = r0[r1];
-               var r22 = true;
-               if(r21  ==  r22){
-                  var r20 = false;
-               case 782:
-                  continue;
-               }
-               var r20 = true;
-               var r20 = false;
-               var r23 = r0[r1];
-               var r25 = r0[r1];
-               var r26 = true;
-               if(r25  ==  r26){
-                  var r24 = false;
-               case 784:
-                  continue;
-               }
-               var r24 = true;
-               var r24 = false;
-               r2[r1] = r24;//update %2[%1] = %24 : [bool] -> [bool]
-               var r27 = new WyJS.Integer(1);
-               var r28 = r1.add(r27);//add %28 = %1, %27 : int
-               var r1 = r28;//assign %1 = %28  : int
+            var r5 = r0.clone(new WyJS.Type.Bool());//assign %5 = %0  : bool[]
+            var r2 = r5.clone(new WyJS.Type.Bool());//assign %2 = %5  : bool[]
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case -2:
+            var r17 = new WyJS.Integer(8);
+            if(WyJS.gt(r1, r17, true)){
+               control_flow_pc = 718;
+               control_flow_repeat = true;
+               continue outer;
             }
-         case 780:
-            return r2;//return %2 : [bool]
+            var r18 = r0.getValue(r1);
+            var r20 = r0.getValue(r1);
+            var r21 = true;
+            if(r20 === r21){
+               control_flow_pc = 719;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -3;
+               control_flow_repeat = true;
+               break;
+            }
+         case -3:
+            var r19 = true;
+            control_flow_pc = 720;
+            control_flow_repeat = true;
+            continue outer;//goto label720
+            control_flow_pc = 722;
+            control_flow_repeat = true;
+            break;
+         case 719:
+            var r19 = false;
+            control_flow_pc = 722;
+            control_flow_repeat = true;
+            break;
+         case 720:
+            var r22 = r0.getValue(r1);
+            var r24 = r0.getValue(r1);
+            var r25 = true;
+            if(r24 === r25){
+               control_flow_pc = 721;
+               control_flow_repeat = true;
+               break;
+            }
+            else{
+               control_flow_pc = -4;
+               control_flow_repeat = true;
+               break;
+            }
+         case -4:
+            var r23 = true;
+            control_flow_pc = 722;
+            control_flow_repeat = true;
+            continue outer;//goto label722
+            control_flow_pc = 722;
+            control_flow_repeat = true;
+            break;
+         case 721:
+            var r23 = false;
+            control_flow_pc = 722;
+            control_flow_repeat = true;
+            break;
+         case 722:
+            r2.setValue(r1, r23);
+            var r26 = new WyJS.Integer(1);
+            var r27 = r1.add(r26);//add %27 = %1, %26 : int
+            var r1 = r27;//assign %1 = %27  : int
+            control_flow_pc = -2;
+            control_flow_repeat = true;
+            break;
+         case 718:
+            return r2;//return %2 : bool[]
+            return;
       }
    }
 }
@@ -65,8 +105,8 @@ function test(){//method() -> void
             var r6 = false;
             var r7 = true;
             var r8 = false;
-            var r9 = [r1, r2, r3, r4, r5, r6, r7, r8];
-            var r0 = invertByte(r9);//invoke %0 = (%9) While_Valid_37:invertByte : function([bool]) -> [bool]
+            var r9 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r0 = invertByte$Z9bF1D527FWz(r9);//invoke %0 = (%9) While_Valid_37:invertByte : function(bool[]) -> bool[]
             var r10 = false;
             var r11 = true;
             var r12 = false;
@@ -75,14 +115,14 @@ function test(){//method() -> void
             var r15 = true;
             var r16 = false;
             var r17 = true;
-            var r18 = [r10, r11, r12, r13, r14, r15, r16, r17];
+            var r18 = new WyJS.List([r10, r11, r12, r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Bool()));
             if(WyJS.equals(r0, r18, true)){
-               control_flow_pc = 785;
+               control_flow_pc = 723;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 785:
+         case 723:
             var r20 = true;
             var r21 = true;
             var r22 = true;
@@ -91,8 +131,8 @@ function test(){//method() -> void
             var r25 = false;
             var r26 = false;
             var r27 = false;
-            var r28 = [r20, r21, r22, r23, r24, r25, r26, r27];
-            var r19 = invertByte(r28);//invoke %19 = (%28) While_Valid_37:invertByte : function([bool]) -> [bool]
+            var r28 = new WyJS.List([r20, r21, r22, r23, r24, r25, r26, r27], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r19 = invertByte$Z9bF1D527FWz(r28);//invoke %19 = (%28) While_Valid_37:invertByte : function(bool[]) -> bool[]
             var r29 = false;
             var r30 = false;
             var r31 = false;
@@ -101,14 +141,15 @@ function test(){//method() -> void
             var r34 = true;
             var r35 = true;
             var r36 = true;
-            var r37 = [r29, r30, r31, r32, r33, r34, r35, r36];
+            var r37 = new WyJS.List([r29, r30, r31, r32, r33, r34, r35, r36], new WyJS.Type.List(new WyJS.Type.Bool()));
             if(WyJS.equals(r19, r37, true)){
-               control_flow_pc = 786;
+               control_flow_pc = 724;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 786:
+         case 724:
+            return;
       }
    }
 }

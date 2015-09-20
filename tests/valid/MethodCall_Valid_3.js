@@ -29,7 +29,7 @@ function f$3AbFaL1e$FI$J5$o0$P$w5$Z0kF$35$g0$Q$w4$L0FN$k5$d0$O$w4$nV0$r0FQ$B5$m0
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -43,12 +43,12 @@ function test$1A_7VkE(){//method() -> void
             var r3 = new WyJS.Integer(1);
             var r4 = new WyJS.Record(["x", "y"], [r2, r3], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 1113;
+               control_flow_pc = 1017;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1113:
+         case 1017:
             return;
       }
    }

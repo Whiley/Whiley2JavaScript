@@ -211,15 +211,21 @@ public class WyJS {
 			write((Codes.NewTuple) o);
 		} else if(o instanceof Codes.TupleLoad){
 			write((Codes.TupleLoad) o);
-		} else if(o instanceof Codes.ListOperator){
-			write((Codes.ListOperator) o);
-		} else if(o instanceof Codes.IndirectInvoke){
+		} else if(o instanceof Codes.ListGenerator){
+			write((Codes.ListGenerator) o);
+		}
+//		else if(o instanceof Codes.ListOperator){
+//			write((Codes.ListOperator) o);
+//		} 
+		else if(o instanceof Codes.IndirectInvoke){
 			write((Codes.IndirectInvoke) o);
 		} else if(o instanceof Codes.Convert){
 			write((Codes.Convert) o);
-		} else if(o instanceof Codes.SubList){
-			write((Codes.SubList) o);
-		} else if(o instanceof Codes.Switch){
+		} 
+//		else if(o instanceof Codes.SubList){
+//			write((Codes.SubList) o);
+//		} 
+		else if(o instanceof Codes.Switch){
 			write((Codes.Switch) o);
 		} else{	
 			throw new Exception("Unknown object " + o.getClass());
@@ -271,8 +277,6 @@ public class WyJS {
 			break;
 		case RIGHTSHIFT:
 			break;
-		case RANGE:
-			break;
 		}
 		throw new Exception("Unknown kind" + o.toString());
 	}
@@ -281,8 +285,8 @@ public class WyJS {
 		// TODO: Use Runtime file 
 		//ANY TYPE?
 		// find type of rhs, make appropriate type
-		if(o.type() instanceof Type.List){
-			Type.List list = (Type.List) o.type();
+		if(o.type() instanceof Type.Array){
+			Type.Array list = (Type.Array) o.type();
 			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 					+ ".clone(" + getType(list.element()) + ");//" + o.toString() + "\n");
 		} else if(o.type() instanceof Type.Record){
@@ -356,7 +360,9 @@ public class WyJS {
 			case NEQ:
 				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
 						+ ", r" + o.rightOperand + ", false)){\n";
-
+//			case IN:
+//				return getIndentBlock() + "if(WyJS.in(r" + o.leftOperand
+//						+ ", r" + o.rightOperand + ")){\n";
 			default:
 				throw new Exception(o.op + "not supported?");
 			}
@@ -637,7 +643,7 @@ public class WyJS {
 				Codes.ListLVal lis = (Codes.ListLVal) l;
 				if(vals.hasNext()){
 					if(first){
-						str = "r" + o.target() + " = r" + o.operand(i) + ".getValue(r" + lis.indexOperand + ")";
+						str = "r" + o.target() + ".getValue(r" + lis.indexOperand + ")";
 					} else{
 						str += ".getValue(r" + lis.indexOperand + ")";
 					}
@@ -692,22 +698,26 @@ public class WyJS {
 				+ ".getValue(r" + o.operand(1) + ");\n");
 	}
 	
-	private void write(Codes.ListOperator o) throws Exception{
-		switch(o.kind){
-		case APPEND:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".append(r" + o.operand(1) + ");\n");
-			break;
-		default:
-			throw new Exception("Unknown List Operator Kind " + o.kind);
-		}
+	private void write(Codes.ListGenerator o) throws Exception{
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ListGen(r" + o.operand(0) + ", r" + o.operand(1) + ", " + getType(o.type()) + ");\n");
 	}
 	
-	private void write(Codes.SubList o){
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".sublist(r" + o.operand(1) + ", r" + o.operand(2) + ");\n");
-		o.operand(0);//array
-		o.operand(1);//from
-		o.operand(2);//to
-	}
+//	private void write(Codes.ListOperator o) throws Exception{
+//		switch(o.kind){
+//		case APPEND:
+//			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".append(r" + o.operand(1) + ");\n");
+//			break;
+//		default:
+//			throw new Exception("Unknown List Operator Kind " + o.kind);
+//		}
+//	}
+	
+//	private void write(Codes.SubList o){
+//		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".sublist(r" + o.operand(1) + ", r" + o.operand(2) + ");\n");
+//		o.operand(0);//array
+//		o.operand(1);//from
+//		o.operand(2);//to
+//	}
 	
 	private void write(Codes.NewTuple o) throws Exception{
 		String values = "[";
@@ -774,8 +784,8 @@ public class WyJS {
 			//return "new WyJS.Type.Any();";
 		} else if(t instanceof Type.Bool){
 			return "new WyJS.Type.Bool()";
-		}else if(t instanceof Type.List){
-			return "new WyJS.Type.List(" + getType(((Type.List) t).element()) + ")";
+		}else if(t instanceof Type.Array){
+			return "new WyJS.Type.List(" + getType(((Type.Array) t).element()) + ")";
 		}else if(t instanceof Type.Int){
 			return "new WyJS.Type.Int()";
 		}else if(t instanceof Type.Real){

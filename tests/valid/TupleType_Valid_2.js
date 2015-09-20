@@ -15,7 +15,7 @@ function f$Z9bF5C9n$WAw(r0){//function(int) -> (int,int)
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -31,12 +31,12 @@ function test$1A_7VkE(){//method() -> void
             var r5 = new WyJS.Integer(3);
             var r6 = new WyJS.Tuple([r4, r5], new WyJS.Type.Tuple([new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 55;
+               control_flow_pc = 38;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 55:
+         case 38:
             return;
       }
    }

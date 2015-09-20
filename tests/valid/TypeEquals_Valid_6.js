@@ -14,14 +14,14 @@ function f$Z9bF59$WA$(r0){//function(int) -> bool
             }
             var r4 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r5 = new WyJS.Record(["input"], [r4], new WyJS.Type.Record(["input"], [new WyJS.Type.List(new WyJS.Type.Int())]));
-            var r1 = r5;//assign %1 = %5  : {[int+] input}
+            var r1 = r5.clone();//assign %1 = %5  : {int[] input}
             control_flow_pc = 23;
             control_flow_repeat = true;
             continue outer;//goto label23
          case 22:
             var r7 = new WyJS.List([new WyJS.Integer(112), new WyJS.Integer(114), new WyJS.Integer(111), new WyJS.Integer(98), new WyJS.Integer(108), new WyJS.Integer(101), new WyJS.Integer(109)], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r6 = syntaxError$_9bFaL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$qg0$I0FT$s5$o0FN$V6$40VR$76$j0VRFVY0t12(r7);//invoke %6 = (%7) TypeEquals_Valid_6:syntaxError : function([int]) -> TypeEquals_Valid_6:SyntaxError
-            var r1 = r6;//assign %1 = %6  : {[int] msg}
+            var r6 = syntaxError$_9bFaL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$qg0$I0FT$s5$o0FN$V6$40VR$76$j0VRFVY0t12(r7);//invoke %6 = (%7) TypeEquals_Valid_6:syntaxError : function(int[]) -> TypeEquals_Valid_6:SyntaxError
+            var r1 = r6.clone();//assign %1 = %6  : {int[] msg}
          case 23:
             if(WyJS.is(r1, new WyJS.Type.Record(["msg"], [new WyJS.Type.List(new WyJS.Type.Int())]))){
                control_flow_pc = 24;
@@ -46,7 +46,7 @@ function f$Z9bF59$WA$(r0){//function(int) -> bool
    }
 }
 
-function syntaxError$_9bFaL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$qg0$I0FT$s5$o0FN$V6$40VR$76$j0VRFVY0t12(r0){//function([int]) -> TypeEquals_Valid_6:SyntaxError
+function syntaxError$_9bFaL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$qg0$I0FT$s5$o0FN$V6$40VR$76$j0VRFVY0t12(r0){//function(int[]) -> TypeEquals_Valid_6:SyntaxError
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -55,13 +55,13 @@ function syntaxError$_9bFaL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$qg0$
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Record(["msg"], [r0], new WyJS.Type.Record(["msg"], [new WyJS.Type.List(new WyJS.Type.Int())]));
-            return r1;//return %1 : {[int] msg}
+            return r1;//return %1 : {int[] msg}
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:

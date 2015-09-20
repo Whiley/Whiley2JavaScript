@@ -7,41 +7,41 @@ function abs$_9bFaA$0J70CW2(r0){//function(int|null) -> int
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Int())){
-               control_flow_pc = 1843;
+               control_flow_pc = 1697;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1844;
+            control_flow_pc = 1698;
             control_flow_repeat = true;
-            continue outer;//goto label1844
-         case 1843:
+            continue outer;//goto label1698
+         case 1697:
             var r1 = new WyJS.Integer(0);
             if(WyJS.lt(r0, r1, false)){
-               control_flow_pc = 1845;
+               control_flow_pc = 1699;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : int
-            control_flow_pc = 1846;
+            control_flow_pc = 1700;
             control_flow_repeat = true;
-            continue outer;//goto label1846
-         case 1845:
+            continue outer;//goto label1700
+         case 1699:
             var r2 = r0.neg();//neg %2 = %0 : int
             return r2;//return %2 : int
-         case 1846:
-            control_flow_pc = 1847;
+         case 1700:
+            control_flow_pc = 1701;
             control_flow_repeat = true;
-            continue outer;//goto label1847
-         case 1844:
+            continue outer;//goto label1701
+         case 1698:
             var r3 = new WyJS.Integer(0);
             return r3;//return %3 : int
-         case 1847:
+         case 1701:
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -53,33 +53,33 @@ function test$1A_7VkE(){//method() -> void
             var r0 = abs$_9bFaA$0J70CW2(r1);//invoke %0 = (%1) Ensures_Valid_7:abs : function(int|null) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1848;
+               control_flow_pc = 1702;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1848:
+         case 1702:
             var r4 = new WyJS.Integer(1);
             var r5 = r4.neg();//neg %5 = %4 : int
             var r3 = abs$_9bFaA$0J70CW2(r5);//invoke %3 = (%5) Ensures_Valid_7:abs : function(int|null) -> int
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r3, r6, true)){
-               control_flow_pc = 1849;
+               control_flow_pc = 1703;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1849:
+         case 1703:
             var r8 = null;
             var r7 = abs$_9bFaA$0J70CW2(r8);//invoke %7 = (%8) Ensures_Valid_7:abs : function(int|null) -> int
             var r9 = new WyJS.Integer(0);
             if(WyJS.equals(r7, r9, true)){
-               control_flow_pc = 1850;
+               control_flow_pc = 1704;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1850:
+         case 1704:
             return;
       }
    }

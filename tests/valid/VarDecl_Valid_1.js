@@ -1,4 +1,4 @@
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -11,12 +11,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r3 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1102;
+               control_flow_pc = 1006;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1102:
+         case 1006:
             return;
       }
    }

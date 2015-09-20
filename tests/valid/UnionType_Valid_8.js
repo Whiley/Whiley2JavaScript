@@ -6,14 +6,14 @@ function f$Z9bFa7$WL1d$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$Vn0FQ$B6$b0$K$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = r0.fieldLoad("op");//fieldload %1 = %0 op : {int op,[int] payload}|{int header,int op,[int] rest}
+            var r1 = r0.fieldLoad("op");//fieldload %1 = %0 op : {int op,int[] payload}|{int header,int op,int[] rest}
             return r1;//return %1 : any
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -30,12 +30,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Z9bFa7$WL1d$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$Vn0FQ$B6$b0$K$Z6$k0FO(r6);//invoke %0 = (%6) UnionType_Valid_8:f : function(UnionType_Valid_8:msgType) -> any
             var r7 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 1958;
+               control_flow_pc = 1785;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1958:
+         case 1785:
             return;
       }
    }

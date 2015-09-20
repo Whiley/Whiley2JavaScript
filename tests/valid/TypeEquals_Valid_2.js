@@ -15,8 +15,8 @@ function f$Z9bFaA$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$mF$J5$s0$R$
             control_flow_repeat = true;
             continue outer;//goto label7
          case 6:
-            var r1 = r0.fieldLoad("err");//fieldload %1 = %0 err : {[int] err}
-            var r2 = r1.length();//lengthof %2 = %1 : [int]
+            var r1 = r0.fieldLoad("err");//fieldload %1 = %0 err : {int[] err}
+            var r2 = r1.length();//lengthof %2 = %1 : int[]
             return r2;//return %2 : int
             control_flow_pc = 8;
             control_flow_repeat = true;
@@ -31,7 +31,7 @@ function f$Z9bFaA$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$mF$J5$s0$R$
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:

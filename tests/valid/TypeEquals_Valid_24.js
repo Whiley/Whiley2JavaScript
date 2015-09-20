@@ -7,28 +7,28 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$$C0$J0(r0
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
-               control_flow_pc = 963;
+               control_flow_pc = 882;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 964;
+            control_flow_pc = 883;
             control_flow_repeat = true;
-            continue outer;//goto label964
-         case 963:
-            var r1 = r0.length();//lengthof %1 = %0 : [int]
+            continue outer;//goto label883
+         case 882:
+            var r1 = r0.length();//lengthof %1 = %0 : int[]
             return r1;//return %1 : int
-            control_flow_pc = 965;
+            control_flow_pc = 884;
             control_flow_repeat = true;
-            continue outer;//goto label965
-         case 964:
+            continue outer;//goto label884
+         case 883:
             return r0;//return %0 : int
-         case 965:
+         case 884:
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -44,22 +44,22 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$$C0$J0(r5);//invoke %0 = (%5) TypeEquals_Valid_24:f : function(TypeEquals_Valid_24:T) -> int
             var r6 = new WyJS.Integer(4);
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 966;
+               control_flow_pc = 885;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 966:
+         case 885:
             var r8 = new WyJS.Integer(123);
             var r7 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$$C0$J0(r8);//invoke %7 = (%8) TypeEquals_Valid_24:f : function(TypeEquals_Valid_24:T) -> int
             var r9 = new WyJS.Integer(123);
             if(WyJS.equals(r7, r9, true)){
-               control_flow_pc = 967;
+               control_flow_pc = 886;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 967:
+         case 886:
             return;
       }
    }

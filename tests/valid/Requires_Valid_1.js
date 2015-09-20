@@ -29,7 +29,7 @@ function g$Z9dFaGYmBFs1(r0, r1){//function(int,int) -> (int,int)
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -48,20 +48,20 @@ function test$1A_7VkE(){//method() -> void
             var r1 = r8;//assign %1 = %8  : int
             var r9 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 1207;
+               control_flow_pc = 1106;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1207:
+         case 1106:
             var r10 = new WyJS.Integer(2);
             if(WyJS.equals(r1, r10, true)){
-               control_flow_pc = 1208;
+               control_flow_pc = 1107;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1208:
+         case 1107:
             return;
       }
    }

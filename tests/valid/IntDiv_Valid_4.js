@@ -14,7 +14,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -26,12 +26,12 @@ function test$1A_7VkE(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) IntDiv_Valid_4:f : function(int) -> int
             var r2 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 2332;
+               control_flow_pc = 2137;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2332:
+         case 2137:
             return;
       }
    }

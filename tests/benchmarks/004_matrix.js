@@ -17,7 +17,7 @@ function buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0
             break;
          case -2:
             if(WyJS.gt(r5, r1, true)){
-               control_flow_pc = 4;
+               control_flow_pc = 9;
                control_flow_repeat = true;
                continue outer;
             }
@@ -34,7 +34,7 @@ function buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 4:
+         case 9:
             var r17 = Matrix$b9fFaWP8c0$k$$B$F2$U0FQ$35$o0VR$Z5$sO$o3$W0$S$76$d0$TFc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vr$VQ$35$ollcklkRW2(r0, r1, r4);//invoke %17 = (%0, %1, %4) 004_matrix:Matrix : function(004_matrix:nat,004_matrix:nat,[[int]]) -> 004_matrix:Matrix
             return r17;//return %17 : {[[int]] data,int height,int width}
             return;
@@ -77,7 +77,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
          case -3:
             var r13 = r0.fieldLoad("height");//fieldload %13 = %0 height : {[[int]] data,int height,int width}
             if(WyJS.gt(r3, r13, true)){
-               control_flow_pc = 14;
+               control_flow_pc = 19;
                control_flow_repeat = true;
                continue outer;
             }
@@ -93,7 +93,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
          case -4:
             var r19 = r1.fieldLoad("width");//fieldload %19 = %1 width : {[[int]] data,int height,int width}
             if(WyJS.gt(r5, r19, true)){
-               control_flow_pc = 16;
+               control_flow_pc = 21;
                control_flow_repeat = true;
                continue outer;
             }
@@ -109,7 +109,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
          case -5:
             var r25 = r0.fieldLoad("width");//fieldload %25 = %0 width : {[[int]] data,int height,int width}
             if(WyJS.gt(r7, r25, true)){
-               control_flow_pc = 18;
+               control_flow_pc = 23;
                control_flow_repeat = true;
                continue outer;
             }
@@ -128,10 +128,10 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
             control_flow_pc = -5;
             control_flow_repeat = true;
             break;
-            control_flow_pc = 18;
+            control_flow_pc = 23;
             control_flow_repeat = true;
             break;
-         case 18:
+         case 23:
             var r36 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
             var r37 = r4.append(r36);
             var r4 = r37.clone(new WyJS.Type.Int());//assign %4 = %37  : [int]
@@ -141,10 +141,10 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
             control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-            control_flow_pc = 16;
+            control_flow_pc = 21;
             control_flow_repeat = true;
             break;
-         case 16:
+         case 21:
             var r40 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
             var r41 = r2.append(r40);
             var r2 = r41.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %2 = %41  : [[int]]
@@ -154,7 +154,7 @@ function multiply$Y9dFXc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vb0FI$35$o0VR$Z5$s0WE(r0, r1
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 14:
+         case 19:
             var r45 = r1.fieldLoad("width");//fieldload %45 = %1 width : {[[int]] data,int height,int width}
             var r46 = r0.fieldLoad("height");//fieldload %46 = %0 height : {[[int]] data,int height,int width}
             var r44 = Matrix$b9fFaWP8c0$k$$B$F2$U0FQ$35$o0VR$Z5$sO$o3$W0$S$76$d0$TFc_V5$$2$k$$C$w4$h0FN$F6$m0FP$Vr$VQ$35$ollcklkRW2(r45, r46, r2);//invoke %44 = (%45, %46, %2) 004_matrix:Matrix : function(004_matrix:nat,004_matrix:nat,[[int]]) -> 004_matrix:Matrix
@@ -282,12 +282,12 @@ function test(){//method() -> void
             var r14 = new WyJS.Integer(0);
             var r1 = buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0$k$$B$F2$U0FQ$35$o0VR$Z5$sC$s5$W0$SRB9M7(r2, r3, r13, r14);//invoke %1 = (%2, %3, %13, %14) 004_matrix:buildMatrix : function(004_matrix:nat,004_matrix:nat,[int],int) -> 004_matrix:Matrix
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 19;
+               control_flow_pc = 24;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 19:
+         case 24:
             var r15 = setUp2$Y9_FP8c0$k$$B$F2$U0FQ$35$o0VR$Z5$sO$o3$W0$S$76$d0$TFs2();//invoke %15 = () 004_matrix:setUp2 : function() -> 004_matrix:Matrix
             var r17 = new WyJS.Integer(3);
             var r18 = new WyJS.Integer(3);
@@ -304,12 +304,12 @@ function test(){//method() -> void
             var r29 = new WyJS.Integer(0);
             var r16 = buildMatrix$a9hFaWeL1P$$B$$2$o$kM$o5$W0$S$76$d0$T5$C0FN$F6$m0FP$V63P8c0$k$$B$F2$U0FQ$35$o0VR$Z5$sC$s5$W0$SRB9M7(r17, r18, r28, r29);//invoke %16 = (%17, %18, %28, %29) 004_matrix:buildMatrix : function(004_matrix:nat,004_matrix:nat,[int],int) -> 004_matrix:Matrix
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 20;
+               control_flow_pc = 25;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 20:
+         case 25:
             return;
       }
    }

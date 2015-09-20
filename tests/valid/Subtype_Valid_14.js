@@ -1,4 +1,4 @@
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -8,8 +8,8 @@ function test$1A_7VkE(){//method() -> void
          case -1 :
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Record(["f"], [r2], new WyJS.Type.Record(["f"], [new WyJS.Type.Int()]));
-            var r1 = r3;//assign %1 = %3  : {int f}
-            var r0 = r1;//assign %0 = %1  : {int f}
+            var r1 = r3.clone();//assign %1 = %3  : {int f}
+            var r0 = r1.clone();//assign %0 = %1  : {int f}
             var r4 = r0.fieldLoad("f");//fieldload %4 = %0 f : {int f}
             var r5 = new WyJS.Integer(1);
             var r6 = r4.add(r5);//add %6 = %4, %5 : int
@@ -20,12 +20,12 @@ function test$1A_7VkE(){//method() -> void
             var r10 = new WyJS.Integer(2);
             var r11 = new WyJS.Record(["f"], [r10], new WyJS.Type.Record(["f"], [new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r11, true)){
-               control_flow_pc = 495;
+               control_flow_pc = 425;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 495:
+         case 425:
             return;
       }
    }

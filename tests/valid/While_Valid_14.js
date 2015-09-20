@@ -1,4 +1,4 @@
-function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
+function extract$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -13,9 +13,9 @@ function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             control_flow_repeat = true;
             break;
          case -2:
-            var r4 = r0.length();//lengthof %4 = %0 : [int]
+            var r4 = r0.length();//lengthof %4 = %0 : int[]
             if(WyJS.gt(r1, r4, true)){
-               control_flow_pc = 562;
+               control_flow_pc = 501;
                control_flow_repeat = true;
                continue outer;
             }
@@ -25,14 +25,14 @@ function extract$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 562:
+         case 501:
             return r1;//return %1 : int
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -53,17 +53,17 @@ function test$1A_7VkE(){//method() -> void
             var r13 = new WyJS.Integer(4);
             var r14 = new WyJS.Integer(5);
             var r15 = new WyJS.List([r4, r6, r7, r8, r10, r11, r12, r13, r14], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r2 = extract$Z9bFaA$0D5Wz(r15);//invoke %2 = (%15) While_Valid_14:extract : function([int]) -> int
+            var r2 = extract$Z9bFaA$0D5Wz(r15);//invoke %2 = (%15) While_Valid_14:extract : function(int[]) -> int
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
             var r16 = new WyJS.Integer(9);
             if(WyJS.equals(r0, r16, true)){
-               control_flow_pc = 563;
+               control_flow_pc = 502;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 563:
+         case 502:
             return;
       }
    }

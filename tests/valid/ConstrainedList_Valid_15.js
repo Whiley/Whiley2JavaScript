@@ -1,4 +1,4 @@
-function f$Z9_FsNBVk4D(){//function() -> [int]
+function f$Z9_FsNBVk4D(){//function() -> int[]
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -7,13 +7,13 @@ function f$Z9_FsNBVk4D(){//function() -> [int]
       switch(control_flow_pc){
          case -1 :
             var r0 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            return r0;//return %0 : [int]
+            return r0;//return %0 : int[]
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -21,15 +21,15 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r0 = f$Z9_FsNBVk4D();//invoke %0 = () ConstrainedList_Valid_15:f : function() -> [int]
+            var r0 = f$Z9_FsNBVk4D();//invoke %0 = () ConstrainedList_Valid_15:f : function() -> int[]
             var r1 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 157;
+               control_flow_pc = 139;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 157:
+         case 139:
             return;
       }
    }

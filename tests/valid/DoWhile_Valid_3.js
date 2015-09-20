@@ -1,4 +1,4 @@
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -15,7 +15,7 @@ function test$1A_7VkE(){//method() -> void
          case -2:
             var r3 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r3, false)){
-               control_flow_pc = 468;
+               control_flow_pc = 398;
                control_flow_repeat = true;
                break;
             }
@@ -25,34 +25,34 @@ function test$1A_7VkE(){//method() -> void
                break;
             }
          case -3:
-            control_flow_pc = 469;
+            control_flow_pc = 399;
             control_flow_repeat = true;
-            continue outer;//goto label469
-            control_flow_pc = 468;
+            continue outer;//goto label399
+            control_flow_pc = 398;
             control_flow_repeat = true;
             break;
-         case 468:
+         case 398:
             var r4 = new WyJS.Integer(1);
             var r5 = r0.add(r4);//add %5 = %0, %4 : int
             var r0 = r5;//assign %0 = %5  : int
             var r6 = new WyJS.Integer(5);
             if(WyJS.gt(r0, r6, true)){
-               control_flow_pc = 469;
+               control_flow_pc = 399;
                control_flow_repeat = true;
                continue outer;
             }
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 469:
+         case 399:
             var r7 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 470;
+               control_flow_pc = 400;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 470:
+         case 400:
             return;
       }
    }

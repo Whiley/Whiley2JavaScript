@@ -1,4 +1,4 @@
-function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
+function sum$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -16,25 +16,9 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             control_flow_repeat = true;
             break;
          case -2:
-            var r7 = new WyJS.Integer(0);
-            if(WyJS.lt(r1, r7, false)){
-               control_flow_pc = 718;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            var r8 = new WyJS.Integer(0);
-            if(WyJS.gt(r2, r8, true)){
-               control_flow_pc = 719;
-               control_flow_repeat = true;
-               continue outer;
-            }
-         case 718:
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 719:
-            return;
-            var r9 = r0.length();//lengthof %9 = %0 : [int]
+            var r9 = r0.length();//lengthof %9 = %0 : int[]
             if(WyJS.gt(r1, r9, true)){
-               control_flow_pc = 720;
+               control_flow_pc = 662;
                control_flow_repeat = true;
                continue outer;
             }
@@ -47,14 +31,14 @@ function sum$Z9bFaA$0D5Wz(r0){//function([int]) -> int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 720:
+         case 662:
             return r2;//return %2 : int
             return;
       }
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -62,51 +46,53 @@ function test$1A_7VkE(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
-            var r0 = sum$Z9bFaA$0D5Wz(r1);//invoke %0 = (%1) While_Valid_33:sum : function([int]) -> int
+            var r1 = new WyJS.Integer(0);
             var r2 = new WyJS.Integer(0);
-            if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 721;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 721:
+            var r3 = WyJS.ListGen(r1, r2, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r0 = sum$Z9bFaA$0D5Wz(r3);//invoke %0 = (%3) While_Valid_33:sum : function(int[]) -> int
             var r4 = new WyJS.Integer(0);
-            var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r3 = sum$Z9bFaA$0D5Wz(r5);//invoke %3 = (%5) While_Valid_33:sum : function([int]) -> int
+            if(WyJS.equals(r0, r4, true)){
+               control_flow_pc = 663;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 663:
             var r6 = new WyJS.Integer(0);
-            if(WyJS.equals(r3, r6, true)){
-               control_flow_pc = 722;
+            var r7 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = sum$Z9bFaA$0D5Wz(r7);//invoke %5 = (%7) While_Valid_33:sum : function(int[]) -> int
+            var r8 = new WyJS.Integer(0);
+            if(WyJS.equals(r5, r8, true)){
+               control_flow_pc = 664;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 722:
-            var r8 = new WyJS.Integer(1);
-            var r9 = new WyJS.List([r8], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r7 = sum$Z9bFaA$0D5Wz(r9);//invoke %7 = (%9) While_Valid_33:sum : function([int]) -> int
+         case 664:
             var r10 = new WyJS.Integer(1);
-            if(WyJS.equals(r7, r10, true)){
-               control_flow_pc = 723;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            throw {name: 'Assert Failed', message: 'fail'}
-         case 723:
+            var r11 = new WyJS.List([r10], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r9 = sum$Z9bFaA$0D5Wz(r11);//invoke %9 = (%11) While_Valid_33:sum : function(int[]) -> int
             var r12 = new WyJS.Integer(1);
-            var r13 = new WyJS.Integer(2);
-            var r14 = new WyJS.Integer(3);
-            var r15 = new WyJS.List([r12, r13, r14], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r11 = sum$Z9bFaA$0D5Wz(r15);//invoke %11 = (%15) While_Valid_33:sum : function([int]) -> int
-            var r16 = new WyJS.Integer(6);
-            if(WyJS.equals(r11, r16, true)){
-               control_flow_pc = 724;
+            if(WyJS.equals(r9, r12, true)){
+               control_flow_pc = 665;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 724:
+         case 665:
+            var r14 = new WyJS.Integer(1);
+            var r15 = new WyJS.Integer(2);
+            var r16 = new WyJS.Integer(3);
+            var r17 = new WyJS.List([r14, r15, r16], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = sum$Z9bFaA$0D5Wz(r17);//invoke %13 = (%17) While_Valid_33:sum : function(int[]) -> int
+            var r18 = new WyJS.Integer(6);
+            if(WyJS.equals(r13, r18, true)){
+               control_flow_pc = 666;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            throw {name: 'Assert Failed', message: 'fail'}
+         case 666:
             return;
       }
    }

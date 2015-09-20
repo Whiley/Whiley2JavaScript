@@ -14,7 +14,7 @@ function f$Z9bFaL1i$VJ$J5$Y0FS$76$n0FP$N6$_0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$l$FD3$
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -36,12 +36,12 @@ function test$1A_7VkE(){//method() -> void
             var r11 = new WyJS.Integer(1);
             var r12 = new WyJS.Record(["lhs", "rhs"], [r10, r11], new WyJS.Type.Record(["lhs", "rhs"], [new WyJS.Type.Record(["lhs", "rhs"], [new WyJS.Type.Int(), new WyJS.Type.Int()]), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 321;
+               control_flow_pc = 317;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 321:
+         case 317:
             return;
       }
    }

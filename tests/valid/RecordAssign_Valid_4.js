@@ -17,7 +17,7 @@ function f$Z9bFaL1g$VJ$J5$Y0kQ$76$Z0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$FY0$S$35$
    }
 }
 
-function test$1A_7VkE(){//method() -> void
+function test(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -28,34 +28,34 @@ function test$1A_7VkE(){//method() -> void
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.Record(["f1", "f2"], [r3, r4], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
-            var r2 = r5;//assign %2 = %5  : {int f1,int f2}
-            var r0 = r2;//assign %0 = %2  : {int f1,int f2}
+            var r2 = r5.clone();//assign %2 = %5  : {int f1,int f2}
+            var r0 = r2.clone();//assign %0 = %2  : {int f1,int f2}
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.Record(["f1", "f2"], [r6, r7], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r8, true)){
-               control_flow_pc = 1231;
+               control_flow_pc = 1129;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1231:
+         case 1129:
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(1);
             r0.setValue("f1", r10);
             var r12 = f$Z9bFaL1g$VJ$J5$Y0kQ$76$Z0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$FY0$S$35$Y0VB$F6$X0WL1g$VJ$J5$Y0kQ$76$Z0FF$B6$n0FP$R5$i0kM$N4$W0$Q$Z5$Z0kM$FY0$S$35$Y0VB$F6$W0(r0);//invoke %12 = (%0) RecordAssign_Valid_4:f : function(RecordAssign_Valid_4:tac2ta) -> RecordAssign_Valid_4:tac2tb
-            var r11 = r12;//assign %11 = %12  : {int f1,int f2}
-            var r1 = r11;//assign %1 = %11  : {int f1,int f2}
+            var r11 = r12.clone();//assign %11 = %12  : {int f1,int f2}
+            var r1 = r11.clone();//assign %1 = %11  : {int f1,int f2}
             var r13 = new WyJS.Integer(0);
             var r14 = new WyJS.Integer(3);
             var r15 = new WyJS.Record(["f1", "f2"], [r13, r14], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r1, r15, true)){
-               control_flow_pc = 1232;
+               control_flow_pc = 1130;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1232:
+         case 1130:
             return;
       }
    }
