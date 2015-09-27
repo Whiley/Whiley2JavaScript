@@ -16,32 +16,32 @@ function test(){//method() -> void
             var r7 = r0.getValue(r6);
             var r8 = r0.length();//lengthof %8 = %0 : int[]
             if(WyJS.lt(r7, r8, false)){
-               control_flow_pc = 837;
+               control_flow_pc = 934;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 837:
+         case 934:
             var r9 = new WyJS.Integer(1);
             var r10 = r0.getValue(r9);
             var r11 = r0.length();//lengthof %11 = %0 : int[]
             if(WyJS.lt(r10, r11, false)){
-               control_flow_pc = 838;
+               control_flow_pc = 935;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 838:
+         case 935:
             var r12 = new WyJS.Integer(2);
             var r13 = r0.getValue(r12);
             var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.equals(r13, r14, true)){
-               control_flow_pc = 839;
+               control_flow_pc = 936;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 839:
+         case 936:
             return;
       }
    }

@@ -17,7 +17,7 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             break;
          case -2:
             if(WyJS.gt(r2, r3, true)){
-               control_flow_pc = 1042;
+               control_flow_pc = 1183;
                control_flow_repeat = true;
                continue outer;
             }
@@ -28,7 +28,7 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             var r4 = r17;//assign %4 = %17  : int
             var r21 = r0.getValue(r4);
             if(WyJS.gt(r21, r1, true)){
-               control_flow_pc = 1043;
+               control_flow_pc = 1184;
                control_flow_repeat = true;
                break;
             }
@@ -41,16 +41,16 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             var r22 = new WyJS.Integer(1);
             var r23 = r4.add(r22);//add %23 = %4, %22 : int
             var r2 = r23;//assign %2 = %23  : int
-            control_flow_pc = 1044;
+            control_flow_pc = 1185;
             control_flow_repeat = true;
-            continue outer;//goto label1044
-            control_flow_pc = 1044;
+            continue outer;//goto label1185
+            control_flow_pc = 1185;
             control_flow_repeat = true;
             break;
-         case 1043:
+         case 1184:
             var r24 = r0.getValue(r4);
             if(WyJS.lt(r24, r1, true)){
-               control_flow_pc = 1045;
+               control_flow_pc = 1186;
                control_flow_repeat = true;
                break;
             }
@@ -61,23 +61,23 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             }
          case -4:
             var r3 = r4;//assign %3 = %4  : int
-            control_flow_pc = 1044;
+            control_flow_pc = 1185;
             control_flow_repeat = true;
-            continue outer;//goto label1044
-            control_flow_pc = 1044;
+            continue outer;//goto label1185
+            control_flow_pc = 1185;
             control_flow_repeat = true;
             break;
-         case 1045:
+         case 1186:
             var r25 = true;
             return r25;//return %25 : bool
-            control_flow_pc = 1044;
+            control_flow_pc = 1185;
             control_flow_repeat = true;
             break;
-         case 1044:
+         case 1185:
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 1042:
+         case 1183:
             var r26 = false;
             return r26;//return %26 : bool
             return;
@@ -104,112 +104,112 @@ function test(){//method() -> void
             var r7 = binarySearch$_9dF5X1FVY0t12(r0, r8);//invoke %7 = (%0, %8) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r9 = false;
             if(r7 === r9){
-               control_flow_pc = 1046;
+               control_flow_pc = 1187;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1046:
+         case 1187:
             var r11 = new WyJS.Integer(1);
             var r10 = binarySearch$_9dF5X1FVY0t12(r0, r11);//invoke %10 = (%0, %11) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r12 = false;
             if(r10 === r12){
-               control_flow_pc = 1047;
+               control_flow_pc = 1188;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1047:
+         case 1188:
             var r14 = new WyJS.Integer(2);
             var r13 = binarySearch$_9dF5X1FVY0t12(r0, r14);//invoke %13 = (%0, %14) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r15 = false;
             if(r13 === r15){
-               control_flow_pc = 1048;
+               control_flow_pc = 1189;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1048:
+         case 1189:
             var r17 = new WyJS.Integer(3);
             var r16 = binarySearch$_9dF5X1FVY0t12(r0, r17);//invoke %16 = (%0, %17) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r18 = true;
             if(r16 === r18){
-               control_flow_pc = 1049;
+               control_flow_pc = 1190;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1049:
+         case 1190:
             var r20 = new WyJS.Integer(4);
             var r19 = binarySearch$_9dF5X1FVY0t12(r0, r20);//invoke %19 = (%0, %20) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r21 = false;
             if(r19 === r21){
-               control_flow_pc = 1050;
+               control_flow_pc = 1191;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1050:
+         case 1191:
             var r23 = new WyJS.Integer(5);
             var r22 = binarySearch$_9dF5X1FVY0t12(r0, r23);//invoke %22 = (%0, %23) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r24 = true;
             if(r22 === r24){
-               control_flow_pc = 1051;
+               control_flow_pc = 1192;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1051:
+         case 1192:
             var r26 = new WyJS.Integer(6);
             var r25 = binarySearch$_9dF5X1FVY0t12(r0, r26);//invoke %25 = (%0, %26) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r27 = true;
             if(r25 === r27){
-               control_flow_pc = 1052;
+               control_flow_pc = 1193;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1052:
+         case 1193:
             var r29 = new WyJS.Integer(7);
             var r28 = binarySearch$_9dF5X1FVY0t12(r0, r29);//invoke %28 = (%0, %29) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r30 = false;
             if(r28 === r30){
-               control_flow_pc = 1053;
+               control_flow_pc = 1194;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1053:
+         case 1194:
             var r32 = new WyJS.Integer(8);
             var r31 = binarySearch$_9dF5X1FVY0t12(r0, r32);//invoke %31 = (%0, %32) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r33 = false;
             if(r31 === r33){
-               control_flow_pc = 1054;
+               control_flow_pc = 1195;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1054:
+         case 1195:
             var r35 = new WyJS.Integer(9);
             var r34 = binarySearch$_9dF5X1FVY0t12(r0, r35);//invoke %34 = (%0, %35) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r36 = true;
             if(r34 === r36){
-               control_flow_pc = 1055;
+               control_flow_pc = 1196;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1055:
+         case 1196:
             var r38 = new WyJS.Integer(10);
             var r37 = binarySearch$_9dF5X1FVY0t12(r0, r38);//invoke %37 = (%0, %38) While_Valid_2:binarySearch : function(int[],int) -> bool
             var r39 = false;
             if(r37 === r39){
-               control_flow_pc = 1056;
+               control_flow_pc = 1197;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1056:
+         case 1197:
             return;
       }
    }

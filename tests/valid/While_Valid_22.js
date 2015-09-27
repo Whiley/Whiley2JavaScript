@@ -7,17 +7,17 @@ function max$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
       switch(control_flow_pc){
          case -1 :
             if(WyJS.lt(r0, r1, false)){
-               control_flow_pc = 539;
+               control_flow_pc = 636;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : int
-            control_flow_pc = 540;
+            control_flow_pc = 637;
             control_flow_repeat = true;
-            continue outer;//goto label540
-         case 539:
+            continue outer;//goto label637
+         case 636:
             return r1;//return %1 : int
-         case 540:
+         case 637:
             return;
       }
    }
@@ -44,7 +44,7 @@ function max$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
          case -2:
             var r15 = r0.length();//lengthof %15 = %0 : int[]
             if(WyJS.gt(r2, r15, true)){
-               control_flow_pc = 548;
+               control_flow_pc = 645;
                control_flow_repeat = true;
                continue outer;
             }
@@ -57,7 +57,7 @@ function max$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 548:
+         case 645:
             return r1;//return %1 : int
             return;
       }
@@ -86,12 +86,12 @@ function test(){//method() -> void
             var r0 = max$Z9bFaA$0D5Wz(r11);//invoke %0 = (%11) While_Valid_22:max : function(int[]) -> int
             var r12 = new WyJS.Integer(10);
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 549;
+               control_flow_pc = 646;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 549:
+         case 646:
             var r14 = new WyJS.Integer(8);
             var r15 = r14.neg();//neg %15 = %14 : int
             var r16 = new WyJS.Integer(7);
@@ -109,23 +109,23 @@ function test(){//method() -> void
             var r13 = max$Z9bFaA$0D5Wz(r27);//invoke %13 = (%27) While_Valid_22:max : function(int[]) -> int
             var r28 = new WyJS.Integer(9);
             if(WyJS.equals(r13, r28, true)){
-               control_flow_pc = 550;
+               control_flow_pc = 647;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 550:
+         case 647:
             var r30 = new WyJS.Integer(1);
             var r31 = new WyJS.List([r30], new WyJS.Type.List(new WyJS.Type.Int()));
             var r29 = max$Z9bFaA$0D5Wz(r31);//invoke %29 = (%31) While_Valid_22:max : function(int[]) -> int
             var r32 = new WyJS.Integer(1);
             if(WyJS.equals(r29, r32, true)){
-               control_flow_pc = 551;
+               control_flow_pc = 648;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 551:
+         case 648:
             return;
       }
    }

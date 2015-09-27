@@ -17,42 +17,42 @@ function test(){//method() -> void
             var r8 = true;
             var r9 = new WyJS.List([r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Bool()));
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 1185;
+               control_flow_pc = 1341;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1185:
+         case 1341:
             var r10 = new WyJS.Integer(0);
             var r11 = r0.getValue(r10);
             var r12 = true;
             if(r11 === r12){
-               control_flow_pc = 1186;
+               control_flow_pc = 1342;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1186:
+         case 1342:
             var r13 = new WyJS.Integer(1);
             var r14 = r0.getValue(r13);
             var r15 = false;
             if(r14 === r15){
-               control_flow_pc = 1187;
+               control_flow_pc = 1343;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1187:
+         case 1343:
             var r16 = new WyJS.Integer(2);
             var r17 = r0.getValue(r16);
             var r18 = true;
             if(r17 === r18){
-               control_flow_pc = 1188;
+               control_flow_pc = 1344;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1188:
+         case 1344:
             var r19 = false;
             var r20 = new WyJS.Integer(0);
             var r21 = false;
@@ -61,32 +61,32 @@ function test(){//method() -> void
             var r23 = r0.getValue(r22);
             var r24 = false;
             if(r23 === r24){
-               control_flow_pc = 1189;
+               control_flow_pc = 1345;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1189:
+         case 1345:
             var r25 = new WyJS.Integer(1);
             var r26 = r0.getValue(r25);
             var r27 = false;
             if(r26 === r27){
-               control_flow_pc = 1190;
+               control_flow_pc = 1346;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1190:
+         case 1346:
             var r28 = new WyJS.Integer(2);
             var r29 = r0.getValue(r28);
             var r30 = true;
             if(r29 === r30){
-               control_flow_pc = 1191;
+               control_flow_pc = 1347;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1191:
+         case 1347:
             return;
       }
    }

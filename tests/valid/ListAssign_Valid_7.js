@@ -16,7 +16,7 @@ function f$_9bF5C930WAklNB(r0){//function(int) -> (int[],int[])
             var r2 = r8.clone(new WyJS.Type.Int());//assign %2 = %8  : int[]
             var r9 = r1.length();//lengthof %9 = %1 : int[]
             if(WyJS.equals(r0, r9, true)){
-               control_flow_pc = 2248;
+               control_flow_pc = 2520;
                control_flow_repeat = true;
                continue outer;
             }
@@ -24,23 +24,23 @@ function f$_9bF5C930WAklNB(r0){//function(int) -> (int[],int[])
             var r11 = new WyJS.Integer(2);
             var r12 = new WyJS.Integer(3);
             r2.setValue(r11, r12);
-            control_flow_pc = 2249;
+            control_flow_pc = 2521;
             control_flow_repeat = true;
-            continue outer;//goto label2249
-         case 2248:
+            continue outer;//goto label2521
+         case 2520:
             var r13 = new WyJS.Integer(2);
             r2.setValue(r13, r0);
-         case 2249:
+         case 2521:
             var r14 = new WyJS.Integer(2);
             var r15 = r2.getValue(r14);
             var r16 = r1.length();//lengthof %16 = %1 : int[]
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 2250;
+               control_flow_pc = 2522;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2250:
+         case 2522:
             var r17 = new WyJS.Tuple([r1, r2], new WyJS.Type.Tuple([new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.List(new WyJS.Type.Int())]));
             return r17;//return %17 : (int[],int[])
             return;
@@ -68,12 +68,12 @@ function test(){//method() -> void
             var r9 = new WyJS.List([r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
             var r10 = new WyJS.Tuple([r5, r9], new WyJS.Type.Tuple([new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.List(new WyJS.Type.Int())]));
             if(WyJS.equals(r0, r10, true)){
-               control_flow_pc = 2251;
+               control_flow_pc = 2523;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2251:
+         case 2523:
             var r12 = new WyJS.Integer(3);
             var r11 = f$_9bF5C930WAklNB(r12);//invoke %11 = (%12) ListAssign_Valid_7:f : function(int) -> (int[],int[])
             var r13 = new WyJS.Integer(1);
@@ -86,12 +86,12 @@ function test(){//method() -> void
             var r20 = new WyJS.List([r17, r18, r19], new WyJS.Type.List(new WyJS.Type.Int()));
             var r21 = new WyJS.Tuple([r16, r20], new WyJS.Type.Tuple([new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.List(new WyJS.Type.Int())]));
             if(WyJS.equals(r11, r21, true)){
-               control_flow_pc = 2252;
+               control_flow_pc = 2524;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2252:
+         case 2524:
             return;
       }
    }

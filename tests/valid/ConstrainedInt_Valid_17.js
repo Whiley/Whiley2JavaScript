@@ -40,21 +40,21 @@ function test(){//method() -> void
             var r3 = atob$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0FB$R20VN$s5$W0$SFc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0FH$s5$o0kM$N4$W0$Q$Z5$Z0kM$32$rF$35$i0FN$F6(r0);//invoke %3 = (%0) ConstrainedInt_Valid_17:atob : function(ConstrainedInt_Valid_17:anat) -> ConstrainedInt_Valid_17:bnat
             var r4 = new WyJS.Integer(1);
             if(WyJS.equals(r3, r4, true)){
-               control_flow_pc = 2168;
+               control_flow_pc = 2440;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2168:
+         case 2440:
             var r5 = btoa$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0FB$R20FN$s5$W0$SFc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0FH$s5$o0kM$N4$W0$Q$Z5$Z0kM$32$rF$75$i0FN$F6(r0);//invoke %5 = (%0) ConstrainedInt_Valid_17:btoa : function(ConstrainedInt_Valid_17:bnat) -> ConstrainedInt_Valid_17:anat
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 2169;
+               control_flow_pc = 2441;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2169:
+         case 2441:
             return;
       }
    }

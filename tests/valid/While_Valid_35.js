@@ -19,13 +19,13 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|nul
          case -2:
             var r16 = r0.length();//lengthof %16 = %0 : int[]
             if(WyJS.gt(r2, r16, true)){
-               control_flow_pc = 684;
+               control_flow_pc = 781;
                control_flow_repeat = true;
                continue outer;
             }
             var r17 = r0.getValue(r2);
             if(WyJS.equals(r17, r1, false)){
-               control_flow_pc = 685;
+               control_flow_pc = 782;
                control_flow_repeat = true;
                break;
             }
@@ -36,32 +36,32 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|nul
             }
          case -3:
             var r3 = r2;//assign %3 = %2  : int
-            control_flow_pc = 685;
+            control_flow_pc = 782;
             control_flow_repeat = true;
             break;
-         case 685:
+         case 782:
             var r18 = new WyJS.Integer(1);
             var r19 = r2.add(r18);//add %19 = %2, %18 : int
             var r2 = r19;//assign %2 = %19  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 684:
+         case 781:
             var r20 = new WyJS.Integer(1);
             var r21 = r20.neg();//neg %21 = %20 : int
             if(WyJS.equals(r3, r21, false)){
-               control_flow_pc = 686;
+               control_flow_pc = 783;
                control_flow_repeat = true;
                continue outer;
             }
             var r22 = null;
             return r22;//return %22 : null|int
-            control_flow_pc = 687;
+            control_flow_pc = 784;
             control_flow_repeat = true;
-            continue outer;//goto label687
-         case 686:
+            continue outer;//goto label784
+         case 783:
             return r3;//return %3 : null|int
-         case 687:
+         case 784:
             return;
       }
    }
@@ -88,42 +88,42 @@ function test(){//method() -> void
             var r9 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r10);//invoke %9 = (%0, %10) While_Valid_35:lastIndexOf : function(int[],int) -> int|null
             var r11 = null;
             if(WyJS.equals(r9, r11, true)){
-               control_flow_pc = 688;
+               control_flow_pc = 785;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 688:
+         case 785:
             var r13 = new WyJS.Integer(1);
             var r12 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r13);//invoke %12 = (%0, %13) While_Valid_35:lastIndexOf : function(int[],int) -> int|null
             var r14 = new WyJS.Integer(4);
             if(WyJS.equals(r12, r14, true)){
-               control_flow_pc = 689;
+               control_flow_pc = 786;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 689:
+         case 786:
             var r16 = new WyJS.Integer(2);
             var r15 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r16);//invoke %15 = (%0, %16) While_Valid_35:lastIndexOf : function(int[],int) -> int|null
             var r17 = new WyJS.Integer(5);
             if(WyJS.equals(r15, r17, true)){
-               control_flow_pc = 690;
+               control_flow_pc = 787;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 690:
+         case 787:
             var r19 = new WyJS.Integer(3);
             var r18 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r19);//invoke %18 = (%0, %19) While_Valid_35:lastIndexOf : function(int[],int) -> int|null
             var r20 = new WyJS.Integer(3);
             if(WyJS.equals(r18, r20, true)){
-               control_flow_pc = 691;
+               control_flow_pc = 788;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 691:
+         case 788:
             return;
       }
    }

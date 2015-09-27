@@ -21,14 +21,14 @@ function selectOver$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -2:
             var r16 = r0.length();//lengthof %16 = %0 : int[]
             if(WyJS.gt(r1, r16, true)){
-               control_flow_pc = 1671;
+               control_flow_pc = 1868;
                control_flow_repeat = true;
                continue outer;
             }
             var r17 = r0.getValue(r1);
             var r18 = new WyJS.Integer(0);
             if(WyJS.lt(r17, r18, false)){
-               control_flow_pc = 1672;
+               control_flow_pc = 1869;
                control_flow_repeat = true;
                break;
             }
@@ -41,17 +41,17 @@ function selectOver$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r19 = new WyJS.Integer(1);
             var r20 = r3.add(r19);//add %20 = %3, %19 : int
             var r3 = r20;//assign %3 = %20  : int
-            control_flow_pc = 1672;
+            control_flow_pc = 1869;
             control_flow_repeat = true;
             break;
-         case 1672:
+         case 1869:
             var r21 = new WyJS.Integer(1);
             var r22 = r1.add(r21);//add %22 = %1, %21 : int
             var r1 = r22;//assign %1 = %22  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 1671:
+         case 1868:
             var r24 = new WyJS.Integer(0);
             var r25 = WyJS.ListGen(r24, r3, new WyJS.Type.List(new WyJS.Type.Int()));
             var r23 = r25.clone(new WyJS.Type.Int());//assign %23 = %25  : int[]
@@ -67,20 +67,20 @@ function selectOver$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -4:
             var r37 = r0.length();//lengthof %37 = %0 : int[]
             if(WyJS.gt(r1, r37, true)){
-               control_flow_pc = 1677;
+               control_flow_pc = 1874;
                control_flow_repeat = true;
                continue outer;
             }
             var r38 = r4.length();//lengthof %38 = %4 : int[]
             if(WyJS.gt(r5, r38, true)){
-               control_flow_pc = 1677;
+               control_flow_pc = 1874;
                control_flow_repeat = true;
                continue outer;
             }
             var r39 = r0.getValue(r1);
             var r40 = new WyJS.Integer(0);
             if(WyJS.lt(r39, r40, false)){
-               control_flow_pc = 1678;
+               control_flow_pc = 1875;
                control_flow_repeat = true;
                break;
             }
@@ -96,17 +96,17 @@ function selectOver$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r43 = new WyJS.Integer(1);
             var r44 = r5.add(r43);//add %44 = %5, %43 : int
             var r5 = r44;//assign %5 = %44  : int
-            control_flow_pc = 1678;
+            control_flow_pc = 1875;
             control_flow_repeat = true;
             break;
-         case 1678:
+         case 1875:
             var r45 = new WyJS.Integer(1);
             var r46 = r1.add(r45);//add %46 = %1, %45 : int
             var r1 = r46;//assign %1 = %46  : int
             control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-         case 1677:
+         case 1874:
             return r4;//return %4 : int[]
             return;
       }
@@ -145,22 +145,22 @@ function test(){//method() -> void
             var r21 = new WyJS.Integer(4);
             var r22 = new WyJS.List([r19, r20, r21], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r22, true)){
-               control_flow_pc = 1679;
+               control_flow_pc = 1876;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1679:
+         case 1876:
             var r23 = new WyJS.Integer(1);
             var r24 = new WyJS.Integer(4);
             var r25 = new WyJS.List([r23, r24], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r1, r25, true)){
-               control_flow_pc = 1680;
+               control_flow_pc = 1877;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1680:
+         case 1877:
             return;
       }
    }

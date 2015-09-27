@@ -15,21 +15,21 @@ function test(){//method() -> void
             var r6 = r0.getValue(r5);
             var r7 = false;
             if(r6 === r7){
-               control_flow_pc = 256;
+               control_flow_pc = 286;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 256:
+         case 286:
             var r8 = r0.length();//lengthof %8 = %0 : bool[]
             var r9 = new WyJS.Integer(2);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 257;
+               control_flow_pc = 287;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 257:
+         case 287:
             return;
       }
    }

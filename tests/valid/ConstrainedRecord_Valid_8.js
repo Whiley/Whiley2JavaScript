@@ -40,34 +40,34 @@ function test(){//method() -> void
             var r5 = r3.getValue(r4);
             var r6 = new WyJS.Integer(0);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 1295;
+               control_flow_pc = 1459;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1295:
+         case 1459:
             var r7 = r0.fieldLoad("pieces");//fieldload %7 = %0 pieces : {int move,int[] pieces}
             var r8 = new WyJS.Integer(1);
             var r9 = r7.getValue(r8);
             var r10 = new WyJS.Integer(0);
             if(WyJS.equals(r9, r10, true)){
-               control_flow_pc = 1296;
+               control_flow_pc = 1460;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1296:
+         case 1460:
             var r11 = r0.fieldLoad("pieces");//fieldload %11 = %0 pieces : {int move,int[] pieces}
             var r12 = new WyJS.Integer(8);
             var r13 = r11.getValue(r12);
             var r14 = new WyJS.Integer(0);
             if(WyJS.equals(r13, r14, true)){
-               control_flow_pc = 1297;
+               control_flow_pc = 1461;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1297:
+         case 1461:
             return;
       }
    }

@@ -18,13 +18,13 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
          case -2:
             var r13 = r0.length();//lengthof %13 = %0 : int[]
             if(WyJS.gt(r2, r13, true)){
-               control_flow_pc = 179;
+               control_flow_pc = 209;
                control_flow_repeat = true;
                continue outer;
             }
             var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.gt(r1, r14, true)){
-               control_flow_pc = 180;
+               control_flow_pc = 210;
                control_flow_repeat = true;
                break;
             }
@@ -41,10 +41,10 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
             var r19 = new WyJS.Integer(1);
             var r20 = r18.add(r19);//add %20 = %18, %19 : int
             r0.setValue(r1, r20);
-            control_flow_pc = 180;
+            control_flow_pc = 210;
             control_flow_repeat = true;
             break;
-         case 180:
+         case 210:
             var r21 = new WyJS.Integer(1);
             var r22 = r1.add(r21);//add %22 = %1, %21 : int
             var r1 = r22;//assign %1 = %22  : int
@@ -54,7 +54,7 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 179:
+         case 209:
             var r26 = new WyJS.Integer(0);
             var r27 = r0.length();//lengthof %27 = %0 : int[]
             control_flow_pc = -4;
@@ -64,19 +64,19 @@ function inc$Z9bF1D527oH$6$51Vr$kC$a2$u$FD$12Vo$kC$92$m$V8$H2Vt$VD$y1$f$7B$N2Vo$
             var r28 = r0.getValue(r25);
             var r29 = new WyJS.Integer(0);
             if(WyJS.lt(r28, r29, false)){
-               control_flow_pc = 181;
+               control_flow_pc = 211;
                control_flow_repeat = true;
                continue outer;
             }
             control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-            control_flow_pc = 182;
+            control_flow_pc = 212;
             control_flow_repeat = true;
-            continue outer;//goto label182
-         case 181:
+            continue outer;//goto label212
+         case 211:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 182:
+         case 212:
             return r0;//return %0 : int[]
             return;
       }
@@ -97,12 +97,12 @@ function test(){//method() -> void
             var r3 = new WyJS.Integer(1);
             var r4 = new WyJS.List([r3], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 183;
+               control_flow_pc = 213;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 183:
+         case 213:
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
             var r8 = new WyJS.Integer(3);
@@ -113,12 +113,12 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(4);
             var r13 = new WyJS.List([r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r5, r13, true)){
-               control_flow_pc = 184;
+               control_flow_pc = 214;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 184:
+         case 214:
             var r15 = new WyJS.Integer(10);
             var r16 = new WyJS.Integer(9);
             var r17 = new WyJS.Integer(8);
@@ -145,12 +145,12 @@ function test(){//method() -> void
             var r37 = new WyJS.Integer(1);
             var r38 = new WyJS.List([r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r14, r38, true)){
-               control_flow_pc = 185;
+               control_flow_pc = 215;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 185:
+         case 215:
             return;
       }
    }

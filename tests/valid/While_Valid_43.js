@@ -17,7 +17,7 @@ function add$Z9dFXWYl$1Ms(r0, r1){//function(int[],int) -> int[]
          case -2:
             var r15 = r0.length();//lengthof %15 = %0 : int[]
             if(WyJS.gt(r2, r15, true)){
-               control_flow_pc = 790;
+               control_flow_pc = 887;
                control_flow_repeat = true;
                continue outer;
             }
@@ -32,7 +32,7 @@ function add$Z9dFXWYl$1Ms(r0, r1){//function(int[],int) -> int[]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 790:
+         case 887:
             return r0;//return %0 : int[]
             return;
       }
@@ -62,12 +62,12 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(5);
             var r13 = new WyJS.List([r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r7, r13, true)){
-               control_flow_pc = 791;
+               control_flow_pc = 888;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 791:
+         case 888:
             var r15 = new WyJS.Integer(11);
             var r14 = add$Z9dFXWYl$1Ms(r0, r15);//invoke %14 = (%0, %15) While_Valid_43:add : function(int[],int) -> int[]
             var r16 = new WyJS.Integer(12);
@@ -76,12 +76,12 @@ function test(){//method() -> void
             var r19 = new WyJS.Integer(15);
             var r20 = new WyJS.List([r16, r17, r18, r19], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r14, r20, true)){
-               control_flow_pc = 792;
+               control_flow_pc = 889;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 792:
+         case 889:
             return;
       }
    }

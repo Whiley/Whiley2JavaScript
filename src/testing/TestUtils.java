@@ -18,7 +18,7 @@ public class TestUtils {
 	public static String exec(String filename, String srcDir) {
 		try {
 			//First execute the Whiley test case files to make the Wyil files
-			String tmp = "java -jar ../../lib/" + whileyBuild + " -bp ../../lib/" + whileyBuild + " -od " + wyilFolder + " " + filename + ".whiley";
+			String tmp = "java -cp ../../lib/wyrl-v0.4.0.jar -jar ../../lib/" + whileyBuild + " -bp ../../lib/" + whileyBuild + " -od " + wyilFolder + " " + filename + ".whiley -verbose";
 			srcDir = srcDir.replace('/', File.separatorChar);
 			Process p = Runtime.getRuntime().exec(tmp, null, new File(srcDir));
 
@@ -54,10 +54,15 @@ public class TestUtils {
 			    //Set up the library
 			    String lib = "tests" + File.separatorChar + "WyJS_Runtime.js";
 			    String math = "tests" + File.separatorChar + "Math.js";
+			    String bigmath = "tests" + File.separatorChar + "BigMath.min.js";
 			    Reader library = new FileReader(new File(lib));
 			    Reader mathlib = new FileReader(new File(math));
+			    Reader bigmathlib = new FileReader(new File(bigmath));
+			    cxt.setOptimizationLevel(-1);
+			    cxt.evaluateReader(scope, bigmathlib, bigmath, 1, null);
 			    cxt.evaluateReader(scope, library, lib, 1, null);
 			    cxt.evaluateReader(scope, mathlib, math, 1, null);
+			    
     		    cxt.evaluateReader(scope, file, filename, 1, null);
 			    cxt.evaluateString(scope, start + "();", "test", 1, null);
 				

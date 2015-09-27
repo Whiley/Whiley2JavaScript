@@ -36,22 +36,22 @@ function test(){//method() -> void
             var r9 = r0.fieldLoad("f1");//fieldload %9 = %0 f1 : {int f1,int f2}
             var r10 = r0.fieldLoad("f2");//fieldload %10 = %0 f2 : {int f1,int f2}
             if(WyJS.equals(r9, r10, false)){
-               control_flow_pc = 1122;
+               control_flow_pc = 1268;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1122:
+         case 1268:
             var r11 = new WyJS.Integer(1);
             var r12 = new WyJS.Integer(3);
             var r13 = new WyJS.Record(["f1", "f2"], [r11, r12], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r13, true)){
-               control_flow_pc = 1123;
+               control_flow_pc = 1269;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1123:
+         case 1269:
             return;
       }
    }

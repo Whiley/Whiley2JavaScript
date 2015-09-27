@@ -45,12 +45,12 @@ function test(){//method() -> void
             var r5 = sum2$Z9bFaA$WL1c$kF$w5$_0VR$B5$d0kQ$s5$U0VK$35$g0FP$F5$U0FD6$10FP$R5$B0FP$s5$f0(r0);//invoke %5 = (%0) Coercion_Valid_9:sum2 : function(Coercion_Valid_9:BigLink) -> int
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 1267;
+               control_flow_pc = 1431;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1267:
+         case 1431:
             return;
       }
    }

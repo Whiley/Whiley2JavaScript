@@ -16,12 +16,12 @@ function test(){//method() -> void
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Record(["f"], [r6], new WyJS.Type.Record(["f"], [new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 419;
+               control_flow_pc = 515;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 419:
+         case 515:
             return;
       }
    }

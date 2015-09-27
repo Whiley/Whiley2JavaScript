@@ -22,22 +22,22 @@ function test(){//method() -> void
             var r2 = r12;//assign %2 = %12  : int
             var r14 = new WyJS.Integer(1);
             if(WyJS.equals(r2, r14, true)){
-               control_flow_pc = 471;
+               control_flow_pc = 567;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 471:
+         case 567:
             var r15 = new WyJS.Integer(0);
             var r16 = r0.getValue(r15);
             var r17 = new WyJS.Integer(1);
             if(WyJS.equals(r16, r17, true)){
-               control_flow_pc = 472;
+               control_flow_pc = 568;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 472:
+         case 568:
             return;
       }
    }

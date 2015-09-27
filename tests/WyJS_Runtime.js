@@ -29,24 +29,25 @@ WyJS.Real.prototype.add = function (other) {
 };
 
 WyJS.Real.prototype.sub = function(other) {
-  return new WyJS.Real(this.val - other.val);
+  sysout.println("hi")
+  return new WyJS.Real(math.subtract(this.val, other.val));
 };
 
 WyJS.Real.prototype.mul = function(other) {
-  return new WyJS.Real(this.val * other.val);
+  return new WyJS.Real(math.multiply(this.val, other.val));
 };
 
 WyJS.Real.prototype.div = function(other) {
-  return new WyJS.Real(this.val / other.val);
+  return new WyJS.Real(math.divide(this.val, other.val));
 };
 
 WyJS.Real.prototype.rem = function(other) {
-  return new WyJS.Real(this.val % other.val);
+  return new WyJS.Real(math.mod(this.val, other.val));
 };
 
 //negates a real
 WyJS.Real.prototype.neg = function(){
-  return new WyJS.Real(-this.val);
+  return new WyJS.Real(math.unaryMinus(this.val));
 }
 
 
@@ -63,48 +64,48 @@ WyJS.Integer = function(i) {
 
 WyJS.Integer.prototype.add = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(this.val + other.val);
+    return new WyJS.Integer(math.add(this.val, other.val));
   }
   
-  return new WyJS.Real(this.val + other.val);
+  return new WyJS.Real(math.add(this.val, other.val));
 };
 
 WyJS.Integer.prototype.sub = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(this.val - other.val);
+    return new WyJS.Integer(math.subtract(this.val, other.val));
   }
     
-  return new WyJS.Real(this.val - other.val);
+  return new WyJS.Real(math.subtract(this.val,other.val));
 };
 
 WyJS.Integer.prototype.mul = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(this.val * other.val);
+    return new WyJS.Integer(math.multiply(this.val, other.val));
   }
     
-  return new WyJS.Real(this.val * other.val);
+  return new WyJS.Real(math.multiply(this.val, other.val));
 };
 
 WyJS.Integer.prototype.div = function(other) {
-  var tmp = this.val / other.val;
+  var tmp = math.divide(this.val, other.val);
   if (other instanceof WyJS.Integer) {
     return new WyJS.Integer(~~tmp);
   }
   
-  return new WyJS.Real(this.val / other.val);
+  return new WyJS.Real(tmp);
 };
 
 WyJS.Integer.prototype.rem = function(other) {  
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(this.val % other.val);
+    return new WyJS.Integer(math.mod(this.val, other.val));
   }
     
-  return new WyJS.Real(this.val % other.val);
+  return new WyJS.Real(math.mod(this.val, other.val));
 };
 
 //negates a number
 WyJS.Integer.prototype.neg = function(){
-  return new WyJS.Integer(-this.val);
+  return new WyJS.Integer(math.unaryMinus(this.val));
 }
     
 WyJS.Integer.prototype.cast = function() {    

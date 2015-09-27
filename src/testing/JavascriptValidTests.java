@@ -29,7 +29,7 @@ public class JavascriptValidTests {
 //	@Test public void JSValidTest4(){ runTest("boolean01");}
 //	@Test public void JSValidTest5(){ runTest("boolean02");}
 //	
-//	@Test public void JSValidTest6(){ runTest("real01");}
+	@Test public void JSValidTest6(){ runTest("real01");}
 //	@Test public void JSValidTest7(){ runTest("real02");}
 //	
 //	@Test public void JSValidTest8(){ runTest("controlflow01");}

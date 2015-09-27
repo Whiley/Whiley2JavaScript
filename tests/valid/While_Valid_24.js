@@ -15,13 +15,13 @@ function indexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|null
          case -2:
             var r6 = r0.length();//lengthof %6 = %0 : int[]
             if(WyJS.gt(r2, r6, true)){
-               control_flow_pc = 560;
+               control_flow_pc = 657;
                control_flow_repeat = true;
                continue outer;
             }
             var r7 = r0.getValue(r2);
             if(WyJS.equals(r7, r1, false)){
-               control_flow_pc = 561;
+               control_flow_pc = 658;
                control_flow_repeat = true;
                break;
             }
@@ -32,17 +32,17 @@ function indexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|null
             }
          case -3:
             return r2;//return %2 : null|int
-            control_flow_pc = 561;
+            control_flow_pc = 658;
             control_flow_repeat = true;
             break;
-         case 561:
+         case 658:
             var r8 = new WyJS.Integer(1);
             var r9 = r2.add(r8);//add %9 = %2, %8 : int
             var r2 = r9;//assign %2 = %9  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 560:
+         case 657:
             var r10 = null;
             return r10;//return %10 : null|int
             return;
@@ -66,12 +66,12 @@ function test(){//method() -> void
             var r0 = indexOf$a9dF5141KFVY0t1Is2(r4, r5);//invoke %0 = (%4, %5) While_Valid_24:indexOf : function(int[],int) -> int|null
             var r6 = new WyJS.Integer(0);
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 562;
+               control_flow_pc = 659;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 562:
+         case 659:
             var r8 = new WyJS.Integer(1);
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(3);
@@ -80,12 +80,12 @@ function test(){//method() -> void
             var r7 = indexOf$a9dF5141KFVY0t1Is2(r11, r12);//invoke %7 = (%11, %12) While_Valid_24:indexOf : function(int[],int) -> int|null
             var r13 = null;
             if(WyJS.equals(r7, r13, true)){
-               control_flow_pc = 563;
+               control_flow_pc = 660;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 563:
+         case 660:
             return;
       }
    }

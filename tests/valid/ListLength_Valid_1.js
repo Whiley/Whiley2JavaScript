@@ -28,24 +28,24 @@ function test(){//method() -> void
             var r0 = f$_9bFaL1e$$I$Z5$n0$S$k3$_0VQ$R5$o0$P$w4$L0FN$k5$d0$O$w4$lB$s5$W0$SFVY0t1z(r4);//invoke %0 = (%4) ListLength_Valid_1:f : function(int[]) -> ListLength_Valid_1:nat
             var r5 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 834;
+               control_flow_pc = 931;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 834:
+         case 931:
             var r7 = new WyJS.Integer(0);
             var r8 = new WyJS.Integer(0);
             var r9 = WyJS.ListGen(r7, r8, new WyJS.Type.List(new WyJS.Type.Int()));
             var r6 = f$_9bFaL1e$$I$Z5$n0$S$k3$_0VQ$R5$o0$P$w4$L0FN$k5$d0$O$w4$lB$s5$W0$SFVY0t1z(r9);//invoke %6 = (%9) ListLength_Valid_1:f : function(int[]) -> ListLength_Valid_1:nat
             var r10 = new WyJS.Integer(0);
             if(WyJS.equals(r6, r10, true)){
-               control_flow_pc = 835;
+               control_flow_pc = 932;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 835:
+         case 932:
             return;
       }
    }

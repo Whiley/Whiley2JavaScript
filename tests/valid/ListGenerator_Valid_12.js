@@ -15,21 +15,21 @@ function test(){//method() -> void
             var r6 = false;
             var r7 = new WyJS.List([r5, r6], new WyJS.Type.List(new WyJS.Type.Bool()));
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 258;
+               control_flow_pc = 288;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 258:
+         case 288:
             var r8 = r0.length();//lengthof %8 = %0 : bool[]
             var r9 = new WyJS.Integer(2);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 259;
+               control_flow_pc = 289;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 259:
+         case 289:
             return;
       }
    }

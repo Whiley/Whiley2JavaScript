@@ -15,13 +15,13 @@ function find$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
          case -2:
             var r7 = r0.length();//lengthof %7 = %0 : int[]
             if(WyJS.gt(r2, r7, true)){
-               control_flow_pc = 613;
+               control_flow_pc = 710;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = r0.getValue(r2);
             if(WyJS.equals(r8, r1, false)){
-               control_flow_pc = 614;
+               control_flow_pc = 711;
                control_flow_repeat = true;
                break;
             }
@@ -33,33 +33,33 @@ function find$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
          case -3:
             var r9 = new WyJS.Integer(0);
             if(WyJS.gt(r9, r2, false)){
-               control_flow_pc = 615;
+               control_flow_pc = 712;
                control_flow_repeat = true;
                continue outer;
             }
             var r10 = r0.length();//lengthof %10 = %0 : int[]
             if(WyJS.lt(r2, r10, false)){
-               control_flow_pc = 616;
+               control_flow_pc = 713;
                control_flow_repeat = true;
                continue outer;
             }
-         case 615:
+         case 712:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 616:
-            control_flow_pc = 613;
+         case 713:
+            control_flow_pc = 710;
             control_flow_repeat = true;
-            continue outer;//goto label613
-            control_flow_pc = 614;
+            continue outer;//goto label710
+            control_flow_pc = 711;
             control_flow_repeat = true;
             break;
-         case 614:
+         case 711:
             var r11 = new WyJS.Integer(1);
             var r12 = r2.add(r11);//add %12 = %2, %11 : int
             var r2 = r12;//assign %2 = %12  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 613:
+         case 710:
             return r2;//return %2 : int
             return;
       }
@@ -82,12 +82,12 @@ function test(){//method() -> void
             var r0 = find$Z9dFas1FVYGs(r4, r5);//invoke %0 = (%4, %5) While_Valid_29:find : function(int[],int) -> int
             var r6 = new WyJS.Integer(0);
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 617;
+               control_flow_pc = 714;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 617:
+         case 714:
             var r8 = new WyJS.Integer(1);
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(3);
@@ -96,12 +96,12 @@ function test(){//method() -> void
             var r7 = find$Z9dFas1FVYGs(r11, r12);//invoke %7 = (%11, %12) While_Valid_29:find : function(int[],int) -> int
             var r13 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r13, true)){
-               control_flow_pc = 618;
+               control_flow_pc = 715;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 618:
+         case 715:
             var r15 = new WyJS.Integer(1);
             var r16 = new WyJS.Integer(2);
             var r17 = new WyJS.Integer(3);
@@ -110,12 +110,12 @@ function test(){//method() -> void
             var r14 = find$Z9dFas1FVYGs(r18, r19);//invoke %14 = (%18, %19) While_Valid_29:find : function(int[],int) -> int
             var r20 = new WyJS.Integer(2);
             if(WyJS.equals(r14, r20, true)){
-               control_flow_pc = 619;
+               control_flow_pc = 716;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 619:
+         case 716:
             var r22 = new WyJS.Integer(1);
             var r23 = new WyJS.Integer(2);
             var r24 = new WyJS.Integer(3);
@@ -125,12 +125,12 @@ function test(){//method() -> void
             var r21 = find$Z9dFas1FVYGs(r25, r27);//invoke %21 = (%25, %27) While_Valid_29:find : function(int[],int) -> int
             var r28 = new WyJS.Integer(3);
             if(WyJS.equals(r21, r28, true)){
-               control_flow_pc = 620;
+               control_flow_pc = 717;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 620:
+         case 717:
             return;
       }
    }

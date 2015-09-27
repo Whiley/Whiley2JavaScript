@@ -17,12 +17,12 @@ function test(){//method() -> void
             var r6 = r9.clone();//assign %6 = %9  : {int f1,int f2}
             var r1 = r6.clone();//assign %1 = %6  : {int f1,int f2}
             if(WyJS.equals(r0, r1, false)){
-               control_flow_pc = 1133;
+               control_flow_pc = 1279;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1133:
+         case 1279:
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(1);
             r0.setValue("f1", r11);
@@ -30,29 +30,29 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(3);
             var r14 = new WyJS.Record(["f1", "f2"], [r12, r13], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r0, r14, true)){
-               control_flow_pc = 1134;
+               control_flow_pc = 1280;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1134:
+         case 1280:
             var r15 = new WyJS.Integer(1);
             var r16 = new WyJS.Integer(3);
             var r17 = new WyJS.Record(["f1", "f2"], [r15, r16], new WyJS.Type.Record(["f1", "f2"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r1, r17, true)){
-               control_flow_pc = 1135;
+               control_flow_pc = 1281;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1135:
+         case 1281:
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 1136;
+               control_flow_pc = 1282;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1136:
+         case 1282:
             return;
       }
    }

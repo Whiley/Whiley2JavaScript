@@ -35,12 +35,12 @@ function test(){//method() -> void
             var r6 = f$Z9bFaA$0D5Wz(r0);//invoke %6 = (%0) ListGenerator_Valid_1:f : function(int[]) -> int
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1086;
+               control_flow_pc = 1228;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1086:
+         case 1228:
             return;
       }
    }

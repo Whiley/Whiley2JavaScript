@@ -21,7 +21,7 @@ function append$Z9dFXWYl$1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kG2$c1$t$7B$
          case -2:
             var r12 = r0.length();//lengthof %12 = %0 : {int character,int from,int to}[]
             if(WyJS.gt(r3, r12, true)){
-               control_flow_pc = 1470;
+               control_flow_pc = 1650;
                control_flow_repeat = true;
                continue outer;
             }
@@ -34,7 +34,7 @@ function append$Z9dFXWYl$1h3y$VW$sC$P2$s$VC$92$w$sA$g1Vk$VC$H2$m$sA$kG2$c1$t$7B$
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 1470:
+         case 1650:
             return r2;//return %2 : {int character,int from,int to}[]
             return;
       }
@@ -68,15 +68,15 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
          case -1 :
             var r9 = r2.length();//lengthof %9 = %2 : int[]
             if(WyJS.equals(r9, r3, false)){
-               control_flow_pc = 1472;
+               control_flow_pc = 1652;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : {{int character,int from,int to}[] transitions}
-            control_flow_pc = 1473;
+            control_flow_pc = 1653;
             control_flow_repeat = true;
-            continue outer;//goto label1473
-         case 1472:
+            continue outer;//goto label1653
+         case 1652:
             var r11 = r2.getValue(r3);
             var r10 = r11;//assign %10 = %11  : int
             var r4 = r10;//assign %4 = %10  : int
@@ -90,7 +90,7 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
             var r15 = r0.fieldLoad("transitions");//fieldload %15 = %0 transitions : {{int character,int from,int to}[] transitions}
             var r16 = r15.length();//lengthof %16 = %15 : {int character,int from,int to}[]
             if(WyJS.gt(r5, r16, true)){
-               control_flow_pc = 1475;
+               control_flow_pc = 1655;
                control_flow_repeat = true;
                continue outer;
             }
@@ -100,7 +100,7 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
             var r8 = r17.clone();//assign %8 = %17  : {int character,int from,int to}
             var r20 = r8.fieldLoad("from");//fieldload %20 = %8 from : {int character,int from,int to}
             if(WyJS.equals(r20, r1, false)){
-               control_flow_pc = 1476;
+               control_flow_pc = 1656;
                control_flow_repeat = true;
                break;
             }
@@ -112,7 +112,7 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
          case -4:
             var r21 = r8.fieldLoad("character");//fieldload %21 = %8 character : {int character,int from,int to}
             if(WyJS.equals(r21, r4, false)){
-               control_flow_pc = 1476;
+               control_flow_pc = 1656;
                control_flow_repeat = true;
                break;
             }
@@ -127,17 +127,17 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
             var r25 = r3.add(r24);//add %25 = %3, %24 : int
             var r22 = add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r23, r2, r25);//invoke %22 = (%0, %23, %2, %25) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
             return r22;//return %22 : {{int character,int from,int to}[] transitions}
-            control_flow_pc = 1476;
+            control_flow_pc = 1656;
             control_flow_repeat = true;
             break;
-         case 1476:
+         case 1656:
             var r26 = new WyJS.Integer(1);
             var r27 = r5.add(r26);//add %27 = %5, %26 : int
             var r5 = r27;//assign %5 = %27  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1475:
+         case 1655:
             var r29 = r0.fieldLoad("transitions");//fieldload %29 = %0 transitions : {{int character,int from,int to}[] transitions}
             var r30 = r29.length();//lengthof %30 = %29 : {int character,int from,int to}[]
             var r31 = new WyJS.Integer(1);
@@ -156,7 +156,7 @@ function add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAW
             var r41 = r3.add(r40);//add %41 = %3, %40 : int
             var r39 = add$_9hFXWaL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$J53iFAWE$N7$T2Vq$$D$N2Vm$$E$y1$f$7B$N2Vo$VB$y1$RB$a2$u$FD$H2$r$sg2(r0, r7, r2, r41);//invoke %39 = (%0, %7, %2, %41) Complex_Valid_8:add : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> Complex_Valid_8:Trie
             return r39;//return %39 : {{int character,int from,int to}[] transitions}
-         case 1473:
+         case 1653:
             return;
       }
    }
@@ -189,16 +189,16 @@ function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP
          case -1 :
             var r7 = r2.length();//lengthof %7 = %2 : int[]
             if(WyJS.equals(r7, r3, false)){
-               control_flow_pc = 1478;
+               control_flow_pc = 1658;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = true;
             return r8;//return %8 : bool
-            control_flow_pc = 1479;
+            control_flow_pc = 1659;
             control_flow_repeat = true;
-            continue outer;//goto label1479
-         case 1478:
+            continue outer;//goto label1659
+         case 1658:
             var r10 = r2.getValue(r3);
             var r9 = r10;//assign %9 = %10  : int
             var r4 = r9;//assign %4 = %9  : int
@@ -212,7 +212,7 @@ function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP
             var r14 = r0.fieldLoad("transitions");//fieldload %14 = %0 transitions : {{int character,int from,int to}[] transitions}
             var r15 = r14.length();//lengthof %15 = %14 : {int character,int from,int to}[]
             if(WyJS.gt(r5, r15, true)){
-               control_flow_pc = 1481;
+               control_flow_pc = 1661;
                control_flow_repeat = true;
                continue outer;
             }
@@ -222,7 +222,7 @@ function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP
             var r6 = r16.clone();//assign %6 = %16  : {int character,int from,int to}
             var r19 = r6.fieldLoad("from");//fieldload %19 = %6 from : {int character,int from,int to}
             if(WyJS.equals(r19, r1, false)){
-               control_flow_pc = 1482;
+               control_flow_pc = 1662;
                control_flow_repeat = true;
                break;
             }
@@ -234,7 +234,7 @@ function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP
          case -7:
             var r20 = r6.fieldLoad("character");//fieldload %20 = %6 character : {int character,int from,int to}
             if(WyJS.equals(r20, r4, false)){
-               control_flow_pc = 1482;
+               control_flow_pc = 1662;
                control_flow_repeat = true;
                break;
             }
@@ -249,20 +249,20 @@ function contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP
             var r24 = r3.add(r23);//add %24 = %3, %23 : int
             var r21 = contains$a9hF5e79$WL1U$kF$w5$h0$R$k5$_0$T$w4$L0FN$k5$d0$O$w4$sF$F4$m0FP$Jq4P8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$VY0kR$F6$m0FP$s5$bC(r0, r22, r2, r24);//invoke %21 = (%0, %22, %2, %24) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,int,Complex_Valid_8:string,int) -> bool
             return r21;//return %21 : bool
-            control_flow_pc = 1482;
+            control_flow_pc = 1662;
             control_flow_repeat = true;
             break;
-         case 1482:
+         case 1662:
             var r25 = new WyJS.Integer(1);
             var r26 = r5.add(r25);//add %26 = %5, %25 : int
             var r5 = r26;//assign %5 = %26  : int
             control_flow_pc = -6;
             control_flow_repeat = true;
             break;
-         case 1481:
+         case 1661:
             var r27 = false;
             return r27;//return %27 : bool
-         case 1479:
+         case 1659:
             return;
       }
    }
@@ -292,50 +292,50 @@ function test(){//method() -> void
             var r9 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r10);//invoke %9 = (%0, %10) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r11 = true;
             if(r9 === r11){
-               control_flow_pc = 1483;
+               control_flow_pc = 1663;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1483:
+         case 1663:
             var r13 = new WyJS.List([new WyJS.Integer(98), new WyJS.Integer(108), new WyJS.Integer(97), new WyJS.Integer(104)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r12 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r13);//invoke %12 = (%0, %13) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r14 = true;
             if(r12 === r14){
-               control_flow_pc = 1484;
+               control_flow_pc = 1664;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1485;
+            control_flow_pc = 1665;
             control_flow_repeat = true;
-            continue outer;//goto label1485
-         case 1484:
+            continue outer;//goto label1665
+         case 1664:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1485:
+         case 1665:
             var r16 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r15 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r16);//invoke %15 = (%0, %16) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r17 = true;
             if(r15 === r17){
-               control_flow_pc = 1486;
+               control_flow_pc = 1666;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1486:
+         case 1666:
             var r19 = new WyJS.List([new WyJS.Integer(100), new WyJS.Integer(97), new WyJS.Integer(118), new WyJS.Integer(101)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r18 = contains$_9dF5X1Fc_k6$B3$j0FQ$$6$g0FO$V6$U0VK$35$g0FP$F5$U0$D3$J0VR$Z5$_pHs2$51Vr$cC$V2$q$cB$k2Vj$k9$12$q$7C$72Vj$$62Vt$VD$Z2Vo$kC$Dv(r0, r19);//invoke %18 = (%0, %19) Complex_Valid_8:contains : function(Complex_Valid_8:Trie,Complex_Valid_8:string) -> bool
             var r20 = true;
             if(r18 === r20){
-               control_flow_pc = 1487;
+               control_flow_pc = 1667;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 1488;
+            control_flow_pc = 1668;
             control_flow_repeat = true;
-            continue outer;//goto label1488
-         case 1487:
+            continue outer;//goto label1668
+         case 1667:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1488:
+         case 1668:
             return;
       }
    }
