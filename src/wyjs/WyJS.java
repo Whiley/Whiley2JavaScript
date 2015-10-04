@@ -493,6 +493,7 @@ public class WyJS {
 		indent++;
 		ArrayList<Integer> labels1 = new ArrayList<Integer>();
 		int currentIndex = -1;
+		boolean hitLabel = false;
 		
 		Iterator<Code> iter = o.iterator();
 		while(iter.hasNext()){
@@ -558,7 +559,15 @@ public class WyJS {
 					write(c);
 				}
 			} else if(c instanceof Codes.Label){
-				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(lastLabel)
+//				if(hitLabel){
+//					js.add(getIndentBlock() + "control_flow_pc = " + loopLabel
+//							+ ";\n");
+//					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
+//					js.add(getIndentBlock() + "break;\n");
+//				}else{
+//					hitLabel = true;
+//				}
+				js.add(getIndentBlock() + "control_flow_pc = " + loopLabel//parseLabel(lastLabel)
 						+ ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 				js.add(getIndentBlock() + "break;\n");

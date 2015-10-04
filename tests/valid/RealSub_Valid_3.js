@@ -28,24 +28,24 @@ function test(){//method() -> void
             var r0 = suber$Y9fFX7k7$WE(r1, r2, r3);//invoke %0 = (%1, %2, %3) RealSub_Valid_3:suber : function(real,real,real) -> real
             var r4 = new WyJS.Real(-6.7);
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 1829;
+               control_flow_pc = 0;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1829:
+         case 0:
             var r6 = new WyJS.Real(1000.0);
             var r7 = new WyJS.Real(300.0);
             var r8 = new WyJS.Real(400.0);
             var r5 = suber$Y9fFX7k7$WE(r6, r7, r8);//invoke %5 = (%6, %7, %8) RealSub_Valid_3:suber : function(real,real,real) -> real
             var r9 = new WyJS.Real(300.0);
             if(WyJS.equals(r5, r9, true)){
-               control_flow_pc = 1830;
+               control_flow_pc = 1;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1830:
+         case 1:
             return;
       }
    }

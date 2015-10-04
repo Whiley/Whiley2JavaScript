@@ -18,13 +18,13 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|nul
          case -2:
             var r12 = r0.length();//lengthof %12 = %0 : int[]
             if(WyJS.gt(r2, r12, true)){
-               control_flow_pc = 770;
+               control_flow_pc = 6;
                control_flow_repeat = true;
                continue outer;
             }
             var r13 = r0.getValue(r2);
             if(WyJS.equals(r13, r1, false)){
-               control_flow_pc = 771;
+               control_flow_pc = 7;
                control_flow_repeat = true;
                break;
             }
@@ -35,17 +35,17 @@ function lastIndexOf$a9dF5141KFVY0t1Is2(r0, r1){//function(int[],int) -> int|nul
             }
          case -3:
             var r3 = r2;//assign %3 = %2  : int
-            control_flow_pc = 771;
+            control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 771:
+         case 7:
             var r14 = new WyJS.Integer(1);
             var r15 = r2.add(r14);//add %15 = %2, %14 : int
             var r2 = r15;//assign %2 = %15  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 770:
+         case 6:
             return r3;//return %3 : null|int
             return;
       }
@@ -73,42 +73,42 @@ function test(){//method() -> void
             var r9 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r10);//invoke %9 = (%0, %10) While_Valid_34:lastIndexOf : function(int[],int) -> int|null
             var r11 = null;
             if(WyJS.equals(r9, r11, true)){
-               control_flow_pc = 772;
+               control_flow_pc = 8;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 772:
+         case 8:
             var r13 = new WyJS.Integer(1);
             var r12 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r13);//invoke %12 = (%0, %13) While_Valid_34:lastIndexOf : function(int[],int) -> int|null
             var r14 = new WyJS.Integer(4);
             if(WyJS.equals(r12, r14, true)){
-               control_flow_pc = 773;
+               control_flow_pc = 9;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 773:
+         case 9:
             var r16 = new WyJS.Integer(2);
             var r15 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r16);//invoke %15 = (%0, %16) While_Valid_34:lastIndexOf : function(int[],int) -> int|null
             var r17 = new WyJS.Integer(5);
             if(WyJS.equals(r15, r17, true)){
-               control_flow_pc = 774;
+               control_flow_pc = 10;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 774:
+         case 10:
             var r19 = new WyJS.Integer(3);
             var r18 = lastIndexOf$a9dF5141KFVY0t1Is2(r0, r19);//invoke %18 = (%0, %19) While_Valid_34:lastIndexOf : function(int[],int) -> int|null
             var r20 = new WyJS.Integer(3);
             if(WyJS.equals(r18, r20, true)){
-               control_flow_pc = 775;
+               control_flow_pc = 11;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 775:
+         case 11:
             return;
       }
    }

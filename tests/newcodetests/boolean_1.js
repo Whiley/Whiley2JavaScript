@@ -1,4 +1,4 @@
-function test(){//method() -> void
+function test$1A_7VkE(){//method() -> void
    var control_flow_repeat = true;
    var control_flow_pc = -1;
    outer:
@@ -136,6 +136,7 @@ function test(){//method() -> void
          case 18:
             throw {name: 'Assert Failed', message: 'fail'}
          case 19:
+            return;
       }
    }
 }

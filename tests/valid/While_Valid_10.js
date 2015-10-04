@@ -20,7 +20,7 @@ function extract$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -2:
             var r10 = r2.length();//lengthof %10 = %2 : int[]
             if(WyJS.gt(r1, r10, true)){
-               control_flow_pc = 576;
+               control_flow_pc = 1;
                control_flow_repeat = true;
                continue outer;
             }
@@ -33,7 +33,7 @@ function extract$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 576:
+         case 1:
             return r2;//return %2 : int[]
             return;
       }
@@ -68,12 +68,12 @@ function test(){//method() -> void
             var r17 = new WyJS.Integer(1);
             var r18 = new WyJS.List([r11, r12, r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r18, true)){
-               control_flow_pc = 577;
+               control_flow_pc = 2;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 577:
+         case 2:
             var r20 = new WyJS.Integer(0);
             var r21 = new WyJS.Integer(0);
             var r22 = WyJS.ListGen(r20, r21, new WyJS.Type.List(new WyJS.Type.Int()));
@@ -83,12 +83,12 @@ function test(){//method() -> void
             var r24 = new WyJS.Integer(0);
             var r25 = WyJS.ListGen(r23, r24, new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r25, true)){
-               control_flow_pc = 578;
+               control_flow_pc = 3;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 578:
+         case 3:
             return;
       }
    }

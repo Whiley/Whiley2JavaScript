@@ -29,7 +29,7 @@ public class JavascriptValidTests {
 //	@Test public void JSValidTest4(){ runTest("boolean01");}
 //	@Test public void JSValidTest5(){ runTest("boolean02");}
 //	
-	@Test public void JSValidTest6(){ runTest("real01");}
+//	@Test public void JSValidTest6(){ runTest("real01");}
 //	@Test public void JSValidTest7(){ runTest("real02");}
 //	
 //	@Test public void JSValidTest8(){ runTest("controlflow01");}
@@ -40,7 +40,7 @@ public class JavascriptValidTests {
 //	@Test public void JSValidTest13(){ runTest("controlflownew2");}
 //	
 //	
-//	@Test public void JSValidTest14(){ runTest("whilevalid1");}
+//	@Test public void JSValidTest14(){ runTest("while_valid_01");}
 //	@Test public void JSValidTest15(){ runTest("whilevalid2");}
 //	@Test public void JSValidTestum1(){ runTest("whilevalid5");}
 //	

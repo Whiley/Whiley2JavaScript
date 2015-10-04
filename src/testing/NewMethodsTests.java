@@ -21,7 +21,7 @@ public class NewMethodsTests {
 	
 	@Test
 	public void integer_1() throws IOException {
-		runTest("integer_1");
+		runTest("unbound_1");
 	}
 	
 	@Test @Ignore("precision error")

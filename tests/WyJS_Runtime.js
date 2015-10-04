@@ -2,6 +2,8 @@
 
 var WyJS = {};
 
+
+
 //Any CLASS/METHODS
 WyJS.Any = function (i, type){
   if ( i.val !== undefined) {
@@ -29,65 +31,64 @@ WyJS.Real.prototype.add = function (other) {
 };
 
 WyJS.Real.prototype.sub = function(other) {
-  sysout.println("hi")
-  return new WyJS.Real(math.subtract(this.val, other.val));
+  return new WyJS.Real(this.val - other.val);
 };
 
 WyJS.Real.prototype.mul = function(other) {
-  return new WyJS.Real(math.multiply(this.val, other.val));
+  return new WyJS.Real(this.val * other.val);
 };
 
 WyJS.Real.prototype.div = function(other) {
-  return new WyJS.Real(math.divide(this.val, other.val));
+  return new WyJS.Real(this.val / other.val);
 };
 
 WyJS.Real.prototype.rem = function(other) {
-  return new WyJS.Real(math.mod(this.val, other.val));
+  return new WyJS.Real(this.val % other.val);
 };
 
 //negates a real
 WyJS.Real.prototype.neg = function(){
-  return new WyJS.Real(math.unaryMinus(this.val));
+  return new WyJS.Real(-this.val);
 }
 
 
 //INTEGER CLASS/METHODS
 WyJS.Integer = function(i) {
   if (i.val !== undefined) {
-    this.val = ~~(i.val);
+    this.val = i.val;
   }
   else {
-    this.val = ~~i;
+    this.val = i;
   }
   this.type = new WyJS.Type.Int();
 };
 
 WyJS.Integer.prototype.add = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(math.add(this.val, other.val));
+    return new WyJS.Integer(this.val + other.val);
   }
   
-  return new WyJS.Real(math.add(this.val, other.val));
+  return new WyJS.Real(this.val + other.val);
 };
 
 WyJS.Integer.prototype.sub = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(math.subtract(this.val, other.val));
+    return new WyJS.Integer(this.val - other.val);
   }
     
-  return new WyJS.Real(math.subtract(this.val,other.val));
+  return new WyJS.Real(this.val - other.val);
 };
 
 WyJS.Integer.prototype.mul = function(other) {
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(math.multiply(this.val, other.val));
+    return new WyJS.Integer(this.val * other.val);
   }
     
-  return new WyJS.Real(math.multiply(this.val, other.val));
+  return new WyJS.Real(this.val * other.val);
 };
 
 WyJS.Integer.prototype.div = function(other) {
-  var tmp = math.divide(this.val, other.val);
+  var tmp = this.val/ other.val;
   if (other instanceof WyJS.Integer) {
     return new WyJS.Integer(~~tmp);
   }
@@ -97,15 +98,15 @@ WyJS.Integer.prototype.div = function(other) {
 
 WyJS.Integer.prototype.rem = function(other) {  
   if (other instanceof WyJS.Integer) {
-    return new WyJS.Integer(math.mod(this.val, other.val));
+    return new WyJS.Integer(this.val % other.val);
   }
     
-  return new WyJS.Real(math.mod(this.val, other.val));
+  return new WyJS.Real(this.val % other.val);
 };
 
 //negates a number
 WyJS.Integer.prototype.neg = function(){
-  return new WyJS.Integer(math.unaryMinus(this.val));
+  return new WyJS.Integer(-this.val);
 }
     
 WyJS.Integer.prototype.cast = function() {    
@@ -177,7 +178,6 @@ WyJS.Record.prototype.equals = function(other) {
   }
   tmpNames.sort();
   otherNames.sort();
-  
   for (i = 0; i < tmpNames.length; i++) {
     if (!WyJS.equals(this.values[this.names.indexOf(tmpNames[i])], other.values[other.names.indexOf(otherNames[i])], true))
       return false;
@@ -195,7 +195,7 @@ WyJS.List = function(list, type) {//need to implement
 WyJS.List.prototype.getValue = function(index) {
   var idx = index;
   if (index.val !== undefined) {
-      idx = index.val;
+      idx = index.val.toString();
     }
   return this.list[idx];
 };
@@ -204,13 +204,13 @@ WyJS.List.prototype.getValue = function(index) {
 WyJS.List.prototype.setValue = function(index, value) {
   var idx = index;
   if (index.val !== undefined) {
-      idx = index.val;
+      idx = index.val.toString();
     }
   this.list[idx] = value;
 };
 
 WyJS.List.prototype.length = function() {
-  return new WyJS.Integer(this.list.length);
+  return new WyJS.Integer((this.list.length));
 };
 
 //Appends another list to this list (must be of same type)
@@ -245,9 +245,11 @@ WyJS.List.prototype.clone = function(type) {
     }
     clist[i] = elem;
   }
-  if(this.type.val instanceof WyJS.Type.Void){
-    return new WyJS.List(clist, type);
-  }
+  //console.log(this);
+  // if(this.type.val instanceof WyJS.Type.Void){
+  //   console.log("here");
+  //   return new WyJS.List(clist, type);
+  // }
   return new WyJS.List(clist, this.type);
 };
 
@@ -262,9 +264,8 @@ WyJS.List.prototype.equals = function(other) {
     return false;
   }
   for (i = 0; i < this.list.length; i++) {
-    if (!(WyJS.equals(this.list[i], other.list[i], true))) {
+    if (!(WyJS.equals(this.list[i], other.list[i], true))) 
       return false;
-    }
   }
   return true;
 };
@@ -373,9 +374,9 @@ WyJS.lt = function(lhs, rhs, isEqual) {
       right = right.val;
     }
   if (isEqual) {
-      return (left <= right);
+      return left <= right;
     }
-  return (left < right);
+  return left < right;
 };
 
 //Checks for greater than and greater than or equal to
@@ -389,9 +390,9 @@ WyJS.gt = function(lhs, rhs, isEqual) {
       right = right.val;
     }
   if (isEqual) {
-      return (left >= right);
+      return left >= right;
     }
-  return (left > right);
+  return left > right;
 };
 
 //negates a number
@@ -481,8 +482,9 @@ WyJS.cast = function(type, obj) {
   }
   
   //Handle the case where casting an int
-  if (obj instanceof WyJS.Integer)
+  if (obj instanceof WyJS.Integer){
       return obj.cast();
+    }
       
   //Handle the case where casting a list
   if (obj instanceof WyJS.List) {
