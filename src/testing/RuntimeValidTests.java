@@ -11,8 +11,10 @@ import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
 import wyc.WycMain;
+import wyil.io.WyilFileReader;
 import wyjc.WyjcMain;
 import wyjc.util.WyjcBuildTask;
+import wyjs.WyJS;
 
 public class RuntimeValidTests {
 	/**
@@ -45,7 +47,7 @@ public class RuntimeValidTests {
 	 * generated JavaScript. Each of these should be contained in the
 	 * JS_LIB_DIR.
 	 */
-	private static String[] JS_LIBS = { "WyJS_Runtime.js", "Math.js", "BigMath.min.js" };
+	private static String[] JS_LIBS = { "WyJS_Runtime.js", "BigMath.min.js" };
 	
 	/**
 	 * The directory into which all generated intermediate files should be placed.
@@ -60,8 +62,9 @@ public class RuntimeValidTests {
  	 * @param name
  	 *            Name of the test to run. This must correspond to a whiley
  	 *            source file in the <code>WHILEY_SRC_DIR</code> directory.
+	 * @throws Exception 
  	 */
- 	protected void runTest(String name) {
+ 	protected void runTest(String name) throws IOException {
  		// this will need to turn on verification at some point.
  		String filename = WHILEY_TESTS_VALID_DIR + File.separatorChar + name + ".whiley";
 
@@ -79,8 +82,16 @@ public class RuntimeValidTests {
  			fail("Test caused internal failure!");
  		}
 
- 		// (1) Need to generate JS here
- 		// (2) Need to execute JS here
+ 		// (1) Need to generate JS here 		
+ 		WyilFileReader wyilReader = new WyilFileReader(TEST_OUTPUT_DIR + File.separatorChar + name + ".wyil");
+ 		try {
+ 			WyJS js = new WyJS(wyilReader.read());
+ 			String start = js.makeFile(name, TEST_OUTPUT_DIR); 			
+ 			// (2) Need to execute JS here
+ 			exec(name);
+ 		} catch(Exception e) {
+ 			throw new RuntimeException("Internal Failure",e);
+ 		}
  	}
 
  	/**
@@ -90,7 +101,7 @@ public class RuntimeValidTests {
 	 * @return
  	 * @throws IOException 
 	 */
- 	public static String exec(String test) throws IOException {
+ 	public static String exec(String name) throws IOException {
 
 	    // Setup the JavaScript execution context	    
 	    OutputStream out = new ByteArrayOutputStream();
@@ -108,7 +119,7 @@ public class RuntimeValidTests {
 	    }
 	    
 	    // Finally, execute the test case itself
-	    String filename = WHILEY_TESTS_VALID_DIR + File.separatorChar + test;
+	    String filename = TEST_OUTPUT_DIR + File.separatorChar + name + ".js";
 	    Reader testReader = new FileReader(new File(filename));
 	    ctx.evaluateReader(scope, testReader, filename, 1, null);
 	    ctx.evaluateString(scope, "test();", "test", 1, null);
