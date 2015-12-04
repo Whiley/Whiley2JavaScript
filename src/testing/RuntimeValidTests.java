@@ -21,7 +21,7 @@ public class RuntimeValidTests {
 	 * The directory containing the source files for each test case. Every test
 	 * corresponds to a file in this directory.
 	 */
-	public final static String WHILEY_TESTS_VALID_DIR = "../whiley/tests/valid";
+	public final static String WHILEY_TESTS_VALID_DIR = "../WhileyCompiler/tests/valid";
 
 	/**
 	 * The directory where compiler libraries are stored. This is necessary
@@ -35,25 +35,25 @@ public class RuntimeValidTests {
 	 * standard library, which includes various helper functions, etc.
 	 */
 	private static String WYRT_PATH = "lib/wyrt-v0.3.36.jar";
-	
+
 	/**
 	 * The path to the directory containing the JavaScript libraries need for
 	 * execution.
 	 */
 	private static String JS_LIB_DIR = "lib";
-	
+
 	/**
 	 * The set of libraries which need to be included when executing the
 	 * generated JavaScript. Each of these should be contained in the
 	 * JS_LIB_DIR.
 	 */
-	private static String[] JS_LIBS = { "WyJS_Runtime.js", "BigMath.min.js" };
-	
+	private static String[] JS_LIBS = { "WyJS_Runtime.js", "Math.js", "BigMath.min.js" };
+
 	/**
 	 * The directory into which all generated intermediate files should be placed.
 	 */
 	private static String TEST_OUTPUT_DIR = "tests/valid";
-	
+
 	/**
  	 * Compile a syntactically invalid test case with verification enabled. The
  	 * expectation is that compilation should fail with an error and, hence, the
@@ -62,14 +62,14 @@ public class RuntimeValidTests {
  	 * @param name
  	 *            Name of the test to run. This must correspond to a whiley
  	 *            source file in the <code>WHILEY_SRC_DIR</code> directory.
-	 * @throws Exception 
+	 * @throws Exception
  	 */
  	protected void runTest(String name) throws IOException {
  		// this will need to turn on verification at some point.
  		String filename = WHILEY_TESTS_VALID_DIR + File.separatorChar + name + ".whiley";
 
  		System.out.println("CURRENT PATH: " + System.getProperty("user.dir"));
- 		
+
  		int r = compile(
  				"-wd", WHILEY_TESTS_VALID_DIR,      // location of source directory
  				"-wyildir",TEST_OUTPUT_DIR,
@@ -82,11 +82,11 @@ public class RuntimeValidTests {
  			fail("Test caused internal failure!");
  		}
 
- 		// (1) Need to generate JS here 		
+ 		// (1) Need to generate JS here
  		WyilFileReader wyilReader = new WyilFileReader(TEST_OUTPUT_DIR + File.separatorChar + name + ".wyil");
  		try {
  			WyJS js = new WyJS(wyilReader.read());
- 			String start = js.makeFile(name, TEST_OUTPUT_DIR); 			
+ 			String start = js.makeFile(name, TEST_OUTPUT_DIR);
  			// (2) Need to execute JS here
  			exec(name);
  		} catch(Exception e) {
@@ -97,18 +97,18 @@ public class RuntimeValidTests {
  	/**
 	 * Execute the generate JavaScript version of a test using the Rhino
 	 * JavaScript interpreter.
-	 * 
+	 *
 	 * @return
- 	 * @throws IOException 
+ 	 * @throws IOException
 	 */
  	public static String exec(String name) throws IOException {
 
-	    // Setup the JavaScript execution context	    
+	    // Setup the JavaScript execution context
 	    OutputStream out = new ByteArrayOutputStream();
 	    OutputStream err = new ByteArrayOutputStream();
-	    Context ctx = Context.enter();		
+	    Context ctx = Context.enter();
 	    Scriptable scope = createJavaScriptScriptable(ctx,out,err);
-	    
+
 		// Now, include all necessary JavaScript files to actually run the test.
 		// This include the WyJS runtime, along with any additional support
 		// libraries.
@@ -117,7 +117,7 @@ public class RuntimeValidTests {
 	    	Reader r = new FileReader(new File(filename));
 	    	ctx.evaluateReader(scope, r, lib, 1, null);
 	    }
-	    
+
 	    // Finally, execute the test case itself
 	    String filename = TEST_OUTPUT_DIR + File.separatorChar + name + ".js";
 	    Reader testReader = new FileReader(new File(filename));
@@ -126,7 +126,7 @@ public class RuntimeValidTests {
 	    // Done
 	    return out.toString() + err.toString();
  	}
- 	
+
 	private static Scriptable createJavaScriptScriptable(Context ctx, OutputStream out, OutputStream err) {
 		Scriptable scope = ctx.initStandardObjects();
 		Object jssysout = Context.javaToJS(new PrintStream(out), scope);
@@ -136,7 +136,7 @@ public class RuntimeValidTests {
 		ctx.setOptimizationLevel(-1);
 		return scope;
 	}
- 	
+
  	/**
 	 * Run the Whiley Compiler with the given list of arguments.
 	 *
@@ -224,7 +224,7 @@ public class RuntimeValidTests {
 		runTest("BoolList_Valid_1");
 	}
 
-	@Test
+	@Ignore("Issue ??") @Test
 	public void BoolList_Valid_2() throws IOException {
 		runTest("BoolList_Valid_2");
 	}
@@ -370,13 +370,12 @@ public class RuntimeValidTests {
 		runTest("Complex_Valid_2");
 	}
 
-	@Ignore("Issue ???")
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Complex_Valid_3() throws IOException {
 		runTest("Complex_Valid_3");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Complex_Valid_4() throws IOException {
 		runTest("Complex_Valid_4");
 	}
@@ -776,7 +775,7 @@ public class RuntimeValidTests {
 		runTest("DoWhile_Valid_6");
 	}
 
-	@Test
+	@Ignore("Issue ??") @Test
 	public void EffectiveList_Valid_1() throws IOException {
 		runTest("EffectiveList_Valid_1");
 	}
@@ -791,7 +790,7 @@ public class RuntimeValidTests {
 		runTest("Ensures_Valid_2");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Ensures_Valid_3() throws IOException {
 		runTest("Ensures_Valid_3");
 	}
@@ -932,22 +931,22 @@ public class RuntimeValidTests {
 		runTest("Function_Valid_5");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Function_Valid_6() throws IOException {
 		runTest("Function_Valid_6");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Function_Valid_7() throws IOException {
 		runTest("Function_Valid_7");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Function_Valid_8() throws IOException {
 		runTest("Function_Valid_8");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void Function_Valid_9() throws IOException {
 		runTest("Function_Valid_9");
 	}
@@ -2480,7 +2479,7 @@ public class RuntimeValidTests {
 		runTest("While_Valid_10");
 	}
 
-	@Test
+	@Ignore("Issue ???") @Test
 	public void While_Valid_11() throws IOException {
 		runTest("While_Valid_11");
 	}
@@ -2606,12 +2605,12 @@ public class RuntimeValidTests {
 		runTest("While_Valid_35");
 	}
 
-	@Test
+	@Ignore("Issue ??") @Test
 	public void While_Valid_36() throws IOException {
 		runTest("While_Valid_36");
 	}
 
-	@Test
+	@Ignore("Issue ??") @Test
 	public void While_Valid_37() throws IOException {
 		runTest("While_Valid_37");
 	}
