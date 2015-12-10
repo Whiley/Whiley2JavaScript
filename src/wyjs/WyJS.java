@@ -78,7 +78,7 @@ public class WyJS {
 	/**
 	 * Creates the contents of a JavaScript file from a specified Whiley wyil
 	 * file. The JavaScript is equal to the wyil file
-	 * 
+	 *
 	 * @param file
 	 *            the wyil file that is being converted
 	 * @return WyJS The JavaScript converter object
@@ -98,7 +98,7 @@ public class WyJS {
 //			for(WyilFile.Type ty: file.types()){
 //				js.add("userTypes[" + i + "] = ");
 //				System.out.println();
-//				
+//
 //				i++;
 //			}
 //		}
@@ -120,7 +120,7 @@ public class WyJS {
 	/**
 	 * Creates a JavaScript file from the JavaScript array Used for the test
 	 * cases
-	 * 
+	 *
 	 * @param filename
 	 *            the name of the file being converted
 	 * @param srcDir
@@ -191,69 +191,98 @@ public class WyJS {
 	}
 
 	private void write(Object o) throws Exception {
-		if (o instanceof Codes.Const) {
-			write((Codes.Const) o);
-		} else if (o instanceof Codes.BinaryOperator) {
-			write((Codes.BinaryOperator) o);
+		if (o instanceof Codes.Assert) {
+			throw new RuntimeException("Codes.Assert not suppported. " + o.getClass().getName());
+		} if (o instanceof Codes.AssertOrAssume) {
+			write((Codes.AssertOrAssume) o);
 		} else if (o instanceof Codes.Assign) {
 			write((Codes.Assign) o);
-		} else if (o instanceof Codes.Return) {
-			write((Codes.Return) o);
-		} else if (o instanceof Codes.If) {
-			write((Codes.If) o);
-		} else if (o instanceof Codes.Goto) {
-			write((Codes.Goto) o);
-		} else if (o instanceof Codes.AssertOrAssume) {
-			write((Codes.AssertOrAssume) o);
-		} else if (o instanceof Codes.Label) {
-			write((Codes.Label) o);
-		} else if (o instanceof Codes.Invoke) {
-			write((Codes.Invoke) o);
+		} else if (o instanceof Codes.Assume) {
+			throw new RuntimeException("Codes.Assume not supported.");
+		} else if (o instanceof Codes.BinaryOperator) {
+			write((Codes.BinaryOperator) o);
+		} else if (o instanceof Codes.BinaryOperatorKind) {
+			throw new RuntimeException("Codes.BinaryOperatorKind not supported.");
+		} else if (o instanceof Codes.Comparator) {
+			throw new RuntimeException("Codes.Comparator not supported.");
+		} else if (o instanceof Codes.Const) {
+			write((Codes.Const) o);
+		} else if(o instanceof Codes.Convert){
+			write((Codes.Convert) o);
+		} else if(o instanceof Codes.Debug){
+			throw new RuntimeException("Codes.Debug not supported.");
+		} else if (o instanceof Codes.Dereference) {
+			throw new RuntimeException("Codes.Dereference not supported.");
 		} else if (o instanceof Codes.Fail) {
 			write((Codes.Fail) o);
-		} else if (o instanceof Codes.UnaryOperator) {
-			write((Codes.UnaryOperator) o);
+		} else if (o instanceof Codes.FieldLoad) {
+			write((Codes.FieldLoad) o);
+		} else if (o instanceof Codes.Goto) {
+			write((Codes.Goto) o);
+		} else if (o instanceof Codes.If) {
+			write((Codes.If) o);
+		} else if(o instanceof Codes.IfIs){
+			write((Codes.IfIs) o);
+		} else if (o instanceof Codes.IndexOf) {
+			write((Codes.IndexOf) o);
+		} else if(o instanceof Codes.IndirectInvoke){
+			//write((Codes.IndirectInvoke) o);
+			throw new RuntimeException("Codes.IndirectInvoke not supported.");
+		} else if (o instanceof Codes.Invariant) {
+			throw new RuntimeException("Codes.Invariant not supported.");
+		} else if (o instanceof Codes.Invert) {
+			throw new RuntimeException("Codes.Invert not supported.");
+		} else if (o instanceof Codes.Invoke) {
+			write((Codes.Invoke) o);
+		} else if (o instanceof Codes.Label) {
+			write((Codes.Label) o);
+		} else if (o instanceof Codes.Lambda) {
+			throw new RuntimeException("Codes.Lambda not supported.");
+		} else if (o instanceof Codes.LengthOf) {
+			write((Codes.LengthOf) o);
+		} else if(o instanceof Codes.ListGenerator){
+			write((Codes.ListGenerator) o);
+		} else if(o instanceof Codes.ListLVal){
+			throw new RuntimeException("Codes.ListLVal not supported.");
 		} else if (o instanceof Codes.Loop) {
 			Codes.Loop loop = (Codes.Loop) o;
 			Map<String, Index> labelMap = CodeUtils
 					.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
 			write(loop, labelMap);
-		} else if (o instanceof Codes.NewRecord) {
-			write((Codes.NewRecord) o);
-		} else if (o instanceof Codes.FieldLoad) {
-			write((Codes.FieldLoad) o);
-		} else if (o instanceof Codes.Update) {
-			write((Codes.Update) o);
+		} else if (o instanceof Codes.Move) {
+			throw new RuntimeException("Codes.Move not supported.");
 		} else if (o instanceof Codes.NewList) {
 			write((Codes.NewList) o);
-		} else if (o instanceof Codes.LengthOf) {
-			write((Codes.LengthOf) o);
-		} else if (o instanceof Codes.IndexOf) {
-			write((Codes.IndexOf) o);
-		} else if(o instanceof Codes.IfIs){
-			write((Codes.IfIs) o);
+		} else if (o instanceof Codes.NewObject) {
+			throw new RuntimeException("Codes.NewObject not supported.");
+		} else if (o instanceof Codes.NewRecord) {
+			write((Codes.NewRecord) o);
 		} else if(o instanceof Codes.NewTuple){
 			write((Codes.NewTuple) o);
+		} else if(o instanceof Codes.Nop){
+			throw new RuntimeException("Codes.Nop not supported.");
+		} else if(o instanceof Codes.Not){
+			throw new RuntimeException("Codes.Not not supported.");
+		} else if (o instanceof Codes.Quantify) {
+			throw new RuntimeException("Codes.Quantify not supported.");
+		} else if (o instanceof Codes.RecordLVal) {
+			throw new RuntimeException("Codes.RecordLVal not supported.");
+		} else if (o instanceof Codes.ReferenceLVal) {
+			throw new RuntimeException("Codes.ReferenceLVal not supported.");
+		} else if (o instanceof Codes.Return) {
+			write((Codes.Return) o);
+		} else if(o instanceof Codes.Switch){
+			write((Codes.Switch) o);
 		} else if(o instanceof Codes.TupleLoad){
 			write((Codes.TupleLoad) o);
-		} else if(o instanceof Codes.ListGenerator){
-			write((Codes.ListGenerator) o);
-		}
-//		else if(o instanceof Codes.ListOperator){
-//			write((Codes.ListOperator) o);
-//		} 
-		else if(o instanceof Codes.IndirectInvoke){
-			write((Codes.IndirectInvoke) o);
-		} else if(o instanceof Codes.Convert){
-			write((Codes.Convert) o);
-		} 
-//		else if(o instanceof Codes.SubList){
-//			write((Codes.SubList) o);
-//		} 
-		else if(o instanceof Codes.Switch){
-			write((Codes.Switch) o);
-		} else{	
-			throw new Exception("Unknown object " + o.getClass());
+		} else if (o instanceof Codes.UnaryOperator) {
+			write((Codes.UnaryOperator) o);
+		} else if (o instanceof Codes.UnaryOperatorKind) {
+			throw new RuntimeException("Codes.UnaryOperatorKind not supported.");
+		} else if (o instanceof Codes.Update) {
+			write((Codes.Update) o);
+		} else {
+			throw new RuntimeException("Codes.Void not supported.");
 		}
 	}
 
@@ -267,47 +296,48 @@ public class WyJS {
 		// TODO: Use Runtime file
 		// Should be able to do it how we do here
 		switch (o.kind) {
-		case ADD:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".add(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
-			return;
-		case SUB:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".sub(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
-			return;
-		case DIV:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".div(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
-			return;
-		case MUL:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".mul(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
-			return;
-		case REM:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".rem(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
-			return;
-		case BITWISEAND:
-			break;
-		case BITWISEOR:
-			break;
-		case BITWISEXOR:
-			break;
-		case LEFTSHIFT:
-			break;
-		case RIGHTSHIFT:
-			break;
+			case ADD:
+				js.add(getIndentBlock() + "var r" + o.target() + " = r"
+						+ o.operand(0) + ".add(" + "r" + o.operand(1) + ");//"
+						+ o.toString() + "\n");
+				return;
+			case SUB:
+				js.add(getIndentBlock() + "var r" + o.target() + " = r"
+						+ o.operand(0) + ".sub(" + "r" + o.operand(1) + ");//"
+						+ o.toString() + "\n");
+				return;
+			case DIV:
+				js.add(getIndentBlock() + "var r" + o.target() + " = r"
+						+ o.operand(0) + ".div(" + "r" + o.operand(1) + ");//"
+						+ o.toString() + "\n");
+				return;
+			case MUL:
+				js.add(getIndentBlock() + "var r" + o.target() + " = r"
+						+ o.operand(0) + ".mul(" + "r" + o.operand(1) + ");//"
+						+ o.toString() + "\n");
+				return;
+			case REM:
+				js.add(getIndentBlock() + "var r" + o.target() + " = r"
+						+ o.operand(0) + ".rem(" + "r" + o.operand(1) + ");//"
+						+ o.toString() + "\n");
+				return;
+			case BITWISEAND:
+				break;
+			case BITWISEOR:
+				break;
+			case BITWISEXOR:
+				break;
+			case LEFTSHIFT:
+				break;
+			case RIGHTSHIFT:
+				break;
+			default:
+				throw new Exception("Unknown kind of binary operator " + o.toString());
 		}
-		throw new Exception("Unknown kind" + o.toString());
 	}
 
 	private void write(Codes.Assign o) throws Exception {
-		// TODO: Use Runtime file 
+		// TODO: Use Runtime file
 		//ANY TYPE?
 		// find type of rhs, make appropriate type
 		if(o.type() instanceof Type.Array){
@@ -322,8 +352,8 @@ public class WyJS {
 					+ ";//" + o.toString() + "\n");
 		}
 	}
-	
-	private void write(Codes.Convert o) throws Exception{	
+
+	private void write(Codes.Convert o) throws Exception{
 		String type = getType(o.result);
 		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.cast(" + type  + ", r" + o.operand(0) + ");\n");
 	}
@@ -336,7 +366,7 @@ public class WyJS {
 			js.add(getIndentBlock() + "return;\n");
 		}
 	}
-	
+
 	private void write(Codes.If o) throws Exception{
 		js.add(writeIfTop(o));
 		indent++;
@@ -393,7 +423,7 @@ public class WyJS {
 			}
 		}
 	}
-	
+
 	private void write(Codes.IfIs o) throws Exception{
 		js.add(getIndentBlock() + writeIfIsTop(o));
 		indent++;
@@ -404,7 +434,7 @@ public class WyJS {
 		indent--;
 		js.add(getIndentBlock() + "}\n");
 	}
-	
+
 	private String writeIfIsTop(Codes.IfIs c) throws Exception{
 		return "if(WyJS.is(r" + c.operand + ", " + getType(c.rightOperand) + ")){\n";
 	}
@@ -442,12 +472,12 @@ public class WyJS {
 		str += ");//" + o.toString() + "\n";
 		js.add(str);
 	}
-	
+
 	private void write(Codes.IndirectInvoke o) throws Exception{
 		//TODO:
 		//System.out.println(o.type().automaton);
 		//js.add(getIndentBlock() + "Indirect Invoke Here " + o.toString() + "\n");
-		throw new Exception("How to indirect invoke");
+		throw new Exception("IndirectInvoke not yet treated.");
 	}
 
 	private void write(Codes.Label o) {
@@ -475,7 +505,7 @@ public class WyJS {
 			throw new Exception("Unary not supported.. Yet");
 		}
 	}
-	
+
 	Map<String, List<Code>> labels = new HashMap<String, List<Code>>();
 	private void write(Codes.Loop o, Map<String, Index> labelMap) throws Exception {
 		// TODO: Could maybe use the runtime file?
@@ -506,8 +536,8 @@ public class WyJS {
 			labels.put(name, codes);
 			strings.add(name);
 		}
-		
-		
+
+
 		int loopLabel = getFreshLabel();
 		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel
 				+ ";\n");
@@ -519,7 +549,7 @@ public class WyJS {
 		ArrayList<Integer> labels1 = new ArrayList<Integer>();
 		int currentIndex = -1;
 		boolean hitLabel = false;
-		
+
 		Iterator<Code> iter = o.iterator();
 		while(iter.hasNext()){
 			Code c = iter.next();
@@ -528,7 +558,7 @@ public class WyJS {
 					//jumping in the loop
 					js.add(writeIfTop((If) c));
 					indent++;
-					
+
 					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.If) c).target)
 							+ ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
@@ -558,7 +588,7 @@ public class WyJS {
 					//jumping in the loop
 					js.add(getIndentBlock() + writeIfIsTop((Codes.IfIs) c));
 					indent++;
-					
+
 					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.IfIs) c).target)
 							+ ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
@@ -601,7 +631,7 @@ public class WyJS {
 				indent++;
 			}else if(c instanceof Codes.Invariant){
 				//Ignore it i think..
-				
+
 			} else{
 				write(c);
 			}
@@ -635,9 +665,9 @@ public class WyJS {
 				types += getType(o.type().field(s)) + ", ";
 			}
 		}
-		
+
 		String type = "new WyJS.Type.Record("+names+", " + types + ")";
-		
+
 		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Record("
 				+ names + ", " + values + ", " + type + ");\n");
 	}
@@ -715,10 +745,10 @@ public class WyJS {
 				}
 			}
 		}
-		
-		
+
+
 		String type = getType(o.type());
-		
+
 		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.List(" + values + ", " + type + ");\n");
 	}
 
@@ -731,11 +761,11 @@ public class WyJS {
 		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
 				+ ".getValue(r" + o.operand(1) + ");\n");
 	}
-	
+
 	private void write(Codes.ListGenerator o) throws Exception{
 		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ListGen(r" + o.operand(0) + ", r" + o.operand(1) + ", " + getType(o.type()) + ");\n");
 	}
-	
+
 //	private void write(Codes.ListOperator o) throws Exception{
 //		switch(o.kind){
 //		case APPEND:
@@ -745,14 +775,14 @@ public class WyJS {
 //			throw new Exception("Unknown List Operator Kind " + o.kind);
 //		}
 //	}
-	
+
 //	private void write(Codes.SubList o){
 //		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".sublist(r" + o.operand(1) + ", r" + o.operand(2) + ");\n");
 //		o.operand(0);//array
 //		o.operand(1);//from
 //		o.operand(2);//to
 //	}
-	
+
 	private void write(Codes.NewTuple o) throws Exception{
 		String values = "[";
 		int i = 0;
@@ -767,11 +797,11 @@ public class WyJS {
 		String type = getType(o.assignedType());
 		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Tuple(" + values + ", " + type + ");\n");
 	}
-	
+
 	private void write(Codes.TupleLoad o){
 		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r" + o.operand(0) + ".tupleLoad(" + o.index + ");\n");
 	}
-	
+
 	private void write(Codes.Switch o) throws Exception{
 		Iterator<Pair<Constant, String>> i = o.branches.iterator();
 		boolean first = true;
@@ -806,16 +836,16 @@ public class WyJS {
 		js.add(getIndentBlock() + "continue outer;\n");
 		indent--;
 		js.add(getIndentBlock() + "}\n");
-		
+
 	}
 
 	private String parseLabel(String label) {
 		return label.substring(5);
 	}
-	
+
 	private String getType(Type t) throws Exception{
 		if(t instanceof Type.Any){
-			//return "new WyJS.Type.Any();";
+			return "new WyJS.Type.Any();";
 		} else if(t instanceof Type.Bool){
 			return "new WyJS.Type.Bool()";
 		}else if(t instanceof Type.Array){
@@ -881,12 +911,13 @@ public class WyJS {
 			TypeExpander ty = new TypeExpander(proj);
 			Type newTy = ty.getUnderlyingType(t);
 			return getType(newTy);
-		}else {
+		}else if(t instanceof Type.Byte){
+			throw new Exception("Byte type not suported. " + t);
+		} else {
 			throw new Exception("Unknown Type in getType " + t);
 		}
-		return "";
 	}
-	
+
 	private String getConst(Constant con) throws Exception{
 		if(con instanceof Constant.Integer){
 			Constant.Integer inte = (Constant.Integer) con;
@@ -895,12 +926,12 @@ public class WyJS {
 			Constant.Bool bol = (Constant.Bool) con;
 			return bol.value + "";
 		}else if(con instanceof Constant.Byte){
-			
+
 		}else if(con instanceof Constant.Decimal){
 			Constant.Decimal deci = (Constant.Decimal) con;
 			return "new WyJS.Real(" + deci.value + ")";
 		}else if(con instanceof Constant.Lambda){
-			
+
 		}else if(con instanceof Constant.List){
 			Constant.List tmp = (Constant.List)con;
 			String values = "[";
@@ -921,7 +952,7 @@ public class WyJS {
 		}else if(con instanceof Constant.Null){
 			return "null";
 		}else if(con instanceof Constant.Rational){
-			
+
 		}else if(con instanceof Constant.Record){
 			Constant.Record rec = (Constant.Record)con;
 			int i = 0;
@@ -955,12 +986,12 @@ public class WyJS {
 			Constant.Type ty = (Constant.Type) con;
 			return getType(ty.type);
 		}else{
-			
+
 		}
-		
+
 		return "";
 	}
-	
+
 
 	public static String nameMangle(String name, Type.FunctionOrMethod ft){
 		try {
@@ -982,13 +1013,13 @@ public class WyJS {
 		binout.close(); // force flush
 		return jout.toString();
 	}
-	
+
 	int labelCount = -2;
 	private int getFreshLabel(){
 		labelCount--;
 		return labelCount+1;
 	}
-	
+
 
 
 	private String getIndentBlock() {
@@ -1009,7 +1040,7 @@ public class WyJS {
 			// WyilFilePrinter printer = new WyilFilePrinter(System.out);
 			// printer.apply(wyilFile);
 			// Make the javascript file
-			
+
 
 			WyJS wy = new WyJS(wyilFile);
 		} catch (IOException e) {
