@@ -86,7 +86,7 @@ public class RuntimeValidTests {
  		WyilFileReader wyilReader = new WyilFileReader(TEST_OUTPUT_DIR + File.separatorChar + name + ".wyil");
  		try {
  			WyJS js = new WyJS(wyilReader.read());
- 			String start = js.makeFile(name, TEST_OUTPUT_DIR);
+ 			//String start = js.makeFile(name, TEST_OUTPUT_DIR);
  			// (2) Need to execute JS here
  			exec(name);
  		} catch(Exception e) {
