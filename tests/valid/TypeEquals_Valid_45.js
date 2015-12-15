@@ -7,16 +7,16 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$o$FC6$d0VQ$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Int())){
-               control_flow_pc = 92;
+               control_flow_pc = 544;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 93;
+            control_flow_pc = 545;
             control_flow_repeat = true;
-            continue outer;//goto label93
-         case 92:
+            continue outer;//goto label545
+         case 544:
             return r0;//return %0 : int
-         case 93:
+         case 545:
             var r1 = new WyJS.Integer(1);
             return r1;//return %1 : int
             return;
@@ -41,23 +41,23 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int
             var r7 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 94;
+               control_flow_pc = 546;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 94:
+         case 546:
             var r9 = new WyJS.Integer(123);
             var r8 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$o$FC6$d0VQ$F6$g0FP$B6$o0(r9);//invoke %8 = (%9) TypeEquals_Valid_45:f : function(TypeEquals_Valid_45:intlist) -> int
             var r0 = r8;//assign %0 = %8  : int
             var r10 = new WyJS.Integer(123);
             if(WyJS.equals(r0, r10, true)){
-               control_flow_pc = 95;
+               control_flow_pc = 547;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 95:
+         case 547:
             return;
       }
    }

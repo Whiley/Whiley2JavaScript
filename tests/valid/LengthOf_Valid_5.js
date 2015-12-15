@@ -29,24 +29,24 @@ function test(){//method() -> void
             var r6 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0FC3$g0FP$B6$o0(r0);//invoke %6 = (%0) LengthOf_Valid_5:len : function(LengthOf_Valid_5:list) -> int
             var r7 = new WyJS.Integer(2);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 5;
+               control_flow_pc = 631;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 5:
+         case 631:
             var r9 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
             var r8 = r9.clone(new WyJS.Type.Int());//assign %8 = %9  : int[]
             var r1 = r8.clone(new WyJS.Type.Int());//assign %1 = %8  : int[]
             var r10 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0FC3$g0FP$B6$o0(r1);//invoke %10 = (%1) LengthOf_Valid_5:len : function(LengthOf_Valid_5:list) -> int
             var r11 = new WyJS.Integer(11);
             if(WyJS.equals(r10, r11, true)){
-               control_flow_pc = 6;
+               control_flow_pc = 632;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 6:
+         case 632:
             return;
       }
    }

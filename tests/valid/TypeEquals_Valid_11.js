@@ -7,23 +7,23 @@ function f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$FB5$H0$S$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Record(["x", "z"], [new WyJS.Type.Int(), new WyJS.Type.Int()]))){
-               control_flow_pc = 155;
+               control_flow_pc = 477;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 156;
+            control_flow_pc = 478;
             control_flow_repeat = true;
-            continue outer;//goto label156
-         case 155:
+            continue outer;//goto label478
+         case 477:
             var r1 = true;
             return r1;//return %1 : bool
-            control_flow_pc = 157;
+            control_flow_pc = 479;
             control_flow_repeat = true;
-            continue outer;//goto label157
-         case 156:
+            continue outer;//goto label479
+         case 478:
             var r2 = false;
             return r2;//return %2 : bool
-         case 157:
+         case 479:
             return;
       }
    }
@@ -43,36 +43,36 @@ function test(){//method() -> void
             var r0 = f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$FB5$H0$S$Z6$k0FO$B6(r3);//invoke %0 = (%3) TypeEquals_Valid_11:f : function(TypeEquals_Valid_11:Rtypes) -> bool
             var r4 = false;
             if(r0 === r4){
-               control_flow_pc = 158;
+               control_flow_pc = 480;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 158:
+         case 480:
             var r6 = new WyJS.Real(1.0);
             var r7 = new WyJS.Real(1.0);
             var r8 = new WyJS.Record(["x", "y"], [r6, r7], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Real(), new WyJS.Type.Real()]));
             var r5 = f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$FB5$H0$S$Z6$k0FO$B6(r8);//invoke %5 = (%8) TypeEquals_Valid_11:f : function(TypeEquals_Valid_11:Rtypes) -> bool
             var r9 = false;
             if(r5 === r9){
-               control_flow_pc = 159;
+               control_flow_pc = 481;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 159:
+         case 481:
             var r11 = new WyJS.Integer(1);
             var r12 = new WyJS.Integer(1);
             var r13 = new WyJS.Record(["x", "z"], [r11, r12], new WyJS.Type.Record(["x", "z"], [new WyJS.Type.Int(), new WyJS.Type.Int()]));
             var r10 = f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$FB5$H0$S$Z6$k0FO$B6(r13);//invoke %10 = (%13) TypeEquals_Valid_11:f : function(TypeEquals_Valid_11:Rtypes) -> bool
             var r14 = true;
             if(r10 === r14){
-               control_flow_pc = 160;
+               control_flow_pc = 482;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 160:
+         case 482:
             return;
       }
    }

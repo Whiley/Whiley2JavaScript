@@ -29,12 +29,12 @@ function test(){//method() -> void
             var r5 = f$Z9bFaA$0D5Wz(r0);//invoke %5 = (%0) ListGenerator_Valid_5:f : function(int[]) -> int
             var r6 = new WyJS.Integer(0);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 25;
+               control_flow_pc = 612;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 25:
+         case 612:
             return;
       }
    }
