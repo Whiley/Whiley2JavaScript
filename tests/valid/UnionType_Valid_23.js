@@ -29,7 +29,7 @@ function test(){//method() -> void
             var r6 = new WyJS.Integer(0);
             var r7 = new WyJS.Integer(10);
             if(WyJS.equals(r6, r7, false)){
-               control_flow_pc = 316;
+               control_flow_pc = 415;
                control_flow_repeat = true;
                continue outer;
             }
@@ -38,7 +38,7 @@ function test(){//method() -> void
             var r10 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Real()));
             var r11 = new WyJS.Record(["op", "rest"], [r8, r10], new WyJS.Type.Record(["op", "rest"], [new WyJS.Type.Real(), new WyJS.Type.List(new WyJS.Type.Real())]));
             var r0 = r11.clone();//assign %0 = %11  : {real op,real[] rest}
-         case 316:
+         case 415:
             var r12 = new WyJS.Integer(123);
             var r13 = new WyJS.Integer(123);
             r0.setValue("op", r13);
@@ -48,12 +48,12 @@ function test(){//method() -> void
             var r17 = new WyJS.List([r16], new WyJS.Type.List(new WyJS.Type.Real()));
             var r18 = new WyJS.Record(["op", "rest"], [r15, r17], new WyJS.Type.Record(["op", "rest"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Real())]));
             if(WyJS.equals(r14, r18, true)){
-               control_flow_pc = 317;
+               control_flow_pc = 416;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 317:
+         case 416:
             return;
       }
    }

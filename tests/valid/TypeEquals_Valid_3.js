@@ -18,7 +18,7 @@ function create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$k
             break;
          case -2:
             if(WyJS.gt(r3, r0, true)){
-               control_flow_pc = 103;
+               control_flow_pc = 628;
                control_flow_repeat = true;
                continue outer;
             }
@@ -29,7 +29,7 @@ function create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$k
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 103:
+         case 628:
             return r2;//return %2 : int[]
             return;
       }
@@ -59,12 +59,12 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(10);
             var r13 = new WyJS.List([r3, r4, r5, r6, r7, r8, r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r13, true)){
-               control_flow_pc = 104;
+               control_flow_pc = 629;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 104:
+         case 629:
             var r15 = new WyJS.Integer(5);
             var r16 = new WyJS.Integer(0);
             var r14 = create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$kC$12$uD(r15, r16);//invoke %14 = (%15, %16) TypeEquals_Valid_3:create : function(TypeEquals_Valid_3:nat,TypeEquals_Valid_3:nat) -> TypeEquals_Valid_3:nat[]
@@ -75,12 +75,12 @@ function test(){//method() -> void
             var r21 = new WyJS.Integer(0);
             var r22 = new WyJS.List([r17, r18, r19, r20, r21], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r14, r22, true)){
-               control_flow_pc = 105;
+               control_flow_pc = 630;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 105:
+         case 630:
             var r24 = new WyJS.Integer(0);
             var r25 = new WyJS.Integer(0);
             var r23 = create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$kC$12$uD(r24, r25);//invoke %23 = (%24, %25) TypeEquals_Valid_3:create : function(TypeEquals_Valid_3:nat,TypeEquals_Valid_3:nat) -> TypeEquals_Valid_3:nat[]
@@ -88,12 +88,12 @@ function test(){//method() -> void
             var r27 = new WyJS.Integer(0);
             var r28 = WyJS.ListGen(r26, r27, new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r23, r28, true)){
-               control_flow_pc = 106;
+               control_flow_pc = 631;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 106:
+         case 631:
             return;
       }
    }

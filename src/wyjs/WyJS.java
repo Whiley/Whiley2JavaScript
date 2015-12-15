@@ -30,37 +30,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import wyc.lang.Stmt.Case;
 import wyc.util.WycBuildTask.Registry;
 import wycc.util.Pair;
 import wyfs.io.BinaryOutputStream;
-import wyfs.lang.Path;
-import wyfs.lang.Content.Filter;
-import wyfs.lang.Path.Entry;
-import wyfs.lang.Path.ID;
 import wyfs.lang.Path.Root;
 import wyfs.util.DirectoryRoot;
-import wyil.io.WyilFilePrinter;
 import wyil.io.WyilFileReader;
 import wyil.lang.Code;
-import wyil.lang.CodeBlock;
 import wyil.lang.CodeBlock.Index;
 import wyil.lang.CodeUtils;
 import wyil.lang.Codes;
+import wyil.lang.Codes.Debug;
 import wyil.lang.Codes.If;
 import wyil.lang.Codes.LVal;
-import wyil.lang.Codes.Label;
+import wyil.lang.Codes.Nop;
 import wyil.lang.Constant;
 import wyil.lang.Type;
-import wyil.lang.Type.Any;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.FunctionOrMethod;
 import wyil.util.AttributedCodeBlock;
@@ -142,54 +133,6 @@ public class WyJS {
 		return nameMangle(start.get(0).name(), start.get(0).type());
 	}
 
-	private void write(FunctionOrMethod func) throws Exception {
-		String str = "";
-		str += getIndentBlock() + "function "
-				+ nameMangle(func.name(), func.type()) + "(";
-		int i = 1;
-		for (Type t : func.type().params()) {
-			if (t instanceof Type.Nominal) {
-				Type.Nominal yo = (Type.Nominal) t;
-				// System.out.println(yo.name().name().equals("Console"));
-			}
-			if (i == 1) {
-				str += "r" + (i - 1);
-			} else {
-				str += ", r" + (i - 1);
-			}
-			i++;
-		}
-		str += "){//" + func.type().toString() + "\n";
-		js.add(str);
-		indent++;
-		// make initial Switch
-		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
-				+ getIndentBlock() + "var control_flow_pc = -1;\n"
-				+ getIndentBlock() + "outer:\n" + getIndentBlock()
-				+ "while(control_flow_repeat){\n");
-		indent++;
-		js.add(getIndentBlock() + "control_flow_repeat = false\n"
-				+ getIndentBlock() + "switch(control_flow_pc){\n");
-		indent++;
-		js.add(getIndentBlock() + "case -1 :\n");
-		indent++;
-
-		// for each bytecode in the method, convert it to JavaScript
-		Iterator iter = func.body().iterator();
-		while (iter.hasNext()) {
-			Object tmp = iter.next();
-			write(tmp);
-		}
-		// close the file
-		indent--;
-		indent--;
-		js.add(getIndentBlock() + "}\n");
-		indent--;
-		js.add(getIndentBlock() + "}\n");
-		indent--;
-		js.add("}\n\n");
-	}
-
 	/**
 	 * Identifies the instance of Codes given and writes a JavaScript version of
 	 * it to the JavaScript array.
@@ -223,7 +166,7 @@ public class WyJS {
 		} else if (o instanceof Codes.Convert) {
 			write((Codes.Convert) o);
 		} else if (o instanceof Codes.Debug) {
-			throw new RuntimeException("Codes.Debug not supported.");
+			write((Codes.Debug) o);
 		} else if (o instanceof Codes.Dereference) {
 			throw new RuntimeException("Codes.Dereference not supported.");
 		} else if (o instanceof Codes.Fail) {
@@ -273,7 +216,7 @@ public class WyJS {
 		} else if (o instanceof Codes.NewTuple) {
 			write((Codes.NewTuple) o);
 		} else if (o instanceof Codes.Nop) {
-			throw new RuntimeException("Codes.Nop not supported.");
+			write((Codes.Nop) o);
 		} else if (o instanceof Codes.Not) {
 			throw new RuntimeException("Codes.Not not supported.");
 		} else if (o instanceof Codes.Quantify) {
@@ -299,6 +242,64 @@ public class WyJS {
 		} else {
 			throw new RuntimeException("Object not an instance of Codes.");
 		}
+	}
+
+	private void write(Debug function) throws Exception {
+		String functionText = function.toString();
+		functionText = functionText.substring(6);
+		System.out.println("debug:: "+functionText);
+		js.add(getIndentBlock() + "console.log(\"" + function + "\");\n");
+	}
+
+	private void write(Nop function) throws Exception {	}
+
+	private void write(FunctionOrMethod function) throws Exception {
+		String functionInJS = "";
+		functionInJS += getIndentBlock() + "function "
+				+ nameMangle(function.name(), function.type()) + "(";
+		int i = 1;
+		for (Type t : function.type().params()) {
+			if (t instanceof Type.Nominal) {
+				// TODO: what does this mean? - Danielle
+				// Type.Nominal nominal = (Type.Nominal) t;
+				// System.out.println(nominal.name().name().equals("Console"));
+			}
+			if (i == 1) {
+				functionInJS += "r" + (i - 1);
+			} else {
+				functionInJS += ", r" + (i - 1);
+			}
+			i++;
+		}
+		functionInJS += "){//" + function.type().toString() + "\n";
+		js.add(functionInJS);
+		indent++;
+		// make initial Switch
+		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
+				+ getIndentBlock() + "var control_flow_pc = -1;\n"
+				+ getIndentBlock() + "outer:\n" + getIndentBlock()
+				+ "while(control_flow_repeat){\n");
+		indent++;
+		js.add(getIndentBlock() + "control_flow_repeat = false\n"
+				+ getIndentBlock() + "switch(control_flow_pc){\n");
+		indent++;
+		js.add(getIndentBlock() + "case -1 :\n");
+		indent++;
+
+		// for each bytecode in the method, convert it to JavaScript
+		Iterator iter = function.body().iterator();
+		while (iter.hasNext()) {
+			Object tmp = iter.next();
+			write(tmp);
+		}
+		// close the file
+		indent--;
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		indent--;
+		js.add(getIndentBlock() + "}\n");
+		indent--;
+		js.add("}\n\n");
 	}
 
 	private void write(Codes.Const o) throws Exception {

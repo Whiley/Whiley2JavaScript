@@ -86,7 +86,7 @@ public class RuntimeValidTests {
  		WyilFileReader wyilReader = new WyilFileReader(TEST_OUTPUT_DIR + File.separatorChar + name + ".wyil");
  		try {
  			WyJS js = new WyJS(wyilReader.read());
- 			//String start = js.makeFile(name, TEST_OUTPUT_DIR);
+ 			String start = js.makeFile(name, TEST_OUTPUT_DIR);
  			// (2) Need to execute JS here
  			exec(name);
  		} catch(Exception e) {
@@ -122,7 +122,7 @@ public class RuntimeValidTests {
 	    String filename = TEST_OUTPUT_DIR + File.separatorChar + name + ".js";
 	    Reader testReader = new FileReader(new File(filename));
 	    ctx.evaluateReader(scope, testReader, filename, 1, null);
-	    System.out.println("Evaluate reader done.");
+	    System.out.println("Evaluate reader done for " + filename);
 	    ctx.evaluateString(scope, "test();", "test", 1, null);
 	    System.out.println("Evaluate string done.");
 	    // Done
@@ -1349,7 +1349,7 @@ public class RuntimeValidTests {
 		runTest("MessageSend_Valid_5");
 	}
 
-	 @Ignore("checked") @Test
+	@Test
 	public void MethodCall_Valid_1() throws IOException {
 		runTest("MethodCall_Valid_1");
 	}
@@ -1896,7 +1896,7 @@ public class RuntimeValidTests {
 		runTest("SingleLineComment_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Skip_Valid_1() throws IOException {
 		runTest("Skip_Valid_1");
 	}
@@ -2066,7 +2066,7 @@ public class RuntimeValidTests {
 		runTest("Switch_Valid_9");
 	}
 
-	@Ignore("checked")  @Test
+	@Test
 	public void Syntax_Valid_1() throws IOException {
 		runTest("Syntax_Valid_1");
 	}

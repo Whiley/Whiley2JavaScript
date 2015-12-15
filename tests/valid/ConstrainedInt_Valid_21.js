@@ -26,12 +26,12 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) ConstrainedInt_Valid_21:f : function(int) -> int
             var r2 = new WyJS.Integer(10);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1188;
+               control_flow_pc = 1192;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1188:
+         case 1192:
             return;
       }
    }

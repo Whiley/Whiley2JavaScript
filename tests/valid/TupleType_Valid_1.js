@@ -32,20 +32,20 @@ function test(){//method() -> void
             var r1 = r6;//assign %1 = %6  : int
             var r7 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 141;
+               control_flow_pc = 590;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 141:
+         case 590:
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r1, r8, true)){
-               control_flow_pc = 142;
+               control_flow_pc = 591;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 142:
+         case 591:
             return;
       }
    }

@@ -7,23 +7,23 @@ function f$a9bF59$0J7JCWAB(r0){//function(null|int) -> bool
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Null())){
-               control_flow_pc = 107;
+               control_flow_pc = 621;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 108;
+            control_flow_pc = 622;
             control_flow_repeat = true;
-            continue outer;//goto label108
-         case 107:
+            continue outer;//goto label622
+         case 621:
             var r1 = true;
             return r1;//return %1 : bool
-            control_flow_pc = 109;
+            control_flow_pc = 623;
             control_flow_repeat = true;
-            continue outer;//goto label109
-         case 108:
+            continue outer;//goto label623
+         case 622:
             var r2 = false;
             return r2;//return %2 : bool
-         case 109:
+         case 623:
             return;
       }
    }
@@ -43,22 +43,22 @@ function test(){//method() -> void
             var r3 = f$a9bF59$0J7JCWAB(r0);//invoke %3 = (%0) TypeEquals_Valid_5:f : function(null|int) -> bool
             var r4 = true;
             if(r3 === r4){
-               control_flow_pc = 110;
+               control_flow_pc = 624;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 110:
+         case 624:
             var r6 = new WyJS.Integer(1);
             var r5 = f$a9bF59$0J7JCWAB(r6);//invoke %5 = (%6) TypeEquals_Valid_5:f : function(null|int) -> bool
             var r7 = false;
             if(r5 === r7){
-               control_flow_pc = 111;
+               control_flow_pc = 625;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 111:
+         case 625:
             return;
       }
    }

@@ -38,22 +38,22 @@ function test(){//method() -> void
             var r15 = new WyJS.Integer(11);
             var r16 = new WyJS.Record(["data", "op"], [r14, r15], new WyJS.Type.Record(["data", "op"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             if(WyJS.equals(r11, r16, true)){
-               control_flow_pc = 271;
+               control_flow_pc = 461;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 271:
+         case 461:
             var r17 = f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$lR$o5$n0kO$F4$t0$R$J531(r1);//invoke %17 = (%1) UnionType_Valid_11:f : function(UnionType_Valid_11:msgType) -> UnionType_Valid_11:msgType
             var r18 = new WyJS.Integer(1);
             var r19 = new WyJS.Record(["index"], [r18], new WyJS.Type.Record(["index"], [new WyJS.Type.Int()]));
             if(WyJS.equals(r17, r19, true)){
-               control_flow_pc = 272;
+               control_flow_pc = 462;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 272:
+         case 462:
             return;
       }
    }
