@@ -2072,6 +2072,11 @@ public class RuntimeValidTests {
 	}
 
 	@Test
+	public void Syntax_Valid_2() throws IOException {
+		runTest("Syntax_Valid_2");
+	}
+
+	@Test
 	public void TupleType_Valid_1() throws IOException {
 		runTest("TupleType_Valid_1");
 	}

@@ -245,17 +245,26 @@ public class WyJS {
 	}
 
 	private void write(Debug function) throws Exception {
-		String functionText = function.toString();
-		functionText = functionText.substring(6);
-		System.out.println("debug:: "+functionText);
-		js.add(getIndentBlock() + "console.log(\"" + function + "\");\n");
+		String functionText = "";
+
+		System.out.println("debug:: "+function.toString()
+				+"\n type:: "+function.type.toString()
+				+"\n regs:: "+function.operand);
+
+		if(function.type.toString().equals("int[]")) {
+			// have to make the register go through encoding to string
+			functionText = getIndentBlock() + "WyJS.debug(yes);";
+		} else if(function.type.toString().equals("string")) {
+			functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");";
+		}
+
 	}
 
 	private void write(Nop function) throws Exception {	}
 
 	private void write(FunctionOrMethod function) throws Exception {
-		String functionInJS = "";
-		functionInJS += getIndentBlock() + "function "
+		String functionText = "";
+		functionText += getIndentBlock() + "function "
 				+ nameMangle(function.name(), function.type()) + "(";
 		int i = 1;
 		for (Type t : function.type().params()) {
@@ -265,14 +274,14 @@ public class WyJS {
 				// System.out.println(nominal.name().name().equals("Console"));
 			}
 			if (i == 1) {
-				functionInJS += "r" + (i - 1);
+				functionText += "r" + (i - 1);
 			} else {
-				functionInJS += ", r" + (i - 1);
+				functionText += ", r" + (i - 1);
 			}
 			i++;
 		}
-		functionInJS += "){//" + function.type().toString() + "\n";
-		js.add(functionInJS);
+		functionText += "){//" + function.type().toString() + "\n";
+		js.add(functionText);
 		indent++;
 		// make initial Switch
 		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
