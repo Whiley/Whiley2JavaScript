@@ -250,14 +250,9 @@ public class WyJS {
 		System.out.println("debug:: "+function.toString()
 				+"\n type:: "+function.type.toString()
 				+"\n regs:: "+function.operand);
+		functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");\n";
 
-		if(function.type.toString().equals("int[]")) {
-			// have to make the register go through encoding to string
-			functionText = getIndentBlock() + "WyJS.debug(yes);";
-		} else if(function.type.toString().equals("string")) {
-			functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");";
-		}
-
+		js.add(functionText);
 	}
 
 	private void write(Nop function) throws Exception {	}

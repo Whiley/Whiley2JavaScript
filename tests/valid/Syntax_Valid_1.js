@@ -7,6 +7,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r0 = new WyJS.List([], new WyJS.Type.List(new WyJS.Type.Void()));
+            WyJS.debug(r0);
             return;
       }
    }
