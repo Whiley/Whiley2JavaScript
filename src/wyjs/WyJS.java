@@ -250,7 +250,7 @@ public class WyJS {
 		System.out.println("debug:: "+function.toString()
 				+"\n type:: "+function.type.toString()
 				+"\n regs:: "+function.operand);
-		functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+", "+function.type.toString()+");\n";
+		functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");\n";
 
 		js.add(functionText);
 	}
