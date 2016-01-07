@@ -10,7 +10,7 @@ function parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$
             var r2 = r0.fieldLoad("input");//fieldload %2 = %0 input : {int[] input,int pos}
             var r3 = r2.length();//lengthof %3 = %2 : int[]
             if(WyJS.gt(r1, r3, true)){
-               control_flow_pc = 727;
+               control_flow_pc = 796;
                control_flow_repeat = true;
                continue outer;
             }
@@ -19,7 +19,7 @@ function parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$
             var r6 = r4.getValue(r5);
             var r7 = new WyJS.Integer(32);
             if(WyJS.equals(r6, r7, false)){
-               control_flow_pc = 727;
+               control_flow_pc = 796;
                control_flow_repeat = true;
                continue outer;
             }
@@ -30,12 +30,12 @@ function parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$
             var r13 = new WyJS.Record(["input", "pos"], [r9, r12], new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             var r8 = parseWhiteSpace$Y9bFXL1t$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$H0FO$B5$j0VR$F5$U0VK$35$g0FP$F5$U0VC4$n0$S$35$o0FOF7(r13);//invoke %8 = (%13) ConstrainedRecord_Valid_6:parseWhiteSpace : function(ConstrainedRecord_Valid_6:state) -> ConstrainedRecord_Valid_6:state
             return r8;//return %8 : {int[] input,int pos}
-            control_flow_pc = 728;
+            control_flow_pc = 797;
             control_flow_repeat = true;
-            continue outer;//goto label728
-         case 727:
+            continue outer;//goto label797
+         case 796:
             return r0;//return %0 : {int[] input,int pos}
-         case 728:
+         case 797:
             return;
       }
    }
@@ -82,12 +82,12 @@ function test(){//method() -> void
             var r14 = new WyJS.Integer(2);
             var r15 = new WyJS.Record(["input", "pos"], [r13, r14], new WyJS.Type.Record(["input", "pos"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             if(WyJS.equals(r5, r15, true)){
-               control_flow_pc = 729;
+               control_flow_pc = 798;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 729:
+         case 798:
             return;
       }
    }

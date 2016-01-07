@@ -18,7 +18,7 @@ function create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r
             break;
          case -2:
             if(WyJS.gt(r3, r0, true)){
-               control_flow_pc = 330;
+               control_flow_pc = 399;
                control_flow_repeat = true;
                continue outer;
             }
@@ -29,7 +29,7 @@ function create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 330:
+         case 399:
             return r2;//return %2 : int[]
             return;
       }
@@ -52,12 +52,12 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(3);
             var r6 = new WyJS.List([r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 331;
+               control_flow_pc = 400;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 331:
+         case 400:
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(2);
             var r7 = create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r8, r9);//invoke %7 = (%8, %9) While_Valid_21:create : function(While_Valid_21:nat,int) -> int[]
@@ -65,12 +65,12 @@ function test(){//method() -> void
             var r11 = new WyJS.Integer(2);
             var r12 = new WyJS.List([r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r7, r12, true)){
-               control_flow_pc = 332;
+               control_flow_pc = 401;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 332:
+         case 401:
             var r14 = new WyJS.Integer(2);
             var r15 = new WyJS.Integer(1);
             var r13 = create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r14, r15);//invoke %13 = (%14, %15) While_Valid_21:create : function(While_Valid_21:nat,int) -> int[]
@@ -78,24 +78,24 @@ function test(){//method() -> void
             var r17 = new WyJS.Integer(1);
             var r18 = new WyJS.List([r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r13, r18, true)){
-               control_flow_pc = 333;
+               control_flow_pc = 402;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 333:
+         case 402:
             var r20 = new WyJS.Integer(1);
             var r21 = new WyJS.Integer(1);
             var r19 = create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r20, r21);//invoke %19 = (%20, %21) While_Valid_21:create : function(While_Valid_21:nat,int) -> int[]
             var r22 = new WyJS.Integer(1);
             var r23 = new WyJS.List([r22], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r19, r23, true)){
-               control_flow_pc = 334;
+               control_flow_pc = 403;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 334:
+         case 403:
             var r25 = new WyJS.Integer(0);
             var r26 = new WyJS.Integer(0);
             var r24 = create$_9dF5XY001h3w$Vf$$C$H2$q$cB$y1$f$7B$N2Vo$VB$y1$O$7a0$r$7B$cv12(r25, r26);//invoke %24 = (%25, %26) While_Valid_21:create : function(While_Valid_21:nat,int) -> int[]
@@ -103,12 +103,12 @@ function test(){//method() -> void
             var r28 = new WyJS.Integer(0);
             var r29 = WyJS.ListGen(r27, r28, new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r24, r29, true)){
-               control_flow_pc = 335;
+               control_flow_pc = 404;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 335:
+         case 404:
             return;
       }
    }

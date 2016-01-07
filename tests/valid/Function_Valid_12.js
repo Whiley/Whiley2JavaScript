@@ -61,12 +61,12 @@ function test(){//method() -> void
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.List([r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r8, true)){
-               control_flow_pc = 136;
+               control_flow_pc = 200;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 136:
+         case 200:
             var r10 = new WyJS.Real(1.2);
             var r11 = new WyJS.Real(2.2);
             var r12 = new WyJS.Real(3.3);
@@ -77,12 +77,12 @@ function test(){//method() -> void
             var r16 = new WyJS.Real(3.3);
             var r17 = new WyJS.List([r14, r15, r16], new WyJS.Type.List(new WyJS.Type.Real()));
             if(WyJS.equals(r9, r17, true)){
-               control_flow_pc = 137;
+               control_flow_pc = 201;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 137:
+         case 201:
             return;
       }
    }

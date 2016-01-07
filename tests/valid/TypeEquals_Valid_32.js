@@ -22,7 +22,7 @@ function cons$Z9dFaVYl$1Ms(r0, r1){//function(int,int[]) -> int[]
          case -2:
             var r17 = r1.length();//lengthof %17 = %1 : int[]
             if(WyJS.gt(r3, r17, true)){
-               control_flow_pc = 523;
+               control_flow_pc = 592;
                control_flow_repeat = true;
                continue outer;
             }
@@ -37,7 +37,7 @@ function cons$Z9dFaVYl$1Ms(r0, r1){//function(int,int[]) -> int[]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 523:
+         case 592:
             var r24 = new WyJS.Integer(0);
             r2.setValue(r24, r0);
             return r2;//return %2 : int[]
@@ -55,28 +55,28 @@ function f$_9bF5D537oHN4$c1Vw$$D$92VX$7D$e2Vk$VC$a2Vj$k9$12$q$7C$72Vj$N5$ZW$cB$k
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
-               control_flow_pc = 524;
+               control_flow_pc = 593;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 525;
+            control_flow_pc = 594;
             control_flow_repeat = true;
-            continue outer;//goto label525
-         case 524:
+            continue outer;//goto label594
+         case 593:
             var r4 = new WyJS.Integer(0);
             var r3 = cons$Z9dFaVYl$1Ms(r4, r0);//invoke %3 = (%4, %0) TypeEquals_Valid_32:cons : function(int,int[]) -> int[]
             var r2 = r3.clone(new WyJS.Type.Int());//assign %2 = %3  : int[]
             var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : int[]
             return r1;//return %1 : int[]
-            control_flow_pc = 526;
+            control_flow_pc = 595;
             control_flow_repeat = true;
-            continue outer;//goto label526
-         case 525:
+            continue outer;//goto label595
+         case 594:
             var r5 = new WyJS.Integer(0);
             var r6 = new WyJS.Integer(0);
             var r7 = WyJS.ListGen(r5, r6, new WyJS.Type.List(new WyJS.Type.Int()));
             return r7;//return %7 : int[]
-         case 526:
+         case 595:
             return;
       }
    }
@@ -105,24 +105,24 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(4);
             var r13 = new WyJS.List([r8, r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r7, r13, true)){
-               control_flow_pc = 527;
+               control_flow_pc = 596;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 527:
+         case 596:
             var r15 = false;
             var r14 = f$_9bF5D537oHN4$c1Vw$$D$92VX$7D$e2Vk$VC$a2Vj$k9$12$q$7C$72Vj$N5$ZW$cB$k2$s$FiAw2(r15);//invoke %14 = (%15) TypeEquals_Valid_32:f : function(TypeEquals_Valid_32:expr) -> int[]
             var r16 = new WyJS.Integer(0);
             var r17 = new WyJS.Integer(0);
             var r18 = WyJS.ListGen(r16, r17, new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r14, r18, true)){
-               control_flow_pc = 528;
+               control_flow_pc = 597;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 528:
+         case 597:
             return;
       }
    }

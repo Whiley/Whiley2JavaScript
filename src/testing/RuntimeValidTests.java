@@ -261,42 +261,42 @@ public class RuntimeValidTests {
 		runTest("Byte_Valid_1");
 	}
 
-	@Ignore("checked")   @Test
+	@Test
 	public void Byte_Valid_2() throws IOException {
 		runTest("Byte_Valid_2");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_3() throws IOException {
 		runTest("Byte_Valid_3");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_4() throws IOException {
 		runTest("Byte_Valid_4");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_5() throws IOException {
 		runTest("Byte_Valid_5");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_6() throws IOException {
 		runTest("Byte_Valid_6");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_7() throws IOException {
 		runTest("Byte_Valid_7");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_8() throws IOException {
 		runTest("Byte_Valid_8");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_9() throws IOException {
 		runTest("Byte_Valid_9");
 	}
@@ -1092,12 +1092,12 @@ public class RuntimeValidTests {
 		runTest("Lambda_Valid_2");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Lambda_Valid_3() throws IOException {
 		runTest("Lambda_Valid_3");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Lambda_Valid_4() throws IOException {
 		runTest("Lambda_Valid_4");
 	}
@@ -1169,7 +1169,7 @@ public class RuntimeValidTests {
 		runTest("ListAccess_Valid_7");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAccess_Valid_8() throws IOException {
 		runTest("ListAccess_Valid_8");
 	}
@@ -2517,7 +2517,7 @@ public class RuntimeValidTests {
 		runTest("While_Valid_17");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void While_Valid_18() throws IOException {
 		runTest("While_Valid_18");
 	}

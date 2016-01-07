@@ -8,18 +8,18 @@ function f$Y9bFXA$W(r0){//function(int) -> int
          case -1 :
             var r1 = new WyJS.Integer(0);
             if(WyJS.gt(r0, r1, true)){
-               control_flow_pc = 618;
+               control_flow_pc = 687;
                control_flow_repeat = true;
                continue outer;
             }
             var r2 = new WyJS.Integer(0);
             return r2;//return %2 : int
-            control_flow_pc = 619;
+            control_flow_pc = 688;
             control_flow_repeat = true;
-            continue outer;//goto label619
-         case 618:
+            continue outer;//goto label688
+         case 687:
             return r0;//return %0 : int
-         case 619:
+         case 688:
             return;
       }
    }
@@ -37,12 +37,12 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Import_Valid_1:f : function(int) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 620;
+               control_flow_pc = 689;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 620:
+         case 689:
             return;
       }
    }

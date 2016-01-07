@@ -102,9 +102,9 @@ public class WyJS {
 			write(f);
 		}
 		// print it out once we're done
-		/*
-		 * for (String s : js) { System.out.print(s); }
-		 */
+
+		 for (String s : js) { System.out.print(s); }
+
 	}
 
 	/**
@@ -974,7 +974,7 @@ public class WyJS {
 			Type newTy = ty.getUnderlyingType(type);
 			return getType(newTy);
 		} else if (type instanceof Type.Byte) {
-			throw new Exception("Byte type not suported. " + type);
+			return "new WyJS.Type.Byte()";
 		} else {
 			throw new Exception("Unknown Type in getType " + type);
 		}
@@ -998,7 +998,8 @@ public class WyJS {
 			Constant.Bool bol = (Constant.Bool) constant;
 			return bol.value + "";
 		} else if (constant instanceof Constant.Byte) {
-
+			Constant.Byte varByte = (Constant.Byte) constant;
+			return "new WyJS.Byte(\""+ varByte +"\")";
 		} else if (constant instanceof Constant.Decimal) {
 			Constant.Decimal deci = (Constant.Decimal) constant;
 			return "new WyJS.Real(" + deci.value + ")";

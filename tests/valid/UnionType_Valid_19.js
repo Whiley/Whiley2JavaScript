@@ -29,12 +29,12 @@ function test(){//method() -> void
             var r5 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$tN$F6$p0$R$$6$_0VR(r0);//invoke %5 = (%0) UnionType_Valid_19:f : function(UnionType_Valid_19:tupper) -> int
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 202;
+               control_flow_pc = 266;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 202:
+         case 266:
             return;
       }
    }

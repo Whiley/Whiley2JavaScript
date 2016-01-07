@@ -8,26 +8,26 @@ function f$_9dF5e_V9$J4$i0FP$w5$i0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m$VB4$i0$Q$Z5$n0
          case -1 :
             var r2 = new WyJS.Integer(0);
             if(WyJS.lt(r0, r2, false)){
-               control_flow_pc = 217;
+               control_flow_pc = 281;
                control_flow_repeat = true;
                continue outer;
             }
             var r3 = r1.length();//lengthof %3 = %1 : int|int[][]
             if(WyJS.lt(r0, r3, false)){
-               control_flow_pc = 218;
+               control_flow_pc = 282;
                control_flow_repeat = true;
                continue outer;
             }
-         case 217:
+         case 281:
             var r4 = new WyJS.Integer(0);
             return r4;//return %4 : int|int[]
-            control_flow_pc = 219;
+            control_flow_pc = 283;
             control_flow_repeat = true;
-            continue outer;//goto label219
-         case 218:
+            continue outer;//goto label283
+         case 282:
             var r5 = r1.getValue(r0);
             return r5;//return %5 : int|int[]
-         case 219:
+         case 283:
             return;
       }
    }
@@ -51,12 +51,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : int|int[]
             var r8 = new WyJS.Integer(4);
             if(WyJS.equals(r0, r8, true)){
-               control_flow_pc = 220;
+               control_flow_pc = 284;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 220:
+         case 284:
             return;
       }
    }
