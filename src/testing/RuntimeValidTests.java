@@ -2,13 +2,20 @@ package testing;
 
 import static org.junit.Assert.fail;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.io.Reader;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.tools.shell.Global;
 
 import wyc.WycMain;
 import wyil.io.WyilFileReader;
@@ -130,11 +137,15 @@ public class RuntimeValidTests {
  	}
 
 	private static Scriptable createJavaScriptScriptable(Context ctx, OutputStream out, OutputStream err) {
-		Scriptable scope = ctx.initStandardObjects();
+		ctx.initStandardObjects();
+		Scriptable scope = new Global(ctx); //ctx.initStandardObjects();
+		//scope.defineProperty("", new MyGlobalNativeFunction());
+
 		Object jssysout = Context.javaToJS(new PrintStream(out), scope);
 		Object jssyserr = Context.javaToJS(new PrintStream(err), scope);
 		ScriptableObject.putConstProperty(scope, "sysout", jssysout);
 		ScriptableObject.putConstProperty(scope, "syserr", jssyserr);
+
 		ctx.setOptimizationLevel(-1);
 		return scope;
 	}
