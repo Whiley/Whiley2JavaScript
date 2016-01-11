@@ -25,12 +25,12 @@ function test(){//method() -> void
             var r0 = f$Z9bF5B1Fs1E(r1);//invoke %0 = (%1) Cast_Valid_1:f : function(int) -> real
             var r2 = new WyJS.Real(1.0);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1060;
+               control_flow_pc = 1057;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1060:
+         case 1057:
             return;
       }
    }

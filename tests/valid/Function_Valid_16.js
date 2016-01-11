@@ -44,24 +44,24 @@ function test(){//method() -> void
             var r5 = r6;//assign %5 = %6  : int
             var r1 = r5;//assign %1 = %5  : int
             if(WyJS.gt(r0, r1, true)){
-               control_flow_pc = 207;
+               control_flow_pc = 210;
                control_flow_repeat = true;
                continue outer;
             }
             var r7 = f$Y9bFXA$W(r1);//invoke %7 = (%1) Function_Valid_16:f : function(int) -> int
             var r0 = r7;//assign %0 = %7  : int
-         case 207:
+         case 210:
             var r9 = g$Y9dFXs1Fs2(r0, r1);//invoke %9 = (%0, %1) Function_Valid_16:g : function(int,int) -> int
             var r8 = r9;//assign %8 = %9  : int
             var r2 = r8;//assign %2 = %8  : int
             var r10 = new WyJS.Integer(3);
             if(WyJS.equals(r2, r10, true)){
-               control_flow_pc = 208;
+               control_flow_pc = 211;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 208:
+         case 211:
             return;
       }
    }

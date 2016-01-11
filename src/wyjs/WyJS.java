@@ -343,14 +343,29 @@ public class WyJS {
 					+ o.toString() + "\n");
 			return;
 		case BITWISEAND:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r"
+			+ o.operand(0) + ".and(" + "r" + o.operand(1) + ");//"
+			+ o.toString() + "\n");
 			break;
 		case BITWISEOR:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r"
+					+ o.operand(0) + ".or(" + "r" + o.operand(1) + ");//"
+					+ o.toString() + "\n");
 			break;
 		case BITWISEXOR:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r"
+					+ o.operand(0) + ".xor(" + "r" + o.operand(1) + ");//"
+					+ o.toString() + "\n");
 			break;
 		case LEFTSHIFT:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r"
+					+ o.operand(0) + ".sll(" + "r" + o.operand(1) + ");//"
+					+ o.toString() + "\n");
 			break;
 		case RIGHTSHIFT:
+			js.add(getIndentBlock() + "var r" + o.target() + " = r"
+					+ o.operand(0) + ".srl(" + "r" + o.operand(1) + ");//"
+					+ o.toString() + "\n");
 			break;
 		default:
 			throw new Exception("Unknown kind of binary operator "

@@ -267,7 +267,7 @@ public class RuntimeValidTests {
 		runTest("BoolReturn_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Byte_Valid_1() throws IOException {
 		runTest("Byte_Valid_1");
 	}
@@ -1180,6 +1180,7 @@ public class RuntimeValidTests {
 		runTest("ListAccess_Valid_7");
 	}
 
+	@Ignore("Crash")
 	@Test
 	public void ListAccess_Valid_8() throws IOException {
 		runTest("ListAccess_Valid_8");

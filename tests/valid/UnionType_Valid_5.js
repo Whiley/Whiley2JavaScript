@@ -24,12 +24,12 @@ function test(){//method() -> void
             var r0 = f$Z9bFa7$WL1d$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$Jn0kS$J6$m0$C$s5$W0$S(r1);//invoke %0 = (%1) UnionType_Valid_5:f : function(UnionType_Valid_5:wur4nat) -> any
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1015;
+               control_flow_pc = 1012;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1015:
+         case 1012:
             return;
       }
    }

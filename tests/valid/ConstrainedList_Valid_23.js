@@ -22,7 +22,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
          case -2:
             var r17 = r0.length();//lengthof %17 = %0 : int[][]
             if(WyJS.gt(r3, r17, true)){
-               control_flow_pc = 167;
+               control_flow_pc = 170;
                control_flow_repeat = true;
                continue outer;
             }
@@ -42,7 +42,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             var r26 = r1.getValue(r25);
             var r27 = r26.length();//lengthof %27 = %26 : int[]
             if(WyJS.gt(r5, r27, true)){
-               control_flow_pc = 169;
+               control_flow_pc = 172;
                control_flow_repeat = true;
                continue outer;
             }
@@ -58,7 +58,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
          case -4:
             var r33 = r1.length();//lengthof %33 = %1 : int[][]
             if(WyJS.gt(r7, r33, true)){
-               control_flow_pc = 171;
+               control_flow_pc = 174;
                control_flow_repeat = true;
                continue outer;
             }
@@ -78,7 +78,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 171:
+         case 174:
             r4.setValue(r5, r6);
             var r42 = new WyJS.Integer(1);
             var r43 = r5.add(r42);//add %43 = %5, %42 : int
@@ -89,7 +89,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 169:
+         case 172:
             r2.setValue(r3, r4);
             var r44 = new WyJS.Integer(1);
             var r45 = r3.add(r44);//add %45 = %3, %44 : int
@@ -97,7 +97,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 167:
+         case 170:
             return r2;//return %2 : int[][]
             return;
       }
@@ -141,12 +141,12 @@ function test(){//method() -> void
             var r26 = new WyJS.List([r24, r25], new WyJS.Type.List(new WyJS.Type.Int()));
             var r27 = new WyJS.List([r23, r26], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
             if(WyJS.equals(r2, r27, true)){
-               control_flow_pc = 172;
+               control_flow_pc = 175;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 172:
+         case 175:
             return;
       }
    }

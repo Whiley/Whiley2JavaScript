@@ -27,12 +27,12 @@ function test(){//method() -> void
             var r3 = new WyJS.Real(123542.0);
             var r4 = new WyJS.Record(["x"], [r3], new WyJS.Type.Record(["x"], [new WyJS.Type.Real()]));
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 1062;
+               control_flow_pc = 1059;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1062:
+         case 1059:
             return;
       }
    }

@@ -17,7 +17,7 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
          case -2:
             var r18 = new WyJS.Integer(3);
             if(WyJS.gt(r2, r18, true)){
-               control_flow_pc = 750;
+               control_flow_pc = 753;
                control_flow_repeat = true;
                continue outer;
             }
@@ -30,7 +30,7 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
          case -3:
             var r28 = new WyJS.Integer(3);
             if(WyJS.gt(r3, r28, true)){
-               control_flow_pc = 754;
+               control_flow_pc = 757;
                control_flow_repeat = true;
                continue outer;
             }
@@ -41,7 +41,7 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
             var r32 = r31.getValue(r3);
             var r33 = true;
             if(r32 === r33){
-               control_flow_pc = 755;
+               control_flow_pc = 758;
                control_flow_repeat = true;
                break;
             }
@@ -51,59 +51,59 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
                break;
             }
          case -4:
-            control_flow_pc = 756;
+            control_flow_pc = 759;
             control_flow_repeat = true;
-            continue outer;//goto label756
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
-         case 755:
-            if(WyJS.equals(r4, new WyJS.Integer(0), true)){
-               control_flow_pc = 757;
-               control_flow_repeat = true;
-               continue outer;
-            }
-             else if(WyJS.equals(r4, new WyJS.Integer(1), true)){
-               control_flow_pc = 757;
-               control_flow_repeat = true;
-               continue outer;
-            }
-             else if(WyJS.equals(r4, new WyJS.Integer(2), true)){
-               control_flow_pc = 758;
-               control_flow_repeat = true;
-               continue outer;
-            }
-             else if(WyJS.equals(r4, new WyJS.Integer(3), true)){
-               control_flow_pc = 758;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            else{
-               control_flow_pc = 756;
-               control_flow_repeat = true;
-               continue outer;
-            }
-            control_flow_pc = -3;
-            control_flow_repeat = true;
-            break;
-         case 757:
-            var r34 = false;
-            var r35 = false;
-            r1.getValue(r2).setValue(r3, r35);
-            control_flow_pc = 756;
-            control_flow_repeat = true;
-            continue outer;//goto label756
+            continue outer;//goto label759
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 758:
-            control_flow_pc = 756;
-            control_flow_repeat = true;
-            continue outer;//goto label756
+            if(WyJS.equals(r4, new WyJS.Integer(0), true)){
+               control_flow_pc = 760;
+               control_flow_repeat = true;
+               continue outer;
+            }
+             else if(WyJS.equals(r4, new WyJS.Integer(1), true)){
+               control_flow_pc = 760;
+               control_flow_repeat = true;
+               continue outer;
+            }
+             else if(WyJS.equals(r4, new WyJS.Integer(2), true)){
+               control_flow_pc = 761;
+               control_flow_repeat = true;
+               continue outer;
+            }
+             else if(WyJS.equals(r4, new WyJS.Integer(3), true)){
+               control_flow_pc = 761;
+               control_flow_repeat = true;
+               continue outer;
+            }
+            else{
+               control_flow_pc = 759;
+               control_flow_repeat = true;
+               continue outer;
+            }
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 756:
+         case 760:
+            var r34 = false;
+            var r35 = false;
+            r1.getValue(r2).setValue(r3, r35);
+            control_flow_pc = 759;
+            control_flow_repeat = true;
+            continue outer;//goto label759
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
+         case 761:
+            control_flow_pc = 759;
+            control_flow_repeat = true;
+            continue outer;//goto label759
+            control_flow_pc = -3;
+            control_flow_repeat = true;
+            break;
+         case 759:
             var r36 = new WyJS.Integer(1);
             var r37 = r3.add(r36);//add %37 = %3, %36 : int
             var r3 = r37;//assign %3 = %37  : int
@@ -113,14 +113,14 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 754:
+         case 757:
             var r38 = new WyJS.Integer(1);
             var r39 = r2.add(r38);//add %39 = %2, %38 : int
             var r2 = r39;//assign %2 = %39  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 750:
+         case 753:
             return r1;//return %1 : bool[][]
             return;
       }
@@ -202,19 +202,19 @@ function isAlive$Z9fFa7i$3P8V1$10kQ$w5$g0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$nJ$73$j0F
             var r3 = r5;//assign %3 = %5  : int
             var r7 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r7, false)){
-               control_flow_pc = 759;
+               control_flow_pc = 762;
                control_flow_repeat = true;
                continue outer;
             }
             if(WyJS.lt(r1, r3, false)){
-               control_flow_pc = 760;
+               control_flow_pc = 763;
                control_flow_repeat = true;
                continue outer;
             }
-         case 759:
+         case 762:
             var r8 = new WyJS.Integer(0);
             return r8;//return %8 : int
-         case 760:
+         case 763:
             var r10 = new WyJS.Integer(0);
             var r11 = r0.getValue(r10);
             var r12 = r11.length();//lengthof %12 = %11 : bool[]
@@ -222,40 +222,40 @@ function isAlive$Z9fFa7i$3P8V1$10kQ$w5$g0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$nJ$73$j0F
             var r4 = r9;//assign %4 = %9  : int
             var r13 = new WyJS.Integer(0);
             if(WyJS.lt(r2, r13, false)){
-               control_flow_pc = 761;
+               control_flow_pc = 764;
                control_flow_repeat = true;
                continue outer;
             }
             if(WyJS.lt(r2, r4, false)){
-               control_flow_pc = 762;
+               control_flow_pc = 765;
                control_flow_repeat = true;
                continue outer;
             }
-         case 761:
+         case 764:
             var r14 = new WyJS.Integer(0);
             return r14;//return %14 : int
-         case 762:
+         case 765:
             var r15 = r0.getValue(r1);
             var r16 = r15.getValue(r2);
             var r17 = true;
             if(r16 === r17){
-               control_flow_pc = 763;
+               control_flow_pc = 766;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 764;
+            control_flow_pc = 767;
             control_flow_repeat = true;
-            continue outer;//goto label764
-         case 763:
+            continue outer;//goto label767
+         case 766:
             var r18 = new WyJS.Integer(1);
             return r18;//return %18 : int
-            control_flow_pc = 765;
+            control_flow_pc = 768;
             control_flow_repeat = true;
-            continue outer;//goto label765
-         case 764:
+            continue outer;//goto label768
+         case 767:
             var r19 = new WyJS.Integer(0);
             return r19;//return %19 : int
-         case 765:
+         case 768:
             return;
       }
    }
@@ -301,12 +301,12 @@ function test(){//method() -> void
             var r29 = new WyJS.List([r26, r27, r28], new WyJS.Type.List(new WyJS.Type.Bool()));
             var r30 = new WyJS.List([r21, r25, r29], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Bool())));
             if(WyJS.equals(r0, r30, true)){
-               control_flow_pc = 766;
+               control_flow_pc = 769;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 766:
+         case 769:
             var r31 = false;
             var r32 = false;
             var r33 = false;
@@ -321,12 +321,12 @@ function test(){//method() -> void
             var r42 = new WyJS.List([r39, r40, r41], new WyJS.Type.List(new WyJS.Type.Bool()));
             var r43 = new WyJS.List([r34, r38, r42], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Bool())));
             if(WyJS.equals(r1, r43, true)){
-               control_flow_pc = 767;
+               control_flow_pc = 770;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 767:
+         case 770:
             return;
       }
    }

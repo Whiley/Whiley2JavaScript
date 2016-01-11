@@ -18,14 +18,15 @@ function toUnsignedInt$Z9bFaA$W9$(r0){//function(byte) -> int
          case -2:
             var r7 = new WyJS.Byte("00000000b");
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 878;
+               control_flow_pc = 0;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = new WyJS.Byte("00000001b");
+            var r9 = r0.and(r8);//and %9 = %0, %8 : byte
             var r10 = new WyJS.Byte("00000001b");
             if(WyJS.equals(r9, r10, false)){
-               control_flow_pc = 879;
+               control_flow_pc = 1;
                control_flow_repeat = true;
                break;
             }
@@ -40,7 +41,7 @@ function toUnsignedInt$Z9bFaA$W9$(r0){//function(byte) -> int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 879:
+         case 1:
             var r12 = new WyJS.Integer(1);
             var r0 = r13;//assign %0 = %13  : byte
             var r14 = new WyJS.Integer(2);
@@ -49,7 +50,7 @@ function toUnsignedInt$Z9bFaA$W9$(r0){//function(byte) -> int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 878:
+         case 0:
             return r1;//return %1 : int
             return;
       }
@@ -78,7 +79,7 @@ function meth$a9bF5D537klcRW9w(r0){//function(byte[]) -> int[]
          case -4:
             var r12 = r0.length();//lengthof %12 = %0 : byte[]
             if(WyJS.gt(r2, r12, true)){
-               control_flow_pc = 882;
+               control_flow_pc = 4;
                control_flow_repeat = true;
                continue outer;
             }
@@ -93,7 +94,7 @@ function meth$a9bF5D537klcRW9w(r0){//function(byte[]) -> int[]
             control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-         case 882:
+         case 4:
             return r1;//return %1 : int[]
             return;
       }
@@ -122,12 +123,12 @@ function test(){//method() -> void
             var r11 = new WyJS.Integer(7);
             var r12 = new WyJS.List([r8, r9, r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
             if(WyJS.equals(r7, r12, true)){
-               control_flow_pc = 883;
+               control_flow_pc = 5;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 883:
+         case 5:
             return;
       }
    }
