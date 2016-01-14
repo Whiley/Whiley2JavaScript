@@ -6,7 +6,7 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$$C0$J0(r0
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
+            if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Int()))){
                control_flow_pc = 585;
                control_flow_repeat = true;
                continue outer;
@@ -40,7 +40,7 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
             var r4 = new WyJS.Integer(4);
-            var r5 = new WyJS.List([r1, r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r1, r2, r3, r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$$C0$J0(r5);//invoke %0 = (%5) TypeEquals_Valid_24:f : function(TypeEquals_Valid_24:T) -> int
             var r6 = new WyJS.Integer(4);
             if(WyJS.equals(r0, r6, true)){

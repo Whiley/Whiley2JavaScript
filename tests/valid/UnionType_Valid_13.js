@@ -22,9 +22,9 @@ function test(){//method() -> void
          case -1 :
             var r3 = new WyJS.Integer(0);
             var r4 = new WyJS.Integer(0);
-            var r5 = WyJS.ListGen(r3, r4, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = WyJS.ArrayGen(r3, r4, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = new WyJS.Integer(11);
-            var r7 = new WyJS.Record(["data", "op"], [r5, r6], new WyJS.Type.Record(["data", "op"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
+            var r7 = new WyJS.Record(["data", "op"], [r5, r6], new WyJS.Type.Record(["data", "op"], [new WyJS.Type.Array(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             var r2 = r7.clone();//assign %2 = %7  : {int[] data,int op}
             var r0 = r2.clone();//assign %0 = %2  : {int[] data,int op}
             var r9 = new WyJS.Integer(1);
@@ -34,9 +34,9 @@ function test(){//method() -> void
             var r11 = f$Y9bFXL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$nR$o5$n0kO$F4$t0$R$J531(r0);//invoke %11 = (%0) UnionType_Valid_13:f : function(UnionType_Valid_13:msgType) -> UnionType_Valid_13:msgType
             var r12 = new WyJS.Integer(0);
             var r13 = new WyJS.Integer(0);
-            var r14 = WyJS.ListGen(r12, r13, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r14 = WyJS.ArrayGen(r12, r13, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r15 = new WyJS.Integer(11);
-            var r16 = new WyJS.Record(["data", "op"], [r14, r15], new WyJS.Type.Record(["data", "op"], [new WyJS.Type.List(new WyJS.Type.Int()), new WyJS.Type.Int()]));
+            var r16 = new WyJS.Record(["data", "op"], [r14, r15], new WyJS.Type.Record(["data", "op"], [new WyJS.Type.Array(new WyJS.Type.Int()), new WyJS.Type.Int()]));
             if(WyJS.equals(r11, r16, true)){
                control_flow_pc = 247;
                control_flow_repeat = true;

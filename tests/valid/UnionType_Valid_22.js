@@ -45,7 +45,7 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(2);
             var r5 = new WyJS.Integer(3);
             var r6 = new WyJS.Integer(4);
-            var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = new WyJS.Array([r4, r5, r6], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r2 = f$_9dF5e_V9$J4$i0FP$w5$i0$K$Z6$k0FO$w4$L0FN$k5$d0$O$w4$m$VB4$i0$Q$Z5$n0$SFs1RB12(r3, r7);//invoke %2 = (%3, %7) UnionType_Valid_22:f : function(int,UnionType_Valid_22:nlist[]) -> UnionType_Valid_22:nlist
             var r1 = r2;//assign %1 = %2  : int|int[]
             var r0 = r1;//assign %0 = %1  : int|int[]

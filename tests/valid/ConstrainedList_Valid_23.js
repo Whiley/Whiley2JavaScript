@@ -8,11 +8,11 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
          case -1 :
             var r9 = new WyJS.Integer(0);
             var r10 = new WyJS.Integer(0);
-            var r11 = WyJS.ListGen(r9, r10, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r11 = WyJS.ArrayGen(r9, r10, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r12 = r0.length();//lengthof %12 = %0 : int[][]
-            var r13 = WyJS.ListGen(r11, r12, new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r8 = r13.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %8 = %13  : int[][]
-            var r2 = r8.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %2 = %8  : int[][]
+            var r13 = WyJS.ArrayGen(r11, r12, new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
+            var r8 = r13.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %8 = %13  : int[][]
+            var r2 = r8.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %2 = %8  : int[][]
             var r15 = new WyJS.Integer(0);
             var r14 = r15;//assign %14 = %15  : int
             var r3 = r14;//assign %3 = %14  : int
@@ -28,7 +28,7 @@ function run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w
             }
             var r19 = new WyJS.Integer(0);
             var r20 = r1.length();//lengthof %20 = %1 : int[][]
-            var r21 = WyJS.ListGen(r19, r20, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r21 = WyJS.ArrayGen(r19, r20, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r18 = r21.clone(new WyJS.Type.Int());//assign %18 = %21  : int[]
             var r4 = r18.clone(new WyJS.Type.Int());//assign %4 = %18  : int[]
             var r23 = new WyJS.Integer(0);
@@ -114,32 +114,32 @@ function test(){//method() -> void
          case -1 :
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
-            var r6 = new WyJS.List([r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r6 = new WyJS.Array([r4, r5], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.Integer(4);
-            var r9 = new WyJS.List([r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r10 = new WyJS.List([r6, r9], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r3 = r10.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %3 = %10  : int[][]
-            var r0 = r3.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %3  : int[][]
+            var r9 = new WyJS.Array([r7, r8], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r10 = new WyJS.Array([r6, r9], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
+            var r3 = r10.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %3 = %10  : int[][]
+            var r0 = r3.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %0 = %3  : int[][]
             var r12 = new WyJS.Integer(5);
             var r13 = new WyJS.Integer(6);
-            var r14 = new WyJS.List([r12, r13], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r14 = new WyJS.Array([r12, r13], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r15 = new WyJS.Integer(7);
             var r16 = new WyJS.Integer(8);
-            var r17 = new WyJS.List([r15, r16], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r18 = new WyJS.List([r14, r17], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r11 = r18.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %11 = %18  : int[][]
-            var r1 = r11.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %11  : int[][]
+            var r17 = new WyJS.Array([r15, r16], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r18 = new WyJS.Array([r14, r17], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
+            var r11 = r18.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %11 = %18  : int[][]
+            var r1 = r11.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %1 = %11  : int[][]
             var r20 = run$Y9dFXc_$D$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0$I$Z5$n0$S$w4$L0FN$k5$d0$O$w4$m$kB5$C0FN$F6$m0FP$V63y(r0, r1);//invoke %20 = (%0, %1) ConstrainedList_Valid_23:run : function(ConstrainedList_Valid_23:Matrix,ConstrainedList_Valid_23:Matrix) -> ConstrainedList_Valid_23:Matrix
-            var r19 = r20.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %19 = %20  : int[][]
-            var r2 = r19.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %2 = %19  : int[][]
+            var r19 = r20.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %19 = %20  : int[][]
+            var r2 = r19.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %2 = %19  : int[][]
             var r21 = new WyJS.Integer(19);
             var r22 = new WyJS.Integer(22);
-            var r23 = new WyJS.List([r21, r22], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r23 = new WyJS.Array([r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r24 = new WyJS.Integer(43);
             var r25 = new WyJS.Integer(50);
-            var r26 = new WyJS.List([r24, r25], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r27 = new WyJS.List([r23, r26], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
+            var r26 = new WyJS.Array([r24, r25], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r27 = new WyJS.Array([r23, r26], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
             if(WyJS.equals(r2, r27, true)){
                control_flow_pc = 175;
                control_flow_repeat = true;

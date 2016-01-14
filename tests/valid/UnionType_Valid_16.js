@@ -27,14 +27,14 @@ function test(){//method() -> void
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(2);
             var r12 = new WyJS.Integer(3);
-            var r13 = new WyJS.List([r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r14 = new WyJS.Record(["op"], [r13], new WyJS.Type.Record(["op"], [new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r13 = new WyJS.Array([r10, r11, r12], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r14 = new WyJS.Record(["op"], [r13], new WyJS.Type.Record(["op"], [new WyJS.Type.Array(new WyJS.Type.Int())]));
             var r0 = r14.clone();//assign %0 = %14  : {int[] op}
             var r15 = new WyJS.Integer(1);
             var r16 = new WyJS.Integer(2);
             var r17 = new WyJS.Integer(3);
-            var r18 = new WyJS.List([r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r19 = new WyJS.Record(["op"], [r18], new WyJS.Type.Record(["op"], [new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r18 = new WyJS.Array([r15, r16, r17], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r19 = new WyJS.Record(["op"], [r18], new WyJS.Type.Record(["op"], [new WyJS.Type.Array(new WyJS.Type.Int())]));
             if(WyJS.equals(r0, r19, true)){
                control_flow_pc = 261;
                control_flow_repeat = true;

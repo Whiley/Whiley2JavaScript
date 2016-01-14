@@ -47,7 +47,7 @@ function test(){//method() -> void
       switch(control_flow_pc){
          case -1 :
             var r1 = new WyJS.Integer(1);
-            var r2 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r2 = new WyJS.Array([r1], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = sum$Z9bFaA$0D5Wz(r2);//invoke %0 = (%2) DoWhile_Valid_5:sum : function(int[]) -> int
             var r3 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r3, true)){
@@ -59,7 +59,7 @@ function test(){//method() -> void
          case 322:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
-            var r7 = new WyJS.List([r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = new WyJS.Array([r5, r6], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r4 = sum$Z9bFaA$0D5Wz(r7);//invoke %4 = (%7) DoWhile_Valid_5:sum : function(int[]) -> int
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r4, r8, true)){
@@ -72,7 +72,7 @@ function test(){//method() -> void
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(2);
             var r12 = new WyJS.Integer(3);
-            var r13 = new WyJS.List([r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = new WyJS.Array([r10, r11, r12], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r9 = sum$Z9bFaA$0D5Wz(r13);//invoke %9 = (%13) DoWhile_Valid_5:sum : function(int[]) -> int
             var r14 = new WyJS.Integer(6);
             if(WyJS.equals(r9, r14, true)){

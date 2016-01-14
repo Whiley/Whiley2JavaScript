@@ -6,7 +6,7 @@ function f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$76$g0FP$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
+            if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Int()))){
                control_flow_pc = 30;
                control_flow_repeat = true;
                continue outer;
@@ -37,7 +37,7 @@ function g$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$Z5$g0FP$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = WyJS.cast(new WyJS.Type.Union([new WyJS.Type.Real(), new WyJS.Type.List(new WyJS.Type.Int())]), r0);
+            var r2 = WyJS.cast(new WyJS.Type.Union([new WyJS.Type.Real(), new WyJS.Type.Array(new WyJS.Type.Int())]), r0);
             var r1 = f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$76$g0FP$B6$o0(r2);//invoke %1 = (%2) TypeEquals_Valid_8:f : function(TypeEquals_Valid_8:rlist) -> bool
             return r1;//return %1 : bool
             return;
@@ -64,7 +64,7 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 33:
             var r4 = new WyJS.Integer(1);
-            var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r3 = f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$76$g0FP$B6$o0(r5);//invoke %3 = (%5) TypeEquals_Valid_8:f : function(TypeEquals_Valid_8:rlist) -> bool
             var r6 = true;
             if(r3 === r6){
@@ -76,7 +76,7 @@ function test(){//method() -> void
          case 34:
             var r8 = new WyJS.Integer(0);
             var r9 = new WyJS.Integer(0);
-            var r10 = WyJS.ListGen(r8, r9, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = WyJS.ArrayGen(r8, r9, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r7 = f$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$76$g0FP$B6$o0(r10);//invoke %7 = (%10) TypeEquals_Valid_8:f : function(TypeEquals_Valid_8:rlist) -> bool
             var r11 = true;
             if(r7 === r11){
@@ -97,7 +97,7 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 36:
             var r16 = new WyJS.Integer(1);
-            var r17 = new WyJS.List([r16], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r17 = new WyJS.Array([r16], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r15 = g$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$Z5$g0FP$B6$o0(r17);//invoke %15 = (%17) TypeEquals_Valid_8:g : function(TypeEquals_Valid_8:ilist) -> bool
             var r18 = true;
             if(r15 === r18){
@@ -109,7 +109,7 @@ function test(){//method() -> void
          case 37:
             var r20 = new WyJS.Integer(0);
             var r21 = new WyJS.Integer(0);
-            var r22 = WyJS.ListGen(r20, r21, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r22 = WyJS.ArrayGen(r20, r21, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r19 = g$Z9bF59$WL1e$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$sJ$Z5$g0FP$B6$o0(r22);//invoke %19 = (%22) TypeEquals_Valid_8:g : function(TypeEquals_Valid_8:ilist) -> bool
             var r23 = true;
             if(r19 === r23){

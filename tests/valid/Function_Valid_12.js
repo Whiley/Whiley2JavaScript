@@ -54,12 +54,12 @@ function test(){//method() -> void
             var r1 = new WyJS.Integer(1);
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
-            var r4 = new WyJS.List([r1, r2, r3], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r4 = new WyJS.Array([r1, r2, r3], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = f$Z9bF1D527RWz(r4);//invoke %0 = (%4) Function_Valid_12:f : function(int[]) -> int[]
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
-            var r8 = new WyJS.List([r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r8, true)){
                control_flow_pc = 203;
                control_flow_repeat = true;
@@ -70,12 +70,12 @@ function test(){//method() -> void
             var r10 = new WyJS.Real(1.2);
             var r11 = new WyJS.Real(2.2);
             var r12 = new WyJS.Real(3.3);
-            var r13 = new WyJS.List([r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Real()));
+            var r13 = new WyJS.Array([r10, r11, r12], new WyJS.Type.Array(new WyJS.Type.Real()));
             var r9 = f$Z9bF1D527VGs(r13);//invoke %9 = (%13) Function_Valid_12:f : function(real[]) -> real[]
             var r14 = new WyJS.Real(1.2);
             var r15 = new WyJS.Real(2.2);
             var r16 = new WyJS.Real(3.3);
-            var r17 = new WyJS.List([r14, r15, r16], new WyJS.Type.List(new WyJS.Type.Real()));
+            var r17 = new WyJS.Array([r14, r15, r16], new WyJS.Type.Array(new WyJS.Type.Real()));
             if(WyJS.equals(r9, r17, true)){
                control_flow_pc = 204;
                control_flow_repeat = true;

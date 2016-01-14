@@ -256,7 +256,7 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(6);
             var r6 = new WyJS.Integer(7);
             var r7 = new WyJS.Integer(8);
-            var r8 = new WyJS.List([r0, r1, r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r0, r1, r2, r3, r4, r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             fn$3Ab737klNRWz(r8);//invoke %(%8) Complex_Valid_7:fn : method(int[]) -> void
             return;
       }

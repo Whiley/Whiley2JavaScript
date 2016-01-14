@@ -60,7 +60,7 @@ function test(){//method() -> void
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(3);
-            var r10 = new WyJS.List([r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = new WyJS.Array([r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$Z5$n0$S(r10);//invoke %6 = (%10) TypeEquals_Valid_17:f : function(TypeEquals_Valid_17:rlist) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r11, true)){

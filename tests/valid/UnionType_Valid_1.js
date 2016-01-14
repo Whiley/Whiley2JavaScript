@@ -22,13 +22,13 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
-            var r8 = new WyJS.List([r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = r8.clone(new WyJS.Type.Int());//assign %0 = %8  : int[]
          case 1006:
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(2);
             var r11 = new WyJS.Integer(3);
-            var r12 = new WyJS.List([r9, r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r12 = new WyJS.Array([r9, r10, r11], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r12, true)){
                control_flow_pc = 1007;
                control_flow_repeat = true;

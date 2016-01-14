@@ -16,8 +16,8 @@ function EmptyBoard$Y9_FP8w0$20kQ$o5$k0$Q$J5$s0kM$N4$W0$Q$Z5$Z0kM$JY5$J3$h0$R$F6
             var r7 = new WyJS.Integer(0);
             var r8 = new WyJS.Integer(0);
             var r9 = new WyJS.Integer(0);
-            var r10 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r11 = new WyJS.Record(["move", "pieces"], [r0, r10], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r10 = new WyJS.Array([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r11 = new WyJS.Record(["move", "pieces"], [r0, r10], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
             return r11;//return %11 : {int move,int[] pieces}
             return;
       }
@@ -64,8 +64,8 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(0);
             var r14 = new WyJS.Integer(0);
             var r15 = new WyJS.Integer(0);
-            var r16 = new WyJS.List([r7, r8, r9, r10, r11, r12, r13, r14, r15], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r17 = new WyJS.Record(["move", "pieces"], [r6, r16], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r16 = new WyJS.Array([r7, r8, r9, r10, r11, r12, r13, r14, r15], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r17 = new WyJS.Record(["move", "pieces"], [r6, r16], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
             if(WyJS.equals(r0, r17, true)){
                control_flow_pc = 830;
                control_flow_repeat = true;

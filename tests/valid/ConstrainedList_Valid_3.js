@@ -10,7 +10,7 @@ function init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7
             var r4 = r5;//assign %4 = %5  : int
             var r2 = r4;//assign %2 = %4  : int
             var r7 = new WyJS.Integer(0);
-            var r8 = WyJS.ListGen(r7, r0, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = WyJS.ArrayGen(r7, r0, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = r8.clone(new WyJS.Type.Int());//assign %6 = %8  : int[]
             var r3 = r6.clone(new WyJS.Type.Int());//assign %3 = %6  : int[]
             control_flow_pc = -2;
@@ -49,7 +49,7 @@ function test(){//method() -> void
             var r0 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r1, r2);//invoke %0 = (%1, %2) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
             var r3 = new WyJS.Integer(0);
             var r4 = new WyJS.Integer(0);
-            var r5 = WyJS.ListGen(r3, r4, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = WyJS.ArrayGen(r3, r4, new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
                control_flow_pc = 905;
                control_flow_repeat = true;
@@ -61,7 +61,7 @@ function test(){//method() -> void
             var r8 = new WyJS.Integer(1);
             var r6 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r7, r8);//invoke %6 = (%7, %8) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
             var r9 = new WyJS.Integer(1);
-            var r10 = new WyJS.List([r9], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = new WyJS.Array([r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r6, r10, true)){
                control_flow_pc = 906;
                control_flow_repeat = true;
@@ -74,7 +74,7 @@ function test(){//method() -> void
             var r11 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r12, r13);//invoke %11 = (%12, %13) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
             var r14 = new WyJS.Integer(2);
             var r15 = new WyJS.Integer(2);
-            var r16 = new WyJS.List([r14, r15], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r16 = new WyJS.Array([r14, r15], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r11, r16, true)){
                control_flow_pc = 907;
                control_flow_repeat = true;
@@ -88,7 +88,7 @@ function test(){//method() -> void
             var r20 = new WyJS.Integer(3);
             var r21 = new WyJS.Integer(3);
             var r22 = new WyJS.Integer(3);
-            var r23 = new WyJS.List([r20, r21, r22], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r23 = new WyJS.Array([r20, r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r17, r23, true)){
                control_flow_pc = 908;
                control_flow_repeat = true;
@@ -103,7 +103,7 @@ function test(){//method() -> void
             var r28 = new WyJS.Integer(4);
             var r29 = new WyJS.Integer(4);
             var r30 = new WyJS.Integer(4);
-            var r31 = new WyJS.List([r27, r28, r29, r30], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r31 = new WyJS.Array([r27, r28, r29, r30], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r24, r31, true)){
                control_flow_pc = 909;
                control_flow_repeat = true;
@@ -119,7 +119,7 @@ function test(){//method() -> void
             var r37 = new WyJS.Integer(5);
             var r38 = new WyJS.Integer(5);
             var r39 = new WyJS.Integer(5);
-            var r40 = new WyJS.List([r35, r36, r37, r38, r39], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r40 = new WyJS.Array([r35, r36, r37, r38, r39], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r32, r40, true)){
                control_flow_pc = 910;
                control_flow_repeat = true;
@@ -136,7 +136,7 @@ function test(){//method() -> void
             var r47 = new WyJS.Integer(6);
             var r48 = new WyJS.Integer(6);
             var r49 = new WyJS.Integer(6);
-            var r50 = new WyJS.List([r44, r45, r46, r47, r48, r49], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r50 = new WyJS.Array([r44, r45, r46, r47, r48, r49], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r41, r50, true)){
                control_flow_pc = 911;
                control_flow_repeat = true;

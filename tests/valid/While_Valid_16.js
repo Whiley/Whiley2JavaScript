@@ -53,7 +53,7 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(7);
             var r6 = new WyJS.Integer(9);
             var r7 = new WyJS.Integer(11);
-            var r8 = new WyJS.List([r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r2, r3, r4, r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r1 = r8.clone(new WyJS.Type.Int());//assign %1 = %8  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r9 = inc$Z9bF1D527oHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0$Q5$R2Vk$Viz(r0);//invoke %9 = (%0) While_Valid_16:inc : function(While_Valid_16:nat[]) -> While_Valid_16:nat[]
@@ -64,7 +64,7 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(8);
             var r14 = new WyJS.Integer(10);
             var r15 = new WyJS.Integer(12);
-            var r16 = new WyJS.List([r10, r11, r12, r13, r14, r15], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r16 = new WyJS.Array([r10, r11, r12, r13, r14, r15], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r16, true)){
                control_flow_pc = 384;
                control_flow_repeat = true;

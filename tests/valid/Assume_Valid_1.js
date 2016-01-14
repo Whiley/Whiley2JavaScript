@@ -58,7 +58,7 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
-            var r7 = new WyJS.List([r3, r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = new WyJS.Array([r3, r4, r5, r6], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r2 = sum$_9bFaL1T$FF$B6$n0FS$o5$_0kM$N4$W0$Q$Z5$Z0kM$3n$VQ$35$o00D5ZAw2(r7);//invoke %2 = (%7) Assume_Valid_1:sum : function(int[]) -> Assume_Valid_1:nat
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int

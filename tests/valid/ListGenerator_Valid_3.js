@@ -43,12 +43,12 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r2, r3, r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = new WyJS.Integer(1);
-            var r7 = new WyJS.List([r6], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r8 = new WyJS.List([r5, r7], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r1 = r8.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %1 = %8  : int[][]
-            var r0 = r1.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %1  : int[][]
+            var r7 = new WyJS.Array([r6], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r5, r7], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
+            var r1 = r8.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %1 = %8  : int[][]
+            var r0 = r1.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %0 = %1  : int[][]
             var r9 = f$_9bFaA$0D53D5WE(r0);//invoke %9 = (%0) ListGenerator_Valid_3:f : function(int[][]) -> int
             var r10 = new WyJS.Integer(2);
             if(WyJS.equals(r9, r10, true)){

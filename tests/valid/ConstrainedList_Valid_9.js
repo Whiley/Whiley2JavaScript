@@ -61,7 +61,7 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(5);
             var r6 = new WyJS.Integer(6);
             var r7 = new WyJS.Integer(7);
-            var r8 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r1, r2, r3, r4, r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = sum$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$ZY5$$6$j0kR$Z5$i0$S$k5$d0kR$Fr2(r8);//invoke %0 = (%8) ConstrainedList_Valid_9:sum : function(ConstrainedList_Valid_9:posintlist) -> int
             var r9 = new WyJS.Integer(28);
             if(WyJS.equals(r0, r9, true)){

@@ -51,7 +51,7 @@ function test(){//method() -> void
             var r1 = new WyJS.Integer(1);
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
-            var r4 = new WyJS.List([r1, r2, r3], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r4 = new WyJS.Array([r1, r2, r3], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = f$3AbFaA$0D5Wz(r4);//invoke %0 = (%4) DoWhile_Valid_1:f : method(int[]) -> int
             var r5 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r5, true)){
@@ -63,7 +63,7 @@ function test(){//method() -> void
          case 310:
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
-            var r9 = new WyJS.List([r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r9 = new WyJS.Array([r7, r8], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = f$3AbFaA$0D5Wz(r9);//invoke %6 = (%9) DoWhile_Valid_1:f : method(int[]) -> int
             var r10 = new WyJS.Integer(1);
             if(WyJS.equals(r6, r10, true)){
@@ -79,7 +79,7 @@ function test(){//method() -> void
             var r15 = new WyJS.Integer(4);
             var r16 = new WyJS.Integer(5);
             var r17 = new WyJS.Integer(6);
-            var r18 = new WyJS.List([r12, r13, r14, r15, r16, r17], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r18 = new WyJS.Array([r12, r13, r14, r15, r16, r17], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r11 = f$3AbFaA$0D5Wz(r18);//invoke %11 = (%18) DoWhile_Valid_1:f : method(int[]) -> int
             var r19 = new WyJS.Integer(15);
             if(WyJS.equals(r11, r19, true)){

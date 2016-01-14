@@ -22,7 +22,7 @@ function f$_9bF5D537RWL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$
       switch(control_flow_pc){
          case -1 :
             var r1 = g$Y9bFXA$W(r0);//invoke %1 = (%0) ConstrainedList_Valid_4:g : function(int) -> int
-            var r2 = new WyJS.List([r1], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r2 = new WyJS.Array([r1], new WyJS.Type.Array(new WyJS.Type.Int()));
             return r2;//return %2 : int[]
             return;
       }
@@ -42,7 +42,7 @@ function test(){//method() -> void
             var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r4 = new WyJS.Integer(1);
-            var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
                control_flow_pc = 916;
                control_flow_repeat = true;

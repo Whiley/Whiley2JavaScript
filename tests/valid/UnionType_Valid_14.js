@@ -20,7 +20,7 @@ function f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$
             control_flow_repeat = true;
             continue outer;//goto label252
          case 251:
-            if(WyJS.is(r0, new WyJS.Type.List(new WyJS.Type.Int()))){
+            if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Int()))){
                control_flow_pc = 253;
                control_flow_repeat = true;
                continue outer;
@@ -64,7 +64,7 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
-            var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = new WyJS.Array([r4, r5, r6], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r3 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r7);//invoke %3 = (%7) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r3, r8, true)){

@@ -6,7 +6,7 @@ function f$_9bF5D537RWL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([r0], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r1 = new WyJS.Array([r0], new WyJS.Type.Array(new WyJS.Type.Int()));
             return r1;//return %1 : int[]
             return;
       }
@@ -26,7 +26,7 @@ function test(){//method() -> void
             var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r4 = new WyJS.Integer(0);
-            var r5 = new WyJS.List([r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
                control_flow_pc = 886;
                control_flow_repeat = true;

@@ -29,7 +29,7 @@ function test(){//method() -> void
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(8);
             var r10 = new WyJS.Integer(1);
-            var r11 = new WyJS.List([r3, r4, r5, r6, r7, r8, r9, r10], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r11 = new WyJS.Array([r3, r4, r5, r6, r7, r8, r9, r10], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r2 = r11.clone(new WyJS.Type.Int());//assign %2 = %11  : int[]
             var r0 = r2.clone(new WyJS.Type.Int());//assign %0 = %2  : int[]
             var r13 = new WyJS.Integer(0);

@@ -63,7 +63,7 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
             var r4 = new WyJS.Integer(4);
-            var r5 = new WyJS.List([r1, r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r1, r2, r3, r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = new WyJS.Integer(0);
             var r0 = indexOf$Z9dFas1FVYGs(r5, r6);//invoke %0 = (%5, %6) While_Valid_46:indexOf : function(int[],int) -> int
             var r7 = new WyJS.Integer(4);
@@ -78,7 +78,7 @@ function test(){//method() -> void
             var r10 = new WyJS.Integer(2);
             var r11 = new WyJS.Integer(3);
             var r12 = new WyJS.Integer(4);
-            var r13 = new WyJS.List([r9, r10, r11, r12], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = new WyJS.Array([r9, r10, r11, r12], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r14 = new WyJS.Integer(1);
             var r8 = indexOf$Z9dFas1FVYGs(r13, r14);//invoke %8 = (%13, %14) While_Valid_46:indexOf : function(int[],int) -> int
             var r15 = new WyJS.Integer(0);
@@ -93,7 +93,7 @@ function test(){//method() -> void
             var r18 = new WyJS.Integer(2);
             var r19 = new WyJS.Integer(3);
             var r20 = new WyJS.Integer(4);
-            var r21 = new WyJS.List([r17, r18, r19, r20], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r21 = new WyJS.Array([r17, r18, r19, r20], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r22 = new WyJS.Integer(2);
             var r16 = indexOf$Z9dFas1FVYGs(r21, r22);//invoke %16 = (%21, %22) While_Valid_46:indexOf : function(int[],int) -> int
             var r23 = new WyJS.Integer(1);
@@ -108,7 +108,7 @@ function test(){//method() -> void
             var r26 = new WyJS.Integer(2);
             var r27 = new WyJS.Integer(3);
             var r28 = new WyJS.Integer(4);
-            var r29 = new WyJS.List([r25, r26, r27, r28], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r29 = new WyJS.Array([r25, r26, r27, r28], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r30 = new WyJS.Integer(3);
             var r24 = indexOf$Z9dFas1FVYGs(r29, r30);//invoke %24 = (%29, %30) While_Valid_46:indexOf : function(int[],int) -> int
             var r31 = new WyJS.Integer(2);
@@ -123,7 +123,7 @@ function test(){//method() -> void
             var r34 = new WyJS.Integer(2);
             var r35 = new WyJS.Integer(3);
             var r36 = new WyJS.Integer(4);
-            var r37 = new WyJS.List([r33, r34, r35, r36], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r37 = new WyJS.Array([r33, r34, r35, r36], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r38 = new WyJS.Integer(4);
             var r32 = indexOf$Z9dFas1FVYGs(r37, r38);//invoke %32 = (%37, %38) While_Valid_46:indexOf : function(int[],int) -> int
             var r39 = new WyJS.Integer(3);

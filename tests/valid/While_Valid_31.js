@@ -46,7 +46,7 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r1 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r2 = new WyJS.Integer(104);
             var r0 = indexOf$Z9dFas1FVYGs(r1, r2);//invoke %0 = (%1, %2) While_Valid_31:indexOf : function(int[],int) -> int
             var r3 = new WyJS.Integer(0);
@@ -57,7 +57,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 428:
-            var r5 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = new WyJS.Integer(101);
             var r4 = indexOf$Z9dFas1FVYGs(r5, r6);//invoke %4 = (%5, %6) While_Valid_31:indexOf : function(int[],int) -> int
             var r7 = new WyJS.Integer(1);
@@ -68,7 +68,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 429:
-            var r9 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r9 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r10 = new WyJS.Integer(108);
             var r8 = indexOf$Z9dFas1FVYGs(r9, r10);//invoke %8 = (%9, %10) While_Valid_31:indexOf : function(int[],int) -> int
             var r11 = new WyJS.Integer(2);
@@ -79,7 +79,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 430:
-            var r13 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r13 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r14 = new WyJS.Integer(111);
             var r12 = indexOf$Z9dFas1FVYGs(r13, r14);//invoke %12 = (%13, %14) While_Valid_31:indexOf : function(int[],int) -> int
             var r15 = new WyJS.Integer(4);
@@ -90,7 +90,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 431:
-            var r17 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r17 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r18 = new WyJS.Integer(32);
             var r16 = indexOf$Z9dFas1FVYGs(r17, r18);//invoke %16 = (%17, %18) While_Valid_31:indexOf : function(int[],int) -> int
             var r19 = new WyJS.Integer(5);
@@ -101,7 +101,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 432:
-            var r21 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r21 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r22 = new WyJS.Integer(119);
             var r20 = indexOf$Z9dFas1FVYGs(r21, r22);//invoke %20 = (%21, %22) While_Valid_31:indexOf : function(int[],int) -> int
             var r23 = new WyJS.Integer(6);
@@ -112,7 +112,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 433:
-            var r25 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r25 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r26 = new WyJS.Integer(114);
             var r24 = indexOf$Z9dFas1FVYGs(r25, r26);//invoke %24 = (%25, %26) While_Valid_31:indexOf : function(int[],int) -> int
             var r27 = new WyJS.Integer(8);
@@ -123,7 +123,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 434:
-            var r29 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r29 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r30 = new WyJS.Integer(100);
             var r28 = indexOf$Z9dFas1FVYGs(r29, r30);//invoke %28 = (%29, %30) While_Valid_31:indexOf : function(int[],int) -> int
             var r31 = new WyJS.Integer(10);
@@ -134,7 +134,7 @@ function test(){//method() -> void
             }
             throw {name: 'Assert Failed', message: 'fail'}
          case 435:
-            var r33 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r33 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(119), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r34 = new WyJS.Integer(122);
             var r32 = indexOf$Z9dFas1FVYGs(r33, r34);//invoke %32 = (%33, %34) While_Valid_31:indexOf : function(int[],int) -> int
             var r35 = new WyJS.Integer(11);

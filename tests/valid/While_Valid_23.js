@@ -56,7 +56,7 @@ function test(){//method() -> void
             var r8 = new WyJS.Integer(8);
             var r9 = new WyJS.Integer(9);
             var r10 = new WyJS.Integer(10);
-            var r11 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r11 = new WyJS.Array([r1, r2, r3, r4, r5, r6, r7, r8, r9, r10], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = f$Z9bFaA$0D5Wz(r11);//invoke %0 = (%11) While_Valid_23:f : function(int[]) -> int
             var r12 = new WyJS.Integer(10);
             if(WyJS.equals(r0, r12, true)){

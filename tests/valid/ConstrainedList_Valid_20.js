@@ -40,7 +40,7 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(7);
             var r6 = new WyJS.Integer(9);
             var r7 = new WyJS.Integer(11);
-            var r8 = new WyJS.List([r2, r3, r4, r5, r6, r7], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r8 = new WyJS.Array([r2, r3, r4, r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r1 = r8.clone(new WyJS.Type.Int());//assign %1 = %8  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r10 = new WyJS.Integer(0);

@@ -29,7 +29,7 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(1);
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
-            var r5 = new WyJS.List([r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r2, r3, r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r1 = r5.clone(new WyJS.Type.Int());//assign %1 = %5  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r6 = f$Z9bFaA$0D5Wz(r0);//invoke %6 = (%0) ListGenerator_Valid_1:f : function(int[]) -> int

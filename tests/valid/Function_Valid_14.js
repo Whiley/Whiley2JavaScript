@@ -74,7 +74,7 @@ function test(){//method() -> void
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(3);
-            var r10 = new WyJS.List([r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = new WyJS.Array([r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = f$Z9bFaA$0D5Wz(r10);//invoke %6 = (%10) Function_Valid_14:f : function(int[]) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r11, true)){

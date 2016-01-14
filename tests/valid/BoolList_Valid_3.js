@@ -6,8 +6,8 @@ function update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r5 = r0.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %5 = %0  : bool[][]
-            var r1 = r5.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %1 = %5  : bool[][]
+            var r5 = r0.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %5 = %0  : bool[][]
+            var r1 = r5.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %1 = %5  : bool[][]
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r2 = r6;//assign %2 = %6  : int
@@ -272,34 +272,34 @@ function test(){//method() -> void
             var r3 = false;
             var r4 = true;
             var r5 = false;
-            var r6 = new WyJS.List([r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r6 = new WyJS.Array([r3, r4, r5], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r7 = false;
             var r8 = true;
             var r9 = false;
-            var r10 = new WyJS.List([r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r10 = new WyJS.Array([r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r11 = false;
             var r12 = true;
             var r13 = false;
-            var r14 = new WyJS.List([r11, r12, r13], new WyJS.Type.List(new WyJS.Type.Bool()));
-            var r15 = new WyJS.List([r6, r10, r14], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Bool())));
-            var r2 = r15.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %2 = %15  : bool[][]
-            var r0 = r2.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %0 = %2  : bool[][]
+            var r14 = new WyJS.Array([r11, r12, r13], new WyJS.Type.Array(new WyJS.Type.Bool()));
+            var r15 = new WyJS.Array([r6, r10, r14], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Bool())));
+            var r2 = r15.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %2 = %15  : bool[][]
+            var r0 = r2.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %0 = %2  : bool[][]
             var r17 = update$Y9bFXL1c$VF$w5$j0$Q$k3$d0kR$F6$U0VK$35$g0FP$F5$U0kB4$10kQ$35$m0$OF7(r0);//invoke %17 = (%0) BoolList_Valid_3:update : function(BoolList_Valid_3:Board) -> BoolList_Valid_3:Board
-            var r16 = r17.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %16 = %17  : bool[][]
-            var r1 = r16.clone(new WyJS.Type.List(new WyJS.Type.Bool()));//assign %1 = %16  : bool[][]
+            var r16 = r17.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %16 = %17  : bool[][]
+            var r1 = r16.clone(new WyJS.Type.Array(new WyJS.Type.Bool()));//assign %1 = %16  : bool[][]
             var r18 = false;
             var r19 = true;
             var r20 = false;
-            var r21 = new WyJS.List([r18, r19, r20], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r21 = new WyJS.Array([r18, r19, r20], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r22 = false;
             var r23 = true;
             var r24 = false;
-            var r25 = new WyJS.List([r22, r23, r24], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r25 = new WyJS.Array([r22, r23, r24], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r26 = false;
             var r27 = true;
             var r28 = false;
-            var r29 = new WyJS.List([r26, r27, r28], new WyJS.Type.List(new WyJS.Type.Bool()));
-            var r30 = new WyJS.List([r21, r25, r29], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Bool())));
+            var r29 = new WyJS.Array([r26, r27, r28], new WyJS.Type.Array(new WyJS.Type.Bool()));
+            var r30 = new WyJS.Array([r21, r25, r29], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Bool())));
             if(WyJS.equals(r0, r30, true)){
                control_flow_pc = 769;
                control_flow_repeat = true;
@@ -310,16 +310,16 @@ function test(){//method() -> void
             var r31 = false;
             var r32 = false;
             var r33 = false;
-            var r34 = new WyJS.List([r31, r32, r33], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r34 = new WyJS.Array([r31, r32, r33], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r35 = false;
             var r36 = true;
             var r37 = false;
-            var r38 = new WyJS.List([r35, r36, r37], new WyJS.Type.List(new WyJS.Type.Bool()));
+            var r38 = new WyJS.Array([r35, r36, r37], new WyJS.Type.Array(new WyJS.Type.Bool()));
             var r39 = false;
             var r40 = false;
             var r41 = false;
-            var r42 = new WyJS.List([r39, r40, r41], new WyJS.Type.List(new WyJS.Type.Bool()));
-            var r43 = new WyJS.List([r34, r38, r42], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Bool())));
+            var r42 = new WyJS.Array([r39, r40, r41], new WyJS.Type.Array(new WyJS.Type.Bool()));
+            var r43 = new WyJS.Array([r34, r38, r42], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Bool())));
             if(WyJS.equals(r1, r43, true)){
                control_flow_pc = 770;
                control_flow_repeat = true;

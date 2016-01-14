@@ -22,7 +22,7 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r1 = new WyJS.List([new WyJS.Integer(49)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r1 = new WyJS.Array([new WyJS.Integer(49)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = f$Z9bFaA$0D5Wz(r1);//invoke %0 = (%1) Import_Valid_2:f : function(int[]) -> int
             var r2 = new WyJS.Integer(49);
             if(WyJS.equals(r0, r2, true)){

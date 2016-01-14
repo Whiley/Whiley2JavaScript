@@ -25,8 +25,8 @@ function test(){//method() -> void
          case -1 :
             var r1 = new WyJS.Integer(1);
             var r2 = new WyJS.Integer(1);
-            var r3 = new WyJS.List([r2], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r4 = new WyJS.Record(["op", "payload"], [r1, r3], new WyJS.Type.Record(["op", "payload"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r3 = new WyJS.Array([r2], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r4 = new WyJS.Record(["op", "payload"], [r1, r3], new WyJS.Type.Record(["op", "payload"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
             var r0 = f$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0FB$B20kN$w5$Z0FO(r4);//invoke %0 = (%4) ConstrainedInt_Valid_13:f : function(ConstrainedInt_Valid_13:code) -> int
             var r5 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r5, true)){

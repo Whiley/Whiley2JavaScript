@@ -48,7 +48,7 @@ function test(){//method() -> void
          case -1 :
             var r1 = new WyJS.Integer(0);
             var r2 = new WyJS.Integer(0);
-            var r3 = WyJS.ListGen(r1, r2, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r3 = WyJS.ArrayGen(r1, r2, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r3);//invoke %0 = (%3) While_Valid_3:sum : function(While_Valid_3:nat[]) -> While_Valid_3:nat
             var r4 = new WyJS.Integer(0);
             if(WyJS.equals(r0, r4, true)){
@@ -61,7 +61,7 @@ function test(){//method() -> void
             var r6 = new WyJS.Integer(1);
             var r7 = new WyJS.Integer(2);
             var r8 = new WyJS.Integer(3);
-            var r9 = new WyJS.List([r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r9 = new WyJS.Array([r6, r7, r8], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r5 = sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r9);//invoke %5 = (%9) While_Valid_3:sum : function(While_Valid_3:nat[]) -> While_Valid_3:nat
             var r10 = new WyJS.Integer(6);
             if(WyJS.equals(r5, r10, true)){
@@ -76,7 +76,7 @@ function test(){//method() -> void
             var r14 = new WyJS.Integer(12398);
             var r15 = new WyJS.Integer(12309);
             var r16 = new WyJS.Integer(0);
-            var r17 = new WyJS.List([r12, r13, r14, r15, r16], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r17 = new WyJS.Array([r12, r13, r14, r15, r16], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r11 = sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r17);//invoke %11 = (%17) While_Valid_3:sum : function(While_Valid_3:nat[]) -> While_Valid_3:nat
             var r18 = new WyJS.Integer(135217);
             if(WyJS.equals(r11, r18, true)){

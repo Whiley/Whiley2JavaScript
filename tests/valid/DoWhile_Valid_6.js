@@ -55,7 +55,7 @@ function test(){//method() -> void
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(1);
-            var r10 = new WyJS.List([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r10 = new WyJS.Array([r1, r2, r3, r4, r5, r6, r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r11 = new WyJS.Integer(1);
             var r0 = lastIndexOf$Z9dFas1FVYGs(r10, r11);//invoke %0 = (%10, %11) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r12 = new WyJS.Integer(8);
@@ -75,7 +75,7 @@ function test(){//method() -> void
             var r20 = new WyJS.Integer(3);
             var r21 = new WyJS.Integer(2);
             var r22 = new WyJS.Integer(1);
-            var r23 = new WyJS.List([r14, r15, r16, r17, r18, r19, r20, r21, r22], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r23 = new WyJS.Array([r14, r15, r16, r17, r18, r19, r20, r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r24 = new WyJS.Integer(2);
             var r13 = lastIndexOf$Z9dFas1FVYGs(r23, r24);//invoke %13 = (%23, %24) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r25 = new WyJS.Integer(7);
@@ -95,7 +95,7 @@ function test(){//method() -> void
             var r33 = new WyJS.Integer(3);
             var r34 = new WyJS.Integer(2);
             var r35 = new WyJS.Integer(1);
-            var r36 = new WyJS.List([r27, r28, r29, r30, r31, r32, r33, r34, r35], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r36 = new WyJS.Array([r27, r28, r29, r30, r31, r32, r33, r34, r35], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r37 = new WyJS.Integer(3);
             var r26 = lastIndexOf$Z9dFas1FVYGs(r36, r37);//invoke %26 = (%36, %37) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r38 = new WyJS.Integer(6);
@@ -115,7 +115,7 @@ function test(){//method() -> void
             var r46 = new WyJS.Integer(3);
             var r47 = new WyJS.Integer(2);
             var r48 = new WyJS.Integer(1);
-            var r49 = new WyJS.List([r40, r41, r42, r43, r44, r45, r46, r47, r48], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r49 = new WyJS.Array([r40, r41, r42, r43, r44, r45, r46, r47, r48], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r50 = new WyJS.Integer(4);
             var r39 = lastIndexOf$Z9dFas1FVYGs(r49, r50);//invoke %39 = (%49, %50) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r51 = new WyJS.Integer(5);
@@ -135,7 +135,7 @@ function test(){//method() -> void
             var r59 = new WyJS.Integer(3);
             var r60 = new WyJS.Integer(2);
             var r61 = new WyJS.Integer(1);
-            var r62 = new WyJS.List([r53, r54, r55, r56, r57, r58, r59, r60, r61], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r62 = new WyJS.Array([r53, r54, r55, r56, r57, r58, r59, r60, r61], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r63 = new WyJS.Integer(5);
             var r52 = lastIndexOf$Z9dFas1FVYGs(r62, r63);//invoke %52 = (%62, %63) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r64 = new WyJS.Integer(4);

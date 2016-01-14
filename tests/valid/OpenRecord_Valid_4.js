@@ -97,8 +97,8 @@ function test(){//method() -> void
             throw {name: 'Assert Failed', message: 'fail'}
          case 996:
             var r18 = new WyJS.Integer(2);
-            var r19 = new WyJS.List([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r20 = new WyJS.Record(["x", "y"], [r18, r19], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.List(new WyJS.Type.Int())]));
+            var r19 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r20 = new WyJS.Record(["x", "y"], [r18, r19], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
             var r0 = r20.clone();//assign %0 = %20  : {int x,int[] y}
             var r21 = getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$oc0$E0$R$J5$i0VJ$J5$Y0kQ$76$Zx(r0);//invoke %21 = (%0) OpenRecord_Valid_4:getField : function(OpenRecord_Valid_4:OpenRecord) -> int
             var r22 = new WyJS.Integer(2);

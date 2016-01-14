@@ -30,21 +30,21 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
-            var r7 = new WyJS.List([r4, r5, r6], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r7 = new WyJS.Array([r4, r5, r6], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = r7.clone(new WyJS.Type.Int());//assign %0 = %7  : int[]
             control_flow_pc = 1323;
             control_flow_repeat = true;
             continue outer;//goto label1323
          case 1322:
             var r8 = new WyJS.Integer(1);
-            var r9 = new WyJS.List([r8], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r9 = new WyJS.Array([r8], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r10 = new WyJS.Integer(2);
             var r11 = new WyJS.Integer(3);
-            var r12 = new WyJS.List([r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r12 = new WyJS.Array([r10, r11], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r13 = new WyJS.Integer(5);
-            var r14 = new WyJS.List([r13], new WyJS.Type.List(new WyJS.Type.Int()));
-            var r15 = new WyJS.List([r9, r12, r14], new WyJS.Type.List(new WyJS.Type.List(new WyJS.Type.Int())));
-            var r0 = r15.clone(new WyJS.Type.List(new WyJS.Type.Int()));//assign %0 = %15  : int[][]
+            var r14 = new WyJS.Array([r13], new WyJS.Type.Array(new WyJS.Type.Int()));
+            var r15 = new WyJS.Array([r9, r12, r14], new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())));
+            var r0 = r15.clone(new WyJS.Type.Array(new WyJS.Type.Int()));//assign %0 = %15  : int[][]
          case 1323:
             var r16 = new WyJS.Integer(1);
             var r17 = new WyJS.Integer(0);
@@ -54,7 +54,7 @@ function test(){//method() -> void
             var r20 = new WyJS.Integer(1);
             var r21 = new WyJS.Integer(2);
             var r22 = new WyJS.Integer(3);
-            var r23 = new WyJS.List([r20, r21, r22], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r23 = new WyJS.Array([r20, r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r19, r23, true)){
                control_flow_pc = 1324;
                control_flow_repeat = true;

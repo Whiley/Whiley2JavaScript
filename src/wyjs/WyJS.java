@@ -798,7 +798,7 @@ public class WyJS {
 
 		String type = getType(o.type());
 
-		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.List("
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Array("
 				+ values + ", " + type + ");\n");
 	}
 
@@ -813,7 +813,7 @@ public class WyJS {
 	}
 
 	private void write(Codes.ListGenerator o) throws Exception {
-		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ListGen(r"
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ArrayGen(r"
 				+ o.operand(0) + ", r" + o.operand(1) + ", "
 				+ getType(o.type()) + ");\n");
 	}
@@ -925,7 +925,7 @@ public class WyJS {
 		} else if (type instanceof Type.Bool) {
 			return "new WyJS.Type.Bool()";
 		} else if (type instanceof Type.Array) {
-			return "new WyJS.Type.List(" + getType(((Type.Array) type).element())
+			return "new WyJS.Type.Array(" + getType(((Type.Array) type).element())
 					+ ")";
 		} else if (type instanceof Type.Int) {
 			return "new WyJS.Type.Int()";
@@ -1036,7 +1036,7 @@ public class WyJS {
 				}
 			}
 			String type = getType(tmp.type());
-			return "new WyJS.List(" + values + ", " + type + ")";
+			return "new WyJS.Array(" + values + ", " + type + ")";
 		} else if (constant instanceof Constant.Null) {
 			return "null";
 		} else if (constant instanceof Constant.Rational) {

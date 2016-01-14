@@ -25,7 +25,7 @@ function test(){//method() -> void
             var r3 = new WyJS.Integer(2);
             var r4 = new WyJS.Integer(3);
             var r5 = new WyJS.Integer(4);
-            var r6 = new WyJS.List([r2, r3, r4, r5], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r6 = new WyJS.Array([r2, r3, r4, r5], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r1 = r6.clone(new WyJS.Type.Int());//assign %1 = %6  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r8 = new WyJS.Integer(0);
@@ -48,7 +48,7 @@ function test(){//method() -> void
             var r20 = new WyJS.Integer(3);
             var r21 = new WyJS.Integer(4);
             var r22 = new WyJS.Integer(5);
-            var r23 = new WyJS.List([r19, r20, r21, r22], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r23 = new WyJS.Array([r19, r20, r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r23, true)){
                control_flow_pc = 935;
                control_flow_repeat = true;

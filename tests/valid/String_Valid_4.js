@@ -57,13 +57,13 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r2 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r2 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r1 = r2.clone(new WyJS.Type.Int());//assign %1 = %2  : int[]
             var r0 = r1.clone(new WyJS.Type.Int());//assign %0 = %1  : int[]
             var r4 = new WyJS.Integer(108);
             var r5 = new WyJS.Integer(49);
             var r3 = repl$Z9fFa8sNBVk4y2(r4, r5, r0);//invoke %3 = (%4, %5, %0) String_Valid_4:repl : function(int,int,int[]) -> int[]
-            var r6 = new WyJS.List([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(49), new WyJS.Integer(49), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(49), new WyJS.Integer(100)], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r6 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(49), new WyJS.Integer(49), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(49), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r3, r6, true)){
                control_flow_pc = 1161;
                control_flow_repeat = true;

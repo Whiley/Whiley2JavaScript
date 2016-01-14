@@ -66,7 +66,7 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(2);
             var r3 = new WyJS.Integer(3);
             var r4 = new WyJS.Integer(4);
-            var r5 = new WyJS.List([r1, r2, r3, r4], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r5 = new WyJS.Array([r1, r2, r3, r4], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r0 = isSorted$_9bF59$0D5ZAw2(r5);//invoke %0 = (%5) While_Valid_38:isSorted : function(int[]) -> bool
             var r6 = true;
             if(r0 === r6){
@@ -80,7 +80,7 @@ function test(){//method() -> void
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(4);
             var r11 = new WyJS.Integer(3);
-            var r12 = new WyJS.List([r8, r9, r10, r11], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r12 = new WyJS.Array([r8, r9, r10, r11], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r7 = isSorted$_9bF59$0D5ZAw2(r12);//invoke %7 = (%12) While_Valid_38:isSorted : function(int[]) -> bool
             var r13 = true;
             if(r7 === r13){
@@ -98,7 +98,7 @@ function test(){//method() -> void
             var r16 = new WyJS.Integer(2);
             var r17 = new WyJS.Integer(3);
             var r18 = new WyJS.Integer(5);
-            var r19 = new WyJS.List([r15, r16, r17, r18], new WyJS.Type.List(new WyJS.Type.Int()));
+            var r19 = new WyJS.Array([r15, r16, r17, r18], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r14 = isSorted$_9bF59$0D5ZAw2(r19);//invoke %14 = (%19) While_Valid_38:isSorted : function(int[]) -> bool
             var r20 = true;
             if(r14 === r20){
@@ -114,7 +114,7 @@ function test(){//method() -> void
          case 461:
             var r22 = new WyJS.Integer(0);
             var r23 = new WyJS.Integer(0);
-            var r24 = WyJS.ListGen(r22, r23, new WyJS.Type.List(new WyJS.Type.Int()));
+            var r24 = WyJS.ArrayGen(r22, r23, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r21 = isSorted$_9bF59$0D5ZAw2(r24);//invoke %21 = (%24) While_Valid_38:isSorted : function(int[]) -> bool
             var r25 = true;
             if(r21 === r25){

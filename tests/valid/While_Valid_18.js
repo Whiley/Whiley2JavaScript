@@ -60,13 +60,13 @@ function test(){//method() -> void
       control_flow_repeat = false
       switch(control_flow_pc){
          case -1 :
-            var r3 = new WyJS.Byte("0");
-            var r4 = new WyJS.Byte("5");
-            var r5 = new WyJS.Byte("0");
-            var r6 = new WyJS.Byte("6");
-            var r7 = new WyJS.Byte("0");
-            var r8 = new WyJS.Byte("5");
-            var r9 = new WyJS.List([r3, r4, r5, r6, r7, r8], new WyJS.Type.List(new WyJS.Type.Byte()));
+            var r3 = new WyJS.Byte(0);
+            var r4 = new WyJS.Byte(5);
+            var r5 = new WyJS.Byte(0);
+            var r6 = new WyJS.Byte(6);
+            var r7 = new WyJS.Byte(0);
+            var r8 = new WyJS.Byte(5);
+            var r9 = new WyJS.Array([r3, r4, r5, r6, r7, r8], new WyJS.Type.Array(new WyJS.Type.Byte()));
             var r2 = r9.clone(new WyJS.Type.Byte());//assign %2 = %9  : byte[]
             var r0 = r2.clone(new WyJS.Type.Byte());//assign %0 = %2  : byte[]
             var r12 = new WyJS.Integer(0);
