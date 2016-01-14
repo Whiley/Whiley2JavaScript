@@ -1014,7 +1014,7 @@ public class WyJS {
 			return bol.value + "";
 		} else if (constant instanceof Constant.Byte) {
 			Constant.Byte varByte = (Constant.Byte) constant;
-			return "new WyJS.Byte(\""+ varByte +"\")";
+			return "new WyJS.Byte("+ varByte.value +")";
 		} else if (constant instanceof Constant.Decimal) {
 			Constant.Decimal deci = (Constant.Decimal) constant;
 			return "new WyJS.Real(" + deci.value + ")";
