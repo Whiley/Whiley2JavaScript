@@ -37,7 +37,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
          case -2:
             var r19 = r0.fieldLoad("height");//fieldload %19 = %0 height : {int[][] data,int height,int width}
             if(WyJS.gt(r3, r19, true)){
-               control_flow_pc = 814;
+               control_flow_pc = 839;
                control_flow_repeat = true;
                continue outer;
             }
@@ -55,7 +55,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
          case -3:
             var r29 = r1.fieldLoad("width");//fieldload %29 = %1 width : {int[][] data,int height,int width}
             if(WyJS.gt(r5, r29, true)){
-               control_flow_pc = 817;
+               control_flow_pc = 842;
                control_flow_repeat = true;
                continue outer;
             }
@@ -71,7 +71,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
          case -4:
             var r35 = r0.fieldLoad("width");//fieldload %35 = %0 width : {int[][] data,int height,int width}
             if(WyJS.gt(r7, r35, true)){
-               control_flow_pc = 819;
+               control_flow_pc = 844;
                control_flow_repeat = true;
                continue outer;
             }
@@ -93,7 +93,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 819:
+         case 844:
             r4.setValue(r5, r6);
             var r46 = new WyJS.Integer(1);
             var r47 = r5.add(r46);//add %47 = %5, %46 : int
@@ -104,7 +104,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 817:
+         case 842:
             r2.setValue(r3, r4);
             var r48 = new WyJS.Integer(1);
             var r49 = r3.add(r48);//add %49 = %3, %48 : int
@@ -112,7 +112,7 @@ function run$Y9dFXc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 814:
+         case 839:
             var r51 = r1.fieldLoad("width");//fieldload %51 = %1 width : {int[][] data,int height,int width}
             var r52 = r0.fieldLoad("height");//fieldload %52 = %0 height : {int[][] data,int height,int width}
             var r50 = Matrix$b9fFaWP8Z2$20kQ$s5$n0$S$76$W0FP$s5$_0$O$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$tN$o3$W0$S$76$d0$TFc_FD$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0VJ$J5$Y0kQ$76$Z0kM$N4$W0$Q$Z5$Z0kM$Zn$VQ$35$ollcklkRW2(r51, r52, r2);//invoke %50 = (%51, %52, %2) ConstrainedRecord_Valid_9:Matrix : function(ConstrainedRecord_Valid_9:nat,ConstrainedRecord_Valid_9:nat,int[][]) -> ConstrainedRecord_Valid_9:Matrix
@@ -172,12 +172,12 @@ function test(){//method() -> void
             var r39 = new WyJS.Integer(2);
             var r40 = new WyJS.Record(["data", "height", "width"], [r37, r38, r39], new WyJS.Type.Record(["data", "height", "width"], [new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r2, r40, true)){
-               control_flow_pc = 820;
+               control_flow_pc = 845;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 820:
+         case 845:
             var r42 = new WyJS.Integer(3);
             var r43 = new WyJS.Integer(2);
             var r44 = new WyJS.Integer(1);
@@ -218,12 +218,12 @@ function test(){//method() -> void
             var r75 = new WyJS.Integer(2);
             var r76 = new WyJS.Record(["data", "height", "width"], [r73, r74, r75], new WyJS.Type.Record(["data", "height", "width"], [new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r2, r76, true)){
-               control_flow_pc = 821;
+               control_flow_pc = 846;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 821:
+         case 846:
             var r78 = new WyJS.Integer(3);
             var r79 = new WyJS.Integer(2);
             var r80 = new WyJS.Integer(1);
@@ -274,12 +274,12 @@ function test(){//method() -> void
             var r121 = new WyJS.Integer(4);
             var r122 = new WyJS.Record(["data", "height", "width"], [r119, r120, r121], new WyJS.Type.Record(["data", "height", "width"], [new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())), new WyJS.Type.Int(), new WyJS.Type.Int()]));
             if(WyJS.equals(r2, r122, true)){
-               control_flow_pc = 822;
+               control_flow_pc = 847;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 822:
+         case 847:
             return;
       }
    }

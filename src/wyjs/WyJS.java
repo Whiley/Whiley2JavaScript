@@ -48,6 +48,7 @@ import wyil.lang.CodeUtils;
 import wyil.lang.Codes;
 import wyil.lang.Codes.Debug;
 import wyil.lang.Codes.If;
+import wyil.lang.Codes.Invert;
 import wyil.lang.Codes.LVal;
 import wyil.lang.Codes.Nop;
 import wyil.lang.Constant;
@@ -187,7 +188,7 @@ public class WyJS {
 		} else if (o instanceof Codes.Invariant) {
 			throw new RuntimeException("Codes.Invariant not supported.");
 		} else if (o instanceof Codes.Invert) {
-			throw new RuntimeException("Codes.Invert not supported.");
+			write((Codes.Invert) o);
 		} else if (o instanceof Codes.Invoke) {
 			write((Codes.Invoke) o);
 		} else if (o instanceof Codes.Label) {
@@ -255,7 +256,12 @@ public class WyJS {
 		js.add(functionText);
 	}
 
-	private void write(Nop function) throws Exception {	}
+	private void write(Codes.Nop function) throws Exception {	}
+
+	private void write(Codes.Invert o) throws Exception {
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r"
+				+ o.operand(0) + ".neg();//" + o.toString() + "\n");
+	}
 
 	private void write(FunctionOrMethod function) throws Exception {
 		String functionText = "";

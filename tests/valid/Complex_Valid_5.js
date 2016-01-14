@@ -67,12 +67,12 @@ function test(){//method() -> void
             var r16 = new WyJS.Array([r7, r8, r9, r10, r11, r12, r13, r14, r15], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r17 = new WyJS.Record(["move", "pieces"], [r6, r16], new WyJS.Type.Record(["move", "pieces"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
             if(WyJS.equals(r0, r17, true)){
-               control_flow_pc = 830;
+               control_flow_pc = 855;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 830:
+         case 855:
             return;
       }
    }

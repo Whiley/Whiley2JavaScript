@@ -24,12 +24,12 @@ function test(){//method() -> void
             var r0 = f$Z9_FsNBVk4D();//invoke %0 = () ConstrainedList_Valid_15:f : function() -> int[]
             var r1 = new WyJS.Array([], new WyJS.Type.Array(new WyJS.Type.Void()));
             if(WyJS.equals(r0, r1, true)){
-               control_flow_pc = 129;
+               control_flow_pc = 154;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 129:
+         case 154:
             return;
       }
    }

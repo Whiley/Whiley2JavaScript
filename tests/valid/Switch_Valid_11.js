@@ -7,33 +7,33 @@ function f$Y9bFXA$W(r0){//function(int) -> int
       switch(control_flow_pc){
          case -1 :
             if(WyJS.equals(r0, new WyJS.Integer(1), true)){
-               control_flow_pc = 774;
+               control_flow_pc = 799;
                control_flow_repeat = true;
                continue outer;
             }
              else if(WyJS.equals(r0, new WyJS.Integer(2), true)){
-               control_flow_pc = 775;
+               control_flow_pc = 800;
                control_flow_repeat = true;
                continue outer;
             }
             else{
-               control_flow_pc = 773;
+               control_flow_pc = 798;
                control_flow_repeat = true;
                continue outer;
             }
-         case 774:
+         case 799:
             var r1 = new WyJS.Integer(0);
             return r1;//return %1 : int
-            control_flow_pc = 773;
+            control_flow_pc = 798;
             control_flow_repeat = true;
-            continue outer;//goto label773
-         case 775:
+            continue outer;//goto label798
+         case 800:
             var r2 = new WyJS.Integer(1);
             return r2;//return %2 : int
-            control_flow_pc = 773;
+            control_flow_pc = 798;
             control_flow_repeat = true;
-            continue outer;//goto label773
-         case 773:
+            continue outer;//goto label798
+         case 798:
             var r3 = new WyJS.Integer(2);
             return r3;//return %3 : int
             return;
@@ -53,32 +53,32 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Switch_Valid_11:f : function(int) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 776;
+               control_flow_pc = 801;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 776:
+         case 801:
             var r4 = new WyJS.Integer(1);
             var r3 = f$Y9bFXA$W(r4);//invoke %3 = (%4) Switch_Valid_11:f : function(int) -> int
             var r5 = new WyJS.Integer(0);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 777;
+               control_flow_pc = 802;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 777:
+         case 802:
             var r7 = new WyJS.Integer(0);
             var r6 = f$Y9bFXA$W(r7);//invoke %6 = (%7) Switch_Valid_11:f : function(int) -> int
             var r8 = new WyJS.Integer(2);
             if(WyJS.equals(r6, r8, true)){
-               control_flow_pc = 778;
+               control_flow_pc = 803;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 778:
+         case 803:
             return;
       }
    }

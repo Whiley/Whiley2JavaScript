@@ -24,12 +24,12 @@ function test(){//method() -> void
             var r0 = f$b9bFaJ533sNJFWJq4a$(r1);//invoke %0 = (%1) NegationType_Valid_4:f : function(int[]) -> !(int|null)
             var r2 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 879;
+               control_flow_pc = 904;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 879:
+         case 904:
             return;
       }
    }
