@@ -18,7 +18,7 @@ function init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7
             break;
          case -2:
             if(WyJS.gt(r2, r0, true)){
-               control_flow_pc = 929;
+               control_flow_pc = 965;
                control_flow_repeat = true;
                continue outer;
             }
@@ -29,7 +29,7 @@ function init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 929:
+         case 965:
             return r3;//return %3 : int[]
             return;
       }
@@ -51,24 +51,24 @@ function test(){//method() -> void
             var r4 = new WyJS.Integer(0);
             var r5 = WyJS.ArrayGen(r3, r4, new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 930;
+               control_flow_pc = 966;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 930:
+         case 966:
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(1);
             var r6 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r7, r8);//invoke %6 = (%7, %8) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Array([r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r6, r10, true)){
-               control_flow_pc = 931;
+               control_flow_pc = 967;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 931:
+         case 967:
             var r12 = new WyJS.Integer(2);
             var r13 = new WyJS.Integer(2);
             var r11 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r12, r13);//invoke %11 = (%12, %13) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
@@ -76,12 +76,12 @@ function test(){//method() -> void
             var r15 = new WyJS.Integer(2);
             var r16 = new WyJS.Array([r14, r15], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r11, r16, true)){
-               control_flow_pc = 932;
+               control_flow_pc = 968;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 932:
+         case 968:
             var r18 = new WyJS.Integer(3);
             var r19 = new WyJS.Integer(3);
             var r17 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r18, r19);//invoke %17 = (%18, %19) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
@@ -90,12 +90,12 @@ function test(){//method() -> void
             var r22 = new WyJS.Integer(3);
             var r23 = new WyJS.Array([r20, r21, r22], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r17, r23, true)){
-               control_flow_pc = 933;
+               control_flow_pc = 969;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 933:
+         case 969:
             var r25 = new WyJS.Integer(4);
             var r26 = new WyJS.Integer(4);
             var r24 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r25, r26);//invoke %24 = (%25, %26) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
@@ -105,12 +105,12 @@ function test(){//method() -> void
             var r30 = new WyJS.Integer(4);
             var r31 = new WyJS.Array([r27, r28, r29, r30], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r24, r31, true)){
-               control_flow_pc = 934;
+               control_flow_pc = 970;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 934:
+         case 970:
             var r33 = new WyJS.Integer(5);
             var r34 = new WyJS.Integer(5);
             var r32 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r33, r34);//invoke %32 = (%33, %34) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
@@ -121,12 +121,12 @@ function test(){//method() -> void
             var r39 = new WyJS.Integer(5);
             var r40 = new WyJS.Array([r35, r36, r37, r38, r39], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r32, r40, true)){
-               control_flow_pc = 935;
+               control_flow_pc = 971;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 935:
+         case 971:
             var r42 = new WyJS.Integer(6);
             var r43 = new WyJS.Integer(6);
             var r41 = init$_9dF5XY001h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Na0$r$7B$cv12(r42, r43);//invoke %41 = (%42, %43) ConstrainedList_Valid_3:init : function(ConstrainedList_Valid_3:nat,int) -> int[]
@@ -138,12 +138,12 @@ function test(){//method() -> void
             var r49 = new WyJS.Integer(6);
             var r50 = new WyJS.Array([r44, r45, r46, r47, r48, r49], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r41, r50, true)){
-               control_flow_pc = 936;
+               control_flow_pc = 972;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 936:
+         case 972:
             return;
       }
    }

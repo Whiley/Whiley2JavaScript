@@ -31,32 +31,32 @@ function test(){//method() -> void
             var r7 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r0, r8);//invoke %7 = (%0, %8) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r9 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r9, true)){
-               control_flow_pc = 367;
+               control_flow_pc = 357;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 367:
+         case 357:
             var r11 = new WyJS.Integer(1);
             var r10 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r0, r11);//invoke %10 = (%0, %11) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r12 = new WyJS.Integer(2);
             if(WyJS.equals(r10, r12, true)){
-               control_flow_pc = 368;
+               control_flow_pc = 358;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 368:
+         case 358:
             var r14 = new WyJS.Integer(2);
             var r13 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r0, r14);//invoke %13 = (%0, %14) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r15 = new WyJS.Integer(3);
             if(WyJS.equals(r13, r15, true)){
-               control_flow_pc = 369;
+               control_flow_pc = 359;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 369:
+         case 359:
             var r17 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(87), new WyJS.Integer(111), new WyJS.Integer(114), new WyJS.Integer(108), new WyJS.Integer(100)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r16 = r17.clone(new WyJS.Type.Int());//assign %16 = %17  : int[]
             var r1 = r16.clone(new WyJS.Type.Int());//assign %1 = %16  : int[]
@@ -64,32 +64,32 @@ function test(){//method() -> void
             var r18 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r1, r19);//invoke %18 = (%1, %19) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r20 = new WyJS.Integer(72);
             if(WyJS.equals(r18, r20, true)){
-               control_flow_pc = 370;
+               control_flow_pc = 360;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 370:
+         case 360:
             var r22 = new WyJS.Integer(1);
             var r21 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r1, r22);//invoke %21 = (%1, %22) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r23 = new WyJS.Integer(101);
             if(WyJS.equals(r21, r23, true)){
-               control_flow_pc = 371;
+               control_flow_pc = 361;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 371:
+         case 361:
             var r25 = new WyJS.Integer(2);
             var r24 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$mR$k5$d0kR$F6$n0$S$7r4D(r1, r25);//invoke %24 = (%1, %25) Access_Valid_2:index : function(Access_Valid_2:liststr,int) -> any
             var r26 = new WyJS.Integer(108);
             if(WyJS.equals(r24, r26, true)){
-               control_flow_pc = 372;
+               control_flow_pc = 362;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 372:
+         case 362:
             return;
       }
    }

@@ -34,12 +34,12 @@ function test(){//method() -> void
             var r5 = sum$Z9bF5B1Fc_V9$w3$k0FO$s5$H0FO$B5$j0VR$F5$U0VK$35$g0FP$F5$U0$D4$F0kQ$Z5$i0$SE(r0);//invoke %5 = (%0) OpenRecord_Valid_8:sum : function(OpenRecord_Valid_8:Point) -> real
             var r6 = new WyJS.Real(3.0);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 1023;
+               control_flow_pc = 1066;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1023:
+         case 1066:
             var r7 = new WyJS.Real(1.23);
             var r8 = new WyJS.Real(2.34);
             var r9 = new WyJS.Record(["x", "y"], [r7, r8], new WyJS.Type.Record(["x", "y"], [new WyJS.Type.Real(), new WyJS.Type.Real()]));
@@ -47,12 +47,12 @@ function test(){//method() -> void
             var r10 = sum$Z9bF5B1Fc_V9$w3$k0FO$s5$H0FO$B5$j0VR$F5$U0VK$35$g0FP$F5$U0$D4$F0kQ$Z5$i0$SE(r0);//invoke %10 = (%0) OpenRecord_Valid_8:sum : function(OpenRecord_Valid_8:Point) -> real
             var r11 = new WyJS.Real(3.57);
             if(WyJS.equals(r10, r11, true)){
-               control_flow_pc = 1024;
+               control_flow_pc = 1067;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1024:
+         case 1067:
             return;
       }
    }

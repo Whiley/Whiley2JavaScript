@@ -15,7 +15,7 @@ function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
          case -2:
             var r12 = r0.length();//lengthof %12 = %0 : int[]
             if(WyJS.gt(r1, r12, true)){
-               control_flow_pc = 480;
+               control_flow_pc = 470;
                control_flow_repeat = true;
                continue outer;
             }
@@ -24,7 +24,7 @@ function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
             var r15 = r0.getValue(r14);
             var r16 = r0.getValue(r1);
             if(WyJS.lt(r15, r16, false)){
-               control_flow_pc = 481;
+               control_flow_pc = 471;
                control_flow_repeat = true;
                break;
             }
@@ -39,14 +39,14 @@ function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 481:
+         case 471:
             var r18 = new WyJS.Integer(1);
             var r19 = r1.add(r18);//add %19 = %1, %18 : int
             var r1 = r19;//assign %1 = %19  : int
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 480:
+         case 470:
             var r20 = true;
             return r20;//return %20 : bool
             return;
@@ -70,12 +70,12 @@ function test(){//method() -> void
             var r0 = isSorted$_9bF59$0D5ZAw2(r5);//invoke %0 = (%5) While_Valid_38:isSorted : function(int[]) -> bool
             var r6 = true;
             if(r0 === r6){
-               control_flow_pc = 482;
+               control_flow_pc = 472;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 482:
+         case 472:
             var r8 = new WyJS.Integer(1);
             var r9 = new WyJS.Integer(2);
             var r10 = new WyJS.Integer(4);
@@ -84,16 +84,16 @@ function test(){//method() -> void
             var r7 = isSorted$_9bF59$0D5ZAw2(r12);//invoke %7 = (%12) While_Valid_38:isSorted : function(int[]) -> bool
             var r13 = true;
             if(r7 === r13){
-               control_flow_pc = 483;
+               control_flow_pc = 473;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 484;
+            control_flow_pc = 474;
             control_flow_repeat = true;
-            continue outer;//goto label484
-         case 483:
+            continue outer;//goto label474
+         case 473:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 484:
+         case 474:
             var r15 = new WyJS.Integer(4);
             var r16 = new WyJS.Integer(2);
             var r17 = new WyJS.Integer(3);
@@ -102,28 +102,28 @@ function test(){//method() -> void
             var r14 = isSorted$_9bF59$0D5ZAw2(r19);//invoke %14 = (%19) While_Valid_38:isSorted : function(int[]) -> bool
             var r20 = true;
             if(r14 === r20){
-               control_flow_pc = 485;
+               control_flow_pc = 475;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 486;
+            control_flow_pc = 476;
             control_flow_repeat = true;
-            continue outer;//goto label486
-         case 485:
+            continue outer;//goto label476
+         case 475:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 486:
+         case 476:
             var r22 = new WyJS.Integer(0);
             var r23 = new WyJS.Integer(0);
             var r24 = WyJS.ArrayGen(r22, r23, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r21 = isSorted$_9bF59$0D5ZAw2(r24);//invoke %21 = (%24) While_Valid_38:isSorted : function(int[]) -> bool
             var r25 = true;
             if(r21 === r25){
-               control_flow_pc = 487;
+               control_flow_pc = 477;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 487:
+         case 477:
             return;
       }
    }

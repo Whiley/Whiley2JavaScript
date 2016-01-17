@@ -24,15 +24,15 @@ function abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q
          case -1 :
             var r2 = r0.length();//lengthof %2 = %0 : int[]
             if(WyJS.equals(r1, r2, false)){
-               control_flow_pc = 916;
+               control_flow_pc = 952;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : int[]
-            control_flow_pc = 917;
+            control_flow_pc = 953;
             control_flow_repeat = true;
-            continue outer;//goto label917
-         case 916:
+            continue outer;//goto label953
+         case 952:
             var r4 = r0.getValue(r1);
             var r3 = abs$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM$7n$VQ$35$o0WA$(r4);//invoke %3 = (%4) ConstrainedList_Valid_2:abs : function(int) -> ConstrainedList_Valid_2:nat
             var r6 = r0.getValue(r1);
@@ -42,7 +42,7 @@ function abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q
             var r9 = r1.add(r8);//add %9 = %1, %8 : int
             var r7 = abs$a9dF5XY001RB9h3T0VW$sC$R2Vt$VD$Z2Vk$7C$R2Vm$VB$N1Vo$ND$c2Vj$k9$12$q$7C$72Vj$Fa0$r$7B$cv1(r0, r9);//invoke %7 = (%0, %9) ConstrainedList_Valid_2:abs : function(int[],ConstrainedList_Valid_2:nat) -> ConstrainedList_Valid_2:nat[]
             return r7;//return %7 : int[]
-         case 917:
+         case 953:
             return;
       }
    }
@@ -58,18 +58,18 @@ function abs$Z9bFaL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0kM
          case -1 :
             var r1 = new WyJS.Integer(0);
             if(WyJS.lt(r0, r1, false)){
-               control_flow_pc = 918;
+               control_flow_pc = 954;
                control_flow_repeat = true;
                continue outer;
             }
             return r0;//return %0 : int
-            control_flow_pc = 919;
+            control_flow_pc = 955;
             control_flow_repeat = true;
-            continue outer;//goto label919
-         case 918:
+            continue outer;//goto label955
+         case 954:
             var r2 = r0.neg();//neg %2 = %0 : int
             return r2;//return %2 : int
-         case 919:
+         case 955:
             return;
       }
    }
@@ -105,12 +105,12 @@ function test(){//method() -> void
             var r18 = new WyJS.Integer(11);
             var r19 = new WyJS.Array([r13, r14, r15, r16, r17, r18], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r19, true)){
-               control_flow_pc = 920;
+               control_flow_pc = 956;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 920:
+         case 956:
             return;
       }
    }

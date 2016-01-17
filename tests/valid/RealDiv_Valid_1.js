@@ -45,12 +45,12 @@ function test(){//method() -> void
             var r4 = new WyJS.Real(3.0);
             var r5 = r3.div(r4);//div %5 = %3, %4 : real
             if(WyJS.equals(r0, r5, true)){
-               control_flow_pc = 318;
+               control_flow_pc = 308;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 318:
+         case 308:
             return;
       }
    }

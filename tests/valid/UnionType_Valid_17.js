@@ -40,12 +40,12 @@ function test(){//method() -> void
             var r3 = f$2AbFXA$W(r0);//invoke %3 = (%0) UnionType_Valid_17:f : method(int) -> int
             var r4 = new WyJS.Integer(123);
             if(WyJS.equals(r3, r4, true)){
-               control_flow_pc = 287;
+               control_flow_pc = 277;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 287:
+         case 277:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
@@ -57,12 +57,12 @@ function test(){//method() -> void
             var r12 = new WyJS.Integer(3);
             var r13 = new WyJS.Array([r10, r11, r12], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r9, r13, true)){
-               control_flow_pc = 288;
+               control_flow_pc = 278;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 288:
+         case 278:
             return;
       }
    }

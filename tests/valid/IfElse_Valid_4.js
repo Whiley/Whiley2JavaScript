@@ -7,26 +7,26 @@ function sum_1$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Null())){
-               control_flow_pc = 213;
+               control_flow_pc = 188;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 214;
+            control_flow_pc = 189;
             control_flow_repeat = true;
-            continue outer;//goto label214
-         case 213:
+            continue outer;//goto label189
+         case 188:
             var r1 = new WyJS.Integer(0);
             return r1;//return %1 : int
-            control_flow_pc = 215;
+            control_flow_pc = 190;
             control_flow_repeat = true;
-            continue outer;//goto label215
-         case 214:
+            continue outer;//goto label190
+         case 189:
             var r2 = r0.fieldLoad("data");//fieldload %2 = %0 data : X<{int data,X|null next}>
             var r4 = r0.fieldLoad("next");//fieldload %4 = %0 next : X<{int data,X|null next}>
             var r3 = sum_1$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r4);//invoke %3 = (%4) IfElse_Valid_4:sum_1 : function(IfElse_Valid_4:LinkedList) -> int
             var r5 = r2.add(r3);//add %5 = %2, %3 : int
             return r5;//return %5 : int
-         case 215:
+         case 190:
             return;
       }
    }
@@ -41,26 +41,26 @@ function sum_2$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Null())){
-               control_flow_pc = 216;
+               control_flow_pc = 191;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 217;
+            control_flow_pc = 192;
             control_flow_repeat = true;
-            continue outer;//goto label217
-         case 216:
+            continue outer;//goto label192
+         case 191:
             var r1 = new WyJS.Integer(0);
             return r1;//return %1 : int
-            control_flow_pc = 218;
+            control_flow_pc = 193;
             control_flow_repeat = true;
-            continue outer;//goto label218
-         case 217:
+            continue outer;//goto label193
+         case 192:
             var r2 = r0.fieldLoad("data");//fieldload %2 = %0 data : X<{int data,X|null next}>
             var r4 = r0.fieldLoad("next");//fieldload %4 = %0 next : X<{int data,X|null next}>
             var r3 = sum_2$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r4);//invoke %3 = (%4) IfElse_Valid_4:sum_2 : function(IfElse_Valid_4:LinkedList) -> int
             var r5 = r2.add(r3);//add %5 = %2, %3 : int
             return r5;//return %5 : int
-         case 218:
+         case 193:
             return;
       }
    }
@@ -75,7 +75,7 @@ function sum_3$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Null())){
-               control_flow_pc = 219;
+               control_flow_pc = 194;
                control_flow_repeat = true;
                continue outer;
             }
@@ -84,13 +84,13 @@ function sum_3$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$
             var r2 = sum_3$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r3);//invoke %2 = (%3) IfElse_Valid_4:sum_3 : function(IfElse_Valid_4:LinkedList) -> int
             var r4 = r1.add(r2);//add %4 = %1, %2 : int
             return r4;//return %4 : int
-            control_flow_pc = 220;
+            control_flow_pc = 195;
             control_flow_repeat = true;
-            continue outer;//goto label220
-         case 219:
+            continue outer;//goto label195
+         case 194:
             var r5 = new WyJS.Integer(0);
             return r5;//return %5 : int
-         case 220:
+         case 195:
             return;
       }
    }
@@ -118,30 +118,30 @@ function test(){//method() -> void
             var r9 = sum_1$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %9 = (%0) IfElse_Valid_4:sum_1 : function(IfElse_Valid_4:LinkedList) -> int
             var r10 = new WyJS.Integer(6);
             if(WyJS.equals(r9, r10, true)){
-               control_flow_pc = 221;
+               control_flow_pc = 196;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 221:
+         case 196:
             var r11 = sum_2$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %11 = (%0) IfElse_Valid_4:sum_2 : function(IfElse_Valid_4:LinkedList) -> int
             var r12 = new WyJS.Integer(6);
             if(WyJS.equals(r11, r12, true)){
-               control_flow_pc = 222;
+               control_flow_pc = 197;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 222:
+         case 197:
             var r13 = sum_3$Z9bFaA$WL1T$FH$N5$40$Q$B6$_0kM$N4$W0$Q$Z5$Z0kM$FY5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %13 = (%0) IfElse_Valid_4:sum_3 : function(IfElse_Valid_4:LinkedList) -> int
             var r14 = new WyJS.Integer(6);
             if(WyJS.equals(r13, r14, true)){
-               control_flow_pc = 223;
+               control_flow_pc = 198;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 223:
+         case 198:
             return;
       }
    }

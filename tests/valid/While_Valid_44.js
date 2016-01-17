@@ -20,7 +20,7 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -2:
             var r13 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r13, true)){
-               control_flow_pc = 535;
+               control_flow_pc = 525;
                control_flow_repeat = true;
                continue outer;
             }
@@ -36,7 +36,7 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 535:
+         case 525:
             return r2;//return %2 : int[]
             return;
       }
@@ -59,24 +59,24 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(0);
             var r6 = WyJS.ArrayGen(r4, r5, new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 536;
+               control_flow_pc = 526;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 536:
+         case 526:
             var r8 = new WyJS.Integer(1);
             var r9 = new WyJS.Array([r8], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r7 = reverse$Z9bF1D527RWz(r9);//invoke %7 = (%9) While_Valid_44:reverse : function(int[]) -> int[]
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Array([r10], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r7, r11, true)){
-               control_flow_pc = 537;
+               control_flow_pc = 527;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 537:
+         case 527:
             var r13 = new WyJS.Integer(1);
             var r14 = new WyJS.Integer(2);
             var r15 = new WyJS.Array([r13, r14], new WyJS.Type.Array(new WyJS.Type.Int()));
@@ -85,12 +85,12 @@ function test(){//method() -> void
             var r17 = new WyJS.Integer(1);
             var r18 = new WyJS.Array([r16, r17], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r12, r18, true)){
-               control_flow_pc = 538;
+               control_flow_pc = 528;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 538:
+         case 528:
             var r20 = new WyJS.Integer(1);
             var r21 = new WyJS.Integer(2);
             var r22 = new WyJS.Integer(3);
@@ -101,12 +101,12 @@ function test(){//method() -> void
             var r26 = new WyJS.Integer(1);
             var r27 = new WyJS.Array([r24, r25, r26], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r19, r27, true)){
-               control_flow_pc = 539;
+               control_flow_pc = 529;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 539:
+         case 529:
             var r29 = new WyJS.Integer(1);
             var r30 = new WyJS.Integer(2);
             var r31 = new WyJS.Integer(3);
@@ -119,12 +119,12 @@ function test(){//method() -> void
             var r37 = new WyJS.Integer(1);
             var r38 = new WyJS.Array([r34, r35, r36, r37], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r28, r38, true)){
-               control_flow_pc = 540;
+               control_flow_pc = 530;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 540:
+         case 530:
             var r40 = new WyJS.Integer(1);
             var r41 = new WyJS.Integer(2);
             var r42 = new WyJS.Integer(3);
@@ -139,12 +139,12 @@ function test(){//method() -> void
             var r50 = new WyJS.Integer(1);
             var r51 = new WyJS.Array([r46, r47, r48, r49, r50], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r39, r51, true)){
-               control_flow_pc = 541;
+               control_flow_pc = 531;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 541:
+         case 531:
             return;
       }
    }

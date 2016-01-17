@@ -48,9 +48,7 @@ import wyil.lang.CodeUtils;
 import wyil.lang.Codes;
 import wyil.lang.Codes.Debug;
 import wyil.lang.Codes.If;
-import wyil.lang.Codes.Invert;
 import wyil.lang.Codes.LVal;
-import wyil.lang.Codes.Nop;
 import wyil.lang.Constant;
 import wyil.lang.Type;
 import wyil.lang.WyilFile;
@@ -145,10 +143,7 @@ public class WyJS {
 	 *             as parameter (not and instance of Codes).
 	 */
 	private void write(Object o) throws Exception {
-		if (o instanceof Codes.Assert) {
-			throw new RuntimeException("Codes.Assert not suppported. "
-					+ o.getClass().getName());
-		}
+
 		if (o instanceof Codes.AssertOrAssume) {
 			write((Codes.AssertOrAssume) o);
 		} else if (o instanceof Codes.Assign) {
@@ -260,7 +255,7 @@ public class WyJS {
 
 	private void write(Codes.Invert o) throws Exception {
 		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r"
-				+ o.operand(0) + ".neg();//" + o.toString() + "\n");
+				+ o.operand(0) + ".invert();//" + o.toString() + "\n");
 	}
 
 	private void write(FunctionOrMethod function) throws Exception {
@@ -493,6 +488,7 @@ public class WyJS {
 	}
 
 	private void write(Codes.AssertOrAssume o) throws Exception {
+		System.out.println("TRANSLATING ASSERT");
 		for (Code c : o.bytecodes()) {
 			write(c);
 		}
@@ -930,6 +926,8 @@ public class WyJS {
 			return "new WyJS.Type.Any();";
 		} else if (type instanceof Type.Bool) {
 			return "new WyJS.Type.Bool()";
+		} else if (type instanceof Type.Byte) {
+			return "new WyJS.Type.Byte()";
 		} else if (type instanceof Type.Array) {
 			return "new WyJS.Type.Array(" + getType(((Type.Array) type).element())
 					+ ")";
@@ -994,8 +992,6 @@ public class WyJS {
 			TypeExpander ty = new TypeExpander(proj);
 			Type newTy = ty.getUnderlyingType(type);
 			return getType(newTy);
-		} else if (type instanceof Type.Byte) {
-			return "new WyJS.Type.Byte()";
 		} else {
 			throw new Exception("Unknown Type in getType " + type);
 		}

@@ -30,12 +30,12 @@ function test(){//method() -> void
             var r5 = new WyJS.Real(51.0);
             var r6 = r4.div(r5);//div %6 = %4, %5 : real
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 330;
+               control_flow_pc = 320;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 330:
+         case 320:
             var r8 = new WyJS.Real(1000.0);
             var r9 = new WyJS.Real(300.0);
             var r10 = new WyJS.Real(400.0);
@@ -44,12 +44,12 @@ function test(){//method() -> void
             var r12 = new WyJS.Real(120.0);
             var r13 = r11.div(r12);//div %13 = %11, %12 : real
             if(WyJS.equals(r7, r13, true)){
-               control_flow_pc = 331;
+               control_flow_pc = 321;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 331:
+         case 321:
             return;
       }
    }

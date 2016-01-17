@@ -182,17 +182,17 @@ public class RuntimeValidTests {
 		runTest("Assume_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Assume_Valid_2() throws IOException {
 		runTest("Assume_Valid_2");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void BoolAssign_Valid_1() throws IOException {
 		runTest("BoolAssign_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void BoolAssign_Valid_2() throws IOException {
 		runTest("BoolAssign_Valid_2");
 	}
@@ -232,7 +232,7 @@ public class RuntimeValidTests {
 		runTest("BoolIfElse_Valid_2");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void BoolList_Valid_1() throws IOException {
 		runTest("BoolList_Valid_1");
 	}
@@ -247,12 +247,12 @@ public class RuntimeValidTests {
 		runTest("BoolList_Valid_3");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void BoolRecord_Valid_1() throws IOException {
 		runTest("BoolRecord_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void BoolRecord_Valid_2() throws IOException {
 		runTest("BoolRecord_Valid_2");
 	}
@@ -413,7 +413,7 @@ public class RuntimeValidTests {
 		runTest("Complex_Valid_8");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Constant_Valid_3() throws IOException {
 		runTest("Constant_Valid_3");
 	}
@@ -629,7 +629,7 @@ public class RuntimeValidTests {
 		runTest("ConstrainedList_Valid_6");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ConstrainedList_Valid_7() throws IOException {
 		runTest("ConstrainedList_Valid_7");
 	}
@@ -676,7 +676,7 @@ public class RuntimeValidTests {
 		runTest("ConstrainedRecord_Valid_4");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ConstrainedRecord_Valid_5() throws IOException {
 		runTest("ConstrainedRecord_Valid_5");
 	}
@@ -686,7 +686,7 @@ public class RuntimeValidTests {
 		runTest("ConstrainedRecord_Valid_6");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ConstrainedRecord_Valid_8() throws IOException {
 		runTest("ConstrainedRecord_Valid_8");
 	}
@@ -732,7 +732,7 @@ public class RuntimeValidTests {
 		runTest("Contractive_Valid_2");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void DecimalAssignment_Valid_1() throws IOException {
 		runTest("DecimalAssignment_Valid_1");
 	}
@@ -1056,7 +1056,7 @@ public class RuntimeValidTests {
 		runTest("IntDiv_Valid_4");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void IntDiv_Valid_5() throws IOException {
 		runTest("IntDiv_Valid_5");
 	}
@@ -1066,12 +1066,12 @@ public class RuntimeValidTests {
 		runTest("IntEquals_Valid_1");
 	}
 
-	@Ignore("Crash") @Test
+	@Test
 	public void IntMul_Valid_1() throws IOException {
 		runTest("IntMul_Valid_1");
 	}
 
-	@Ignore("Crash") @Test
+	@Test
 	public void IntMul_Valid_2() throws IOException {
 		runTest("IntMul_Valid_2");
 	}
@@ -1153,12 +1153,12 @@ public class RuntimeValidTests {
 		runTest("LengthOf_Valid_5");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAccess_Valid_1() throws IOException {
 		runTest("ListAccess_Valid_1");
 	}
 
-	@Ignore("Crash") @Test
+	@Test
 	public void ListAccess_Valid_3() throws IOException {
 		runTest("ListAccess_Valid_3");
 	}
@@ -1186,12 +1186,12 @@ public class RuntimeValidTests {
 		runTest("ListAccess_Valid_8");
 	}
 
-	@Ignore("Crash") @Test
+	@Test
 	public void ListAccess_Valid_9() throws IOException {
 		runTest("ListAccess_Valid_9");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAssign_Valid_1() throws IOException {
 		runTest("ListAssign_Valid_1");
 	}
@@ -1221,22 +1221,22 @@ public class RuntimeValidTests {
 		runTest("ListAssign_Valid_5");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAssign_Valid_6() throws IOException {
 		runTest("ListAssign_Valid_6");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAssign_Valid_7() throws IOException {
 		runTest("ListAssign_Valid_7");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAssign_Valid_8() throws IOException {
 		runTest("ListAssign_Valid_8");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void ListAssign_Valid_9() throws IOException {
 		runTest("ListAssign_Valid_9");
 	}
@@ -1547,7 +1547,7 @@ public class RuntimeValidTests {
 		runTest("Process_Valid_9");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Quantifiers_Valid_1() throws IOException {
 		runTest("Quantifiers_Valid_1");
 	}
@@ -1724,17 +1724,17 @@ public class RuntimeValidTests {
 		runTest("RecursiveType_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_10() throws IOException {
 		runTest("RecursiveType_Valid_10");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_11() throws IOException {
 		runTest("RecursiveType_Valid_11");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_12() throws IOException {
 		runTest("RecursiveType_Valid_12");
 	}
@@ -1843,7 +1843,7 @@ public class RuntimeValidTests {
 		runTest("RecursiveType_Valid_5");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_6() throws IOException {
 		runTest("RecursiveType_Valid_6");
 	}
@@ -1853,12 +1853,12 @@ public class RuntimeValidTests {
 		runTest("RecursiveType_Valid_7");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_8() throws IOException {
 		runTest("RecursiveType_Valid_8");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void RecursiveType_Valid_9() throws IOException {
 		runTest("RecursiveType_Valid_9");
 	}
@@ -1903,7 +1903,7 @@ public class RuntimeValidTests {
 		runTest("Resolution_Valid_1");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void SingleLineComment_Valid_1() throws IOException {
 		runTest("SingleLineComment_Valid_1");
 	}
@@ -2008,7 +2008,7 @@ public class RuntimeValidTests {
 		runTest("Subtype_Valid_8");
 	}
 
-	@Ignore("checked") @Test
+	@Test
 	public void Subtype_Valid_9() throws IOException {
 		runTest("Subtype_Valid_9");
 	}

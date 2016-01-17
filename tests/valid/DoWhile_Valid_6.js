@@ -18,20 +18,20 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
             var r2 = r6;//assign %2 = %6  : int
             var r10 = new WyJS.Integer(0);
             if(WyJS.lt(r2, r10, false)){
-               control_flow_pc = 354;
+               control_flow_pc = 344;
                control_flow_repeat = true;
                continue outer;
             }
             var r11 = r0.getValue(r2);
             if(WyJS.equals(r11, r1, true)){
-               control_flow_pc = 354;
+               control_flow_pc = 344;
                control_flow_repeat = true;
                continue outer;
             }
             control_flow_pc = -2;
             control_flow_repeat = true;
             break;
-         case 354:
+         case 344:
             return r2;//return %2 : int
             return;
       }
@@ -60,12 +60,12 @@ function test(){//method() -> void
             var r0 = lastIndexOf$Z9dFas1FVYGs(r10, r11);//invoke %0 = (%10, %11) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r12 = new WyJS.Integer(8);
             if(WyJS.equals(r0, r12, true)){
-               control_flow_pc = 355;
+               control_flow_pc = 345;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 355:
+         case 345:
             var r14 = new WyJS.Integer(1);
             var r15 = new WyJS.Integer(2);
             var r16 = new WyJS.Integer(3);
@@ -80,12 +80,12 @@ function test(){//method() -> void
             var r13 = lastIndexOf$Z9dFas1FVYGs(r23, r24);//invoke %13 = (%23, %24) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r25 = new WyJS.Integer(7);
             if(WyJS.equals(r13, r25, true)){
-               control_flow_pc = 356;
+               control_flow_pc = 346;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 356:
+         case 346:
             var r27 = new WyJS.Integer(1);
             var r28 = new WyJS.Integer(2);
             var r29 = new WyJS.Integer(3);
@@ -100,12 +100,12 @@ function test(){//method() -> void
             var r26 = lastIndexOf$Z9dFas1FVYGs(r36, r37);//invoke %26 = (%36, %37) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r38 = new WyJS.Integer(6);
             if(WyJS.equals(r26, r38, true)){
-               control_flow_pc = 357;
+               control_flow_pc = 347;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 357:
+         case 347:
             var r40 = new WyJS.Integer(1);
             var r41 = new WyJS.Integer(2);
             var r42 = new WyJS.Integer(3);
@@ -120,12 +120,12 @@ function test(){//method() -> void
             var r39 = lastIndexOf$Z9dFas1FVYGs(r49, r50);//invoke %39 = (%49, %50) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r51 = new WyJS.Integer(5);
             if(WyJS.equals(r39, r51, true)){
-               control_flow_pc = 358;
+               control_flow_pc = 348;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 358:
+         case 348:
             var r53 = new WyJS.Integer(1);
             var r54 = new WyJS.Integer(2);
             var r55 = new WyJS.Integer(3);
@@ -140,12 +140,12 @@ function test(){//method() -> void
             var r52 = lastIndexOf$Z9dFas1FVYGs(r62, r63);//invoke %52 = (%62, %63) DoWhile_Valid_6:lastIndexOf : function(int[],int) -> int
             var r64 = new WyJS.Integer(4);
             if(WyJS.equals(r52, r64, true)){
-               control_flow_pc = 359;
+               control_flow_pc = 349;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 359:
+         case 349:
             return;
       }
    }

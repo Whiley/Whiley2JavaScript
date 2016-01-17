@@ -11,22 +11,22 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : bool
             var r3 = true;
             if(r0 === r3){
-               control_flow_pc = 2090;
+               control_flow_pc = 1154;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2090:
+         case 1154:
             var r4 = false;
             var r0 = r4;//assign %0 = %4  : bool
             var r5 = false;
             if(r0 === r5){
-               control_flow_pc = 2091;
+               control_flow_pc = 1155;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2091:
+         case 1155:
             return;
       }
    }

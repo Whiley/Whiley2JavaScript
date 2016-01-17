@@ -40,22 +40,22 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Function_Valid_1:f : function(int) -> int
             var r2 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1003;
+               control_flow_pc = 1046;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1003:
+         case 1046:
             var r4 = new WyJS.Real(1.23);
             var r3 = f$Z9bFaA$0B1E(r4);//invoke %3 = (%4) Function_Valid_1:f : function(real) -> int
             var r5 = new WyJS.Integer(1);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 1004;
+               control_flow_pc = 1047;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1004:
+         case 1047:
             return;
       }
    }
