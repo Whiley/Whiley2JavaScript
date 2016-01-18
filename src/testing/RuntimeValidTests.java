@@ -268,6 +268,11 @@ public class RuntimeValidTests {
 	}
 
 	@Test
+	public void ByteSimple_Valid_1() throws IOException {
+		runTest("ByteSimple_Valid_1");
+	}
+
+	@Test
 	public void Byte_Valid_1() throws IOException {
 		runTest("Byte_Valid_1");
 	}
