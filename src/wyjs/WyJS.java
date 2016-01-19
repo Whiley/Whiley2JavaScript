@@ -254,8 +254,8 @@ public class WyJS {
 	private void write(Codes.Nop function) throws Exception {	}
 
 	private void write(Codes.Invert o) throws Exception {
-		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r"
-				+ o.operand(0) + ".invert();//" + o.toString() + "\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = "
+				+"WyJS.invert(r"+ o.operand(0) +");//" + o.toString() + "\n");
 	}
 
 	private void write(FunctionOrMethod function) throws Exception {

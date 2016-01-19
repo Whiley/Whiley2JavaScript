@@ -287,6 +287,20 @@ public class RuntimeValidTests {
 		runTest("ByteSimple_Valid_4");
 	}
 
+	@Test
+	public void ByteSimple_Valid_5() throws IOException {
+		runTest("ByteSimple_Valid_5");
+	}
+
+	@Test
+	public void ByteSimple_Valid_6() throws IOException {
+		runTest("ByteSimple_Valid_6");
+	}
+
+	@Test
+	public void ByteSimple_Valid_7() throws IOException {
+		runTest("ByteSimple_Valid_7");
+	}
 
 	@Test
 	public void Byte_Valid_1() throws IOException {
