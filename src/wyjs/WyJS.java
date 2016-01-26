@@ -198,8 +198,8 @@ public class WyJS {
 			throw new RuntimeException("Codes.ListLVal not supported.");
 		} else if (o instanceof Codes.Loop) {
 			Codes.Loop loop = (Codes.Loop) o;
-			Map<String, Index> labelMap = CodeUtils
-					.buildLabelMap(new AttributedCodeBlock(loop.bytecodes()));
+			AttributedCodeBlock attributedCodeBlock = new AttributedCodeBlock(loop.bytecodes());
+			Map<String, Index> labelMap = CodeUtils.buildLabelMap(attributedCodeBlock);
 			write(loop, labelMap);
 		} else if (o instanceof Codes.Move) {
 			throw new RuntimeException("Codes.Move not supported.");
@@ -265,7 +265,6 @@ public class WyJS {
 		int i = 1;
 		for (Type t : function.type().params()) {
 			if (t instanceof Type.Nominal) {
-				// TODO: what does this mean? - Danielle
 				// Type.Nominal nominal = (Type.Nominal) t;
 				// System.out.println(nominal.name().name().equals("Console"));
 			}
@@ -292,7 +291,7 @@ public class WyJS {
 		indent++;
 
 		// for each bytecode in the method, convert it to JavaScript
-		Iterator iter = function.body().iterator();
+		Iterator<?> iter = function.body().iterator();
 		while (iter.hasNext()) {
 			Object tmp = iter.next();
 			write(tmp);
@@ -360,7 +359,7 @@ public class WyJS {
 			break;
 		case LEFTSHIFT:
 			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".sll(" + "r" + o.operand(1) + ");//"
+					+ o.operand(0) + ".shl(" + "r" + o.operand(1) + ");//"
 					+ o.toString() + "\n");
 			break;
 		case RIGHTSHIFT:
@@ -436,7 +435,9 @@ public class WyJS {
 				throw new Exception(o.op + " shouldnt be used with Bools?");
 			}
 		} else {
+			System.out.println("o.op :: "+o.op);
 			switch (o.op) {
+
 			case EQ:
 				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
 						+ ", r" + o.rightOperand + ", true)){\n";
@@ -515,14 +516,6 @@ public class WyJS {
 		js.add(str);
 	}
 
-	private void write(Codes.IndirectInvoke o) throws Exception {
-		// TODO:
-		// System.out.println(o.type().automaton);
-		// js.add(getIndentBlock() + "Indirect Invoke Here " + o.toString() +
-		// "\n");
-		throw new Exception("IndirectInvoke not yet treated.");
-	}
-
 	private void write(Codes.Label o) {
 		indent--;
 		js.add(getIndentBlock() + "case " + parseLabel(o.label) + ":\n");
@@ -549,38 +542,9 @@ public class WyJS {
 		}
 	}
 
-	Map<String, List<Code>> labels = new HashMap<String, List<Code>>();
-
 	private void write(Codes.Loop o, Map<String, Index> labelMap)
 			throws Exception {
 		// TODO: Could maybe use the runtime file?
-		boolean yo = false;
-		String name = "";
-		ArrayList<Code> codes = new ArrayList<Code>();
-		ArrayList<String> strings = new ArrayList<String>();
-		String lastLabel = "";
-		for (Code c : o.bytecodes()) {
-			if (yo) {
-				codes.add(c);
-			}
-			if (c instanceof Codes.Label) {
-				lastLabel = ((Codes.Label) c).label;
-				if (yo) {
-					labels.put(name, codes);
-					strings.add(name);
-					name = "";
-					codes.clear();
-				} else {
-					name = ((Codes.Label) c).label;
-					// System.out.println(name);
-					yo = true;
-				}
-			}
-		}
-		if (name != "") {
-			labels.put(name, codes);
-			strings.add(name);
-		}
 
 		int loopLabel = getFreshLabel();
 		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel + ";\n");
@@ -589,11 +553,10 @@ public class WyJS {
 		indent--;
 		js.add(getIndentBlock() + "case " + loopLabel + ":\n");
 		indent++;
-		ArrayList<Integer> labels1 = new ArrayList<Integer>();
+		ArrayList<Integer> labels = new ArrayList<Integer>();
 		int currentIndex = -1;
-		boolean hitLabel = false;
-
 		Iterator<Code> iter = o.iterator();
+
 		while (iter.hasNext()) {
 			Code c = iter.next();
 			if (c instanceof Codes.If) {
@@ -609,19 +572,20 @@ public class WyJS {
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					// write else
+					System.out.println("IF :: "+c.toString());
 					currentIndex++;
-					labels1.add(getFreshLabel());
+					labels.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");
 					indent++;
 					js.add(getIndentBlock() + "control_flow_pc = "
-							+ labels1.get(currentIndex) + ";\n");
+							+ labels.get(currentIndex) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					indent--;
 					js.add(getIndentBlock() + "case "
-							+ labels1.get(currentIndex) + ":\n");
+							+ labels.get(currentIndex) + ":\n");
 					indent++;
 				} else {
 					// terminating statement
@@ -641,36 +605,28 @@ public class WyJS {
 					js.add(getIndentBlock() + "}\n");
 					// write else
 					currentIndex++;
-					labels1.add(getFreshLabel());
+					labels.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");
 					indent++;
 					js.add(getIndentBlock() + "control_flow_pc = "
-							+ labels1.get(currentIndex) + ";\n");
+							+ labels.get(currentIndex) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					indent--;
 					js.add(getIndentBlock() + "case "
-							+ labels1.get(currentIndex) + ":\n");
+							+ labels.get(currentIndex) + ":\n");
 					indent++;
 				} else {
 					// terminating statement
 					write(c);
 				}
 			} else if (c instanceof Codes.Label) {
-				// if(hitLabel){
-				// js.add(getIndentBlock() + "control_flow_pc = " + loopLabel
-				// + ";\n");
-				// js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-				// js.add(getIndentBlock() + "break;\n");
-				// }else{
-				// hitLabel = true;
-				// }
 				js.add(getIndentBlock() + "control_flow_pc = " + loopLabel// parseLabel(lastLabel)
 						+ ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-				js.add(getIndentBlock() + "break;\n");
+				//js.add(getIndentBlock() + "break;\n");
 				indent--;
 				js.add(getIndentBlock() + "case "
 						+ parseLabel(((Codes.Label) c).label) + ":\n");
@@ -679,6 +635,7 @@ public class WyJS {
 				// Ignore it i think..
 
 			} else {
+				// here's where it creates the other statements that aren't conditionals
 				write(c);
 			}
 		}
@@ -1107,8 +1064,7 @@ public class WyJS {
 	int labelCount = -2;
 
 	private int getFreshLabel() {
-		labelCount--;
-		return labelCount + 1;
+		return --labelCount;
 	}
 
 	/**
@@ -1135,7 +1091,7 @@ public class WyJS {
 			// printer.apply(wyilFile);
 			// Make the javascript file
 
-			WyJS wy = new WyJS(wyilFile);
+			new WyJS(wyilFile);
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		} catch (Exception e) {

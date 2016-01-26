@@ -9,10 +9,10 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             var r3 = new WyJS.Integer(0);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.is(r0, new WyJS.Type.Null())){
                control_flow_pc = 408;
                control_flow_repeat = true;
@@ -23,7 +23,7 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             var r1 = r5;//assign %1 = %5  : int
             var r6 = r0.fieldLoad("next");//fieldload %6 = %0 next : X<{int data,X|null next}>
             var r0 = r6;//assign %0 = %6  : X<null|{int data,X next}>
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 408:

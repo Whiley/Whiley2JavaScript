@@ -15,12 +15,12 @@ function f$Z9b737klNRWz(r0){//function(int[]) -> void
             var r6 = r8;//assign %6 = %8  : int
             var r2 = r6;//assign %2 = %6  : int
             if(WyJS.equals(r1, r2, true)){
-               control_flow_pc = 925;
+               control_flow_pc = 938;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 925:
+         case 938:
             return;
       }
    }
@@ -45,12 +45,12 @@ function test(){//method() -> void
             var r7 = r0.getValue(r6);
             var r8 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 926;
+               control_flow_pc = 939;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 926:
+         case 939:
             return;
       }
    }

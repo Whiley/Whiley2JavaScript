@@ -12,10 +12,10 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             var r8 = r0.length();//lengthof %8 = %0 : int[]
             var r7 = r8;//assign %7 = %8  : int
             var r3 = r7;//assign %3 = %7  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.gt(r2, r3, true)){
                control_flow_pc = 667;
                control_flow_repeat = true;
@@ -33,20 +33,19 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
                break;
             }
             else{
-               control_flow_pc = -3;
+               control_flow_pc = -4;
                control_flow_repeat = true;
                break;
             }
-         case -3:
+         case -4:
             var r22 = new WyJS.Integer(1);
             var r23 = r4.add(r22);//add %23 = %4, %22 : int
             var r2 = r23;//assign %2 = %23  : int
             control_flow_pc = 669;
             control_flow_repeat = true;
             continue outer;//goto label669
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 668:
             var r24 = r0.getValue(r4);
             if(WyJS.lt(r24, r1, true)){
@@ -55,26 +54,24 @@ function binarySearch$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
                break;
             }
             else{
-               control_flow_pc = -4;
+               control_flow_pc = -5;
                control_flow_repeat = true;
                break;
             }
-         case -4:
+         case -5:
             var r3 = r4;//assign %3 = %4  : int
             control_flow_pc = 669;
             control_flow_repeat = true;
             continue outer;//goto label669
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 670:
             var r25 = true;
             return r25;//return %25 : bool
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 669:
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 667:

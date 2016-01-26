@@ -11,10 +11,10 @@ function match$a9fF5Xi$3sNJP8s0$M0$P$Z5$g0FO$w4$L0FN$k5$d0$O$w4$l$$D2$i0FN$FM4y(
             var r7 = new WyJS.Integer(0);
             var r6 = r7;//assign %6 = %7  : int
             var r4 = r6;//assign %4 = %6  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.gt(r1, r3, true)){
                control_flow_pc = 406;
                control_flow_repeat = true;
@@ -42,7 +42,7 @@ function match$a9fF5Xi$3sNJP8s0$M0$P$Z5$g0FO$w4$L0FN$k5$d0$O$w4$l$$D2$i0FN$FM4y(
             var r17 = new WyJS.Integer(1);
             var r18 = r4.add(r17);//add %18 = %4, %17 : int
             var r4 = r18;//assign %4 = %18  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 406:

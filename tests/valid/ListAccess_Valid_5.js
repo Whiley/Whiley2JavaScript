@@ -33,12 +33,12 @@ function test(){//method() -> void
             var r7 = f$Z9bFaA$0D5Wz(r9);//invoke %7 = (%9) ListAccess_Valid_5:f : function(int[]) -> int
             var r10 = new WyJS.Integer(3);
             if(WyJS.equals(r7, r10, true)){
-               control_flow_pc = 935;
+               control_flow_pc = 948;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 935:
+         case 948:
             return;
       }
    }

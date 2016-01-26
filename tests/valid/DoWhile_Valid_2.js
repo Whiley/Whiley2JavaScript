@@ -9,10 +9,10 @@ function test(){//method() -> void
             var r2 = new WyJS.Integer(0);
             var r1 = r2;//assign %1 = %2  : int
             var r0 = r1;//assign %0 = %1  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r3 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r3, false)){
                control_flow_pc = 328;
@@ -20,17 +20,16 @@ function test(){//method() -> void
                break;
             }
             else{
-               control_flow_pc = -3;
+               control_flow_pc = -4;
                control_flow_repeat = true;
                break;
             }
-         case -3:
+         case -4:
             control_flow_pc = 329;
             control_flow_repeat = true;
             continue outer;//goto label329
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 328:
             var r4 = new WyJS.Integer(1);
             var r5 = r0.add(r4);//add %5 = %0, %4 : int
@@ -41,7 +40,7 @@ function test(){//method() -> void
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 329:

@@ -9,10 +9,10 @@ function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
             var r3 = new WyJS.Integer(1);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r12 = r0.length();//lengthof %12 = %0 : int[]
             if(WyJS.gt(r1, r12, true)){
                control_flow_pc = 470;
@@ -29,21 +29,20 @@ function isSorted$_9bF59$0D5ZAw2(r0){//function(int[]) -> bool
                break;
             }
             else{
-               control_flow_pc = -3;
+               control_flow_pc = -4;
                control_flow_repeat = true;
                break;
             }
-         case -3:
+         case -4:
             var r17 = false;
             return r17;//return %17 : bool
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 471:
             var r18 = new WyJS.Integer(1);
             var r19 = r1.add(r18);//add %19 = %1, %18 : int
             var r1 = r19;//assign %1 = %19  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 470:

@@ -9,10 +9,10 @@ function contains$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r6 = r0.length();//lengthof %6 = %0 : int[]
             if(WyJS.gt(r2, r6, true)){
                control_flow_pc = 481;
@@ -26,21 +26,20 @@ function contains$_9dF5X1FVY0t12(r0, r1){//function(int[],int) -> bool
                break;
             }
             else{
-               control_flow_pc = -3;
+               control_flow_pc = -4;
                control_flow_repeat = true;
                break;
             }
-         case -3:
+         case -4:
             var r8 = true;
             return r8;//return %8 : bool
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 482:
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 481:

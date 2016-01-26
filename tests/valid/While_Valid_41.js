@@ -11,10 +11,10 @@ function zeroOut$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r1 = r3;//assign %1 = %3  : int
             var r5 = r0.clone(new WyJS.Type.Int());//assign %5 = %0  : int[]
             var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : int[]
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.gt(r1, r14, true)){
                control_flow_pc = 504;
@@ -27,7 +27,7 @@ function zeroOut$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r17 = new WyJS.Integer(1);
             var r18 = r1.add(r17);//add %18 = %1, %17 : int
             var r1 = r18;//assign %1 = %18  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 504:

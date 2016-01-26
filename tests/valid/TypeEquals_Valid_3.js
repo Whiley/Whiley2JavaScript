@@ -13,10 +13,10 @@ function create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$k
             var r8 = new WyJS.Integer(0);
             var r7 = r8;//assign %7 = %8  : int
             var r3 = r7;//assign %3 = %7  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.gt(r3, r0, true)){
                control_flow_pc = 8;
                control_flow_repeat = true;
@@ -26,7 +26,7 @@ function create$Z9dFaWYl$1h3J0$e$7E$V2Vm$c7$X2Vu$7B$N2Vt$sA$g1Vk$VC$H2$m$sA$aO$k
             var r9 = new WyJS.Integer(1);
             var r10 = r3.add(r9);//add %10 = %3, %9 : int
             var r3 = r10;//assign %3 = %10  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 8:

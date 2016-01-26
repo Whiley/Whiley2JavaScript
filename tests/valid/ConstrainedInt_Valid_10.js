@@ -42,12 +42,12 @@ function test(){//method() -> void
             var r0 = g$Z9dFXt1Fc_kA$B3$j0VQ$B6$o0VR$35$d0VQ$J5$Z0FH$s5$o0kM$N4$W0$Q$Z5$Z0kM$32$kB$s5$W0$SE(r1, r2);//invoke %0 = (%1, %2) ConstrainedInt_Valid_10:g : function(int,ConstrainedInt_Valid_10:nat) -> int
             var r3 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1376;
+               control_flow_pc = 1392;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1376:
+         case 1392:
             return;
       }
    }

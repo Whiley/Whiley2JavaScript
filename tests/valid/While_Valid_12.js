@@ -9,10 +9,10 @@ function add$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r8 = r0.length();//lengthof %8 = %0 : int[]
             if(WyJS.gt(r2, r8, true)){
                control_flow_pc = 386;
@@ -29,7 +29,7 @@ function add$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             var r15 = new WyJS.Integer(1);
             var r16 = r2.add(r15);//add %16 = %2, %15 : int
             var r2 = r16;//assign %2 = %16  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 386:

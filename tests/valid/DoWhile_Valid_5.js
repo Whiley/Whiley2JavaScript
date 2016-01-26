@@ -12,10 +12,10 @@ function sum$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r7 = r0.getValue(r1);
             var r8 = r2.add(r7);//add %8 = %2, %7 : int
             var r2 = r8;//assign %2 = %8  : int
@@ -28,7 +28,7 @@ function sum$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 336:

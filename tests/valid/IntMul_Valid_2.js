@@ -18,34 +18,34 @@ function test(){//method() -> void
             var r2 = r7;//assign %2 = %7  : int
             var r10 = new WyJS.Integer(63);
             if(WyJS.equals(r2, r10, true)){
-               control_flow_pc = 1134;
+               control_flow_pc = 1147;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1134:
+         case 1147:
             var r11 = r0.mul(r0);//mul %11 = %0, %0 : int
             var r12 = r11.sub(r1);//sub %12 = %11, %1 : int
             var r2 = r12;//assign %2 = %12  : int
             var r13 = new WyJS.Integer(63);
             if(WyJS.equals(r2, r13, true)){
-               control_flow_pc = 1135;
+               control_flow_pc = 1148;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1135:
+         case 1148:
             var r14 = r0.sub(r1);//sub %14 = %0, %1 : int
             var r15 = r0.mul(r14);//mul %15 = %0, %14 : int
             var r2 = r15;//assign %2 = %15  : int
             var r16 = new WyJS.Integer(56);
             if(WyJS.equals(r2, r16, true)){
-               control_flow_pc = 1136;
+               control_flow_pc = 1149;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1136:
+         case 1149:
             return;
       }
    }

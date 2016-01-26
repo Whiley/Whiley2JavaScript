@@ -303,6 +303,12 @@ public class RuntimeValidTests {
 	}
 
 	@Test
+	public void ByteSimple_Valid_9() throws IOException {
+		runTest("ByteSimple_Valid_9");
+	}
+
+
+	@Test
 	public void Byte_Valid_1() throws IOException {
 		runTest("Byte_Valid_1");
 	}
@@ -2719,10 +2725,12 @@ public class RuntimeValidTests {
 		runTest("While_Valid_3");
 	}
 
+	@Test
 	public void While_Valid_5() throws IOException {
 		runTest("While_Valid_5");
 	}
 
+	@Test
 	public void While_Valid_7() throws IOException {
 		runTest("While_Valid_7");
 	}
@@ -2730,6 +2738,11 @@ public class RuntimeValidTests {
 	@Ignore("checked")  @Test
 	public void While_Valid_9() throws IOException {
 		runTest("While_Valid_9");
+	}
+
+	@Test
+	public void WhileSimple_Valid_1() throws IOException {
+		runTest("WhileSimple_Valid_1");
 	}
 
 }

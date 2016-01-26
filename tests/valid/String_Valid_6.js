@@ -18,13 +18,13 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             var r14 = new WyJS.Integer(0);
             var r13 = r14;//assign %13 = %14  : int
             var r4 = r13;//assign %4 = %13  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r21 = r0.length();//lengthof %21 = %0 : int[]
             if(WyJS.gt(r4, r21, true)){
-               control_flow_pc = 1270;
+               control_flow_pc = 1283;
                control_flow_repeat = true;
                continue outer;
             }
@@ -34,20 +34,20 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             var r24 = new WyJS.Integer(1);
             var r25 = r4.add(r24);//add %25 = %4, %24 : int
             var r4 = r25;//assign %4 = %25  : int
-            control_flow_pc = -2;
-            control_flow_repeat = true;
-            break;
-         case 1270:
-            var r27 = new WyJS.Integer(0);
-            var r26 = r27;//assign %26 = %27  : int
-            var r5 = r26;//assign %5 = %26  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -3:
+         case 1283:
+            var r27 = new WyJS.Integer(0);
+            var r26 = r27;//assign %26 = %27  : int
+            var r5 = r26;//assign %5 = %26  : int
+            control_flow_pc = -4;
+            control_flow_repeat = true;
+            break;
+         case -4:
             var r33 = r1.length();//lengthof %33 = %1 : int[]
             if(WyJS.gt(r5, r33, true)){
-               control_flow_pc = 1273;
+               control_flow_pc = 1286;
                control_flow_repeat = true;
                continue outer;
             }
@@ -58,10 +58,10 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             var r37 = new WyJS.Integer(1);
             var r38 = r5.add(r37);//add %38 = %5, %37 : int
             var r5 = r38;//assign %5 = %38  : int
-            control_flow_pc = -3;
+            control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-         case 1273:
+         case 1286:
             return r3;//return %3 : int[]
             return;
       }
@@ -81,12 +81,12 @@ function test(){//method() -> void
             var r0 = append$Z9dFXVYl$1Ms(r1, r2);//invoke %0 = (%1, %2) String_Valid_6:append : function(int[],int[]) -> int[]
             var r3 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(49), new WyJS.Integer(50), new WyJS.Integer(50)], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1274;
+               control_flow_pc = 1287;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1274:
+         case 1287:
             return;
       }
    }

@@ -9,10 +9,10 @@ function indexOf$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
             var r4 = new WyJS.Integer(0);
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r7 = r0.length();//lengthof %7 = %0 : int[]
             if(WyJS.gt(r2, r7, true)){
                control_flow_pc = 547;
@@ -26,22 +26,21 @@ function indexOf$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
                break;
             }
             else{
-               control_flow_pc = -3;
+               control_flow_pc = -4;
                control_flow_repeat = true;
                break;
             }
-         case -3:
+         case -4:
             control_flow_pc = 547;
             control_flow_repeat = true;
             continue outer;//goto label547
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
-            break;
          case 548:
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 547:

@@ -9,10 +9,10 @@ function inc$Z9bF1D527oHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0$Q5$R2Vk$Viz(r0){//
             var r3 = new WyJS.Integer(0);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r10 = r0.length();//lengthof %10 = %0 : int[]
             if(WyJS.gt(r1, r10, true)){
                control_flow_pc = 398;
@@ -29,7 +29,7 @@ function inc$Z9bF1D527oHk2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$X0$Q5$R2Vk$Viz(r0){//
             var r17 = new WyJS.Integer(1);
             var r18 = r1.add(r17);//add %18 = %1, %17 : int
             var r1 = r18;//assign %1 = %18  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 398:

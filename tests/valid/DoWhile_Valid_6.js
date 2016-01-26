@@ -9,10 +9,10 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
             var r4 = r0.length();//lengthof %4 = %0 : int[]
             var r3 = r4;//assign %3 = %4  : int
             var r2 = r3;//assign %2 = %3  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r5 = new WyJS.Integer(1);
             var r6 = r2.sub(r5);//sub %6 = %2, %5 : int
             var r2 = r6;//assign %2 = %6  : int
@@ -28,7 +28,7 @@ function lastIndexOf$Z9dFas1FVYGs(r0, r1){//function(int[],int) -> int
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 344:

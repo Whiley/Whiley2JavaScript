@@ -20,10 +20,10 @@ function Cash$_9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0k
             var r15 = new WyJS.Integer(0);
             var r14 = r15;//assign %14 = %15  : int
             var r2 = r14;//assign %2 = %14  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r24 = r0.length();//lengthof %24 = %0 : int[]
             if(WyJS.gt(r2, r24, true)){
                control_flow_pc = 161;
@@ -43,7 +43,7 @@ function Cash$_9bFaL1s$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$B0FP$B6$o0kM$N4$W0$Q$Z5$Z0k
             var r33 = new WyJS.Integer(1);
             var r34 = r2.add(r33);//add %34 = %2, %33 : int
             var r2 = r34;//assign %2 = %34  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 161:

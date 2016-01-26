@@ -16,10 +16,10 @@ function cons$Z9dFaVYl$1Ms(r0, r1){//function(int,int[]) -> int[]
             var r11 = new WyJS.Integer(0);
             var r10 = r11;//assign %10 = %11  : int
             var r3 = r10;//assign %3 = %10  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r17 = r1.length();//lengthof %17 = %1 : int[]
             if(WyJS.gt(r3, r17, true)){
                control_flow_pc = 610;
@@ -34,7 +34,7 @@ function cons$Z9dFaVYl$1Ms(r0, r1){//function(int,int[]) -> int[]
             var r22 = new WyJS.Integer(1);
             var r23 = r3.add(r22);//add %23 = %3, %22 : int
             var r3 = r23;//assign %3 = %23  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 610:

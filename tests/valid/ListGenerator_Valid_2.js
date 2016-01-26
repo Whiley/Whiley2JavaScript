@@ -14,12 +14,12 @@ function f$3Ab737klNRWz(r0){//method(int[]) -> void
             var r6 = r0.getValue(r5);
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 694;
+               control_flow_pc = 707;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 694:
+         case 707:
             return;
       }
    }

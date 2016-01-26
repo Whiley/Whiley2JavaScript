@@ -14,25 +14,25 @@ function test(){//method() -> void
             var r5 = r0.fieldLoad("flag");//fieldload %5 = %0 flag : {int code,bool flag}
             var r6 = true;
             if(r5 === r6){
-               control_flow_pc = 859;
+               control_flow_pc = 872;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 860;
+            control_flow_pc = 873;
             control_flow_repeat = true;
-            continue outer;//goto label860
-         case 859:
-            control_flow_pc = 861;
+            continue outer;//goto label873
+         case 872:
+            control_flow_pc = 874;
             control_flow_repeat = true;
-            continue outer;//goto label861
+            continue outer;//goto label874
             throw {name: 'Assert Failed', message: 'fail'}
-         case 861:
-            control_flow_pc = 862;
+         case 874:
+            control_flow_pc = 875;
             control_flow_repeat = true;
-            continue outer;//goto label862
-         case 860:
+            continue outer;//goto label875
+         case 873:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 862:
+         case 875:
             return;
       }
    }

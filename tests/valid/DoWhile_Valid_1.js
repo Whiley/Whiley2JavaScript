@@ -12,10 +12,10 @@ function f$3AbFaA$0D5Wz(r0){//method(int[]) -> int
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r7 = r0.getValue(r2);
             var r8 = r1.add(r7);//add %8 = %1, %7 : int
             var r1 = r8;//assign %1 = %8  : int
@@ -30,7 +30,7 @@ function f$3AbFaA$0D5Wz(r0){//method(int[]) -> int
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 324:

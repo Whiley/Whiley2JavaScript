@@ -14,10 +14,10 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r9 = WyJS.ArrayGen(r7, r8, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r6 = r9.clone(new WyJS.Type.Int());//assign %6 = %9  : int[]
             var r2 = r6.clone(new WyJS.Type.Int());//assign %2 = %6  : int[]
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r13 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r13, true)){
                control_flow_pc = 525;
@@ -33,7 +33,7 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             var r19 = r1.sub(r18);//sub %19 = %1, %18 : int
             var r1 = r19;//assign %1 = %19  : int
             r2.setValue(r1, r3);
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 525:

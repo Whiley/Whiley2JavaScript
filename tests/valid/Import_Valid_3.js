@@ -12,13 +12,13 @@ function toInt$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r8 = r0.length();//lengthof %8 = %0 : int[]
             if(WyJS.gt(r2, r8, true)){
-               control_flow_pc = 711;
+               control_flow_pc = 724;
                control_flow_repeat = true;
                continue outer;
             }
@@ -28,10 +28,10 @@ function toInt$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             var r11 = new WyJS.Integer(1);
             var r12 = r2.add(r11);//add %12 = %2, %11 : int
             var r2 = r12;//assign %2 = %12  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 711:
+         case 724:
             return r1;//return %1 : int
             return;
       }
@@ -56,12 +56,12 @@ function test(){//method() -> void
             var r7 = toInt$Z9bFaA$0D5Wz(r0);//invoke %7 = (%0) Import_Valid_3:toInt : function(int[]) -> int
             var r8 = new WyJS.Integer(10);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 712;
+               control_flow_pc = 725;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 712:
+         case 725:
             return;
       }
    }

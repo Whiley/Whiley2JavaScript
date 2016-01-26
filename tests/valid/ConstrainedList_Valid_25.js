@@ -35,10 +35,10 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(0);
             var r12 = r13;//assign %12 = %13  : int
             var r1 = r12;//assign %1 = %12  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.gt(r1, r14, true)){
                control_flow_pc = 180;
@@ -57,7 +57,7 @@ function test(){//method() -> void
             var r17 = new WyJS.Integer(1);
             var r18 = r1.add(r17);//add %18 = %1, %17 : int
             var r1 = r18;//assign %1 = %18  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 180:

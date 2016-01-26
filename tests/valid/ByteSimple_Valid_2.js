@@ -10,15 +10,15 @@ function test(){//method() -> void
             var r1 = r2;//assign %1 = %2  : byte
             var r0 = r1;//assign %0 = %1  : byte
             var r3 = new WyJS.Integer(1);
-            var r4 = r0.sll(r3);//shl %4 = %0, %3 : byte
+            var r4 = r0.shl(r3);//shl %4 = %0, %3 : byte
             var r5 = new WyJS.Byte(2);
             if(WyJS.equals(r4, r5, true)){
-               control_flow_pc = 0;
+               control_flow_pc = 1447;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 0:
+         case 1447:
             return;
       }
    }

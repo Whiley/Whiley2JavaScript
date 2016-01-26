@@ -13,10 +13,10 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> int[]
             var r7 = WyJS.ArrayGen(r6, r0, new WyJS.Type.Array(new WyJS.Type.Int()));
             var r5 = r7.clone(new WyJS.Type.Int());//assign %5 = %7  : int[]
             var r2 = r5.clone(new WyJS.Type.Int());//assign %2 = %5  : int[]
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.gt(r1, r0, true)){
                control_flow_pc = 537;
                control_flow_repeat = true;
@@ -26,7 +26,7 @@ function buildNatList$Z9bF5D527RWz(r0){//function(int) -> int[]
             var r14 = new WyJS.Integer(1);
             var r15 = r1.add(r14);//add %15 = %1, %14 : int
             var r1 = r15;//assign %1 = %15  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 537:

@@ -12,10 +12,10 @@ function sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r0){//fu
             var r6 = new WyJS.Integer(0);
             var r5 = r6;//assign %5 = %6  : int
             var r2 = r5;//assign %2 = %5  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r9 = r0.length();//lengthof %9 = %0 : int[]
             if(WyJS.gt(r1, r9, true)){
                control_flow_pc = 685;
@@ -28,7 +28,7 @@ function sum$Z9bFaL1S$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0kB2$i0FN$F63sN3y2(r0){//fu
             var r12 = new WyJS.Integer(1);
             var r13 = r1.add(r12);//add %13 = %1, %12 : int
             var r1 = r13;//assign %1 = %13  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 685:

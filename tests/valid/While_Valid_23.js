@@ -13,10 +13,10 @@ function f$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             var r7 = new WyJS.Integer(1);
             var r6 = r7;//assign %6 = %7  : int
             var r2 = r6;//assign %2 = %6  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r12 = r0.length();//lengthof %12 = %0 : int[]
             if(WyJS.gt(r2, r12, true)){
                control_flow_pc = 427;
@@ -28,7 +28,7 @@ function f$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             var r14 = new WyJS.Integer(1);
             var r15 = r2.add(r14);//add %15 = %2, %14 : int
             var r2 = r15;//assign %2 = %15  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 427:

@@ -9,24 +9,24 @@ function strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F
             var r3 = new WyJS.Integer(0);
             var r2 = r3;//assign %2 = %3  : int
             var r1 = r2;//assign %1 = %2  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             var r6 = r0.getValue(r1);
             var r7 = new WyJS.Integer(0);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1428;
+               control_flow_pc = 1444;
                control_flow_repeat = true;
                continue outer;
             }
             var r8 = new WyJS.Integer(1);
             var r9 = r1.add(r8);//add %9 = %1, %8 : int
             var r1 = r9;//assign %1 = %9  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1428:
+         case 1444:
             return r1;//return %1 : int
             return;
       }
@@ -59,12 +59,12 @@ function test(){//method() -> void
             var r15 = strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0VB$F25$B3$U0kR$F6$m0FP$s5$bx(r0);//invoke %15 = (%0) ConstrainedInt_Valid_24:strlen : function(ConstrainedInt_Valid_24:C_string) -> int
             var r16 = new WyJS.Integer(10);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 1429;
+               control_flow_pc = 1445;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1429:
+         case 1445:
             return;
       }
    }

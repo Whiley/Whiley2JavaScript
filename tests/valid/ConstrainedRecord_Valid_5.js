@@ -14,21 +14,21 @@ function test(){//method() -> void
             var r5 = r0.fieldLoad("y");//fieldload %5 = %0 y : {int x,int y}
             var r6 = new WyJS.Integer(1);
             if(WyJS.equals(r5, r6, true)){
-               control_flow_pc = 820;
+               control_flow_pc = 833;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 820:
+         case 833:
             var r7 = r0.fieldLoad("x");//fieldload %7 = %0 x : {int x,int y}
             var r8 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 821;
+               control_flow_pc = 834;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 821:
+         case 834:
             return;
       }
    }

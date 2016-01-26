@@ -12,10 +12,10 @@ function count$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r7 = r0.mul(r1);//mul %7 = %0, %1 : int
             var r6 = r7;//assign %6 = %7  : int
             var r3 = r6;//assign %3 = %6  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
+         case -3:
             if(WyJS.gt(r2, r3, true)){
                control_flow_pc = 435;
                control_flow_repeat = true;
@@ -24,7 +24,7 @@ function count$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             var r8 = new WyJS.Integer(1);
             var r9 = r2.add(r8);//add %9 = %2, %8 : int
             var r2 = r9;//assign %2 = %9  : int
-            control_flow_pc = -2;
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
          case 435:

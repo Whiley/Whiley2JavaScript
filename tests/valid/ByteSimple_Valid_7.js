@@ -9,45 +9,47 @@ function test(){//method() -> void
             var r4 = new WyJS.Byte(0);
             var r5 = new WyJS.Byte(1);
             var r6 = new WyJS.Byte(3);
-            var r7 = new WyJS.Array([r4, r5, r6], new WyJS.Type.Array(new WyJS.Type.Byte()));
-            var r3 = r7.clone(new WyJS.Type.Byte());//assign %3 = %7  : byte[]
+            var r7 = new WyJS.Byte(2);
+            var r8 = new WyJS.Array([r4, r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Byte()));
+            var r3 = r8.clone(new WyJS.Type.Byte());//assign %3 = %8  : byte[]
             var r0 = r3.clone(new WyJS.Type.Byte());//assign %0 = %3  : byte[]
-            var r9 = new WyJS.Byte(-1);
-            var r10 = new WyJS.Byte(-2);
-            var r11 = new WyJS.Byte(-4);
-            var r12 = new WyJS.Array([r9, r10, r11], new WyJS.Type.Array(new WyJS.Type.Byte()));
-            var r8 = r12.clone(new WyJS.Type.Byte());//assign %8 = %12  : byte[]
-            var r1 = r8.clone(new WyJS.Type.Byte());//assign %1 = %8  : byte[]
-            var r14 = new WyJS.Integer(0);
-            var r13 = r14;//assign %13 = %14  : int
-            var r2 = r13;//assign %2 = %13  : int
-            control_flow_pc = -2;
+            var r10 = new WyJS.Byte(-1);
+            var r11 = new WyJS.Byte(-2);
+            var r12 = new WyJS.Byte(-4);
+            var r13 = new WyJS.Byte(-3);
+            var r14 = new WyJS.Array([r10, r11, r12, r13], new WyJS.Type.Array(new WyJS.Type.Byte()));
+            var r9 = r14.clone(new WyJS.Type.Byte());//assign %9 = %14  : byte[]
+            var r1 = r9.clone(new WyJS.Type.Byte());//assign %1 = %9  : byte[]
+            var r16 = new WyJS.Integer(0);
+            var r15 = r16;//assign %15 = %16  : int
+            var r2 = r15;//assign %2 = %15  : int
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case -2:
-            var r16 = r0.length();//lengthof %16 = %0 : byte[]
-            if(WyJS.gt(r2, r16, true)){
-               control_flow_pc = 1;
+         case -3:
+            var r18 = r0.length();//lengthof %18 = %0 : byte[]
+            if(WyJS.gt(r2, r18, true)){
+               control_flow_pc = 1459;
                control_flow_repeat = true;
                continue outer;
             }
-            var r17 = r0.getValue(r2);
-            var r18 = WyJS.invert(r17);//invert %18 = %17 : byte
-            var r19 = r1.getValue(r2);
-            if(WyJS.equals(r18, r19, true)){
-               control_flow_pc = 2;
+            var r19 = r0.getValue(r2);
+            var r20 = WyJS.invert(r19);//invert %20 = %19 : byte
+            var r21 = r1.getValue(r2);
+            if(WyJS.equals(r20, r21, true)){
+               control_flow_pc = 1460;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 2:
-            var r20 = new WyJS.Integer(1);
-            var r21 = r2.add(r20);//add %21 = %2, %20 : int
-            var r2 = r21;//assign %2 = %21  : int
-            control_flow_pc = -2;
+         case 1460:
+            var r22 = new WyJS.Integer(1);
+            var r23 = r2.add(r22);//add %23 = %2, %22 : int
+            var r2 = r23;//assign %2 = %23  : int
+            control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1:
+         case 1459:
             return;
       }
    }
