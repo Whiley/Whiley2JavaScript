@@ -307,23 +307,22 @@ public class RuntimeValidTests {
 		runTest("ByteSimple_Valid_9");
 	}
 
-
 	@Test
 	public void Byte_Valid_1() throws IOException {
 		runTest("Byte_Valid_1");
 	}
 
-	@Test
+	@Ignore @Test
 	public void Byte_Valid_2() throws IOException {
 		runTest("Byte_Valid_2");
 	}
 
-	@Test
+	@Ignore @Test
 	public void Byte_Valid_3() throws IOException {
 		runTest("Byte_Valid_3");
 	}
 
-	@Test
+	@Ignore @Test
 	public void Byte_Valid_4() throws IOException {
 		runTest("Byte_Valid_4");
 	}

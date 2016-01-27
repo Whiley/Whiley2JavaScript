@@ -15,13 +15,13 @@ function test(){//method() -> void
          case -3:
             var r3 = new WyJS.Integer(5);
             if(WyJS.gt(r0, r3, true)){
-               control_flow_pc = 400;
+               control_flow_pc = 370;
                control_flow_repeat = true;
                continue outer;
             }
             var r4 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r4, false)){
-               control_flow_pc = 401;
+               control_flow_pc = 371;
                control_flow_repeat = true;
                break;
             }
@@ -31,27 +31,27 @@ function test(){//method() -> void
                break;
             }
          case -4:
-            control_flow_pc = 400;
+            control_flow_pc = 370;
             control_flow_repeat = true;
-            continue outer;//goto label400
+            continue outer;//goto label370
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 401:
+         case 371:
             var r5 = new WyJS.Integer(1);
             var r6 = r0.add(r5);//add %6 = %0, %5 : int
             var r0 = r6;//assign %0 = %6  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 400:
+         case 370:
             var r7 = new WyJS.Integer(3);
             if(WyJS.equals(r0, r7, true)){
-               control_flow_pc = 402;
+               control_flow_pc = 372;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 402:
+         case 372:
             return;
       }
    }

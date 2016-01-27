@@ -36,7 +36,7 @@ function test(){//method() -> void
          case -3:
             var r25 = r0.length();//lengthof %25 = %0 : byte[]
             if(WyJS.gt(r3, r25, true)){
-               control_flow_pc = 1450;
+               control_flow_pc = 1420;
                control_flow_repeat = true;
                continue outer;
             }
@@ -45,19 +45,19 @@ function test(){//method() -> void
             var r28 = r26.xor(r27);//xor %28 = %26, %27 : byte
             var r29 = r2.getValue(r3);
             if(WyJS.equals(r28, r29, true)){
-               control_flow_pc = 1451;
+               control_flow_pc = 1421;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1451:
+         case 1421:
             var r30 = new WyJS.Integer(1);
             var r31 = r3.add(r30);//add %31 = %3, %30 : int
             var r3 = r31;//assign %3 = %31  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1450:
+         case 1420:
             return;
       }
    }

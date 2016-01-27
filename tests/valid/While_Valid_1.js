@@ -20,7 +20,7 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -3:
             var r13 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r13, true)){
-               control_flow_pc = 651;
+               control_flow_pc = 621;
                control_flow_repeat = true;
                continue outer;
             }
@@ -36,7 +36,7 @@ function reverse$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 651:
+         case 621:
             return r2;//return %2 : int[]
             return;
       }
@@ -67,12 +67,12 @@ function test(){//method() -> void
             var r13 = new WyJS.Integer(1);
             var r14 = new WyJS.Array([r9, r10, r11, r12, r13], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r14, true)){
-               control_flow_pc = 652;
+               control_flow_pc = 622;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 652:
+         case 622:
             return;
       }
    }

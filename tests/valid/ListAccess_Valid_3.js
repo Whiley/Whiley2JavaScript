@@ -8,20 +8,20 @@ function f$Z9d7Z01RB5Ms(r0, r1){//function(int[],int) -> void
          case -1 :
             var r4 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r4, false)){
-               control_flow_pc = 941;
+               control_flow_pc = 911;
                control_flow_repeat = true;
                continue outer;
             }
             var r5 = r0.length();//lengthof %5 = %0 : int[]
             if(WyJS.lt(r1, r5, false)){
-               control_flow_pc = 942;
+               control_flow_pc = 912;
                control_flow_repeat = true;
                continue outer;
             }
-         case 941:
+         case 911:
             var r6 = new WyJS.Integer(0);
             var r1 = r6;//assign %1 = %6  : int
-         case 942:
+         case 912:
             var r8 = r0.getValue(r1);
             var r7 = r8;//assign %7 = %8  : int
             var r2 = r7;//assign %2 = %7  : int
@@ -29,12 +29,12 @@ function f$Z9d7Z01RB5Ms(r0, r1){//function(int[],int) -> void
             var r9 = r10;//assign %9 = %10  : int
             var r3 = r9;//assign %3 = %9  : int
             if(WyJS.equals(r2, r3, true)){
-               control_flow_pc = 943;
+               control_flow_pc = 913;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 943:
+         case 913:
             return;
       }
    }
@@ -61,12 +61,12 @@ function test(){//method() -> void
             var r9 = new WyJS.Integer(3);
             var r10 = new WyJS.Array([r7, r8, r9], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r10, true)){
-               control_flow_pc = 944;
+               control_flow_pc = 914;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 944:
+         case 914:
             var r11 = new WyJS.Integer(2);
             f$Z9d7Z01RB5Ms(r0, r11);//invoke %(%0, %11) ListAccess_Valid_3:f : function(int[],int) -> void
             var r12 = new WyJS.Integer(1);
@@ -74,12 +74,12 @@ function test(){//method() -> void
             var r14 = new WyJS.Integer(3);
             var r15 = new WyJS.Array([r12, r13, r14], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r15, true)){
-               control_flow_pc = 945;
+               control_flow_pc = 915;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 945:
+         case 915:
             var r16 = new WyJS.Integer(3);
             f$Z9d7Z01RB5Ms(r0, r16);//invoke %(%0, %16) ListAccess_Valid_3:f : function(int[],int) -> void
             var r17 = new WyJS.Integer(1);
@@ -87,12 +87,12 @@ function test(){//method() -> void
             var r19 = new WyJS.Integer(3);
             var r20 = new WyJS.Array([r17, r18, r19], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r20, true)){
-               control_flow_pc = 946;
+               control_flow_pc = 916;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 946:
+         case 916:
             var r21 = new WyJS.Integer(1);
             var r22 = r21.neg();//neg %22 = %21 : int
             f$Z9d7Z01RB5Ms(r0, r22);//invoke %(%0, %22) ListAccess_Valid_3:f : function(int[],int) -> void
@@ -101,12 +101,12 @@ function test(){//method() -> void
             var r25 = new WyJS.Integer(3);
             var r26 = new WyJS.Array([r23, r24, r25], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r26, true)){
-               control_flow_pc = 947;
+               control_flow_pc = 917;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 947:
+         case 917:
             var r27 = new WyJS.Integer(4);
             f$Z9d7Z01RB5Ms(r0, r27);//invoke %(%0, %27) ListAccess_Valid_3:f : function(int[],int) -> void
             return;

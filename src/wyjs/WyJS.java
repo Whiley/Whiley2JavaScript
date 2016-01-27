@@ -564,7 +564,6 @@ public class WyJS {
 					// jumping in the loop
 					js.add(writeIfTop((If) c));
 					indent++;
-
 					js.add(getIndentBlock() + "control_flow_pc = "
 							+ parseLabel(((Codes.If) c).target) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
@@ -639,7 +638,8 @@ public class WyJS {
 				write(c);
 			}
 		}
-		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel + ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = "
+				+ loopLabel + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "break;\n");
 	}
@@ -972,8 +972,13 @@ public class WyJS {
 			Constant.Bool bol = (Constant.Bool) constant;
 			return bol.value + "";
 		} else if (constant instanceof Constant.Byte) {
-			Constant.Byte varByte = (Constant.Byte) constant;
-			return "new WyJS.Byte("+ varByte.value +")";
+			// get signed byte as integer
+			Constant.Byte b = (Constant.Byte) constant;
+			byte signedByte =  b.value;
+
+			// uses operation below
+			int varByte = signedByte & (0xff);
+			return "new WyJS.Byte("+ varByte +")";
 		} else if (constant instanceof Constant.Decimal) {
 			Constant.Decimal deci = (Constant.Decimal) constant;
 			return "new WyJS.Real(" + deci.value + ")";

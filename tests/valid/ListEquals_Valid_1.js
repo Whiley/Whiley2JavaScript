@@ -8,19 +8,19 @@ function f$b9dF5X1FVYGWYWt1N3D(r0, r1){//function(int[],real[]) -> bool
          case -1 :
             var r2 = WyJS.cast(new WyJS.Type.Array(new WyJS.Type.Real()), r0);
             if(WyJS.equals(r2, r1, false)){
-               control_flow_pc = 1081;
+               control_flow_pc = 1051;
                control_flow_repeat = true;
                continue outer;
             }
             var r3 = true;
             return r3;//return %3 : bool
-            control_flow_pc = 1082;
+            control_flow_pc = 1052;
             control_flow_repeat = true;
-            continue outer;//goto label1082
-         case 1081:
+            continue outer;//goto label1052
+         case 1051:
             var r4 = false;
             return r4;//return %4 : bool
-         case 1082:
+         case 1052:
             return;
       }
    }
@@ -43,12 +43,12 @@ function test(){//method() -> void
             var r0 = f$b9dF5X1FVYGWYWt1N3D(r3, r6);//invoke %0 = (%3, %6) ListEquals_Valid_1:f : function(int[],real[]) -> bool
             var r7 = true;
             if(r0 === r7){
-               control_flow_pc = 1083;
+               control_flow_pc = 1053;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1083:
+         case 1053:
             var r9 = new WyJS.Integer(1);
             var r10 = new WyJS.Integer(4);
             var r11 = new WyJS.Array([r9, r10], new WyJS.Type.Array(new WyJS.Type.Int()));
@@ -58,12 +58,12 @@ function test(){//method() -> void
             var r8 = f$b9dF5X1FVYGWYWt1N3D(r11, r14);//invoke %8 = (%11, %14) ListEquals_Valid_1:f : function(int[],real[]) -> bool
             var r15 = false;
             if(r8 === r15){
-               control_flow_pc = 1084;
+               control_flow_pc = 1054;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1084:
+         case 1054:
             var r17 = new WyJS.Integer(0);
             var r18 = new WyJS.Integer(0);
             var r19 = WyJS.ArrayGen(r17, r18, new WyJS.Type.Array(new WyJS.Type.Int()));
@@ -73,12 +73,12 @@ function test(){//method() -> void
             var r16 = f$b9dF5X1FVYGWYWt1N3D(r19, r22);//invoke %16 = (%19, %22) ListEquals_Valid_1:f : function(int[],real[]) -> bool
             var r23 = true;
             if(r16 === r23){
-               control_flow_pc = 1085;
+               control_flow_pc = 1055;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1085:
+         case 1055:
             return;
       }
    }

@@ -7,34 +7,34 @@ function f$b9bF5D537klcR0D5aL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Array(new WyJS.Type.Int())))){
-               control_flow_pc = 588;
+               control_flow_pc = 558;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 589;
+            control_flow_pc = 559;
             control_flow_repeat = true;
-            continue outer;//goto label589
-         case 588:
+            continue outer;//goto label559
+         case 558:
             var r1 = r0.length();//lengthof %1 = %0 : int[][]
             var r2 = new WyJS.Integer(0);
             if(WyJS.lt(r1, r2, true)){
-               control_flow_pc = 589;
+               control_flow_pc = 559;
                control_flow_repeat = true;
                continue outer;
             }
             var r3 = new WyJS.Integer(0);
             var r4 = r0.getValue(r3);
             return r4;//return %4 : int[]
-            control_flow_pc = 590;
+            control_flow_pc = 560;
             control_flow_repeat = true;
-            continue outer;//goto label590
-         case 589:
+            continue outer;//goto label560
+         case 559:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
             var r8 = new WyJS.Array([r5, r6, r7], new WyJS.Type.Array(new WyJS.Type.Int()));
             return r8;//return %8 : int[]
-         case 590:
+         case 560:
             return;
       }
    }
@@ -67,12 +67,12 @@ function test(){//method() -> void
             var r16 = new WyJS.Integer(7);
             var r17 = new WyJS.Array([r10, r11, r12, r13, r14, r15, r16], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r17, true)){
-               control_flow_pc = 591;
+               control_flow_pc = 561;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 591:
+         case 561:
             var r19 = new WyJS.Integer(0);
             var r20 = new WyJS.Integer(0);
             var r21 = WyJS.ArrayGen(r19, r20, new WyJS.Type.Array(new WyJS.Type.Int()));
@@ -82,12 +82,12 @@ function test(){//method() -> void
             var r24 = new WyJS.Integer(0);
             var r25 = WyJS.ArrayGen(r23, r24, new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r18, r25, true)){
-               control_flow_pc = 592;
+               control_flow_pc = 562;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 592:
+         case 562:
             var r27 = new WyJS.Integer(1);
             var r28 = new WyJS.Integer(2);
             var r29 = new WyJS.Real(2.01);
@@ -99,12 +99,12 @@ function test(){//method() -> void
             var r34 = new WyJS.Integer(3);
             var r35 = new WyJS.Array([r32, r33, r34], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r26, r35, true)){
-               control_flow_pc = 593;
+               control_flow_pc = 563;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 593:
+         case 563:
             var r37 = new WyJS.Real(1.23);
             var r38 = new WyJS.Integer(2);
             var r39 = new WyJS.Real(2.01);
@@ -116,12 +116,12 @@ function test(){//method() -> void
             var r44 = new WyJS.Integer(3);
             var r45 = new WyJS.Array([r42, r43, r44], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r36, r45, true)){
-               control_flow_pc = 594;
+               control_flow_pc = 564;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 594:
+         case 564:
             return;
       }
    }

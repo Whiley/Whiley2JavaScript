@@ -34,21 +34,21 @@ function test(){//method() -> void
             var r10 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$n$FB4$m0FO$B5$l$VB(r0);//invoke %10 = (%0) TypeEquals_Valid_31:f : function(TypeEquals_Valid_31:rec12) -> int
             var r11 = new WyJS.Integer(1);
             if(WyJS.equals(r10, r11, true)){
-               control_flow_pc = 606;
+               control_flow_pc = 576;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 606:
+         case 576:
             var r12 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$n$FB4$m0FO$B5$l$VB(r1);//invoke %12 = (%1) TypeEquals_Valid_31:f : function(TypeEquals_Valid_31:rec12) -> int
             var r13 = new WyJS.Integer(1);
             if(WyJS.equals(r12, r13, true)){
-               control_flow_pc = 607;
+               control_flow_pc = 577;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 607:
+         case 577:
             return;
       }
    }

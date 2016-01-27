@@ -29,12 +29,12 @@ function test(){//method() -> void
             var r0 = divide$Z9dFX0Y$3i$(r1, r2);//invoke %0 = (%1, %2) Cast_Valid_6:divide : function(real,int) -> real
             var r3 = new WyJS.Real(5.0);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1144;
+               control_flow_pc = 1114;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1144:
+         case 1114:
             var r5 = new WyJS.Real(10.0);
             var r6 = new WyJS.Integer(3);
             var r4 = divide$Z9dFX0Y$3i$(r5, r6);//invoke %4 = (%5, %6) Cast_Valid_6:divide : function(real,int) -> real
@@ -42,12 +42,12 @@ function test(){//method() -> void
             var r8 = new WyJS.Real(1.5);
             var r9 = r7.div(r8);//div %9 = %7, %8 : real
             if(WyJS.equals(r4, r9, true)){
-               control_flow_pc = 1145;
+               control_flow_pc = 1115;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1145:
+         case 1115:
             return;
       }
    }

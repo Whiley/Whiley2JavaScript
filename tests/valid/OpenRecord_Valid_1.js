@@ -28,12 +28,12 @@ function test(){//method() -> void
             var r4 = getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$lc0$E0$R$J5$i0VJ$J5$Y0kQ$76$Zx(r0);//invoke %4 = (%0) OpenRecord_Valid_1:getField : function(OpenRecord_Valid_1:OpenRecord) -> int
             var r5 = new WyJS.Integer(1);
             if(WyJS.equals(r4, r5, true)){
-               control_flow_pc = 1067;
+               control_flow_pc = 1037;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1067:
+         case 1037:
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Array([new WyJS.Integer(104), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111)], new WyJS.Type.Array(new WyJS.Type.Int()));
             var r8 = new WyJS.Record(["field", "x"], [r6, r7], new WyJS.Type.Record(["field", "x"], [new WyJS.Type.Int(), new WyJS.Type.Array(new WyJS.Type.Int())]));
@@ -41,12 +41,12 @@ function test(){//method() -> void
             var r9 = getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$lc0$E0$R$J5$i0VJ$J5$Y0kQ$76$Zx(r0);//invoke %9 = (%0) OpenRecord_Valid_1:getField : function(OpenRecord_Valid_1:OpenRecord) -> int
             var r10 = new WyJS.Integer(2);
             if(WyJS.equals(r9, r10, true)){
-               control_flow_pc = 1068;
+               control_flow_pc = 1038;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1068:
+         case 1038:
             var r11 = new WyJS.Integer(3);
             var r12 = new WyJS.Integer(1);
             var r13 = new WyJS.Integer(2);
@@ -55,12 +55,12 @@ function test(){//method() -> void
             var r15 = getField$Z9bFaA$WL1e$kI$$6$_0VQ$74$_0kN$w5$m0$O$w4$L0FN$k5$d0$O$w4$lc0$E0$R$J5$i0VJ$J5$Y0kQ$76$Zx(r0);//invoke %15 = (%0) OpenRecord_Valid_1:getField : function(OpenRecord_Valid_1:OpenRecord) -> int
             var r16 = new WyJS.Integer(3);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 1069;
+               control_flow_pc = 1039;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1069:
+         case 1039:
             return;
       }
    }

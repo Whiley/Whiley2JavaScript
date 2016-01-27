@@ -18,7 +18,7 @@ function toInt$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
          case -3:
             var r8 = r0.length();//lengthof %8 = %0 : int[]
             if(WyJS.gt(r2, r8, true)){
-               control_flow_pc = 724;
+               control_flow_pc = 694;
                control_flow_repeat = true;
                continue outer;
             }
@@ -31,7 +31,7 @@ function toInt$Z9bFaA$0D5Wz(r0){//function(int[]) -> int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 724:
+         case 694:
             return r1;//return %1 : int
             return;
       }
@@ -56,12 +56,12 @@ function test(){//method() -> void
             var r7 = toInt$Z9bFaA$0D5Wz(r0);//invoke %7 = (%0) Import_Valid_3:toInt : function(int[]) -> int
             var r8 = new WyJS.Integer(10);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 725;
+               control_flow_pc = 695;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 725:
+         case 695:
             return;
       }
    }

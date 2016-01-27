@@ -24,7 +24,7 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
          case -3:
             var r21 = r0.length();//lengthof %21 = %0 : int[]
             if(WyJS.gt(r4, r21, true)){
-               control_flow_pc = 1283;
+               control_flow_pc = 1253;
                control_flow_repeat = true;
                continue outer;
             }
@@ -37,7 +37,7 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1283:
+         case 1253:
             var r27 = new WyJS.Integer(0);
             var r26 = r27;//assign %26 = %27  : int
             var r5 = r26;//assign %5 = %26  : int
@@ -47,7 +47,7 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
          case -4:
             var r33 = r1.length();//lengthof %33 = %1 : int[]
             if(WyJS.gt(r5, r33, true)){
-               control_flow_pc = 1286;
+               control_flow_pc = 1256;
                control_flow_repeat = true;
                continue outer;
             }
@@ -61,7 +61,7 @@ function append$Z9dFXVYl$1Ms(r0, r1){//function(int[],int[]) -> int[]
             control_flow_pc = -4;
             control_flow_repeat = true;
             break;
-         case 1286:
+         case 1256:
             return r3;//return %3 : int[]
             return;
       }
@@ -81,12 +81,12 @@ function test(){//method() -> void
             var r0 = append$Z9dFXVYl$1Ms(r1, r2);//invoke %0 = (%1, %2) String_Valid_6:append : function(int[],int[]) -> int[]
             var r3 = new WyJS.Array([new WyJS.Integer(72), new WyJS.Integer(101), new WyJS.Integer(108), new WyJS.Integer(108), new WyJS.Integer(111), new WyJS.Integer(32), new WyJS.Integer(49), new WyJS.Integer(50), new WyJS.Integer(50)], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1287;
+               control_flow_pc = 1257;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1287:
+         case 1257:
             return;
       }
    }

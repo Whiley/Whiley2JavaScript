@@ -15,12 +15,12 @@ function test(){//method() -> void
             var r6 = r0.srl(r1);//shr %6 = %0, %1 : byte
             var r0 = r6;//assign %0 = %6  : byte
             if(WyJS.equals(r0, r0, true)){
-               control_flow_pc = 1448;
+               control_flow_pc = 1418;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1448:
+         case 1418:
             return;
       }
    }

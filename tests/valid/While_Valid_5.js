@@ -20,14 +20,14 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
          case -3:
             var r17 = r0.length();//lengthof %17 = %0 : int[]
             if(WyJS.gt(r1, r17, true)){
-               control_flow_pc = 694;
+               control_flow_pc = 664;
                control_flow_repeat = true;
                continue outer;
             }
             var r18 = r0.getValue(r1);
             var r19 = new WyJS.Integer(0);
             if(WyJS.lt(r18, r19, false)){
-               control_flow_pc = 695;
+               control_flow_pc = 665;
                control_flow_repeat = true;
                break;
             }
@@ -42,14 +42,14 @@ function extract$a9bF5D537klcoHc2$i1$o$7C$N2Vm$sA$g1Vk$VC$H2$m$sA$eO$kC$12$uik2(
             r2.setValue(r1, r21);
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 695:
+         case 665:
             var r22 = new WyJS.Integer(1);
             var r23 = r1.add(r22);//add %23 = %1, %22 : int
             var r1 = r23;//assign %1 = %23  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 694:
+         case 664:
             return r2;//return %2 : int[]
             return;
       }
@@ -91,12 +91,12 @@ function test(){//method() -> void
             var r24 = new WyJS.Integer(5);
             var r25 = new WyJS.Array([r16, r17, r18, r19, r20, r21, r22, r23, r24], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r25, true)){
-               control_flow_pc = 696;
+               control_flow_pc = 666;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 696:
+         case 666:
             return;
       }
    }

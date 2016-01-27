@@ -31,32 +31,32 @@ function test(){//method() -> void
             var r6 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$lF$k5$d0kR$Fr4D(r0, r7);//invoke %6 = (%0, %7) Access_Valid_1:index : function(Access_Valid_1:list,int) -> any
             var r8 = new WyJS.Integer(1);
             if(WyJS.equals(r6, r8, true)){
-               control_flow_pc = 352;
+               control_flow_pc = 322;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 352:
+         case 322:
             var r10 = new WyJS.Integer(1);
             var r9 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$lF$k5$d0kR$Fr4D(r0, r10);//invoke %9 = (%0, %10) Access_Valid_1:index : function(Access_Valid_1:list,int) -> any
             var r11 = new WyJS.Integer(2);
             if(WyJS.equals(r9, r11, true)){
-               control_flow_pc = 353;
+               control_flow_pc = 323;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 353:
+         case 323:
             var r13 = new WyJS.Integer(2);
             var r12 = index$_9dF591Fc_V6$33$Y0kN$J5$n0kR$w4$L0FN$k5$d0$O$w4$lF$k5$d0kR$Fr4D(r0, r13);//invoke %12 = (%0, %13) Access_Valid_1:index : function(Access_Valid_1:list,int) -> any
             var r14 = new WyJS.Integer(3);
             if(WyJS.equals(r12, r14, true)){
-               control_flow_pc = 354;
+               control_flow_pc = 324;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 354:
+         case 324:
             return;
       }
    }

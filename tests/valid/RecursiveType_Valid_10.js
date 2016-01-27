@@ -15,30 +15,30 @@ function test(){//method() -> void
             var r6 = r0.fieldLoad("op");//fieldload %6 = %0 op : {int left,int op,int right}
             var r7 = new WyJS.Integer(1);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 217;
+               control_flow_pc = 187;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 217:
+         case 187:
             var r8 = r0.fieldLoad("left");//fieldload %8 = %0 left : {int left,int op,int right}
             var r9 = new WyJS.Integer(1);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 218;
+               control_flow_pc = 188;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 218:
+         case 188:
             var r10 = r0.fieldLoad("right");//fieldload %10 = %0 right : {int left,int op,int right}
             var r11 = new WyJS.Integer(2);
             if(WyJS.equals(r10, r11, true)){
-               control_flow_pc = 219;
+               control_flow_pc = 189;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 219:
+         case 189:
             return;
       }
    }

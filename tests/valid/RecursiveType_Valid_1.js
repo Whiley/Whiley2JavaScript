@@ -11,12 +11,12 @@ function test(){//method() -> void
             var r0 = r1;//assign %0 = %1  : X<int|{X left,int op,X right}>
             var r3 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 1245;
+               control_flow_pc = 1215;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1245:
+         case 1215:
             return;
       }
    }

@@ -24,16 +24,16 @@ function test(){//method() -> void
             var r0 = pred$Y9_Fc$3y();//invoke %0 = () BoolReturn_Valid_1:pred : function() -> bool
             var r1 = true;
             if(r0 === r1){
-               control_flow_pc = 713;
+               control_flow_pc = 683;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 714;
+            control_flow_pc = 684;
             control_flow_repeat = true;
-            continue outer;//goto label714
-         case 713:
+            continue outer;//goto label684
+         case 683:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 714:
+         case 684:
             return;
       }
    }

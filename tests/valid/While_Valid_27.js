@@ -17,7 +17,7 @@ function count$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             break;
          case -3:
             if(WyJS.gt(r2, r3, true)){
-               control_flow_pc = 435;
+               control_flow_pc = 405;
                control_flow_repeat = true;
                continue outer;
             }
@@ -27,7 +27,7 @@ function count$Y9dFXs1Fs2(r0, r1){//function(int,int) -> int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 435:
+         case 405:
             return r2;//return %2 : int
             return;
       }
@@ -47,34 +47,34 @@ function test(){//method() -> void
             var r0 = count$Y9dFXs1Fs2(r1, r2);//invoke %0 = (%1, %2) While_Valid_27:count : function(int,int) -> int
             var r3 = new WyJS.Integer(0);
             if(WyJS.equals(r0, r3, true)){
-               control_flow_pc = 436;
+               control_flow_pc = 406;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 436:
+         case 406:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(1);
             var r4 = count$Y9dFXs1Fs2(r5, r6);//invoke %4 = (%5, %6) While_Valid_27:count : function(int,int) -> int
             var r7 = new WyJS.Integer(1);
             if(WyJS.equals(r4, r7, true)){
-               control_flow_pc = 437;
+               control_flow_pc = 407;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 437:
+         case 407:
             var r9 = new WyJS.Integer(5);
             var r10 = new WyJS.Integer(5);
             var r8 = count$Y9dFXs1Fs2(r9, r10);//invoke %8 = (%9, %10) While_Valid_27:count : function(int,int) -> int
             var r11 = new WyJS.Integer(25);
             if(WyJS.equals(r8, r11, true)){
-               control_flow_pc = 438;
+               control_flow_pc = 408;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 438:
+         case 408:
             return;
       }
    }

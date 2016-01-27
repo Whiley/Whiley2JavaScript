@@ -31,12 +31,12 @@ function test(){//method() -> void
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Array([r4, r5], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r6, true)){
-               control_flow_pc = 832;
+               control_flow_pc = 802;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 832:
+         case 802:
             return;
       }
    }
