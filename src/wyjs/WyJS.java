@@ -180,8 +180,6 @@ public class WyJS {
 		} else if (o instanceof Codes.IndirectInvoke) {
 			// write((Codes.IndirectInvoke) o);
 			throw new RuntimeException("Codes.IndirectInvoke not supported.");
-		} else if (o instanceof Codes.Invariant) {
-			throw new RuntimeException("Codes.Invariant not supported.");
 		} else if (o instanceof Codes.Invert) {
 			write((Codes.Invert) o);
 		} else if (o instanceof Codes.Invoke) {
