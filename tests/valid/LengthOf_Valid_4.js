@@ -30,12 +30,12 @@ function test(){//method() -> void
             var r8 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r0);//invoke %8 = (%0) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r9 = new WyJS.Integer(3);
             if(WyJS.equals(r8, r9, true)){
-               control_flow_pc = 698;
+               control_flow_pc = 649;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 698:
+         case 649:
             var r11 = new WyJS.Integer(1);
             var r12 = new WyJS.Integer(2);
             var r13 = new WyJS.Array([r11, r12], new WyJS.Type.Array(new WyJS.Type.Int()));
@@ -44,12 +44,12 @@ function test(){//method() -> void
             var r14 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r1);//invoke %14 = (%1) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r15 = new WyJS.Integer(2);
             if(WyJS.equals(r14, r15, true)){
-               control_flow_pc = 699;
+               control_flow_pc = 650;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 699:
+         case 650:
             var r17 = new WyJS.Real(1.0);
             var r18 = new WyJS.Real(2.0);
             var r19 = new WyJS.Real(3.0);
@@ -60,12 +60,12 @@ function test(){//method() -> void
             var r22 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0$C6$g0FP$B6$o0FP$75$m0(r2);//invoke %22 = (%2) LengthOf_Valid_4:len : function(LengthOf_Valid_4:listibr) -> int
             var r23 = new WyJS.Integer(4);
             if(WyJS.equals(r22, r23, true)){
-               control_flow_pc = 700;
+               control_flow_pc = 651;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 700:
+         case 651:
             return;
       }
    }

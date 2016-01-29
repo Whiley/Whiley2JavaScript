@@ -55,22 +55,22 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Function_Valid_14:f : function(int) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 175;
+               control_flow_pc = 153;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 175:
+         case 153:
             var r4 = new WyJS.Real(1.234);
             var r3 = f$Z9bFaA$0B1E(r4);//invoke %3 = (%4) Function_Valid_14:f : function(real) -> int
             var r5 = new WyJS.Integer(2);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 176;
+               control_flow_pc = 154;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 176:
+         case 154:
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(3);
@@ -78,12 +78,12 @@ function test(){//method() -> void
             var r6 = f$Z9bFaA$0D5Wz(r10);//invoke %6 = (%10) Function_Valid_14:f : function(int[]) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r11, true)){
-               control_flow_pc = 177;
+               control_flow_pc = 155;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 177:
+         case 155:
             return;
       }
    }

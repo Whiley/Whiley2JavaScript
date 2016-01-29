@@ -27,12 +27,12 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) Ensures_Valid_5:f : function(int) -> int
             var r2 = new WyJS.Integer(2);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 1013;
+               control_flow_pc = 964;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1013:
+         case 964:
             return;
       }
    }

@@ -15,13 +15,13 @@ function has$_9dF5X1Fs1RB52(r0, r1){//function(int,int[]) -> bool
          case -3:
             var r6 = r1.length();//lengthof %6 = %1 : int[]
             if(WyJS.gt(r2, r6, true)){
-               control_flow_pc = 1230;
+               control_flow_pc = 1155;
                control_flow_repeat = true;
                continue outer;
             }
             var r7 = r1.getValue(r2);
             if(WyJS.equals(r7, r0, false)){
-               control_flow_pc = 1231;
+               control_flow_pc = 1156;
                control_flow_repeat = true;
                break;
             }
@@ -35,14 +35,14 @@ function has$_9dF5X1Fs1RB52(r0, r1){//function(int,int[]) -> bool
             return r8;//return %8 : bool
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 1231:
+         case 1156:
             var r9 = new WyJS.Integer(1);
             var r10 = r2.add(r9);//add %10 = %2, %9 : int
             var r2 = r10;//assign %2 = %10  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1230:
+         case 1155:
             var r11 = false;
             return r11;//return %11 : bool
             return;
@@ -65,52 +65,52 @@ function test(){//method() -> void
             var r3 = has$_9dF5X1Fs1RB52(r4, r0);//invoke %3 = (%4, %0) String_Valid_2:has : function(int,int[]) -> bool
             var r5 = true;
             if(r3 === r5){
-               control_flow_pc = 1232;
+               control_flow_pc = 1157;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1232:
+         case 1157:
             var r7 = new WyJS.Integer(101);
             var r6 = has$_9dF5X1Fs1RB52(r7, r0);//invoke %6 = (%7, %0) String_Valid_2:has : function(int,int[]) -> bool
             var r8 = true;
             if(r6 === r8){
-               control_flow_pc = 1233;
+               control_flow_pc = 1158;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1233:
+         case 1158:
             var r10 = new WyJS.Integer(104);
             var r9 = has$_9dF5X1Fs1RB52(r10, r0);//invoke %9 = (%10, %0) String_Valid_2:has : function(int,int[]) -> bool
             var r11 = false;
             if(r9 === r11){
-               control_flow_pc = 1234;
+               control_flow_pc = 1159;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1234:
+         case 1159:
             var r13 = new WyJS.Integer(122);
             var r12 = has$_9dF5X1Fs1RB52(r13, r0);//invoke %12 = (%13, %0) String_Valid_2:has : function(int,int[]) -> bool
             var r14 = false;
             if(r12 === r14){
-               control_flow_pc = 1235;
+               control_flow_pc = 1160;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1235:
+         case 1160:
             var r16 = new WyJS.Integer(72);
             var r15 = has$_9dF5X1Fs1RB52(r16, r0);//invoke %15 = (%16, %0) String_Valid_2:has : function(int,int[]) -> bool
             var r17 = true;
             if(r15 === r17){
-               control_flow_pc = 1236;
+               control_flow_pc = 1161;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1236:
+         case 1161:
             return;
       }
    }

@@ -12,17 +12,17 @@ function set$_9dF5X1Fc1Ms(r0, r1){//function(byte,int) -> bool
             var r2 = r3;//assign %2 = %3  : byte
             var r6 = r0.and(r2);//and %6 = %0, %2 : byte
             if(WyJS.equals(r6, r2, true)){
-               control_flow_pc = 1429;
+               control_flow_pc = 1354;
                control_flow_repeat = true;
                continue outer;
             }
             var r7 = false;
-            control_flow_pc = 1430;
+            control_flow_pc = 1355;
             control_flow_repeat = true;
-            continue outer;//goto label1430
-         case 1429:
+            continue outer;//goto label1355
+         case 1354:
             var r7 = true;
-         case 1430:
+         case 1355:
             return r7;//return %7 : bool
             return;
       }
@@ -52,14 +52,14 @@ function and$Y9dFXc1Fs2(r0, r1){//function(byte,byte) -> byte
          case -3:
             var r11 = new WyJS.Integer(8);
             if(WyJS.gt(r4, r11, true)){
-               control_flow_pc = 1431;
+               control_flow_pc = 1356;
                control_flow_repeat = true;
                continue outer;
             }
             var r12 = set$_9dF5X1Fc1Ms(r0, r4);//invoke %12 = (%0, %4) ByteSimple_Valid_9:set : function(byte,int) -> bool
             var r13 = true;
             if(r12 === r13){
-               control_flow_pc = 1432;
+               control_flow_pc = 1357;
                control_flow_repeat = true;
                break;
             }
@@ -69,16 +69,16 @@ function and$Y9dFXc1Fs2(r0, r1){//function(byte,byte) -> byte
                break;
             }
          case -4:
-            control_flow_pc = 1433;
+            control_flow_pc = 1358;
             control_flow_repeat = true;
-            continue outer;//goto label1433
+            continue outer;//goto label1358
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 1432:
+         case 1357:
             var r14 = set$_9dF5X1Fc1Ms(r1, r4);//invoke %14 = (%1, %4) ByteSimple_Valid_9:set : function(byte,int) -> bool
             var r15 = true;
             if(r14 === r15){
-               control_flow_pc = 1434;
+               control_flow_pc = 1359;
                control_flow_repeat = true;
                break;
             }
@@ -88,17 +88,17 @@ function and$Y9dFXc1Fs2(r0, r1){//function(byte,byte) -> byte
                break;
             }
          case -5:
-            control_flow_pc = 1433;
+            control_flow_pc = 1358;
             control_flow_repeat = true;
-            continue outer;//goto label1433
+            continue outer;//goto label1358
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 1434:
+         case 1359:
             var r16 = r3.or(r2);//or %16 = %3, %2 : byte
             var r3 = r16;//assign %3 = %16  : byte
             control_flow_pc = -3;
             control_flow_repeat = true;
-         case 1433:
+         case 1358:
             var r17 = new WyJS.Integer(1);
             var r18 = r2.shl(r17);//shl %18 = %2, %17 : byte
             var r2 = r18;//assign %2 = %18  : byte
@@ -108,7 +108,7 @@ function and$Y9dFXc1Fs2(r0, r1){//function(byte,byte) -> byte
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1431:
+         case 1356:
             return r3;//return %3 : byte
             return;
       }
@@ -138,12 +138,12 @@ function test(){//method() -> void
             var r13 = r11.getValue(r12);
             var r7 = and$Y9dFXc1Fs2(r10, r13);//invoke %7 = (%10, %13) ByteSimple_Valid_9:and : function(byte,byte) -> byte
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1435;
+               control_flow_pc = 1360;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1435:
+         case 1360:
             return;
       }
    }

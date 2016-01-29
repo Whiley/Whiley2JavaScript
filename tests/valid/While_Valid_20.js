@@ -14,7 +14,7 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             break;
          case -3:
             if(WyJS.is(r0, new WyJS.Type.Null())){
-               control_flow_pc = 378;
+               control_flow_pc = 372;
                control_flow_repeat = true;
                continue outer;
             }
@@ -26,7 +26,7 @@ function sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 378:
+         case 372:
             return r1;//return %1 : int
             return;
       }
@@ -47,48 +47,48 @@ function test(){//method() -> void
             var r3 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %3 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r4 = new WyJS.Integer(0);
             if(WyJS.equals(r3, r4, true)){
-               control_flow_pc = 379;
+               control_flow_pc = 373;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 379:
+         case 373:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Record(["data", "next"], [r5, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()]));
             var r0 = r6.clone();//assign %0 = %6  : {int data,null next}
             var r7 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %7 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r8 = new WyJS.Integer(1);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 380;
+               control_flow_pc = 374;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 380:
+         case 374:
             var r9 = new WyJS.Integer(2324);
             var r10 = new WyJS.Record(["data", "next"], [r9, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])]));
             var r0 = r10.clone();//assign %0 = %10  : {int data,{int data,null next} next}
             var r11 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %11 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r12 = new WyJS.Integer(2325);
             if(WyJS.equals(r11, r12, true)){
-               control_flow_pc = 381;
+               control_flow_pc = 375;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 381:
+         case 375:
             var r13 = new WyJS.Integer(2);
             var r14 = new WyJS.Record(["data", "next"], [r13, r0], new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Record(["data", "next"], [new WyJS.Type.Int(), new WyJS.Type.Null()])])]));
             var r0 = r14.clone();//assign %0 = %14  : {int data,{int data,{int data,null next} next} next}
             var r15 = sum$Z9bFaA$WL1T$kK$V5$d0$Q$J5$U0VK$35$g0FP$F5$U0VB$$Y5$k3$d0VQ$g5$_0$O$k3$d0kR$Fr2(r0);//invoke %15 = (%0) While_Valid_20:sum : function(While_Valid_20:LinkedList) -> int
             var r16 = new WyJS.Integer(2327);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 382;
+               control_flow_pc = 376;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 382:
+         case 376:
             return;
       }
    }

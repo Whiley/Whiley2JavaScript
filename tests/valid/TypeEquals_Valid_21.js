@@ -7,23 +7,23 @@ function f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$FB3$_0$T$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Int()))){
-               control_flow_pc = 565;
+               control_flow_pc = 524;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 566;
+            control_flow_pc = 525;
             control_flow_repeat = true;
-            continue outer;//goto label566
-         case 565:
+            continue outer;//goto label525
+         case 524:
             var r1 = true;
             return r1;//return %1 : bool
-            control_flow_pc = 567;
+            control_flow_pc = 526;
             control_flow_repeat = true;
-            continue outer;//goto label567
-         case 566:
+            continue outer;//goto label526
+         case 525:
             var r2 = false;
             return r2;//return %2 : bool
-         case 567:
+         case 526:
             return;
       }
    }
@@ -43,12 +43,12 @@ function test(){//method() -> void
             var r3 = f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$FB3$_0$T$$6$m0(r0);//invoke %3 = (%0) TypeEquals_Valid_21:f : function(TypeEquals_Valid_21:expr) -> bool
             var r4 = false;
             if(r3 === r4){
-               control_flow_pc = 568;
+               control_flow_pc = 527;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 568:
+         case 527:
             var r5 = new WyJS.Integer(1);
             var r6 = new WyJS.Integer(2);
             var r7 = new WyJS.Integer(3);
@@ -58,12 +58,12 @@ function test(){//method() -> void
             var r10 = f$Z9bF59$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$m$FB3$_0$T$$6$m0(r0);//invoke %10 = (%0) TypeEquals_Valid_21:f : function(TypeEquals_Valid_21:expr) -> bool
             var r11 = true;
             if(r10 === r11){
-               control_flow_pc = 569;
+               control_flow_pc = 528;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 569:
+         case 528:
             return;
       }
    }

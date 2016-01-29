@@ -100,9 +100,9 @@ public class WyJS {
 		for (FunctionOrMethod f : fom) {
 			write(f);
 		}
-		// print it out once we're done
 
-		 for (String s : js) { System.out.print(s); }
+		// print it out once we're done
+		// for (String s : js) { System.out.print(s); }
 
 	}
 
@@ -241,9 +241,6 @@ public class WyJS {
 	private void write(Debug function) throws Exception {
 		String functionText = "";
 
-		System.out.println("debug:: "+function.toString()
-				+"\n type:: "+function.type.toString()
-				+"\n regs:: "+function.operand);
 		functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");\n";
 
 		js.add(functionText);
@@ -433,7 +430,6 @@ public class WyJS {
 				throw new Exception(o.op + " shouldnt be used with Bools?");
 			}
 		} else {
-			System.out.println("o.op :: "+o.op);
 			switch (o.op) {
 
 			case EQ:
@@ -487,7 +483,6 @@ public class WyJS {
 	}
 
 	private void write(Codes.AssertOrAssume o) throws Exception {
-		System.out.println("TRANSLATING ASSERT");
 		for (Code c : o.bytecodes()) {
 			write(c);
 		}
@@ -569,7 +564,6 @@ public class WyJS {
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					// write else
-					System.out.println("IF :: "+c.toString());
 					currentIndex++;
 					labels.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");

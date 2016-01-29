@@ -16,7 +16,7 @@ function strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F
             var r6 = r0.getValue(r1);
             var r7 = new WyJS.Integer(0);
             if(WyJS.equals(r6, r7, true)){
-               control_flow_pc = 1414;
+               control_flow_pc = 1339;
                control_flow_repeat = true;
                continue outer;
             }
@@ -26,7 +26,7 @@ function strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 1414:
+         case 1339:
             return r1;//return %1 : int
             return;
       }
@@ -59,12 +59,12 @@ function test(){//method() -> void
             var r15 = strlen$Z9bFaA$WL1j$kF$w5$i0kR$F6$m0FN$Z5$i0FO$F5$80VQ$F6$U0VK$35$g0FP$F5$U0VB$F25$B3$U0kR$F6$m0FP$s5$bx(r0);//invoke %15 = (%0) ConstrainedInt_Valid_24:strlen : function(ConstrainedInt_Valid_24:C_string) -> int
             var r16 = new WyJS.Integer(10);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 1415;
+               control_flow_pc = 1340;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 1415:
+         case 1340:
             return;
       }
    }

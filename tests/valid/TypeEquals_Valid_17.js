@@ -7,23 +7,23 @@ function f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Real())){
-               control_flow_pc = 545;
+               control_flow_pc = 504;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 546;
+            control_flow_pc = 505;
             control_flow_repeat = true;
-            continue outer;//goto label546
-         case 545:
+            continue outer;//goto label505
+         case 504:
             var r1 = new WyJS.Integer(0);
             return r1;//return %1 : int
-            control_flow_pc = 547;
+            control_flow_pc = 506;
             control_flow_repeat = true;
-            continue outer;//goto label547
-         case 546:
+            continue outer;//goto label506
+         case 505:
             var r2 = r0.length();//lengthof %2 = %0 : int[]
             return r2;//return %2 : int
-         case 547:
+         case 506:
             return;
       }
    }
@@ -41,22 +41,22 @@ function test(){//method() -> void
             var r0 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$Z5$n0$S(r1);//invoke %0 = (%1) TypeEquals_Valid_17:f : function(TypeEquals_Valid_17:rlist) -> int
             var r2 = new WyJS.Integer(0);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 548;
+               control_flow_pc = 507;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 548:
+         case 507:
             var r4 = new WyJS.Real(1.23);
             var r3 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$Z5$n0$S(r4);//invoke %3 = (%4) TypeEquals_Valid_17:f : function(TypeEquals_Valid_17:rlist) -> int
             var r5 = new WyJS.Integer(0);
             if(WyJS.equals(r3, r5, true)){
-               control_flow_pc = 549;
+               control_flow_pc = 508;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 549:
+         case 508:
             var r7 = new WyJS.Integer(1);
             var r8 = new WyJS.Integer(2);
             var r9 = new WyJS.Integer(3);
@@ -64,12 +64,12 @@ function test(){//method() -> void
             var r6 = f$Z9bFaA$WL1f$$K$Z6$k0FO$J3$l0FS$35$g0kR$w4$L0FN$k5$d0$O$w4$l$kC4$m0$Q$Z5$n0$S(r10);//invoke %6 = (%10) TypeEquals_Valid_17:f : function(TypeEquals_Valid_17:rlist) -> int
             var r11 = new WyJS.Integer(3);
             if(WyJS.equals(r6, r11, true)){
-               control_flow_pc = 550;
+               control_flow_pc = 509;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 550:
+         case 509:
             return;
       }
    }

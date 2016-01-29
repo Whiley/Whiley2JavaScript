@@ -28,12 +28,12 @@ function test(){//method() -> void
             var r3 = new WyJS.Real(3.0);
             var r4 = r2.div(r3);//div %4 = %2, %3 : real
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 286;
+               control_flow_pc = 250;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 286:
+         case 250:
             return;
       }
    }

@@ -26,12 +26,12 @@ function test(){//method() -> void
             var r3 = true;
             var r4 = new WyJS.Array([r3], new WyJS.Type.Array(new WyJS.Type.Bool()));
             if(WyJS.equals(r0, r4, true)){
-               control_flow_pc = 795;
+               control_flow_pc = 746;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 795:
+         case 746:
             var r6 = true;
             var r7 = false;
             var r8 = new WyJS.Array([r6, r7], new WyJS.Type.Array(new WyJS.Type.Bool()));
@@ -40,12 +40,12 @@ function test(){//method() -> void
             var r10 = false;
             var r11 = new WyJS.Array([r9, r10], new WyJS.Type.Array(new WyJS.Type.Bool()));
             if(WyJS.equals(r5, r11, true)){
-               control_flow_pc = 796;
+               control_flow_pc = 747;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 796:
+         case 747:
             var r13 = true;
             var r14 = false;
             var r15 = true;
@@ -56,12 +56,12 @@ function test(){//method() -> void
             var r19 = true;
             var r20 = new WyJS.Array([r17, r18, r19], new WyJS.Type.Array(new WyJS.Type.Bool()));
             if(WyJS.equals(r12, r20, true)){
-               control_flow_pc = 797;
+               control_flow_pc = 748;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 797:
+         case 748:
             return;
       }
    }

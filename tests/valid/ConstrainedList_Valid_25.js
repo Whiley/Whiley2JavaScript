@@ -41,26 +41,26 @@ function test(){//method() -> void
          case -3:
             var r14 = r0.length();//lengthof %14 = %0 : int[]
             if(WyJS.gt(r1, r14, true)){
-               control_flow_pc = 150;
+               control_flow_pc = 139;
                control_flow_repeat = true;
                continue outer;
             }
             var r15 = indexOf$Z9dFas1FVYGs(r0, r1);//invoke %15 = (%0, %1) ConstrainedList_Valid_25:indexOf : function(int[],int) -> int
             var r16 = r0.getValue(r1);
             if(WyJS.equals(r15, r16, true)){
-               control_flow_pc = 151;
+               control_flow_pc = 140;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 151:
+         case 140:
             var r17 = new WyJS.Integer(1);
             var r18 = r1.add(r17);//add %18 = %1, %17 : int
             var r1 = r18;//assign %1 = %18  : int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 150:
+         case 139:
             return;
       }
    }

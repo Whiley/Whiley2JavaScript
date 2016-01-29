@@ -22,7 +22,7 @@ function extract$Z9bF1D527RWz(r0){//function(int[]) -> int[]
          case -3:
             var r16 = r0.length();//lengthof %16 = %0 : int[]
             if(WyJS.gt(r1, r16, true)){
-               control_flow_pc = 670;
+               control_flow_pc = 621;
                control_flow_repeat = true;
                continue outer;
             }
@@ -35,7 +35,7 @@ function extract$Z9bF1D527RWz(r0){//function(int[]) -> int[]
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 670:
+         case 621:
             return r2;//return %2 : int[]
             return;
       }
@@ -80,12 +80,12 @@ function test(){//method() -> void
             var r27 = new WyJS.Integer(5);
             var r28 = new WyJS.Array([r17, r19, r20, r21, r23, r24, r25, r26, r27], new WyJS.Type.Array(new WyJS.Type.Int()));
             if(WyJS.equals(r0, r28, true)){
-               control_flow_pc = 671;
+               control_flow_pc = 622;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 671:
+         case 622:
             return;
       }
    }

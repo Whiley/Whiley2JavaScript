@@ -17,7 +17,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             break;
          case -3:
             if(WyJS.gt(r1, r0, true)){
-               control_flow_pc = 400;
+               control_flow_pc = 359;
                control_flow_repeat = true;
                continue outer;
             }
@@ -30,7 +30,7 @@ function f$Y9bFXA$W(r0){//function(int) -> int
             control_flow_pc = -3;
             control_flow_repeat = true;
             break;
-         case 400:
+         case 359:
             var r13 = r1.add(r2);//add %13 = %1, %2 : int
             return r13;//return %13 : int
             return;
@@ -50,12 +50,12 @@ function test(){//method() -> void
             var r0 = f$Y9bFXA$W(r1);//invoke %0 = (%1) While_Valid_25:f : function(int) -> int
             var r2 = new WyJS.Integer(30);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 401;
+               control_flow_pc = 360;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 401:
+         case 360:
             return;
       }
    }

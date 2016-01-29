@@ -8,23 +8,23 @@ function f$Y9bF19$W(r0){//function(bool) -> bool
          case -1 :
             var r1 = true;
             if(r0 === r1){
-               control_flow_pc = 734;
+               control_flow_pc = 685;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 735;
+            control_flow_pc = 686;
             control_flow_repeat = true;
-            continue outer;//goto label735
-         case 734:
+            continue outer;//goto label686
+         case 685:
             var r2 = true;
             return r2;//return %2 : bool
-            control_flow_pc = 736;
+            control_flow_pc = 687;
             control_flow_repeat = true;
-            continue outer;//goto label736
-         case 735:
+            continue outer;//goto label687
+         case 686:
             var r3 = false;
             return r3;//return %3 : bool
-         case 736:
+         case 687:
             return;
       }
    }
@@ -42,26 +42,26 @@ function test(){//method() -> void
             var r0 = f$Y9bF19$W(r1);//invoke %0 = (%1) BoolIfElse_Valid_1:f : function(bool) -> bool
             var r2 = true;
             if(r0 === r2){
-               control_flow_pc = 737;
+               control_flow_pc = 688;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 737:
+         case 688:
             var r4 = false;
             var r3 = f$Y9bF19$W(r4);//invoke %3 = (%4) BoolIfElse_Valid_1:f : function(bool) -> bool
             var r5 = true;
             if(r3 === r5){
-               control_flow_pc = 738;
+               control_flow_pc = 689;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 739;
+            control_flow_pc = 690;
             control_flow_repeat = true;
-            continue outer;//goto label739
-         case 738:
+            continue outer;//goto label690
+         case 689:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 739:
+         case 690:
             return;
       }
    }

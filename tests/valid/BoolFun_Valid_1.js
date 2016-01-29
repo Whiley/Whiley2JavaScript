@@ -26,27 +26,27 @@ function test(){//method() -> void
             var r3 = f$Y9bF19$W(r0);//invoke %3 = (%0) BoolFun_Valid_1:f : function(bool) -> bool
             var r4 = true;
             if(r3 === r4){
-               control_flow_pc = 672;
+               control_flow_pc = 623;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 672:
+         case 623:
             var r5 = false;
             var r0 = r5;//assign %0 = %5  : bool
             var r6 = f$Y9bF19$W(r0);//invoke %6 = (%0) BoolFun_Valid_1:f : function(bool) -> bool
             var r7 = true;
             if(r6 === r7){
-               control_flow_pc = 673;
+               control_flow_pc = 624;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 674;
+            control_flow_pc = 625;
             control_flow_repeat = true;
-            continue outer;//goto label674
-         case 673:
+            continue outer;//goto label625
+         case 624:
             throw {name: 'Assert Failed', message: 'fail'}
-         case 674:
+         case 625:
             return;
       }
    }

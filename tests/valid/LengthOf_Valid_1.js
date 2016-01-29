@@ -30,12 +30,12 @@ function test(){//method() -> void
             var r7 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0FB3$g0FP$B6$o0(r0);//invoke %7 = (%0) LengthOf_Valid_1:len : function(LengthOf_Valid_1:list) -> int
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r7, r8, true)){
-               control_flow_pc = 696;
+               control_flow_pc = 647;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 696:
+         case 647:
             var r10 = true;
             var r11 = false;
             var r12 = true;
@@ -45,12 +45,12 @@ function test(){//method() -> void
             var r14 = len$Z9bFaA$WL1c$$I$J5$i0kO$F6$c0kI$N5$U0VK$35$g0FP$F5$U0FB3$g0FP$B6$o0(r1);//invoke %14 = (%1) LengthOf_Valid_1:len : function(LengthOf_Valid_1:list) -> int
             var r15 = new WyJS.Integer(3);
             if(WyJS.equals(r14, r15, true)){
-               control_flow_pc = 697;
+               control_flow_pc = 648;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 697:
+         case 648:
             return;
       }
    }

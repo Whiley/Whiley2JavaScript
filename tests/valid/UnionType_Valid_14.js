@@ -7,37 +7,37 @@ function f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$
       switch(control_flow_pc){
          case -1 :
             if(WyJS.is(r0, new WyJS.Type.Int())){
-               control_flow_pc = 235;
+               control_flow_pc = 199;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 236;
+            control_flow_pc = 200;
             control_flow_repeat = true;
-            continue outer;//goto label236
-         case 235:
+            continue outer;//goto label200
+         case 199:
             return r0;//return %0 : int
-            control_flow_pc = 237;
+            control_flow_pc = 201;
             control_flow_repeat = true;
-            continue outer;//goto label237
-         case 236:
+            continue outer;//goto label201
+         case 200:
             if(WyJS.is(r0, new WyJS.Type.Array(new WyJS.Type.Int()))){
-               control_flow_pc = 238;
+               control_flow_pc = 202;
                control_flow_repeat = true;
                continue outer;
             }
-            control_flow_pc = 239;
+            control_flow_pc = 203;
             control_flow_repeat = true;
-            continue outer;//goto label239
-         case 238:
+            continue outer;//goto label203
+         case 202:
             var r1 = r0.length();//lengthof %1 = %0 : int[]
             return r1;//return %1 : int
-            control_flow_pc = 237;
+            control_flow_pc = 201;
             control_flow_repeat = true;
-            continue outer;//goto label237
-         case 239:
+            continue outer;//goto label201
+         case 203:
             var r2 = new WyJS.Integer(1);
             return r2;//return %2 : int
-         case 237:
+         case 201:
             return;
       }
    }
@@ -55,12 +55,12 @@ function test(){//method() -> void
             var r0 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r1);//invoke %0 = (%1) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r2 = new WyJS.Integer(1);
             if(WyJS.equals(r0, r2, true)){
-               control_flow_pc = 240;
+               control_flow_pc = 204;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 240:
+         case 204:
             var r4 = new WyJS.Integer(1);
             var r5 = new WyJS.Integer(2);
             var r6 = new WyJS.Integer(3);
@@ -68,12 +68,12 @@ function test(){//method() -> void
             var r3 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r7);//invoke %3 = (%7) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r8 = new WyJS.Integer(3);
             if(WyJS.equals(r3, r8, true)){
-               control_flow_pc = 241;
+               control_flow_pc = 205;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 241:
+         case 205:
             var r10 = new WyJS.Integer(1);
             var r11 = new WyJS.Integer(0);
             var r12 = new WyJS.Integer(2);
@@ -81,12 +81,12 @@ function test(){//method() -> void
             var r9 = f$Z9bFaA$WL1e$FK$s5$d0kQ$s5$J0FT$$6$_0kM$N4$W0$Q$Z5$Z0kM$32$oF$J3$s0$R$76(r13);//invoke %9 = (%13) UnionType_Valid_14:f : function(UnionType_Valid_14:Expr) -> int
             var r14 = new WyJS.Integer(1);
             if(WyJS.equals(r9, r14, true)){
-               control_flow_pc = 242;
+               control_flow_pc = 206;
                control_flow_repeat = true;
                continue outer;
             }
             throw {name: 'Assert Failed', message: 'fail'}
-         case 242:
+         case 206:
             return;
       }
    }
