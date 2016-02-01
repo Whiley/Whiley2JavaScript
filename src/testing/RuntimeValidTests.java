@@ -54,7 +54,7 @@ public class RuntimeValidTests {
 	 * generated JavaScript. Each of these should be contained in the
 	 * JS_LIB_DIR.
 	 */
-	private static String[] JS_LIBS = { "WyJS_Runtime.js", "Math.js" };
+	private static String[] JS_LIBS = { "WyJSRuntime.js", "Math.js" };
 
 	/**
 	 * The directory into which all generated intermediate files should be
@@ -308,7 +308,7 @@ public class RuntimeValidTests {
 		runTest("Byte_Valid_1");
 	}
 
-	@Ignore("long but passing")
+	//@Ignore("long but passing")
 	@Test
 	public void Byte_Valid_2() throws IOException {
 		runTest("Byte_Valid_2");

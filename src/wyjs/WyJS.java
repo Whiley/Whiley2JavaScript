@@ -77,20 +77,9 @@ public class WyJS {
 	public WyJS(WyilFile file) throws Exception {
 		this.file = file;
 
-		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(
-				file.functionOrMethods());
+		ArrayList<FunctionOrMethod> fom = new ArrayList<FunctionOrMethod>(file.functionOrMethods());
 		js = new ArrayList<String>();
-		// System.out.println(file.types());
-		// if(!file.types().isEmpty()){
-		// js.add("var userTypes = [];\n");
-		// int i = 0;
-		// for(WyilFile.Type ty: file.types()){
-		// js.add("userTypes[" + i + "] = ");
-		// System.out.println();
-		//
-		// i++;
-		// }
-		// }
+
 		for (FunctionOrMethod f : fom) {
 			if (f.hasModifier(wyil.lang.Modifier.EXPORT)) {
 				exports.add(f.name());
@@ -103,7 +92,6 @@ public class WyJS {
 
 		// print it out once we're done
 		// for (String s : js) { System.out.print(s); }
-
 	}
 
 	/**
@@ -118,12 +106,10 @@ public class WyJS {
 	 */
 	public String makeFile(String filename, String srcDir) {
 		try {
-			PrintStream out = new PrintStream(new FileOutputStream(srcDir + "/"
-					+ filename + ".js"));
+			PrintStream out = new PrintStream(new FileOutputStream(srcDir + "/" + filename + ".js"));
 			for (String s : js) {
 				out.print(s);
 			}
-			// out.println("test();");
 			out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -137,7 +123,7 @@ public class WyJS {
 	 * it to the JavaScript array.
 	 *
 	 * @param o
-	 *             Object which is an instance of Codes.
+	 *            Object which is an instance of Codes.
 	 * @throws Exception
 	 *             if instance of Codes still not supported or unexpected type
 	 *             as parameter (not and instance of Codes).
@@ -153,8 +139,7 @@ public class WyJS {
 		} else if (o instanceof Codes.BinaryOperator) {
 			write((Codes.BinaryOperator) o);
 		} else if (o instanceof Codes.BinaryOperatorKind) {
-			throw new RuntimeException(
-					"Codes.BinaryOperatorKind not supported.");
+			throw new RuntimeException("Codes.BinaryOperatorKind not supported.");
 		} else if (o instanceof Codes.Comparator) {
 			throw new RuntimeException("Codes.Comparator not supported.");
 		} else if (o instanceof Codes.Const) {
@@ -178,7 +163,6 @@ public class WyJS {
 		} else if (o instanceof Codes.IndexOf) {
 			write((Codes.IndexOf) o);
 		} else if (o instanceof Codes.IndirectInvoke) {
-			// write((Codes.IndirectInvoke) o);
 			throw new RuntimeException("Codes.IndirectInvoke not supported.");
 		} else if (o instanceof Codes.Invert) {
 			write((Codes.Invert) o);
@@ -241,22 +225,22 @@ public class WyJS {
 	private void write(Debug function) throws Exception {
 		String functionText = "";
 
-		functionText = getIndentBlock() + "WyJS.debug(r"+function.operand+");\n";
+		functionText = getIndentBlock() + "WyJS.debug(r" + function.operand + ");\n";
 
 		js.add(functionText);
 	}
 
-	private void write(Codes.Nop function) throws Exception {	}
+	private void write(Codes.Nop function) throws Exception {
+	}
 
 	private void write(Codes.Invert o) throws Exception {
-		js.add(getIndentBlock() + "var r" + o.target() + " = "
-				+"WyJS.invert(r"+ o.operand(0) +");//" + o.toString() + "\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + "WyJS.invert(r" + o.operand(0) + ");//" + o.toString()
+				+ "\n");
 	}
 
 	private void write(FunctionOrMethod function) throws Exception {
 		String functionText = "";
-		functionText += getIndentBlock() + "function "
-				+ nameMangle(function.name(), function.type()) + "(";
+		functionText += getIndentBlock() + "function " + nameMangle(function.name(), function.type()) + "(";
 		int i = 1;
 		for (Type t : function.type().params()) {
 			if (t instanceof Type.Nominal) {
@@ -274,13 +258,10 @@ public class WyJS {
 		js.add(functionText);
 		indent++;
 		// make initial Switch
-		js.add(getIndentBlock() + "var control_flow_repeat = true;\n"
-				+ getIndentBlock() + "var control_flow_pc = -1;\n"
-				+ getIndentBlock() + "outer:\n" + getIndentBlock()
-				+ "while(control_flow_repeat){\n");
+		js.add(getIndentBlock() + "var control_flow_repeat = true;\n" + getIndentBlock() + "var control_flow_pc = -1;\n"
+				+ getIndentBlock() + "outer:\n" + getIndentBlock() + "while(control_flow_repeat){\n");
 		indent++;
-		js.add(getIndentBlock() + "control_flow_repeat = false\n"
-				+ getIndentBlock() + "switch(control_flow_pc){\n");
+		js.add(getIndentBlock() + "control_flow_repeat = false\n" + getIndentBlock() + "switch(control_flow_pc){\n");
 		indent++;
 		js.add(getIndentBlock() + "case -1 :\n");
 		indent++;
@@ -304,8 +285,7 @@ public class WyJS {
 	private void write(Codes.Const o) throws Exception {
 		// TODO: Use Runtime file
 		// Find type of constant, make the appropriate type
-		js.add(getIndentBlock() + "var r" + o.target() + " = "
-				+ getConst(o.constant) + ";\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + getConst(o.constant) + ";\n");
 	}
 
 	private void write(Codes.BinaryOperator o) throws Exception {
@@ -313,58 +293,47 @@ public class WyJS {
 		// Should be able to do it how we do here
 		switch (o.kind) {
 		case ADD:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".add(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".add(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			return;
 		case SUB:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".sub(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".sub(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			return;
 		case DIV:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".div(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".div(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			return;
 		case MUL:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".mul(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".mul(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			return;
 		case REM:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".rem(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".rem(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			return;
 		case BITWISEAND:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-			+ o.operand(0) + ".and(" + "r" + o.operand(1) + ");//"
-			+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".and(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			break;
 		case BITWISEOR:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".or(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".or(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			break;
 		case BITWISEXOR:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".xor(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".xor(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			break;
 		case LEFTSHIFT:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".shl(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".shl(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			break;
 		case RIGHTSHIFT:
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".srl(" + "r" + o.operand(1) + ");//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".srl(" + "r" + o.operand(1)
+					+ ");//" + o.toString() + "\n");
 			break;
 		default:
-			throw new Exception("Unknown kind of binary operator "
-					+ o.toString());
+			throw new Exception("Unknown kind of binary operator " + o.toString());
 		}
 	}
 
@@ -374,28 +343,24 @@ public class WyJS {
 		// find type of rhs, make appropriate type
 		if (o.type() instanceof Type.Array) {
 			Type.Array list = (Type.Array) o.type();
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".clone(" + getType(list.element())
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".clone(" + getType(list.element())
 					+ ");//" + o.toString() + "\n");
 		} else if (o.type() instanceof Type.Record) {
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ".clone();//" + o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".clone();//" + o.toString()
+					+ "\n");
 		} else {
-			js.add(getIndentBlock() + "var r" + o.target() + " = r"
-					+ o.operand(0) + ";//" + o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ";//" + o.toString() + "\n");
 		}
 	}
 
 	private void write(Codes.Convert o) throws Exception {
 		String type = getType(o.result);
-		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.cast(" + type
-				+ ", r" + o.operand(0) + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.cast(" + type + ", r" + o.operand(0) + ");\n");
 	}
 
 	private void write(Codes.Return o) {
 		if (o.operand != -1) {
-			js.add(getIndentBlock() + "return r" + o.operand + ";//"
-					+ o.toString() + "\n");
+			js.add(getIndentBlock() + "return r" + o.operand + ";//" + o.toString() + "\n");
 		} else {
 			js.add(getIndentBlock() + "return;\n");
 		}
@@ -404,14 +369,21 @@ public class WyJS {
 	private void write(Codes.If o) throws Exception {
 		js.add(writeIfTop(o));
 		indent++;
-		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
-				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "continue outer;\n");
 		indent--;
 		js.add(getIndentBlock() + "}\n");
 	}
 
+	/**
+	 * Writes the top of the if statement according to the type of comparison of
+	 * the input.
+	 *
+	 * @param o
+	 *            bytecode containing if statement.
+	 * @return text of a string statement.
+	 */
 	private String writeIfTop(Codes.If o) throws Exception {
 		// TODO: Use Runtime file
 		// can use the appropriate .equals method depending on type of if
@@ -421,11 +393,9 @@ public class WyJS {
 			// WHAT IF THE RIGHT HAND SIDE IS NOT A BOOL??????
 			// TODO:
 			case EQ:
-				return getIndentBlock() + "if(r" + o.leftOperand + " === r"
-						+ o.rightOperand + "){\n";
+				return getIndentBlock() + "if(r" + o.leftOperand + " === r" + o.rightOperand + "){\n";
 			case NEQ:
-				return getIndentBlock() + "if(r" + o.leftOperand + " !== r"
-						+ o.rightOperand + "){\n";
+				return getIndentBlock() + "if(r" + o.leftOperand + " !== r" + o.rightOperand + "){\n";
 			default:
 				throw new Exception(o.op + " shouldnt be used with Bools?");
 			}
@@ -433,26 +403,20 @@ public class WyJS {
 			switch (o.op) {
 
 			case EQ:
-				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n";
+				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand + ", r" + o.rightOperand + ", true)){\n";
 			case GT:
-				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n";
+				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand + ", r" + o.rightOperand + ", false)){\n";
 			case GTEQ:
-				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n";
+				return getIndentBlock() + "if(WyJS.gt(r" + o.leftOperand + ", r" + o.rightOperand + ", true)){\n";
 			case LT:
-				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n";
+				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand + ", r" + o.rightOperand + ", false)){\n";
 			case LTEQ:
-				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", true)){\n";
+				return getIndentBlock() + "if(WyJS.lt(r" + o.leftOperand + ", r" + o.rightOperand + ", true)){\n";
 			case NEQ:
-				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand
-						+ ", r" + o.rightOperand + ", false)){\n";
-				// case IN:
-				// return getIndentBlock() + "if(WyJS.in(r" + o.leftOperand
-				// + ", r" + o.rightOperand + ")){\n";
+				return getIndentBlock() + "if(WyJS.equals(r" + o.leftOperand + ", r" + o.rightOperand + ", false)){\n";
+//			case IN:
+//			 return getIndentBlock() + "if(WyJS.inList(r" + o.leftOperand
+//			 + ", r" + o.rightOperand + ")){\n";
 			default:
 				throw new Exception(o.op + "not supported?");
 			}
@@ -462,8 +426,7 @@ public class WyJS {
 	private void write(Codes.IfIs o) throws Exception {
 		js.add(getIndentBlock() + writeIfIsTop(o));
 		indent++;
-		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
-				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "continue outer;\n");
 		indent--;
@@ -471,13 +434,11 @@ public class WyJS {
 	}
 
 	private String writeIfIsTop(Codes.IfIs c) throws Exception {
-		return "if(WyJS.is(r" + c.operand + ", " + getType(c.rightOperand)
-				+ ")){\n";
+		return "if(WyJS.is(r" + c.operand + ", " + getType(c.rightOperand) + ")){\n";
 	}
 
 	private void write(Codes.Goto o) {
-		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target)
-				+ ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.target) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "continue outer;//" + o.toString() + "\n");
 	}
@@ -516,8 +477,7 @@ public class WyJS {
 	}
 
 	private void write(Codes.Fail o) {
-		js.add(getIndentBlock() + "throw {name: 'Assert Failed', message: '"
-				+ o.toString() + "'}\n");
+		js.add(getIndentBlock() + "throw {name: 'Assert Failed', message: '" + o.toString() + "'}\n");
 	}
 
 	private void write(Codes.UnaryOperator o) throws Exception {
@@ -526,8 +486,8 @@ public class WyJS {
 		// TODO: other types of unary.
 		switch (o.kind) {
 		case NEG:
-			js.add(getIndentBlock() + "var r" + o.target() + " = " + "r"
-					+ o.operand(0) + ".neg();//" + o.toString() + "\n");
+			js.add(getIndentBlock() + "var r" + o.target() + " = " + "r" + o.operand(0) + ".neg();//" + o.toString()
+					+ "\n");
 			return;
 		case DENOMINATOR:
 		case NUMERATOR:
@@ -535,8 +495,7 @@ public class WyJS {
 		}
 	}
 
-	private void write(Codes.Loop o, Map<String, Index> labelMap)
-			throws Exception {
+	private void write(Codes.Loop o, Map<String, Index> labelMap) throws Exception {
 		// TODO: Could maybe use the runtime file?
 
 		int loopLabel = getFreshLabel();
@@ -557,8 +516,7 @@ public class WyJS {
 					// jumping in the loop
 					js.add(writeIfTop((If) c));
 					indent++;
-					js.add(getIndentBlock() + "control_flow_pc = "
-							+ parseLabel(((Codes.If) c).target) + ";\n");
+					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.If) c).target) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
@@ -568,15 +526,13 @@ public class WyJS {
 					labels.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");
 					indent++;
-					js.add(getIndentBlock() + "control_flow_pc = "
-							+ labels.get(currentIndex) + ";\n");
+					js.add(getIndentBlock() + "control_flow_pc = " + labels.get(currentIndex) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					indent--;
-					js.add(getIndentBlock() + "case "
-							+ labels.get(currentIndex) + ":\n");
+					js.add(getIndentBlock() + "case " + labels.get(currentIndex) + ":\n");
 					indent++;
 				} else {
 					// terminating statement
@@ -588,8 +544,7 @@ public class WyJS {
 					js.add(getIndentBlock() + writeIfIsTop((Codes.IfIs) c));
 					indent++;
 
-					js.add(getIndentBlock() + "control_flow_pc = "
-							+ parseLabel(((Codes.IfIs) c).target) + ";\n");
+					js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(((Codes.IfIs) c).target) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
@@ -599,15 +554,13 @@ public class WyJS {
 					labels.add(getFreshLabel());
 					js.add(getIndentBlock() + "else{\n");
 					indent++;
-					js.add(getIndentBlock() + "control_flow_pc = "
-							+ labels.get(currentIndex) + ";\n");
+					js.add(getIndentBlock() + "control_flow_pc = " + labels.get(currentIndex) + ";\n");
 					js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 					js.add(getIndentBlock() + "break;\n");
 					indent--;
 					js.add(getIndentBlock() + "}\n");
 					indent--;
-					js.add(getIndentBlock() + "case "
-							+ labels.get(currentIndex) + ":\n");
+					js.add(getIndentBlock() + "case " + labels.get(currentIndex) + ":\n");
 					indent++;
 				} else {
 					// terminating statement
@@ -617,21 +570,20 @@ public class WyJS {
 				js.add(getIndentBlock() + "control_flow_pc = " + loopLabel// parseLabel(lastLabel)
 						+ ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
-				//js.add(getIndentBlock() + "break;\n");
+				// js.add(getIndentBlock() + "break;\n");
 				indent--;
-				js.add(getIndentBlock() + "case "
-						+ parseLabel(((Codes.Label) c).label) + ":\n");
+				js.add(getIndentBlock() + "case " + parseLabel(((Codes.Label) c).label) + ":\n");
 				indent++;
 			} else if (c instanceof Codes.Invariant) {
 				// Ignore it i think..
 
 			} else {
-				// here's where it creates the other statements that aren't conditionals
+				// here's where it creates the other statements that aren't
+				// conditionals
 				write(c);
 			}
 		}
-		js.add(getIndentBlock() + "control_flow_pc = "
-				+ loopLabel + ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = " + loopLabel + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "break;\n");
 	}
@@ -662,16 +614,15 @@ public class WyJS {
 
 		String type = "new WyJS.Type.Record(" + names + ", " + types + ")";
 
-		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Record("
-				+ names + ", " + values + ", " + type + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Record(" + names + ", " + values + ", " + type
+				+ ");\n");
 	}
 
 	private void write(Codes.FieldLoad o) {
 		// TODO: Use Runtime file
 		// use appropriate runtime method
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
-				+ ".fieldLoad(" + '"' + o.field + '"' + ");//" + o.toString()
-				+ "\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".fieldLoad(" + '"' + o.field + '"'
+				+ ");//" + o.toString() + "\n");
 	}
 
 	private void write(Codes.Update o) throws Exception {
@@ -687,36 +638,30 @@ public class WyJS {
 				Codes.RecordLVal rec = (Codes.RecordLVal) l;
 				if (vals.hasNext()) {
 					if (first) {
-						str = "r" + o.target() + ".fieldLoad(" + '"'
-								+ rec.field + '"' + ")";
+						str = "r" + o.target() + ".fieldLoad(" + '"' + rec.field + '"' + ")";
 					} else {
 						str += ".fieldLoad(" + '"' + rec.field + '"' + ")";
 					}
 				} else {
 					if (first) {
-						str = "r" + o.target() + ".setValue(" + '"' + rec.field
-								+ '"' + ", r" + o.operand(i) + ");\n";
+						str = "r" + o.target() + ".setValue(" + '"' + rec.field + '"' + ", r" + o.operand(i) + ");\n";
 					} else {
-						str += ".setValue(" + '"' + rec.field + '"' + ", r"
-								+ o.operand(i) + ");\n";
+						str += ".setValue(" + '"' + rec.field + '"' + ", r" + o.operand(i) + ");\n";
 					}
 				}
 			} else if (l instanceof Codes.ListLVal) {
 				Codes.ListLVal lis = (Codes.ListLVal) l;
 				if (vals.hasNext()) {
 					if (first) {
-						str = "r" + o.target() + ".getValue(r"
-								+ lis.indexOperand + ")";
+						str = "r" + o.target() + ".getValue(r" + lis.indexOperand + ")";
 					} else {
 						str += ".getValue(r" + lis.indexOperand + ")";
 					}
 				} else {
 					if (first) {
-						str = "r" + o.target() + ".setValue(r" + o.operand(0)
-								+ ", r" + o.operand(1) + ");\n";
+						str = "r" + o.target() + ".setValue(r" + o.operand(0) + ", r" + o.operand(1) + ");\n";
 					} else {
-						str += ".setValue(r" + o.operand(i) + ", r"
-								+ o.operand(i + 1) + ");\n";
+						str += ".setValue(r" + o.operand(i) + ", r" + o.operand(i + 1) + ");\n";
 					}
 				}
 				i++;
@@ -749,24 +694,20 @@ public class WyJS {
 
 		String type = getType(o.type());
 
-		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Array("
-				+ values + ", " + type + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Array(" + values + ", " + type + ");\n");
 	}
 
 	private void write(Codes.LengthOf o) {
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
-				+ ".length();//" + o.toString() + "\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".length();//" + o.toString() + "\n");
 	}
 
 	private void write(Codes.IndexOf o) {
-		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0)
-				+ ".getValue(r" + o.operand(1) + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = r" + o.operand(0) + ".getValue(r" + o.operand(1) + ");\n");
 	}
 
 	private void write(Codes.ListGenerator o) throws Exception {
-		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ArrayGen(r"
-				+ o.operand(0) + ", r" + o.operand(1) + ", "
-				+ getType(o.type()) + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = WyJS.ArrayGen(r" + o.operand(0) + ", r" + o.operand(1)
+				+ ", " + getType(o.type()) + ");\n");
 	}
 
 	// private void write(Codes.ListOperator o) throws Exception{
@@ -800,13 +741,11 @@ public class WyJS {
 			}
 		}
 		String type = getType(o.assignedType());
-		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Tuple("
-				+ values + ", " + type + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = new WyJS.Tuple(" + values + ", " + type + ");\n");
 	}
 
 	private void write(Codes.TupleLoad o) {
-		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r"
-				+ o.operand(0) + ".tupleLoad(" + o.index + ");\n");
+		js.add(getIndentBlock() + "var r" + o.target() + " = " + "r" + o.operand(0) + ".tupleLoad(" + o.index + ");\n");
 	}
 
 	private void write(Codes.Switch o) throws Exception {
@@ -816,21 +755,19 @@ public class WyJS {
 			Pair<Constant, String> pair = i.next();
 			if (first) {
 				first = false;
-				js.add(getIndentBlock() + "if(WyJS.equals(r" + o.operand + ", "
-						+ getConst(pair.first()) + ", true)){\n");
+				js.add(getIndentBlock() + "if(WyJS.equals(r" + o.operand + ", " + getConst(pair.first())
+						+ ", true)){\n");
 				indent++;
-				js.add(getIndentBlock() + "control_flow_pc = "
-						+ parseLabel(pair.second()) + ";\n");
+				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(pair.second()) + ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 				js.add(getIndentBlock() + "continue outer;\n");
 				indent--;
 				js.add(getIndentBlock() + "}\n");
 			} else {
-				js.add(getIndentBlock() + " else if(WyJS.equals(r" + o.operand
-						+ ", " + getConst(pair.first()) + ", true)){\n");
+				js.add(getIndentBlock() + " else if(WyJS.equals(r" + o.operand + ", " + getConst(pair.first())
+						+ ", true)){\n");
 				indent++;
-				js.add(getIndentBlock() + "control_flow_pc = "
-						+ parseLabel(pair.second()) + ";\n");
+				js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(pair.second()) + ";\n");
 				js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 				js.add(getIndentBlock() + "continue outer;\n");
 				indent--;
@@ -839,8 +776,7 @@ public class WyJS {
 		}
 		js.add(getIndentBlock() + "else{\n");
 		indent++;
-		js.add(getIndentBlock() + "control_flow_pc = "
-				+ parseLabel(o.defaultTarget) + ";\n");
+		js.add(getIndentBlock() + "control_flow_pc = " + parseLabel(o.defaultTarget) + ";\n");
 		js.add(getIndentBlock() + "control_flow_repeat = true;\n");
 		js.add(getIndentBlock() + "continue outer;\n");
 		indent--;
@@ -852,23 +788,22 @@ public class WyJS {
 	 * Returns a String with its label parsed, removed.
 	 *
 	 * @param label
-	 * 			a String containing a label.
-	 * @return
-	 * 			a String without it's label, parsed.
+	 *            a String containing a label.
+	 * @return a String without it's label, parsed.
 	 */
 	private String parseLabel(String label) {
 		return label.substring(5);
 	}
 
 	/**
-	 * Identifies which instance of Type is given and returns a String with its instance in JavaScript.
+	 * Identifies which instance of Type is given and returns a String with its
+	 * instance in JavaScript.
 	 *
 	 * @param type
-	 * 			Type to be defined.
-	 * @return
-	 * 			a String with its instance in JavaScript.
+	 *            Type to be defined.
+	 * @return a String with its instance in JavaScript.
 	 * @throws Exception
-	 * 			in case the Type is not supported.
+	 *             in case the Type is not supported.
 	 */
 	private String getType(Type type) throws Exception {
 		if (type instanceof Type.Any) {
@@ -878,8 +813,7 @@ public class WyJS {
 		} else if (type instanceof Type.Byte) {
 			return "new WyJS.Type.Byte()";
 		} else if (type instanceof Type.Array) {
-			return "new WyJS.Type.Array(" + getType(((Type.Array) type).element())
-					+ ")";
+			return "new WyJS.Type.Array(" + getType(((Type.Array) type).element()) + ")";
 		} else if (type instanceof Type.Int) {
 			return "new WyJS.Type.Int()";
 		} else if (type instanceof Type.Real) {
@@ -947,14 +881,14 @@ public class WyJS {
 	}
 
 	/**
-	 * Identifies which instance of Constant is given and returns a String with its instance in JavaScript.
+	 * Identifies which instance of Constant is given and returns a String with
+	 * its instance in JavaScript.
 	 *
 	 * @param type
-	 * 			Constant to be defined.
-	 * @return
-	 * 			a String with its instance in JavaScript.
+	 *            Constant to be defined.
+	 * @return a String with its instance in JavaScript.
 	 * @throws Exception
-	 * 			in case the Constant is not supported.
+	 *             in case the Constant is not supported.
 	 */
 	private String getConst(Constant constant) throws Exception {
 		if (constant instanceof Constant.Integer) {
@@ -966,11 +900,11 @@ public class WyJS {
 		} else if (constant instanceof Constant.Byte) {
 			// get signed byte as integer
 			Constant.Byte b = (Constant.Byte) constant;
-			byte signedByte =  b.value;
+			byte signedByte = b.value;
 
 			// uses operation below
 			int varByte = signedByte & (0xff);
-			return "new WyJS.Byte("+ varByte +")";
+			return "new WyJS.Byte(" + varByte + ")";
 		} else if (constant instanceof Constant.Decimal) {
 			Constant.Decimal deci = (Constant.Decimal) constant;
 			return "new WyJS.Real(" + deci.value + ")";
@@ -1013,8 +947,7 @@ public class WyJS {
 				}
 			}
 			String type = getType(rec.type());
-			return "new WyJS.Record(" + names + " ," + values + " ," + type
-					+ ")";
+			return "new WyJS.Record(" + names + " ," + values + " ," + type + ")";
 		} else if (constant instanceof Constant.Tuple) {
 			Constant.Tuple tup = (Constant.Tuple) constant;
 			String values = "[";
@@ -1048,8 +981,7 @@ public class WyJS {
 		}
 	}
 
-	public static String typeMangle(Type.FunctionOrMethod ft)
-			throws IOException {
+	public static String typeMangle(Type.FunctionOrMethod ft) throws IOException {
 		JavaIdentifierOutputStream jout = new JavaIdentifierOutputStream();
 		BinaryOutputStream binout = new BinaryOutputStream(jout);
 		Type.BinaryWriter tm = new Type.BinaryWriter(binout);
