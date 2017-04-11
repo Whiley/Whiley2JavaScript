@@ -1,45 +1,44 @@
 # Contributing to the Whiley2JavaScript Compiler
 
-The following provides a set of guidelines for contributing to the Whiley2JavaScript compiler.
+The following provides a set of guidelines for contributing to the `Whiley2JavaScript` compiler.
 
 #### Table Of Contents
 
 [What do I need to know?](#what-do-I-need-to-known)
    * [Code of Conduct](#code-of-conduct)
-   * [The Whiley Compiler Collection](#the-whiley-compiler-collection)
    * [Licensing and Copyright](#licensing-and-copyright)
+   * [The Whiley Compiler Collection](#the-whiley-compiler-collection)
    
 [How can I contribute?](#how-can-i-contribute)
   * [Reporting Bugs](#reporting-bugs)
-  * [Making Contributions](#making-contributions)
+  * [Making Pull Requests](#making-contributions)
+  * [Contributor Licensing Agreement](contributor-licensing-agreement)
 
 ## What do I need to know?
+
+### Code of Conduct
 
 This project adheres to the Contributor Covenant [code of conduct](CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code.
 
-## The Whiley Compiler Collection
-
-The Whiley2JavaScript compiler is part of the
-[Whiley Compiler Collection](https://github.com/Whiley/WhileyCompilerCollection).
-This is the overarching framework which brings together components for
-compiling, verifying, testing and documenting Whiley programs (and
-much more).  The Whiley2JavaScript compiler can be thought of as a
-"plugin" within this framework.
-
-## Licensing and Copyright
+### Licensing and Copyright
 
 This project is licensed under the
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.  As
-such, you must adhere to this license when working with this project.
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.  such
+As, you must adhere to this license when working with this project.
 This project employs a **Copyright Licensing Agreement**, whereby
 copyright is retained by contributors.
 
-## Developer's Certificate of Origin 1.1
+### The Whiley Compiler Collection
 
-By making a contribution to this project, I certify that:
+The `Whiley2JavaScript` compiler is part of the
+[Whiley Compiler Collection](https://github.com/Whiley/WhileyCompilerCollection).
+This is the overarching framework which brings together components for
+compiling, verifying, testing and documenting Whiley programs (and
+much more).  The `Whiley2JavaScript` compiler can be thought of as a
+"plugin" within this framework.
 
-
+## How can I contribute?
 
 ### Reporting Bugs
 
@@ -48,7 +47,7 @@ use the issue tracker and try, as much as possible, to provide minimal
 examples which illustrate the problem along with a clear description
 of what happened.
 
-### Making Contributions
+### Making Pull Requests
 
 You are welcome to make pull requests to this project.  **Small** pull
 requests are likely to be accepted quickly.  **Large** pull requests may
@@ -57,20 +56,21 @@ involve further discussion and peer review.
 Please *do not* include lines such as the following on the files you
 modify:
 
-// Copyright (c) 2011, David J. Pearce (djp@ecs.vuw.ac.nz)
+```
+// Copyright (c) 2011, David J. Pearce (dave@blah.com)
+```
 
-Such lines are tedious to manage and completely unnecessary.  The
-commit history of the project is sufficient evidence of your
-contribution.
+Such lines are tedious to manage and unnecessary.  The commit history
+of the project is sufficient evidence of your contribution.
 
-#### Contributor Licensing Agreement
+### Contributor Licensing Agreement
 
-In making a contribution to the Whiley2JavaScript compiler, you
+In making a contribution to the `Whiley2JavaScript` compiler, you
 implicitly certify that:
 
 **(a)** The contribution was created in whole or in part by you and you
     have the right to submit it under the open source license
-    indicated in the file; or
+    indicated; or
 
 **(b)** The contribution is based upon previous work that, to the best
     of your knowledge, is covered under an appropriate open source
