@@ -6,7 +6,6 @@
 
 package wyjs.io;
 
-
 import java.io.*;
 import java.util.*;
 
@@ -34,6 +33,8 @@ import wyil.lang.WyilFile.*;
 public final class JavaScriptFileWriter {
 	private PrintWriter out;
 	private boolean verbose = false;
+	private boolean commentTypes = false;
+	private boolean commentSpecifications = false;
 
 	public JavaScriptFileWriter(PrintWriter writer) {
 		this.out = writer;
@@ -94,22 +95,28 @@ public final class JavaScriptFileWriter {
 		out.print("function ");
 		out.print(method.name());
 		writeParameters(tree,0,ft.params(),out);
-		if (ft.returns().length != 0) {
-			out.print("// -> ");
-			writeParameters(tree,ft.params().length,ft.returns(),out);
-			out.println();
+		if(commentTypes) {
+			if (ft.returns().length != 0) {
+				out.print("// -> ");
+				writeParameters(tree,ft.params().length,ft.returns(),out);
+				out.println();
+			} else {
+				out.println();
+			}
 		} else {
-			out.println();
+			out.print(" ");
 		}
-		//
-		for (Location<Expr> precondition : method.getPrecondition()) {
-			out.print("// requires ");
-			writeExpression(precondition, out);
-		}
-		for (Location<Expr> postcondition : method.getPostcondition()) {
-			out.print("// ensures ");
-			writeExpression(postcondition, out);
-			out.println();
+		if(commentSpecifications) {
+			//
+			for (Location<Expr> precondition : method.getPrecondition()) {
+				out.print("// requires ");
+				writeExpression(precondition, out);
+			}
+			for (Location<Expr> postcondition : method.getPostcondition()) {
+				out.print("// ensures ");
+				writeExpression(postcondition, out);
+				out.println();
+			}
 		}
 		if (method.getBody() != null) {
 			out.println("{");
@@ -134,7 +141,7 @@ public final class JavaScriptFileWriter {
 			if (i != 0) {
 				out.print(", ");
 			}
-			out.print("/*" + parameters[i] + "*/ ");
+			writeType(parameters[i]);
 			Location<Bytecode.VariableDeclaration> decl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(n+i);
 			out.print(decl.getBytecode().getName());
 		}
@@ -259,24 +266,13 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b, PrintWriter out) {
-		Location<?>[] loopInvariant = b.getOperandGroup(0);
-		Location<?>[] modifiedOperands = b.getOperandGroup(1);
 		out.println("do {");
 		//
 		writeBlock(indent+1,b.getBlock(0),out);
 		tabIndent(indent+1,out);
-		out.print("} while ");
+		out.print("} while(");
 		writeExpression(b.getOperand(0),out);
-		out.print(" modifies ");
-		writeExpressions(modifiedOperands,out);
-		for(Location<?> invariant : loopInvariant) {
-			out.println();
-			tabIndent(indent+1,out);
-			out.print("where ");
-			writeExpression(invariant,out);
-		}
-		// FIXME: add invariants
-		out.println();
+		out.println(");");
 	}
 
 	private void writeFail(int indent, Location<Bytecode.Fail> c, PrintWriter out) {
@@ -375,16 +371,24 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeVariableAccess(Location<VariableAccess> loc, PrintWriter out) {
+	private void writeVariableMove(Location<VariableAccess> loc, PrintWriter out) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
 		out.print(vd.getBytecode().getName());
 	}
 
+	private void writeVariableCopy(Location<VariableAccess> loc, PrintWriter out) {
+		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
+		if(isCopyable(vd.getType())) {
+			out.print(vd.getBytecode().getName());
+		} else {
+			out.print("wyjs.copy(" + vd.getBytecode().getName() + ")");
+		}
+	}
+
 	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc, PrintWriter out) {
 		Location<?>[] operands = loc.getOperands();
-		out.print("/*");
-		out.print(loc.getType());
-		out.print("*/ ");
+		out.print("var ");
+		writeType(loc.getType());
 		out.print(loc.getBytecode().getName());
 		if (operands.length > 0) {
 			out.print(" = ");
@@ -492,8 +496,10 @@ public final class JavaScriptFileWriter {
 			writeInfixLocations((Location<Bytecode.Operator>) expr, out);
 			break;
 		case Bytecode.OPCODE_varmove:
+			writeVariableMove((Location<VariableAccess>) expr, out);
+			break;
 		case Bytecode.OPCODE_varcopy:
-			writeVariableAccess((Location<VariableAccess>) expr, out);
+			writeVariableCopy((Location<VariableAccess>) expr, out);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown bytecode encountered: " + expr.getBytecode());
@@ -569,31 +575,20 @@ public final class JavaScriptFileWriter {
 
 	@SuppressWarnings("unchecked")
 	private void writeLambda(Location<Bytecode.Lambda> expr, PrintWriter out) {
-		out.print("&[");
-		Location<?>[] environment = expr.getOperandGroup(SyntaxTree.ENVIRONMENT);
-		for (int i = 0; i != environment.length; ++i) {
-			Location<VariableDeclaration> var = (Location<VariableDeclaration>) environment[i];
-			if (i != 0) {
-				out.print(", ");
-			}
-			out.print(var.getType());
-			out.print(" ");
-			out.print(var.getBytecode().getName());
-		}
-		out.print("](");
+		out.print("function(");
 		Location<?>[] parameters = expr.getOperandGroup(SyntaxTree.PARAMETERS);
 		for (int i = 0; i != parameters.length; ++i) {
 			Location<VariableDeclaration> var = (Location<VariableDeclaration>) parameters[i];
 			if (i != 0) {
 				out.print(", ");
 			}
-			out.print(var.getType());
-			out.print(" ");
+			writeType(var.getType());
 			out.print(var.getBytecode().getName());
 		}
-		out.print(" -> ");
+		out.print(") { ");
+		out.print("return ");
 		writeExpression(expr.getOperand(0), out);
-		out.print(")");
+		out.print("; }");
 	}
 
 	private void writeRecordConstructor(Location<Bytecode.Operator> expr, PrintWriter out) {
@@ -661,6 +656,33 @@ public final class JavaScriptFileWriter {
 			return "all";
 		}
 		throw new IllegalArgumentException();
+	}
+
+	private void writeType(Type t) {
+		if(commentTypes) {
+			out.print("/*");
+			out.print(t);
+			out.print("*/");
+		}
+	}
+
+	/**
+	 * Return true if the type in question can be copied directly. More
+	 * specifically, if a bitwise copy of the value is sufficient to fully copy
+	 * it. In general, this is true for primitive data types in JavaScript. But,
+	 * for array types or general class types, it is not true (since these are
+	 * references into the heap). As an exception, class types which are known
+	 * to be immutable can be safely considered as copyable.
+	 *
+	 * @param type
+	 * @return
+	 */
+	private static boolean isCopyable(Type type) {
+		if (type instanceof Type.Primitive) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean needsBrackets(Bytecode e) {
