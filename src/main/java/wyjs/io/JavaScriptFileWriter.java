@@ -228,9 +228,9 @@ public final class JavaScriptFileWriter {
 		out.println();
 	}
 	private void writeAssert(int indent, Location<Bytecode.Assert> c, PrintWriter out) {
-		out.print("assert ");
+		out.print("wyjs.assert(");
 		writeExpression(c.getOperand(0),out);
-		out.println(";");
+		out.println(");");
 	}
 
 	private void writeAssume(int indent, Location<Bytecode.Assume> c, PrintWriter out) {
