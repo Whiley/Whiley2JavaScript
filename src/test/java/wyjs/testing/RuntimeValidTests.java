@@ -46,6 +46,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import wybs.util.StdProject;
 import wyc.commands.Compile;
 import wyc.util.TestUtils;
 import wycc.util.Pair;
@@ -163,7 +164,8 @@ public class RuntimeValidTests {
 		WyilFileReader reader = new WyilFileReader(fin);
 		WyilFile f = reader.read();
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		new JavaScriptFileWriter(os).apply(f);
+		StdProject project = new StdProject();
+		new JavaScriptFileWriter(project,os).apply(f);
 		// Extract the javascript
 		String output = new String(os.toByteArray());
 		// Execute the javascript

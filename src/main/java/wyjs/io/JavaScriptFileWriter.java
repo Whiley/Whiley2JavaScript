@@ -9,8 +9,12 @@ package wyjs.io;
 import java.io.*;
 import java.util.*;
 
+import wyal.lang.WyalFile.Opcode;
 import wybs.lang.Build;
 import wybs.lang.NameID;
+import wybs.lang.SyntacticElement;
+import static wybs.lang.SyntaxError.*;
+import wyfs.lang.Path;
 import wyil.lang.*;
 import wyil.lang.Constant;
 import wyil.lang.Bytecode.AliasDeclaration;
@@ -32,16 +36,21 @@ import wyil.lang.WyilFile.*;
 *
 */
 public final class JavaScriptFileWriter {
-	private PrintWriter out;
+	private final PrintWriter out;
+	private final Build.Project project;
 	private boolean verbose = false;
 	private boolean commentTypes = false;
 	private boolean commentSpecifications = false;
 
-	public JavaScriptFileWriter(PrintWriter writer) {
+	private WyilFile wyilfile;
+
+	public JavaScriptFileWriter(Build.Project project, PrintWriter writer) {
+		this.project = project;
 		this.out = writer;
 	}
 
-	public JavaScriptFileWriter(OutputStream stream) {
+	public JavaScriptFileWriter(Build.Project project, OutputStream stream) {
+		this.project = project;
 		this.out = new PrintWriter(new OutputStreamWriter(stream));
 	}
 
@@ -58,6 +67,9 @@ public final class JavaScriptFileWriter {
 	// ======================================================================
 
 	public void apply(WyilFile module) throws IOException {
+		// FIXME: this is a hack
+		this.wyilfile = module;
+
 		out.println();
 		for(WyilFile.Constant cd : module.constants()) {
 			write(cd);
@@ -245,7 +257,7 @@ public final class JavaScriptFileWriter {
 		if(lhs.length > 0) {
 			for(int i=0;i!=lhs.length;++i) {
 				if(i!=0) { out.print(", "); }
-				writeExpression(lhs[i],out);
+				writeLVal(lhs[i],out);
 			}
 			out.print(" = ");
 		}
@@ -378,7 +390,7 @@ public final class JavaScriptFileWriter {
 
 	private void writeVariableCopy(Location<VariableAccess> loc, PrintWriter out) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
-		if(isCopyable(vd.getType())) {
+		if(isCopyable(vd.getType(),loc)) {
 			out.print(vd.getBytecode().getName());
 		} else {
 			out.print("wyjs.copy(" + vd.getBytecode().getName() + ")");
@@ -474,13 +486,15 @@ public final class JavaScriptFileWriter {
 		case Bytecode.OPCODE_some:
 			writeQuantifier((Location<Bytecode.Quantifier>) expr, out);
 			break;
+		case Bytecode.OPCODE_eq:
+		case Bytecode.OPCODE_ne:
+			writeEqualityOperator((Location<Bytecode.Operator>) expr, out);
+			break;
 		case Bytecode.OPCODE_add:
 		case Bytecode.OPCODE_sub:
 		case Bytecode.OPCODE_mul:
 		case Bytecode.OPCODE_div:
 		case Bytecode.OPCODE_rem:
-		case Bytecode.OPCODE_eq:
-		case Bytecode.OPCODE_ne:
 		case Bytecode.OPCODE_lt:
 		case Bytecode.OPCODE_le:
 		case Bytecode.OPCODE_gt:
@@ -496,7 +510,9 @@ public final class JavaScriptFileWriter {
 			writeInfixLocations((Location<Bytecode.Operator>) expr, out);
 			break;
 		case Bytecode.OPCODE_varmove:
-			writeVariableMove((Location<VariableAccess>) expr, out);
+			// FIXME: this needs to be fixed!
+			writeVariableCopy((Location<VariableAccess>) expr, out);
+			//writeVariableMove((Location<VariableAccess>) expr, out);
 			break;
 		case Bytecode.OPCODE_varcopy:
 			writeVariableCopy((Location<VariableAccess>) expr, out);
@@ -603,7 +619,7 @@ public final class JavaScriptFileWriter {
 				out.print(", ");
 			}
 			out.print(fields[i]);
-			out.print(" ");
+			out.print(": ");
 			writeExpression(operands[i], out);
 		}
 		out.print("}");
@@ -618,6 +634,26 @@ public final class JavaScriptFileWriter {
 		// Prefix operators
 		out.print(opcode(expr.getBytecode().kind()));
 		writeBracketedExpression(expr.getOperand(0),out);
+	}
+
+	private void writeEqualityOperator(Location<Bytecode.Operator> c, PrintWriter out) {
+		Location<?> lhs = c.getOperand(0);
+		Location<?> rhs = c.getOperand(1);
+		Type lhsT = lhs.getType();
+		Type rhsT = rhs.getType();
+		//
+		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
+			writeInfixLocations(c,out);
+		} else {
+			if (c.getOpcode() == Bytecode.OPCODE_ne) {
+				out.print("!");
+			}
+			out.print("wyjs.equals(");
+			writeExpression(lhs,out);
+			out.print(", ");
+			writeExpression(rhs,out);
+			out.print(")");
+		}
 	}
 
 	private void writeInfixLocations(Location<Bytecode.Operator> c, PrintWriter out) {
@@ -660,6 +696,37 @@ public final class JavaScriptFileWriter {
 		throw new IllegalArgumentException();
 	}
 
+	private void writeLVal(Location<?> expr, PrintWriter out) {
+		switch (expr.getOpcode()) {
+		case Bytecode.OPCODE_arrayindex:
+			writeArrayIndexLVal((Location<Bytecode.Operator>) expr,out);
+			break;
+		case Bytecode.OPCODE_fieldload:
+			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) expr,out);
+			break;
+		case Bytecode.OPCODE_varcopy:
+		case Bytecode.OPCODE_varmove:
+			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) expr,out);
+		}
+	}
+
+	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, PrintWriter out) {
+		writeLVal(expr.getOperand(0), out);
+		out.print("[");
+		writeExpression(expr.getOperand(1), out);
+		out.print("]");
+	}
+
+	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr, PrintWriter out) {
+		writeLVal(expr.getOperand(0),out);
+		out.print("." + expr.getBytecode().fieldName());
+	}
+
+	private void writeVariableAccessLVal(Location<VariableAccess> loc, PrintWriter out) {
+		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
+		out.print(vd.getBytecode().getName());
+	}
+
 	private void writeType(Type t) {
 		if(commentTypes) {
 			out.print("/*");
@@ -679,9 +746,29 @@ public final class JavaScriptFileWriter {
 	 * @param type
 	 * @return
 	 */
-	private static boolean isCopyable(Type type) {
+	private boolean isCopyable(Type type, SyntacticElement context) {
 		if (type instanceof Type.Primitive) {
 			return true;
+		} else if(type instanceof Type.Nominal) {
+			Type.Nominal tn = (Type.Nominal) type;
+			NameID nid = tn.name();
+			// First, attempt to locate the enclosing module for this
+			// nominal type.
+//			Path.Entry<WyilFile> entry = project.get(nid.module(), WyilFile.ContentType);
+//			if (entry == null) {
+//				throw new IllegalArgumentException("no WyIL file found: " + nid.module());
+//			}
+			// Read in the module. This may result in it being read from
+			// disk, or from a cache in memory, or even from somewhere else.
+			//WyilFile wyilFile = entry.read();
+			// FIXME: following line is a temporary hack
+			WyilFile wyilFile = this.wyilfile;
+			WyilFile.Type td = wyilFile.type(nid.name());
+			if (td == null) {
+				throw new RuntimeException("undefined nominal type encountered: " + nid);
+			}
+			//
+			return isCopyable(td.type(),context);
 		} else {
 			return false;
 		}

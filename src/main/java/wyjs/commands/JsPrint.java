@@ -1,10 +1,15 @@
 package wyjs.commands;
 
 import java.io.FileInputStream;
+import java.util.ArrayList;
 
+import wybs.util.StdProject;
+import wyc.Activator;
 import wycc.lang.Command;
 import wycc.util.Logger;
 import wyfs.lang.Content;
+import wyfs.lang.Path;
+import wyfs.util.VirtualRoot;
 import wyil.io.WyilFileReader;
 import wyil.lang.WyilFile;
 import wyjs.io.JavaScriptFileWriter;
@@ -49,10 +54,15 @@ public class JsPrint implements Command<String> {
 	@Override
 	public String execute(String... args) {
 		try {
+			Content.Registry registry = new Activator.Registry();
+			VirtualRoot root = new VirtualRoot(registry);
+			ArrayList<Path.Root> roots = new ArrayList<>();
+			roots.add(root);
+			StdProject project = new StdProject(roots);
 			for (String arg : args) {
 				WyilFileReader reader = new WyilFileReader(new FileInputStream(arg));
 				WyilFile f = reader.read();
-				new JavaScriptFileWriter(System.out).apply(f);
+				new JavaScriptFileWriter(project,System.out).apply(f);
 			}
 			return "OK";
 		} catch (RuntimeException e) {
