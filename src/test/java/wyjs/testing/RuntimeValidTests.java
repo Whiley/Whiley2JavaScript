@@ -49,7 +49,6 @@ import org.junit.runners.Parameterized.Parameters;
 import wyc.commands.Compile;
 import wyc.util.TestUtils;
 import wycc.util.Pair;
-import wyfs.util.Trie;
 import wyil.io.WyilFileReader;
 import wyil.lang.WyilFile;
 import wyjs.io.JavaScriptFileWriter;
@@ -86,7 +85,30 @@ public class RuntimeValidTests {
 	public final static Map<String, String> IGNORED = new HashMap<>();
 
 	static {
+		// Bring over all the currently failing tests for the compiler. There's
+		// absolutely no point trying to see whether these work or not, since we
+		// already know they will not.
 		IGNORED.put("RecursiveType_Valid_12", "#339");
+		IGNORED.put("RecursiveType_Valid_22", "#339");
+		//
+		IGNORED.put("Function_Valid_15", "#566");
+		IGNORED.put("TypeEquals_Valid_23", "#566");
+		IGNORED.put("TypeEquals_Valid_41", "#566");
+		//
+		IGNORED.put("Lifetime_Lambda_Valid_4", "#645");
+		//
+		IGNORED.put("RecordSubtype_Valid_1", "#696");
+		IGNORED.put("RecordSubtype_Valid_2", "#696");
+		IGNORED.put("RecursiveType_Valid_3", "#696");
+		IGNORED.put("TypeEquals_Valid_36", "#696");
+		IGNORED.put("TypeEquals_Valid_37", "#696");
+		IGNORED.put("TypeEquals_Valid_38", "#696");
+		//
+		IGNORED.put("Function_Valid_11", "#702");
+		//
+		IGNORED.put("Complex_Valid_3", "#339");
+		IGNORED.put("DoWhile_Valid_4", "#339");
+		IGNORED.put("RecursiveType_Valid_28", "#339");
 	}
 
 	/**
@@ -94,20 +116,6 @@ public class RuntimeValidTests {
 	 * since it will contain the Whiley Runtime.
 	 */
 	public final static String WYC_LIB_DIR = "../../lib/".replace('/', File.separatorChar);
-
-	static {
-
-		// The purpose of this is to figure out what the proper name for the
-		// wyrt file is. Since there can be multiple versions of this file,
-		// we're not sure which one to pick.
-
-		File file = new File(WYC_LIB_DIR);
-//		for(String f : file.list()) {
-//			if(f.startsWith("wyrt-v")) {
-//				WYRT_PATH = WYC_LIB_DIR + f;
-//			}
-//		}
-	}
 
 	// ======================================================================
 	// Test Harness

@@ -10,6 +10,7 @@ import java.io.*;
 import java.util.*;
 
 import wybs.lang.Build;
+import wybs.lang.NameID;
 import wyil.lang.*;
 import wyil.lang.Constant;
 import wyil.lang.Bytecode.AliasDeclaration;
@@ -59,46 +60,45 @@ public final class JavaScriptFileWriter {
 	public void apply(WyilFile module) throws IOException {
 		out.println();
 		for(WyilFile.Constant cd : module.constants()) {
-			out.println("constant " + cd.name() + " = " + cd.constant());
+			write(cd);
 		}
 		if(!module.constants().isEmpty()) {
 			out.println();
 		}
 		for (WyilFile.Type td : module.types()) {
-			Type t = td.type();
-			String t_str;
-			t_str = t.toString();
-			out.println("type " + td.name() + " : " + t_str);
-			for (Location<?> invariant : td.getInvariant()) {
-				out.print("where ");
-				writeExpression(invariant, out);
-				out.println();
-			}
-			out.println();
+			write(td);
 		}
 
 		for(FunctionOrMethod md : module.functionOrMethods()) {
-			write(md,out);
+			write(md);
 			out.println();
 		}
 		out.flush();
 	}
 
-	private void write(FunctionOrMethod method, PrintWriter out) {
+	private void write(WyilFile.Type td) {
+
+	}
+
+	private void write(WyilFile.Constant cd) {
+		out.println("var " + cd.name() + " = " + cd.constant() + ";");
+	}
+
+	private void write(FunctionOrMethod method) {
 		//
 		if(verbose) {
-			writeLocationsAsComments(method.getTree(),out);
+			writeLocationsAsComments(method.getTree());
 		}
 		//
 		Type.FunctionOrMethod ft = method.type();
 		SyntaxTree tree = method.getTree();
 		out.print("function ");
 		out.print(method.name());
-		writeParameters(tree,0,ft.params(),out);
+		writeParameters(tree,0,ft.params());
 		if(commentTypes) {
 			if (ft.returns().length != 0) {
 				out.print("// -> ");
-				writeParameters(tree,ft.params().length,ft.returns(),out);
+				writeParameters(tree,ft.params().length,ft.returns());
 				out.println();
 			} else {
 				out.println();
@@ -125,7 +125,7 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeLocationsAsComments(SyntaxTree tree, PrintWriter out) {
+	private void writeLocationsAsComments(SyntaxTree tree) {
 		List<Location<?>> locations = tree.getLocations();
 		for(int i=0;i!=locations.size();++i) {
 			Location<?> loc = locations.get(i);
@@ -135,7 +135,7 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeParameters(SyntaxTree tree, int n, Type[] parameters, PrintWriter out) {
+	private void writeParameters(SyntaxTree tree, int n, Type[] parameters) {
 		out.print("(");
 		for (int i = 0; i != parameters.length; ++i) {
 			if (i != 0) {
@@ -234,9 +234,9 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeAssume(int indent, Location<Bytecode.Assume> c, PrintWriter out) {
-		out.print("assume ");
+		out.print("wyjs.assert(");
 		writeExpression(c.getOperand(0),out);
-		out.println(";");
+		out.println(");");
 	}
 
 	private void writeAssign(int indent, Location<Bytecode.Assign> stmt, PrintWriter out) {
@@ -562,7 +562,9 @@ public final class JavaScriptFileWriter {
 		out.print(")");
 	}
 	private void writeInvoke(Location<Bytecode.Invoke> expr, PrintWriter out) {
-		out.print(expr.getBytecode().name() + "(");
+		NameID name = expr.getBytecode().name();
+		// FIXME: this doesn't work for imported function symbols!
+		out.print(name.name() + "(");
 		Location<?>[] operands = expr.getOperands();
 		for(int i=0;i!=operands.length;++i) {
 			if(i!=0) {
