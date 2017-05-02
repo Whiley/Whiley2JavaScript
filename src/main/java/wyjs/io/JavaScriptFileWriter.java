@@ -13,6 +13,8 @@ import wyal.lang.WyalFile.Opcode;
 import wybs.lang.Build;
 import wybs.lang.NameID;
 import wybs.lang.SyntacticElement;
+import wybs.util.ResolveError;
+
 import static wybs.lang.SyntaxError.*;
 import wyfs.lang.Path;
 import wyil.lang.*;
@@ -24,6 +26,7 @@ import wyil.lang.Bytecode.VariableDeclaration;
 import wyil.lang.SyntaxTree.Location;
 import wyil.lang.Type;
 import wyil.lang.WyilFile.*;
+import wyil.util.TypeSystem;
 
 /**
 * Writes WYIL bytecodes in a textual from to a given file.
@@ -37,20 +40,33 @@ import wyil.lang.WyilFile.*;
 */
 public final class JavaScriptFileWriter {
 	private final PrintWriter out;
+
+	/**
+	 * The master project for identifying all resources available to the
+	 * builder. This includes all modules declared in the project being verified
+	 * and/or defined in external resources (e.g. jar files).
+	 */
 	private final Build.Project project;
+	/**
+	 * The type system is useful for managing nominal types and converting them
+	 * into their underlying types.
+	 */
+	protected final TypeSystem typeSystem;
 	private boolean verbose = false;
 	private boolean commentTypes = false;
 	private boolean commentSpecifications = false;
 
 	private WyilFile wyilfile;
 
-	public JavaScriptFileWriter(Build.Project project, PrintWriter writer) {
+	public JavaScriptFileWriter(Build.Project project, TypeSystem typeSystem, PrintWriter writer) {
 		this.project = project;
+		this.typeSystem = typeSystem;
 		this.out = writer;
 	}
 
-	public JavaScriptFileWriter(Build.Project project, OutputStream stream) {
+	public JavaScriptFileWriter(Build.Project project, TypeSystem typeSystem, OutputStream stream) {
 		this.project = project;
+		this.typeSystem = typeSystem;
 		this.out = new PrintWriter(new OutputStreamWriter(stream));
 	}
 
@@ -89,14 +105,46 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void write(WyilFile.Type td) {
-
+		SyntaxTree tree = td.getTree();
+		Location<Bytecode.VariableDeclaration> vardecl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(0);
+		out.print("function ");
+		out.print(td.name());
+		out.print("(");
+		out.print(vardecl.getBytecode().getName());
+		out.println(") {");
+		List<Location<Expr>> invariant = td.getInvariant();
+		if(invariant.isEmpty()) {
+			tabIndent(1,out);
+			out.println("return true;");
+		} else {
+			for(int i=0;i!=invariant.size();++i) {
+				tabIndent(1,out);
+				if(i == 0) {
+					out.print("var result = (");
+				} else {
+					out.print("result = (");
+				}
+				writeExpression(invariant.get(i),out);
+				out.println(");");
+			}
+			tabIndent(1,out);
+			out.println("return result;");
+		}
+		out.println("}");
+		out.println();
 	}
 
 	private void write(WyilFile.Constant cd) {
-		out.println("var " + cd.name() + " = " + cd.constant() + ";");
+		out.print("var " + cd.name() + " = ");
+		writeConstant(cd.constant());
+		out.println(";");
 	}
 
 	private void write(FunctionOrMethod method) {
+		// FIXME: what to do with private methods?
+		if(method.hasModifier(Modifier.EXPORT)) {
+			writeExportTrampoline(method);
+		}
 		//
 		if(verbose) {
 			writeLocationsAsComments(method.getTree());
@@ -106,6 +154,7 @@ public final class JavaScriptFileWriter {
 		SyntaxTree tree = method.getTree();
 		out.print("function ");
 		out.print(method.name());
+		writeTypeMangle(method.type());
 		writeParameters(tree,0,ft.params());
 		if(commentTypes) {
 			if (ft.returns().length != 0) {
@@ -158,6 +207,43 @@ public final class JavaScriptFileWriter {
 			out.print(decl.getBytecode().getName());
 		}
 		out.print(")");
+	}
+
+	/**
+	 * Create a trampoline for an exported function. This is simply a function
+	 * without a name mangle which redirects to the same function with the name
+	 * mangle.
+	 *
+	 * @param method
+	 */
+	private void writeExportTrampoline(FunctionOrMethod method) {
+		out.print("function ");
+		out.print(method.name());
+		Type.FunctionOrMethod ft = method.type();
+		SyntaxTree tree = method.getTree();
+		writeParameters(tree,0,ft.params());
+		out.println(" {");
+		tabIndent(1,out);
+		if(ft.returns().length > 0) {
+			out.print("return ");
+		}
+		out.print(method.name());
+		writeTypeMangle(ft);
+		writeTrampolineArguments(tree,ft.params());
+		out.println("}");
+		out.println();
+	}
+
+	private void writeTrampolineArguments(SyntaxTree tree, Type[] parameters) {
+		out.print("(");
+		for (int i = 0; i != parameters.length; ++i) {
+			if (i != 0) {
+				out.print(", ");
+			}
+			Location<Bytecode.VariableDeclaration> decl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(i);
+			out.print(decl.getBytecode().getName());
+		}
+		out.println(");");
 	}
 
 	private void writeBlock(int indent, Location<Bytecode.Block> block, PrintWriter out) {
@@ -318,7 +404,11 @@ public final class JavaScriptFileWriter {
 		out.println(");");
 	}
 	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt, PrintWriter out) {
-		out.print(stmt.getBytecode().name() + "(");
+		NameID name = stmt.getBytecode().name();
+		// FIXME: this doesn't work for imported function symbols!
+		out.print(name.name());
+		writeTypeMangle(stmt.getBytecode().type());
+		out.print("(");
 		Location<?>[] operands = stmt.getOperands();
 		for(int i=0;i!=operands.length;++i) {
 			if(i!=0) {
@@ -359,28 +449,30 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeSwitch(int indent, Location<Bytecode.Switch> b, PrintWriter out) {
-		out.print("switch ");
+		out.print("switch(");
 		writeExpression(b.getOperand(0), out);
-		out.println(":");
+		out.println(") {");
 		for (int i = 0; i != b.numberOfBlocks(); ++i) {
 			// FIXME: ugly
 			Bytecode.Case cAse = b.getBytecode().cases()[i];
 			Constant[] values = cAse.values();
-			tabIndent(indent + 2, out);
 			if (values.length == 0) {
+				tabIndent(indent + 1, out);
 				out.println("default:");
 			} else {
-				out.print("case ");
 				for (int j = 0; j != values.length; ++j) {
-					if (j != 0) {
-						out.print(", ");
-					}
+					tabIndent(indent + 1, out);
+					out.print("case ");
 					out.print(values[j]);
+					out.println(":");
 				}
-				out.println(":");
 			}
-			writeBlock(indent + 2, b.getBlock(i), out);
+			writeBlock(indent + 1, b.getBlock(i), out);
+			tabIndent(indent + 2, out);
+			out.println("break;");
 		}
+		tabIndent(indent + 1, out);
+		out.println("}");
 	}
 
 	private void writeVariableMove(Location<VariableAccess> loc, PrintWriter out) {
@@ -428,7 +520,7 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeExpressions(Location<?>[] exprs, PrintWriter out) {
+	private void writeExpressions(Location<?>[] exprs, PrintWriter out)  {
 		for (int i = 0; i != exprs.length; ++i) {
 			if (i != 0) {
 				out.print(", ");
@@ -438,7 +530,7 @@ public final class JavaScriptFileWriter {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeExpression(Location<?> expr, PrintWriter out) {
+	private void writeExpression(Location<?> expr, PrintWriter out)  {
 		switch (expr.getOpcode()) {
 		case Bytecode.OPCODE_arraylength:
 			writeArrayLength((Location<Bytecode.Operator>) expr,out);
@@ -477,6 +569,8 @@ public final class JavaScriptFileWriter {
 			writeNewObject((Location<Bytecode.Operator>) expr,out);
 			break;
 		case Bytecode.OPCODE_dereference:
+			writeDereference((Location<Bytecode.Operator>) expr,out);
+			break;
 		case Bytecode.OPCODE_logicalnot:
 		case Bytecode.OPCODE_neg:
 		case Bytecode.OPCODE_bitwiseinvert:
@@ -548,19 +642,20 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeArrayGenerator(Location<Bytecode.Operator> expr, PrintWriter out) {
-		out.print("[");
+		out.print("wyjs.array(");
 		writeExpression(expr.getOperand(0), out);
-		out.print(" ; ");
+		out.print(", ");
 		writeExpression(expr.getOperand(1), out);
-		out.print("]");
+		out.print(")");
 	}
 	private void writeConvert(Location<Bytecode.Convert> expr, PrintWriter out) {
-		out.print("(" + expr.getType() + ") ");
 		writeExpression(expr.getOperand(0),out);
 	}
 	private void writeConst(Location<Bytecode.Const> expr, PrintWriter out) {
-		out.print(expr.getBytecode().constant());
+		Constant c = expr.getBytecode().constant();
+		writeConstant(c);
 	}
+
 	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr, PrintWriter out) {
 		writeBracketedExpression(expr.getOperand(0),out);
 		out.print("." + expr.getBytecode().fieldName());
@@ -568,19 +663,22 @@ public final class JavaScriptFileWriter {
 	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr, PrintWriter out) {
 		Location<?>[] operands = expr.getOperands();
 		writeExpression(operands[0],out);
+		Location<?>[] arguments = expr.getOperandGroup(0);
 		out.print("(");
-		for(int i=1;i!=operands.length;++i) {
-			if(i!=1) {
+		for(int i=0;i!=arguments.length;++i) {
+			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i],out);
+			writeExpression(arguments[i],out);
 		}
 		out.print(")");
 	}
 	private void writeInvoke(Location<Bytecode.Invoke> expr, PrintWriter out) {
 		NameID name = expr.getBytecode().name();
 		// FIXME: this doesn't work for imported function symbols!
-		out.print(name.name() + "(");
+		out.print(name.name());
+		writeTypeMangle(expr.getBytecode().type());
+		out.print("(");
 		Location<?>[] operands = expr.getOperands();
 		for(int i=0;i!=operands.length;++i) {
 			if(i!=0) {
@@ -610,24 +708,34 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeRecordConstructor(Location<Bytecode.Operator> expr, PrintWriter out) {
-		Type.EffectiveRecord t = (Type.EffectiveRecord) expr.getType();
-		String[] fields = t.getFieldNames();
-		Location<?>[] operands = expr.getOperands();
-		out.print("{");
-		for (int i = 0; i != operands.length; ++i) {
-			if (i != 0) {
-				out.print(", ");
+		try {
+			Type.EffectiveRecord t = typeSystem.expandAsEffectiveRecord(expr.getType());
+			String[] fields = t.getFieldNames();
+			Location<?>[] operands = expr.getOperands();
+			out.print("{");
+			for (int i = 0; i != operands.length; ++i) {
+				if (i != 0) {
+					out.print(", ");
+				}
+				out.print(fields[i]);
+				out.print(": ");
+				writeExpression(operands[i], out);
 			}
-			out.print(fields[i]);
-			out.print(": ");
-			writeExpression(operands[i], out);
+			out.print("}");
+		} catch(ResolveError e) {
+			throw new RuntimeException(e);
 		}
-		out.print("}");
 	}
 
 	private void writeNewObject(Location<Bytecode.Operator> expr, PrintWriter out) {
-		out.print("new ");
+		out.print("{box: ");
 		writeExpression(expr.getOperand(0), out);
+		out.print("}");
+	}
+
+	private void writeDereference(Location<Bytecode.Operator> expr, PrintWriter out) {
+		writeExpression(expr.getOperand(0), out);
+		out.print(".box");
 	}
 
 	private void writePrefixLocations(Location<Bytecode.Operator> expr, PrintWriter out) {
@@ -696,18 +804,29 @@ public final class JavaScriptFileWriter {
 		throw new IllegalArgumentException();
 	}
 
-	private void writeLVal(Location<?> expr, PrintWriter out) {
-		switch (expr.getOpcode()) {
+	private void writeLVal(Location<?> lval, PrintWriter out) {
+		switch (lval.getOpcode()) {
 		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndexLVal((Location<Bytecode.Operator>) expr,out);
+			writeArrayIndexLVal((Location<Bytecode.Operator>) lval,out);
+			break;
+		case Bytecode.OPCODE_dereference:
+			writeDereferenceLVal((Location<Bytecode.Operator>) lval,out);
 			break;
 		case Bytecode.OPCODE_fieldload:
-			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) expr,out);
+			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval,out);
 			break;
 		case Bytecode.OPCODE_varcopy:
 		case Bytecode.OPCODE_varmove:
-			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) expr,out);
+			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval,out);
+			break;
+		default:
+			throw new IllegalArgumentException("invalid lval: " + lval);
 		}
+	}
+
+	private void writeDereferenceLVal(Location<Bytecode.Operator> expr, PrintWriter out) {
+		writeLVal(expr.getOperand(0), out);
+		out.print(".box");
 	}
 
 	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, PrintWriter out) {
@@ -725,6 +844,177 @@ public final class JavaScriptFileWriter {
 	private void writeVariableAccessLVal(Location<VariableAccess> loc, PrintWriter out) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
 		out.print(vd.getBytecode().getName());
+	}
+
+	private void writeConstant(Constant c) {
+		if(c instanceof Constant.Byte) {
+			writeByteConstant((Constant.Byte) c);
+		} else if(c instanceof Constant.Array) {
+			writeArrayConstant((Constant.Array) c);
+		} else if(c instanceof Constant.FunctionOrMethod) {
+			writeFunctionOrMethodConstant((Constant.FunctionOrMethod) c);
+		} else if(c instanceof Constant.Record) {
+			writeRecordConstant((Constant.Record) c);
+		} else {
+			out.print(c);
+		}
+	}
+
+	private void writeArrayConstant(Constant.Array c) {
+		out.print("[");
+		List<Constant> values = c.values();
+		for(int i=0;i!=values.size();++i) {
+			if(i != 0) {
+				out.print(", ");
+			}
+			writeConstant(values.get(i));
+		}
+		out.print("]");
+	}
+
+	private void writeByteConstant(Constant.Byte c) {
+		// FIXME: support es6 binary literals
+		// out.print("0b");
+		out.print("parseInt('");
+		out.print(Integer.toBinaryString(c.value()));
+		out.print("',2)");
+	}
+
+	private void writeFunctionOrMethodConstant(Constant.FunctionOrMethod c) {
+		Type.FunctionOrMethod fmt = c.type();
+		NameID name = c.name();
+		List<Constant> args = c.arguments();
+		out.print("function(");
+		Type[] params = fmt.params();
+		for(int i=0;i!=params.length;++i) {
+			if(i != 0) {
+				out.print(", ");
+			}
+			out.print("p" + i);
+		}
+		out.print(") {");
+		if(c.type().returns().length > 0) {
+			out.print("return ");
+		}
+		// FIXME: need to handle package
+		out.print(name.name());
+		writeTypeMangle(fmt);
+		out.print("(");
+		for(int i=0;i!=params.length;++i) {
+			if(i != 0) {
+				out.print(", ");
+			}
+			out.print("p" + i);
+		}
+//		for(int i=0;i!=args.size();++i) {
+//			writeConstant(args.get(i));
+//		}
+		out.print(");}");
+	}
+
+	private void writeRecordConstant(Constant.Record c) {
+		out.print("{");
+		boolean firstTime = true;
+		for(Map.Entry<String,Constant> e : c.values().entrySet()) {
+			if(!firstTime) {
+				out.print(", ");
+			}
+			firstTime = false;
+			out.print(e.getKey());
+			out.print(": ");
+			writeConstant(e.getValue());
+		}
+		out.print("}");
+	}
+
+	private void writeTypeMangle(Type.FunctionOrMethod  fmt) {
+		Type[] params = fmt.params();
+		for(int i=0;i!=params.length;++i) {
+			if(i == 0) {
+				out.print("_");
+			}
+			writeTypeMangle(params[i]);
+		}
+	}
+
+	private void writeTypeMangle(Type t) {
+		if(t == Type.T_ANY) {
+			out.print("T");
+		} else if(t == Type.T_NULL) {
+			out.print("N");
+		} else if(t == Type.T_BOOL) {
+			out.print("B");
+		} else if(t == Type.T_BYTE) {
+			out.print("U");
+		} else if(t == Type.T_INT) {
+			out.print("I");
+		} else if(t instanceof Type.Array) {
+			Type.Array at = (Type.Array) t;
+			out.print("a");
+			writeTypeMangle(at.element());
+		} else if(t instanceof Type.Reference) {
+			Type.Reference rt = (Type.Reference) t;
+			out.print("p");
+			writeTypeMangle(rt.element());
+		} else if(t instanceof Type.Record) {
+			Type.Record rt = (Type.Record) t;
+			out.print("r");
+			String[] fields = rt.getFieldNames();
+			out.print(fields.length);
+			for(int i=0;i!=fields.length;++i) {
+				String field = fields[i];
+				writeTypeMangle(rt.getField(field));
+				out.print(field.length());
+				out.print(field);
+			}
+		} else if(t instanceof Type.Nominal) {
+			Type.Nominal nt = (Type.Nominal) t;
+			out.print("n");
+			// FIXME: need to figure out package
+			String name = nt.name().name().toString();
+			out.print(name.length());
+			out.print(name);
+		} else if(t instanceof Type.FunctionOrMethod) {
+			Type.FunctionOrMethod fmt = (Type.FunctionOrMethod) t;
+			if(fmt instanceof Type.Function) {
+				out.print("f");
+			} else {
+				out.print("m");
+			}
+			Type[] params = fmt.params();
+			out.print(params.length);
+			for(int i=0;i!=params.length;++i) {
+				writeTypeMangle(params[i]);
+			}
+			Type[] returns = fmt.returns();
+			out.print(returns.length);
+			for(int i=0;i!=returns.length;++i) {
+				writeTypeMangle(returns[i]);
+			}
+			out.print("e");
+		} else if(t instanceof Type.Negation) {
+			Type.Negation nt = (Type.Negation) t;
+			out.print("n");
+			writeTypeMangle(nt.element());
+		} else if(t instanceof Type.Union) {
+			Type.Union ut = (Type.Union) t;
+			out.print("u");
+			Type[] bounds = ut.bounds();
+			out.print(bounds.length);
+			for(int i=0;i!=bounds.length;++i) {
+				writeTypeMangle(bounds[i]);
+			}
+		} else if(t instanceof Type.Intersection) {
+			Type.Intersection ut = (Type.Intersection) t;
+			out.print("c");
+			Type[] bounds = ut.bounds();
+			out.print(bounds.length);
+			for(int i=0;i!=bounds.length;++i) {
+				writeTypeMangle(bounds[i]);
+			}
+		} else {
+			throw new IllegalArgumentException("unknown type encountered: " + t);
+		}
 	}
 
 	private void writeType(Type t) {
@@ -748,6 +1038,8 @@ public final class JavaScriptFileWriter {
 	 */
 	private boolean isCopyable(Type type, SyntacticElement context) {
 		if (type instanceof Type.Primitive) {
+			return true;
+		} else if(type instanceof Type.FunctionOrMethod) {
 			return true;
 		} else if(type instanceof Type.Nominal) {
 			Type.Nominal tn = (Type.Nominal) type;

@@ -1,0 +1,28 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+<script type="text/javascript" src="wyjs.js"></script>
+<script type="text/javascript" src="minesweeper.js"></script>
+<script type="text/javascript" src="canvas.js"></script>
+
+</head>
+
+<body bgcolor="#ffffff">
+<h1>Minesweeper (in Whiley)</h1>
+<center>
+<canvas id="myCanvas" width="300" height="300"></canvas> 
+</center>
+<h2>Images</h2>
+<img id="blank" src="images/ExposedBlankSquare.png"/>
+<img id="bomb" src="images/ExposedBombSquare.png"/>
+<img id="hidden" src="images/HiddenSquare.png"/>
+<img id="flagged" src="images/HiddenSquareFlagged.png"/>
+<img id="one" src="images/ExposedSquare1.png"/>
+<img id="two" src="images/ExposedSquare2.png"/>
+<img id="three" src="images/ExposedSquare3.png"/>
+<img id="four" src="images/ExposedSquare4.png"/>
+<script>
+window.onload = function() { startGame(document); }
+</script>
+</body>
+</html>

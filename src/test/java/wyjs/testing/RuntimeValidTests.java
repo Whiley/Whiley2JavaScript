@@ -29,8 +29,6 @@ import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
@@ -46,13 +44,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wybs.util.StdProject;
 import wyc.commands.Compile;
 import wyc.util.TestUtils;
+import wycc.util.Logger;
 import wycc.util.Pair;
-import wyil.io.WyilFileReader;
-import wyil.lang.WyilFile;
-import wyjs.io.JavaScriptFileWriter;
+import wyfs.lang.Content;
+import wyjs.commands.JsCompile;
 
 /**
  * Run through all valid test cases with verification enabled. Since every test
@@ -122,60 +119,72 @@ public class RuntimeValidTests {
 	// Test Harness
 	// ======================================================================
 
-	/**
-	 * Compile a syntactically invalid test case with verification enabled. The
-	 * expectation is that compilation should fail with an error and, hence, the
-	 * test fails if compilation does not.
-	 *
-	 * @param name
-	 *            Name of the test to run. This must correspond to a whiley
-	 *            source file in the <code>WHILEY_SRC_DIR</code> directory.
-	 * @throws ScriptException
-	 */
-	protected void runTest(String testName) throws IOException, ScriptException {
-		File whileySrcDir = new File(WHILEY_SRC_DIR);
-		// this will need to turn on verification at some point.
-		String whileyFilename = WHILEY_SRC_DIR + File.separatorChar + testName
-				+ ".whiley";
-
-		Pair<Compile.Result,String> p = TestUtils.compile(
-				whileySrcDir,      // location of source directory
-				false,               // no verification
-				whileyFilename);     // name of test to compile
+ 	protected void runTest(String name) throws IOException {
+ 		String whileyFilename = WHILEY_SRC_DIR + File.separatorChar + name + ".whiley";
+ 		String jsFilename = WHILEY_SRC_DIR + File.separatorChar + name + ".js";
+		// Compile to Java Bytecode
+		Pair<Compile.Result, String> p = compileWhiley2JavaScript(
+				WHILEY_SRC_DIR, // location of source directory
+				whileyFilename); // name of test to compile
 
 		Compile.Result r = p.first();
-
 		System.out.print(p.second());
 
-		if (r != Compile.Result.SUCCESS) {
-			fail("Test failed to compile!");
-		} else if (r == Compile.Result.INTERNAL_FAILURE) {
+		if (r == Compile.Result.INTERNAL_FAILURE) {
 			fail("Test caused internal failure!");
+		} else if (r != Compile.Result.SUCCESS) {
+			fail("Test failed to compile!");
 		}
-
-		// Execute the compile WyIL file
-		execWyil(WHILEY_SRC_DIR, testName);
+		// Execute the generated JavaScript Program.
+		try {
+			execJS(jsFilename);
+		} catch(ScriptException e) {
+			e.printStackTrace();
+			fail("unexpected output!");
+		}
 	}
 
-	private void execWyil(String wyilSrcDir, String testName) throws IOException, ScriptException {
-		String wyilFilename = WHILEY_SRC_DIR + File.separatorChar + testName
-				+ ".wyil";
-		FileInputStream fin = new FileInputStream(wyilFilename);
-		WyilFileReader reader = new WyilFileReader(fin);
-		WyilFile f = reader.read();
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		StdProject project = new StdProject();
-		new JavaScriptFileWriter(project,os).apply(f);
-		// Extract the javascript
-		String output = new String(os.toByteArray());
-		// Execute the javascript
-		execJS(output);
+ 	/**
+	 * Run the Whiley Compiler with the given list of arguments to produce a
+	 * JavaScript source file. This will then need to be separately compiled.
+	 *
+	 * @param args
+	 *            --- list of command-line arguments to provide to the Whiley
+	 *            Compiler.
+	 * @return
+	 * @throws IOException
+	 */
+	public static Pair<Compile.Result,String> compileWhiley2JavaScript(String whileydir, String... args) throws IOException {
+		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
+		ByteArrayOutputStream sysout = new ByteArrayOutputStream();
+		Content.Registry registry = new wyc.Activator.Registry();
+		JsCompile cmd = new JsCompile(registry,Logger.NULL,sysout,syserr);
+		cmd.setWhileydir(new File(whileydir));
+		cmd.setVerbose();
+		Compile.Result result = cmd.execute(args);
+		byte[] errBytes = syserr.toByteArray();
+		byte[] outBytes = sysout.toByteArray();
+		String output = new String(errBytes) + new String(outBytes);
+		return new Pair<>(result,output);
 	}
 
-	private void execJS(String script) throws ScriptException, FileNotFoundException {
+	/**
+	 * Execute a given JavaScript file stored on disk using the built-in
+	 * "Nashorn" interpreter.
+	 *
+	 * @param filename
+	 *            The fully qualified name of the JavaScript file to be
+	 *            executed.
+	 * @throws ScriptException
+	 * @throws IOException
+	 */
+	private void execJS(String filename) throws ScriptException, IOException {
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+		// Load the WyJS runtime which provides necessary support methods.
 		engine.eval(new FileReader(WYJS_RUNTIME));
-		engine.eval(script);
+		// Load the js script from the filesystem
+		engine.eval(new FileReader(filename));
+		// Execute the test() method
 		engine.eval("test();");
 	}
 	// ======================================================================

@@ -1,15 +1,11 @@
 package wyjs;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import wycc.lang.Command;
 import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
-import wyjs.commands.JsPrint;
+import wyjs.commands.JsCompile;
 
 public class Activator implements Module.Activator {
 	// =======================================================================
@@ -52,7 +48,7 @@ public class Activator implements Module.Activator {
 		final Logger logger = new Logger.Default(System.err);
 		// List of commands to use
 		final Command[] commands = {
-				new JsPrint(registry, logger)};
+				new JsCompile(registry, logger)};
 		// Register all commands
 		for (Command c : commands) {
 			context.register(wycc.lang.Command.class, c);
