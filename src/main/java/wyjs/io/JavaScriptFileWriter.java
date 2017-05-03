@@ -340,15 +340,25 @@ public final class JavaScriptFileWriter {
 	private void writeAssign(int indent, Location<Bytecode.Assign> stmt, PrintWriter out) {
 		Location<?>[] lhs = stmt.getOperandGroup(SyntaxTree.LEFTHANDSIDE);
 		Location<?>[] rhs = stmt.getOperandGroup(SyntaxTree.RIGHTHANDSIDE);
-		if(lhs.length > 0) {
-			for(int i=0;i!=lhs.length;++i) {
-				if(i!=0) { out.print(", "); }
-				writeLVal(lhs[i],out);
-			}
+		if(lhs.length == 1) {
+			// easy case
+			writeLVal(lhs[0],out);
 			out.print(" = ");
+			writeExpression(rhs[0],out);
+			out.println(";");
+		} else if(lhs.length > 1) {
+			// FIXME: this is broken when multiple rhs expressions
+			out.print("var tmp = ");
+			// Translate right-hand sides
+			writeExpression(rhs[0],out);
+			out.println(";");
+			// Translate left-hand sides
+			for(int i=0;i!=lhs.length;++i) {
+				tabIndent(indent+1,out);
+				writeLVal(lhs[i],out);
+				out.println(" = tmp[" + i + "];");
+			}
 		}
-		writeExpressions(rhs,out);
-		out.println(";");
 	}
 
 	private void writeBreak(int indent, Location<Bytecode.Break> b, PrintWriter out) {
@@ -437,9 +447,20 @@ public final class JavaScriptFileWriter {
 	private void writeReturn(int indent, Location<Bytecode.Return> b, PrintWriter out) {
 		Location<?>[] operands = b.getOperands();
 		out.print("return");
-		if(operands.length > 0) {
+		if(operands.length == 1) {
+			// easy case
 			out.print(" ");
-			writeExpressions(operands,out);
+			writeExpression(operands[0],out);
+		} else if(operands.length > 0) {
+			// harder case
+			out.print(" [");
+			for (int i = 0; i != operands.length; ++i) {
+				if (i != 0) {
+					out.print(", ");
+				}
+				writeExpression(operands[i], out);
+			}
+			out.print("]");
 		}
 		out.println(";");
 	}
@@ -517,15 +538,6 @@ public final class JavaScriptFileWriter {
 		writeExpression(expr, out);
 		if (needsBrackets) {
 			out.print(")");
-		}
-	}
-
-	private void writeExpressions(Location<?>[] exprs, PrintWriter out)  {
-		for (int i = 0; i != exprs.length; ++i) {
-			if (i != 0) {
-				out.print(", ");
-			}
-			writeExpression(exprs[i], out);
 		}
 	}
 
