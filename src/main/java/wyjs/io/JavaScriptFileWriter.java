@@ -114,20 +114,20 @@ public final class JavaScriptFileWriter {
 		out.println(") {");
 		List<Location<Expr>> invariant = td.getInvariant();
 		if(invariant.isEmpty()) {
-			tabIndent(1,out);
+			tabIndent(1);
 			out.println("return true;");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
-				tabIndent(1,out);
+				tabIndent(1);
 				if(i == 0) {
 					out.print("var result = (");
 				} else {
 					out.print("result = (");
 				}
-				writeExpression(invariant.get(i),out);
+				writeExpression(invariant.get(i));
 				out.println(");");
 			}
-			tabIndent(1,out);
+			tabIndent(1);
 			out.println("return result;");
 		}
 		out.println("}");
@@ -171,17 +171,17 @@ public final class JavaScriptFileWriter {
 			//
 			for (Location<Expr> precondition : method.getPrecondition()) {
 				out.print("// requires ");
-				writeExpression(precondition, out);
+				writeExpression(precondition);
 			}
 			for (Location<Expr> postcondition : method.getPostcondition()) {
 				out.print("// ensures ");
-				writeExpression(postcondition, out);
+				writeExpression(postcondition);
 				out.println();
 			}
 		}
 		if (method.getBody() != null) {
 			out.println("{");
-			writeBlock(0, method.getBody(), out);
+			writeBlock(0, method.getBody());
 			out.println("}");
 		}
 	}
@@ -223,7 +223,7 @@ public final class JavaScriptFileWriter {
 		SyntaxTree tree = method.getTree();
 		writeParameters(tree,0,ft.params());
 		out.println(" {");
-		tabIndent(1,out);
+		tabIndent(1);
 		if(ft.returns().length > 0) {
 			out.print("return ");
 		}
@@ -246,78 +246,78 @@ public final class JavaScriptFileWriter {
 		out.println(");");
 	}
 
-	private void writeBlock(int indent, Location<Bytecode.Block> block, PrintWriter out) {
+	private void writeBlock(int indent, Location<Bytecode.Block> block) {
 		for (int i = 0; i != block.numberOfOperands(); ++i) {
-			writeStatement(indent, block.getOperand(i), out);
+			writeStatement(indent, block.getOperand(i));
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeStatement(int indent, Location<?> c, PrintWriter out) {
-		tabIndent(indent+1,out);
+	private void writeStatement(int indent, Location<?> c) {
+		tabIndent(indent+1);
 		switch(c.getOpcode()) {
 		case Bytecode.OPCODE_aliasdecl:
-			writeAliasDeclaration(indent, (Location<Bytecode.AliasDeclaration>) c, out);
+			writeAliasDeclaration(indent, (Location<Bytecode.AliasDeclaration>) c);
 			break;
 		case Bytecode.OPCODE_assert:
-			writeAssert(indent, (Location<Bytecode.Assert>) c, out);
+			writeAssert(indent, (Location<Bytecode.Assert>) c);
 			break;
 		case Bytecode.OPCODE_assume:
-			writeAssume(indent, (Location<Bytecode.Assume>) c, out);
+			writeAssume(indent, (Location<Bytecode.Assume>) c);
 			break;
 		case Bytecode.OPCODE_assign:
-			writeAssign(indent, (Location<Bytecode.Assign>) c, out);
+			writeAssign(indent, (Location<Bytecode.Assign>) c);
 			break;
 		case Bytecode.OPCODE_break:
-			writeBreak(indent, (Location<Bytecode.Break>) c, out);
+			writeBreak(indent, (Location<Bytecode.Break>) c);
 			break;
 		case Bytecode.OPCODE_continue:
-			writeContinue(indent, (Location<Bytecode.Continue>) c, out);
+			writeContinue(indent, (Location<Bytecode.Continue>) c);
 			break;
 		case Bytecode.OPCODE_debug:
-			writeDebug(indent, (Location<Bytecode.Debug>) c, out);
+			writeDebug(indent, (Location<Bytecode.Debug>) c);
 			break;
 		case Bytecode.OPCODE_dowhile:
-			writeDoWhile(indent, (Location<Bytecode.DoWhile>) c, out);
+			writeDoWhile(indent, (Location<Bytecode.DoWhile>) c);
 			break;
 		case Bytecode.OPCODE_fail:
-			writeFail(indent, (Location<Bytecode.Fail>) c, out);
+			writeFail(indent, (Location<Bytecode.Fail>) c);
 			break;
 		case Bytecode.OPCODE_if:
 		case Bytecode.OPCODE_ifelse:
-			writeIf(indent, (Location<Bytecode.If>) c, out);
+			writeIf(indent, (Location<Bytecode.If>) c);
 			break;
 		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke(indent, (Location<Bytecode.IndirectInvoke>) c, out);
+			writeIndirectInvoke(indent, (Location<Bytecode.IndirectInvoke>) c);
 			break;
 		case Bytecode.OPCODE_invoke:
-			writeInvoke(indent, (Location<Bytecode.Invoke>) c, out);
+			writeInvoke(indent, (Location<Bytecode.Invoke>) c);
 			break;
 		case Bytecode.OPCODE_namedblock:
-			writeNamedBlock(indent, (Location<Bytecode.NamedBlock>) c, out);
+			writeNamedBlock(indent, (Location<Bytecode.NamedBlock>) c);
 			break;
 		case Bytecode.OPCODE_while:
-			writeWhile(indent, (Location<Bytecode.While>) c, out);
+			writeWhile(indent, (Location<Bytecode.While>) c);
 			break;
 		case Bytecode.OPCODE_return:
-			writeReturn(indent, (Location<Bytecode.Return>) c, out);
+			writeReturn(indent, (Location<Bytecode.Return>) c);
 			break;
 		case Bytecode.OPCODE_skip:
-			writeSkip(indent, (Location<Bytecode.Skip>) c, out);
+			writeSkip(indent, (Location<Bytecode.Skip>) c);
 			break;
 		case Bytecode.OPCODE_switch:
-			writeSwitch(indent, (Location<Bytecode.Switch>) c, out);
+			writeSwitch(indent, (Location<Bytecode.Switch>) c);
 			break;
 		case Bytecode.OPCODE_vardecl:
 		case Bytecode.OPCODE_vardeclinit:
-			writeVariableDeclaration(indent, (Location<Bytecode.VariableDeclaration>) c, out);
+			writeVariableDeclaration(indent, (Location<Bytecode.VariableDeclaration>) c);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown bytecode encountered");
 		}
 	}
 
-	private void writeAliasDeclaration(int indent, Location<AliasDeclaration> loc, PrintWriter out) {
+	private void writeAliasDeclaration(int indent, Location<AliasDeclaration> loc) {
 		out.print("alias ");
 		out.print(loc.getType());
 		out.print(" ");
@@ -325,95 +325,95 @@ public final class JavaScriptFileWriter {
 		out.print(aliased.getBytecode().getName());
 		out.println();
 	}
-	private void writeAssert(int indent, Location<Bytecode.Assert> c, PrintWriter out) {
+	private void writeAssert(int indent, Location<Bytecode.Assert> c) {
 		out.print("wyjs.assert(");
-		writeExpression(c.getOperand(0),out);
+		writeExpression(c.getOperand(0));
 		out.println(");");
 	}
 
-	private void writeAssume(int indent, Location<Bytecode.Assume> c, PrintWriter out) {
+	private void writeAssume(int indent, Location<Bytecode.Assume> c) {
 		out.print("wyjs.assert(");
-		writeExpression(c.getOperand(0),out);
+		writeExpression(c.getOperand(0));
 		out.println(");");
 	}
 
-	private void writeAssign(int indent, Location<Bytecode.Assign> stmt, PrintWriter out) {
+	private void writeAssign(int indent, Location<Bytecode.Assign> stmt) {
 		Location<?>[] lhs = stmt.getOperandGroup(SyntaxTree.LEFTHANDSIDE);
 		Location<?>[] rhs = stmt.getOperandGroup(SyntaxTree.RIGHTHANDSIDE);
 		if(lhs.length == 1) {
 			// easy case
-			writeLVal(lhs[0],out);
+			writeLVal(lhs[0]);
 			out.print(" = ");
-			writeExpression(rhs[0],out);
+			writeExpression(rhs[0]);
 			out.println(";");
 		} else if(lhs.length > 1) {
 			// FIXME: this is broken when multiple rhs expressions
 			out.print("var tmp = ");
 			// Translate right-hand sides
-			writeExpression(rhs[0],out);
+			writeExpression(rhs[0]);
 			out.println(";");
 			// Translate left-hand sides
 			for(int i=0;i!=lhs.length;++i) {
-				tabIndent(indent+1,out);
-				writeLVal(lhs[i],out);
+				tabIndent(indent+1);
+				writeLVal(lhs[i]);
 				out.println(" = tmp[" + i + "];");
 			}
 		}
 	}
 
-	private void writeBreak(int indent, Location<Bytecode.Break> b, PrintWriter out) {
+	private void writeBreak(int indent, Location<Bytecode.Break> b) {
 		out.println("break;");
 	}
 
-	private void writeContinue(int indent, Location<Bytecode.Continue> b, PrintWriter out) {
+	private void writeContinue(int indent, Location<Bytecode.Continue> b) {
 		out.println("continue;");
 	}
 
-	private void writeDebug(int indent, Location<Bytecode.Debug> b, PrintWriter out) {
+	private void writeDebug(int indent, Location<Bytecode.Debug> b) {
 
 	}
 
-	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b, PrintWriter out) {
+	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b) {
 		out.println("do {");
 		//
-		writeBlock(indent+1,b.getBlock(0),out);
-		tabIndent(indent+1,out);
+		writeBlock(indent+1,b.getBlock(0));
+		tabIndent(indent+1);
 		out.print("} while(");
-		writeExpression(b.getOperand(0),out);
+		writeExpression(b.getOperand(0));
 		out.println(");");
 	}
 
-	private void writeFail(int indent, Location<Bytecode.Fail> c, PrintWriter out) {
+	private void writeFail(int indent, Location<Bytecode.Fail> c) {
 		out.println("fail");
 	}
 
-	private void writeIf(int indent, Location<Bytecode.If> b, PrintWriter out) {
+	private void writeIf(int indent, Location<Bytecode.If> b) {
 		out.print("if(");
-		writeExpression(b.getOperand(0),out);
+		writeExpression(b.getOperand(0));
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0),out);
+		writeBlock(indent+1,b.getBlock(0));
 		if(b.numberOfBlocks() > 1) {
-			tabIndent(indent+1,out);
+			tabIndent(indent+1);
 			out.println("} else {");
-			writeBlock(indent+1,b.getBlock(1),out);
+			writeBlock(indent+1,b.getBlock(1));
 		}
-		tabIndent(indent+1,out);
+		tabIndent(indent+1);
 		out.println("}");
 	}
 
-	private void writeIndirectInvoke(int indent, Location<Bytecode.IndirectInvoke> stmt, PrintWriter out) {
+	private void writeIndirectInvoke(int indent, Location<Bytecode.IndirectInvoke> stmt) {
 		Location<?>[] operands = stmt.getOperands();
-		writeExpression(operands[0],out);
+		writeExpression(operands[0]);
 		out.print("(");
 		for(int i=1;i!=operands.length;++i) {
 			if(i!=1) {
 				out.print(", ");
 			}
-			writeExpression(operands[i],out);
+			writeExpression(operands[i]);
 		}
 		out.println(");");
 	}
-	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt, PrintWriter out) {
+	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt) {
 		NameID name = stmt.getBytecode().name();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.name());
@@ -424,33 +424,33 @@ public final class JavaScriptFileWriter {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i],out);
+			writeExpression(operands[i]);
 		}
 		out.println(");");
 	}
 
-	private void writeNamedBlock(int indent, Location<Bytecode.NamedBlock> b, PrintWriter out) {
+	private void writeNamedBlock(int indent, Location<Bytecode.NamedBlock> b) {
 		out.print(b.getBytecode().getName());
 		out.println(":");
-		writeBlock(indent+1,b.getBlock(0),out);
+		writeBlock(indent+1,b.getBlock(0));
 	}
 
-	private void writeWhile(int indent, Location<Bytecode.While> b, PrintWriter out) {
+	private void writeWhile(int indent, Location<Bytecode.While> b) {
 		out.print("while(");
-		writeExpression(b.getOperand(0),out);
+		writeExpression(b.getOperand(0));
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0),out);
-		tabIndent(indent+1,out);
+		writeBlock(indent+1,b.getBlock(0));
+		tabIndent(indent+1);
 		out.println("}");
 	}
 
-	private void writeReturn(int indent, Location<Bytecode.Return> b, PrintWriter out) {
+	private void writeReturn(int indent, Location<Bytecode.Return> b) {
 		Location<?>[] operands = b.getOperands();
 		out.print("return");
 		if(operands.length == 1) {
 			// easy case
 			out.print(" ");
-			writeExpression(operands[0],out);
+			writeExpression(operands[0]);
 		} else if(operands.length > 0) {
 			// harder case
 			out.print(" [");
@@ -458,50 +458,50 @@ public final class JavaScriptFileWriter {
 				if (i != 0) {
 					out.print(", ");
 				}
-				writeExpression(operands[i], out);
+				writeExpression(operands[i]);
 			}
 			out.print("]");
 		}
 		out.println(";");
 	}
 
-	private void writeSkip(int indent, Location<Bytecode.Skip> b, PrintWriter out) {
+	private void writeSkip(int indent, Location<Bytecode.Skip> b) {
 		out.println("// skip");
 	}
 
-	private void writeSwitch(int indent, Location<Bytecode.Switch> b, PrintWriter out) {
+	private void writeSwitch(int indent, Location<Bytecode.Switch> b) {
 		out.print("switch(");
-		writeExpression(b.getOperand(0), out);
+		writeExpression(b.getOperand(0));
 		out.println(") {");
 		for (int i = 0; i != b.numberOfBlocks(); ++i) {
 			// FIXME: ugly
 			Bytecode.Case cAse = b.getBytecode().cases()[i];
 			Constant[] values = cAse.values();
 			if (values.length == 0) {
-				tabIndent(indent + 1, out);
+				tabIndent(indent + 1);
 				out.println("default:");
 			} else {
 				for (int j = 0; j != values.length; ++j) {
-					tabIndent(indent + 1, out);
+					tabIndent(indent + 1);
 					out.print("case ");
 					out.print(values[j]);
 					out.println(":");
 				}
 			}
-			writeBlock(indent + 1, b.getBlock(i), out);
-			tabIndent(indent + 2, out);
+			writeBlock(indent + 1, b.getBlock(i));
+			tabIndent(indent + 2);
 			out.println("break;");
 		}
-		tabIndent(indent + 1, out);
+		tabIndent(indent + 1);
 		out.println("}");
 	}
 
-	private void writeVariableMove(Location<VariableAccess> loc, PrintWriter out) {
+	private void writeVariableMove(Location<VariableAccess> loc) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
 		out.print(vd.getBytecode().getName());
 	}
 
-	private void writeVariableCopy(Location<VariableAccess> loc, PrintWriter out) {
+	private void writeVariableCopy(Location<VariableAccess> loc) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
 		if(isCopyable(vd.getType(),loc)) {
 			out.print(vd.getBytecode().getName());
@@ -510,14 +510,14 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc, PrintWriter out) {
+	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc) {
 		Location<?>[] operands = loc.getOperands();
 		out.print("var ");
 		writeType(loc.getType());
 		out.print(loc.getBytecode().getName());
 		if (operands.length > 0) {
 			out.print(" = ");
-			writeExpression(operands[0], out);
+			writeExpression(operands[0]);
 		}
 		out.println(";");
 	}
@@ -530,76 +530,78 @@ public final class JavaScriptFileWriter {
 	 * @param enclosing
 	 * @param out
 	 */
-	private void writeBracketedExpression(Location<?> expr, PrintWriter out) {
+	private void writeBracketedExpression(Location<?> expr) {
 		boolean needsBrackets = needsBrackets(expr.getBytecode());
 		if (needsBrackets) {
 			out.print("(");
 		}
-		writeExpression(expr, out);
+		writeExpression(expr);
 		if (needsBrackets) {
 			out.print(")");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeExpression(Location<?> expr, PrintWriter out)  {
+	private void writeExpression(Location<?> expr)  {
 		switch (expr.getOpcode()) {
 		case Bytecode.OPCODE_arraylength:
-			writeArrayLength((Location<Bytecode.Operator>) expr,out);
+			writeArrayLength((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndex((Location<Bytecode.Operator>) expr,out);
+			writeArrayIndex((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_array:
-			writeArrayInitialiser((Location<Bytecode.Operator>) expr,out);
+			writeArrayInitialiser((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_arraygen:
-			writeArrayGenerator((Location<Bytecode.Operator>) expr,out);
+			writeArrayGenerator((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_convert:
-			writeConvert((Location<Bytecode.Convert>) expr, out);
+			writeConvert((Location<Bytecode.Convert>) expr);
 			break;
 		case Bytecode.OPCODE_const:
-			writeConst((Location<Bytecode.Const>) expr, out);
+			writeConst((Location<Bytecode.Const>) expr);
 			break;
 		case Bytecode.OPCODE_fieldload:
-			writeFieldLoad((Location<Bytecode.FieldLoad>) expr, out);
+			writeFieldLoad((Location<Bytecode.FieldLoad>) expr);
 			break;
 		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke((Location<Bytecode.IndirectInvoke>) expr, out);
+			writeIndirectInvoke((Location<Bytecode.IndirectInvoke>) expr);
 			break;
 		case Bytecode.OPCODE_invoke:
-			writeInvoke((Location<Bytecode.Invoke>) expr, out);
+			writeInvoke((Location<Bytecode.Invoke>) expr);
 			break;
 		case Bytecode.OPCODE_lambda:
-			writeLambda((Location<Bytecode.Lambda>) expr, out);
+			writeLambda((Location<Bytecode.Lambda>) expr);
 			break;
 		case Bytecode.OPCODE_record:
-			writeRecordConstructor((Location<Bytecode.Operator>) expr, out);
+			writeRecordConstructor((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_newobject:
-			writeNewObject((Location<Bytecode.Operator>) expr,out);
+			writeNewObject((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_dereference:
-			writeDereference((Location<Bytecode.Operator>) expr,out);
+			writeDereference((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_logicalnot:
 		case Bytecode.OPCODE_neg:
 		case Bytecode.OPCODE_bitwiseinvert:
-			writePrefixLocations((Location<Bytecode.Operator>) expr,out);
+			writePrefixLocations((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_all:
 		case Bytecode.OPCODE_some:
-			writeQuantifier((Location<Bytecode.Quantifier>) expr, out);
+			writeQuantifier((Location<Bytecode.Quantifier>) expr);
 			break;
 		case Bytecode.OPCODE_eq:
 		case Bytecode.OPCODE_ne:
-			writeEqualityOperator((Location<Bytecode.Operator>) expr, out);
+			writeEqualityOperator((Location<Bytecode.Operator>) expr);
+			break;
+		case Bytecode.OPCODE_div:
+			writeDivideOperator((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_add:
 		case Bytecode.OPCODE_sub:
 		case Bytecode.OPCODE_mul:
-		case Bytecode.OPCODE_div:
 		case Bytecode.OPCODE_rem:
 		case Bytecode.OPCODE_lt:
 		case Bytecode.OPCODE_le:
@@ -613,15 +615,15 @@ public final class JavaScriptFileWriter {
 		case Bytecode.OPCODE_shl:
 		case Bytecode.OPCODE_shr:
 		case Bytecode.OPCODE_is:
-			writeInfixLocations((Location<Bytecode.Operator>) expr, out);
+			writeInfixLocations((Location<Bytecode.Operator>) expr);
 			break;
 		case Bytecode.OPCODE_varmove:
 			// FIXME: this needs to be fixed!
-			writeVariableCopy((Location<VariableAccess>) expr, out);
-			//writeVariableMove((Location<VariableAccess>) expr, out);
+			//writeVariableCopy((Location<VariableAccess>) expr);
+			writeVariableMove((Location<VariableAccess>) expr);
 			break;
 		case Bytecode.OPCODE_varcopy:
-			writeVariableCopy((Location<VariableAccess>) expr, out);
+			writeVariableCopy((Location<VariableAccess>) expr);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown bytecode encountered: " + expr.getBytecode());
@@ -629,63 +631,63 @@ public final class JavaScriptFileWriter {
 	}
 
 
-	private void writeArrayLength(Location<Bytecode.Operator> expr, PrintWriter out) {
-		writeExpression(expr.getOperand(0), out);
+	private void writeArrayLength(Location<Bytecode.Operator> expr) {
+		writeExpression(expr.getOperand(0));
 		out.print(".length");
 	}
 
-	private void writeArrayIndex(Location<Bytecode.Operator> expr, PrintWriter out) {
-		writeExpression(expr.getOperand(0), out);
+	private void writeArrayIndex(Location<Bytecode.Operator> expr) {
+		writeExpression(expr.getOperand(0));
 		out.print("[");
-		writeExpression(expr.getOperand(1), out);
+		writeExpression(expr.getOperand(1));
 		out.print("]");
 	}
 
-	private void writeArrayInitialiser(Location<Bytecode.Operator> expr, PrintWriter out) {
+	private void writeArrayInitialiser(Location<Bytecode.Operator> expr) {
 		Location<?>[] operands = expr.getOperands();
 		out.print("[");
 		for(int i=0;i!=operands.length;++i) {
 			if(i != 0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i],out);
+			writeExpression(operands[i]);
 		}
 		out.print("]");
 	}
 
-	private void writeArrayGenerator(Location<Bytecode.Operator> expr, PrintWriter out) {
+	private void writeArrayGenerator(Location<Bytecode.Operator> expr) {
 		out.print("wyjs.array(");
-		writeExpression(expr.getOperand(0), out);
+		writeExpression(expr.getOperand(0));
 		out.print(", ");
-		writeExpression(expr.getOperand(1), out);
+		writeExpression(expr.getOperand(1));
 		out.print(")");
 	}
-	private void writeConvert(Location<Bytecode.Convert> expr, PrintWriter out) {
-		writeExpression(expr.getOperand(0),out);
+	private void writeConvert(Location<Bytecode.Convert> expr) {
+		writeExpression(expr.getOperand(0));
 	}
-	private void writeConst(Location<Bytecode.Const> expr, PrintWriter out) {
+	private void writeConst(Location<Bytecode.Const> expr) {
 		Constant c = expr.getBytecode().constant();
 		writeConstant(c);
 	}
 
-	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr, PrintWriter out) {
-		writeBracketedExpression(expr.getOperand(0),out);
+	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr) {
+		writeBracketedExpression(expr.getOperand(0));
 		out.print("." + expr.getBytecode().fieldName());
 	}
-	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr, PrintWriter out) {
+	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr) {
 		Location<?>[] operands = expr.getOperands();
-		writeExpression(operands[0],out);
+		writeExpression(operands[0]);
 		Location<?>[] arguments = expr.getOperandGroup(0);
 		out.print("(");
 		for(int i=0;i!=arguments.length;++i) {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(arguments[i],out);
+			writeExpression(arguments[i]);
 		}
 		out.print(")");
 	}
-	private void writeInvoke(Location<Bytecode.Invoke> expr, PrintWriter out) {
+	private void writeInvoke(Location<Bytecode.Invoke> expr) {
 		NameID name = expr.getBytecode().name();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.name());
@@ -696,13 +698,13 @@ public final class JavaScriptFileWriter {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i],out);
+			writeExpression(operands[i]);
 		}
 		out.print(")");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeLambda(Location<Bytecode.Lambda> expr, PrintWriter out) {
+	private void writeLambda(Location<Bytecode.Lambda> expr) {
 		out.print("function(");
 		Location<?>[] parameters = expr.getOperandGroup(SyntaxTree.PARAMETERS);
 		for (int i = 0; i != parameters.length; ++i) {
@@ -715,11 +717,11 @@ public final class JavaScriptFileWriter {
 		}
 		out.print(") { ");
 		out.print("return ");
-		writeExpression(expr.getOperand(0), out);
+		writeExpression(expr.getOperand(0));
 		out.print("; }");
 	}
 
-	private void writeRecordConstructor(Location<Bytecode.Operator> expr, PrintWriter out) {
+	private void writeRecordConstructor(Location<Bytecode.Operator> expr) {
 		try {
 			Type.EffectiveRecord t = typeSystem.expandAsEffectiveRecord(expr.getType());
 			String[] fields = t.getFieldNames();
@@ -731,7 +733,7 @@ public final class JavaScriptFileWriter {
 				}
 				out.print(fields[i]);
 				out.print(": ");
-				writeExpression(operands[i], out);
+				writeExpression(operands[i]);
 			}
 			out.print("}");
 		} catch(ResolveError e) {
@@ -739,54 +741,62 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeNewObject(Location<Bytecode.Operator> expr, PrintWriter out) {
+	private void writeNewObject(Location<Bytecode.Operator> expr) {
 		out.print("{box: ");
-		writeExpression(expr.getOperand(0), out);
+		writeExpression(expr.getOperand(0));
 		out.print("}");
 	}
 
-	private void writeDereference(Location<Bytecode.Operator> expr, PrintWriter out) {
-		writeExpression(expr.getOperand(0), out);
+	private void writeDereference(Location<Bytecode.Operator> expr) {
+		writeExpression(expr.getOperand(0));
 		out.print(".box");
 	}
 
-	private void writePrefixLocations(Location<Bytecode.Operator> expr, PrintWriter out) {
+	private void writePrefixLocations(Location<Bytecode.Operator> expr) {
 		// Prefix operators
 		out.print(opcode(expr.getBytecode().kind()));
-		writeBracketedExpression(expr.getOperand(0),out);
+		writeBracketedExpression(expr.getOperand(0));
 	}
 
-	private void writeEqualityOperator(Location<Bytecode.Operator> c, PrintWriter out) {
+	private void writeEqualityOperator(Location<Bytecode.Operator> c) {
 		Location<?> lhs = c.getOperand(0);
 		Location<?> rhs = c.getOperand(1);
 		Type lhsT = lhs.getType();
 		Type rhsT = rhs.getType();
 		//
 		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
-			writeInfixLocations(c,out);
+			writeInfixLocations(c);
 		} else {
 			if (c.getOpcode() == Bytecode.OPCODE_ne) {
 				out.print("!");
 			}
 			out.print("wyjs.equals(");
-			writeExpression(lhs,out);
+			writeExpression(lhs);
 			out.print(", ");
-			writeExpression(rhs,out);
+			writeExpression(rhs);
 			out.print(")");
 		}
 	}
 
-	private void writeInfixLocations(Location<Bytecode.Operator> c, PrintWriter out) {
-		writeBracketedExpression(c.getOperand(0),out);
+	private void writeDivideOperator(Location<Bytecode.Operator> c) {
+		out.print("Math.floor(");
+		writeBracketedExpression(c.getOperand(0));
+		out.print(" / ");
+		writeBracketedExpression(c.getOperand(1));
+		out.print(")");
+	}
+
+	private void writeInfixLocations(Location<Bytecode.Operator> c) {
+		writeBracketedExpression(c.getOperand(0));
 		out.print(" ");
 		out.print(opcode(c.getBytecode().kind()));
 		out.print(" ");
-		writeBracketedExpression(c.getOperand(1),out);
+		writeBracketedExpression(c.getOperand(1));
 
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeQuantifier(Location<Bytecode.Quantifier> c, PrintWriter out) {
+	private void writeQuantifier(Location<Bytecode.Quantifier> c) {
 		out.print(quantifierKind(c));
 		out.print(" { ");
 		for (int i = 0; i != c.numberOfOperandGroups(); ++i) {
@@ -797,12 +807,12 @@ public final class JavaScriptFileWriter {
 			Location<VariableDeclaration>  v = (Location<VariableDeclaration>) range[SyntaxTree.VARIABLE];
 			out.print(v.getBytecode().getName());
 			out.print(" in ");
-			writeExpression(range[SyntaxTree.START], out);
+			writeExpression(range[SyntaxTree.START]);
 			out.print("..");
-			writeExpression(range[SyntaxTree.END], out);
+			writeExpression(range[SyntaxTree.END]);
 		}
 		out.print(" | ");
-		writeExpression(c.getOperand(SyntaxTree.CONDITION), out);
+		writeExpression(c.getOperand(SyntaxTree.CONDITION));
 		out.print(" } ");
 	}
 
@@ -816,44 +826,44 @@ public final class JavaScriptFileWriter {
 		throw new IllegalArgumentException();
 	}
 
-	private void writeLVal(Location<?> lval, PrintWriter out) {
+	private void writeLVal(Location<?> lval) {
 		switch (lval.getOpcode()) {
 		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndexLVal((Location<Bytecode.Operator>) lval,out);
+			writeArrayIndexLVal((Location<Bytecode.Operator>) lval);
 			break;
 		case Bytecode.OPCODE_dereference:
-			writeDereferenceLVal((Location<Bytecode.Operator>) lval,out);
+			writeDereferenceLVal((Location<Bytecode.Operator>) lval);
 			break;
 		case Bytecode.OPCODE_fieldload:
-			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval,out);
+			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval);
 			break;
 		case Bytecode.OPCODE_varcopy:
 		case Bytecode.OPCODE_varmove:
-			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval,out);
+			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval);
 			break;
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
 		}
 	}
 
-	private void writeDereferenceLVal(Location<Bytecode.Operator> expr, PrintWriter out) {
-		writeLVal(expr.getOperand(0), out);
+	private void writeDereferenceLVal(Location<Bytecode.Operator> expr) {
+		writeLVal(expr.getOperand(0));
 		out.print(".box");
 	}
 
-	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, PrintWriter out) {
-		writeLVal(expr.getOperand(0), out);
+	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr) {
+		writeLVal(expr.getOperand(0));
 		out.print("[");
-		writeExpression(expr.getOperand(1), out);
+		writeExpression(expr.getOperand(1));
 		out.print("]");
 	}
 
-	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr, PrintWriter out) {
-		writeLVal(expr.getOperand(0),out);
+	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr) {
+		writeLVal(expr.getOperand(0));
 		out.print("." + expr.getBytecode().fieldName());
 	}
 
-	private void writeVariableAccessLVal(Location<VariableAccess> loc, PrintWriter out) {
+	private void writeVariableAccessLVal(Location<VariableAccess> loc) {
 		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
 		out.print(vd.getBytecode().getName());
 	}
@@ -1163,7 +1173,7 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private static void tabIndent(int indent, PrintWriter out) {
+	private void tabIndent(int indent) {
 		indent = indent * 4;
 		for(int i=0;i<indent;++i) {
 			out.print(" ");

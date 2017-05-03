@@ -119,5 +119,5 @@ function startGame(document) {
     // Configure mouse listener to capture events
     game.canvas.addEventListener("click", function(event) {
 	onLeftMouseClick(game,event.offsetX,event.offsetY);
-    }, false);
+    });
 }

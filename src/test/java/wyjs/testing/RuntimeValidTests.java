@@ -139,6 +139,9 @@ public class RuntimeValidTests {
 		try {
 			execJS(jsFilename);
 		} catch(ScriptException e) {
+			System.err.println("=========================================================");
+			System.err.println("TEST: " + name);
+			System.err.println("=========================================================");
 			e.printStackTrace();
 			fail("unexpected output!");
 		}
