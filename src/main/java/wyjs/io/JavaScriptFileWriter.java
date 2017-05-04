@@ -96,11 +96,12 @@ public final class JavaScriptFileWriter {
 		for (WyilFile.Type td : module.types()) {
 			write(td);
 		}
-
+		HashSet<Type> typeTests = new HashSet<>();
 		for(FunctionOrMethod md : module.functionOrMethods()) {
-			write(md);
+			write(md,typeTests);
 			out.println();
 		}
+		writeTypeTests(typeTests, new HashSet<>());
 		out.flush();
 	}
 
@@ -109,7 +110,7 @@ public final class JavaScriptFileWriter {
 		Location<Bytecode.VariableDeclaration> vardecl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(0);
 		out.print("function ");
 		out.print(td.name());
-		out.print("(");
+		out.print("$(");
 		out.print(vardecl.getBytecode().getName());
 		out.println(") {");
 		List<Location<Expr>> invariant = td.getInvariant();
@@ -124,7 +125,7 @@ public final class JavaScriptFileWriter {
 				} else {
 					out.print("result = (");
 				}
-				writeExpression(invariant.get(i));
+				writeExpression(invariant.get(i), new HashSet<>());
 				out.println(");");
 			}
 			tabIndent(1);
@@ -140,7 +141,7 @@ public final class JavaScriptFileWriter {
 		out.println(";");
 	}
 
-	private void write(FunctionOrMethod method) {
+	private void write(FunctionOrMethod method, Set<Type> typeTests) {
 		// FIXME: what to do with private methods?
 		if(method.hasModifier(Modifier.EXPORT)) {
 			writeExportTrampoline(method);
@@ -171,17 +172,17 @@ public final class JavaScriptFileWriter {
 			//
 			for (Location<Expr> precondition : method.getPrecondition()) {
 				out.print("// requires ");
-				writeExpression(precondition);
+				writeExpression(precondition,new HashSet<>());
 			}
 			for (Location<Expr> postcondition : method.getPostcondition()) {
 				out.print("// ensures ");
-				writeExpression(postcondition);
+				writeExpression(postcondition, new HashSet<>());
 				out.println();
 			}
 		}
 		if (method.getBody() != null) {
 			out.println("{");
-			writeBlock(0, method.getBody());
+			writeBlock(0, method.getBody(), typeTests);
 			out.println("}");
 		}
 	}
@@ -217,21 +218,25 @@ public final class JavaScriptFileWriter {
 	 * @param method
 	 */
 	private void writeExportTrampoline(FunctionOrMethod method) {
-		out.print("function ");
-		out.print(method.name());
 		Type.FunctionOrMethod ft = method.type();
-		SyntaxTree tree = method.getTree();
-		writeParameters(tree,0,ft.params());
-		out.println(" {");
-		tabIndent(1);
-		if(ft.returns().length > 0) {
-			out.print("return ");
+		Type[] params = ft.params();
+		if (params.length > 0) {
+			out.print("function ");
+			out.print(method.name());
+
+			SyntaxTree tree = method.getTree();
+			writeParameters(tree, 0, params);
+			out.println(" {");
+			tabIndent(1);
+			if (ft.returns().length > 0) {
+				out.print("return ");
+			}
+			out.print(method.name());
+			writeTypeMangle(ft);
+			writeTrampolineArguments(tree, ft.params());
+			out.println("}");
+			out.println();
 		}
-		out.print(method.name());
-		writeTypeMangle(ft);
-		writeTrampolineArguments(tree,ft.params());
-		out.println("}");
-		out.println();
 	}
 
 	private void writeTrampolineArguments(SyntaxTree tree, Type[] parameters) {
@@ -246,78 +251,78 @@ public final class JavaScriptFileWriter {
 		out.println(");");
 	}
 
-	private void writeBlock(int indent, Location<Bytecode.Block> block) {
+	private void writeBlock(int indent, Location<Bytecode.Block> block, Set<Type> typeTests) {
 		for (int i = 0; i != block.numberOfOperands(); ++i) {
-			writeStatement(indent, block.getOperand(i));
+			writeStatement(indent, block.getOperand(i), typeTests);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeStatement(int indent, Location<?> c) {
+	private void writeStatement(int indent, Location<?> stmt, Set<Type> typeTests) {
 		tabIndent(indent+1);
-		switch(c.getOpcode()) {
+		switch(stmt.getOpcode()) {
 		case Bytecode.OPCODE_aliasdecl:
-			writeAliasDeclaration(indent, (Location<Bytecode.AliasDeclaration>) c);
+			writeAliasDeclaration(indent, (Location<Bytecode.AliasDeclaration>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_assert:
-			writeAssert(indent, (Location<Bytecode.Assert>) c);
+			writeAssert(indent, (Location<Bytecode.Assert>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_assume:
-			writeAssume(indent, (Location<Bytecode.Assume>) c);
+			writeAssume(indent, (Location<Bytecode.Assume>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_assign:
-			writeAssign(indent, (Location<Bytecode.Assign>) c);
+			writeAssign(indent, (Location<Bytecode.Assign>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_break:
-			writeBreak(indent, (Location<Bytecode.Break>) c);
+			writeBreak(indent, (Location<Bytecode.Break>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_continue:
-			writeContinue(indent, (Location<Bytecode.Continue>) c);
+			writeContinue(indent, (Location<Bytecode.Continue>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_debug:
-			writeDebug(indent, (Location<Bytecode.Debug>) c);
+			writeDebug(indent, (Location<Bytecode.Debug>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_dowhile:
-			writeDoWhile(indent, (Location<Bytecode.DoWhile>) c);
+			writeDoWhile(indent, (Location<Bytecode.DoWhile>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_fail:
-			writeFail(indent, (Location<Bytecode.Fail>) c);
+			writeFail(indent, (Location<Bytecode.Fail>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_if:
 		case Bytecode.OPCODE_ifelse:
-			writeIf(indent, (Location<Bytecode.If>) c);
+			writeIf(indent, (Location<Bytecode.If>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke(indent, (Location<Bytecode.IndirectInvoke>) c);
+			writeIndirectInvoke(indent, (Location<Bytecode.IndirectInvoke>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_invoke:
-			writeInvoke(indent, (Location<Bytecode.Invoke>) c);
+			writeInvoke(indent, (Location<Bytecode.Invoke>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_namedblock:
-			writeNamedBlock(indent, (Location<Bytecode.NamedBlock>) c);
+			writeNamedBlock(indent, (Location<Bytecode.NamedBlock>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_while:
-			writeWhile(indent, (Location<Bytecode.While>) c);
+			writeWhile(indent, (Location<Bytecode.While>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_return:
-			writeReturn(indent, (Location<Bytecode.Return>) c);
+			writeReturn(indent, (Location<Bytecode.Return>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_skip:
-			writeSkip(indent, (Location<Bytecode.Skip>) c);
+			writeSkip(indent, (Location<Bytecode.Skip>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_switch:
-			writeSwitch(indent, (Location<Bytecode.Switch>) c);
+			writeSwitch(indent, (Location<Bytecode.Switch>) stmt, typeTests);
 			break;
 		case Bytecode.OPCODE_vardecl:
 		case Bytecode.OPCODE_vardeclinit:
-			writeVariableDeclaration(indent, (Location<Bytecode.VariableDeclaration>) c);
+			writeVariableDeclaration(indent, (Location<Bytecode.VariableDeclaration>) stmt, typeTests);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown bytecode encountered");
 		}
 	}
 
-	private void writeAliasDeclaration(int indent, Location<AliasDeclaration> loc) {
+	private void writeAliasDeclaration(int indent, Location<AliasDeclaration> loc, Set<Type> typeTests) {
 		out.print("alias ");
 		out.print(loc.getType());
 		out.print(" ");
@@ -325,95 +330,96 @@ public final class JavaScriptFileWriter {
 		out.print(aliased.getBytecode().getName());
 		out.println();
 	}
-	private void writeAssert(int indent, Location<Bytecode.Assert> c) {
+	private void writeAssert(int indent, Location<Bytecode.Assert> c, Set<Type> typeTests) {
 		out.print("wyjs.assert(");
-		writeExpression(c.getOperand(0));
+		writeExpression(c.getOperand(0), typeTests);
 		out.println(");");
 	}
 
-	private void writeAssume(int indent, Location<Bytecode.Assume> c) {
+	private void writeAssume(int indent, Location<Bytecode.Assume> c, Set<Type> typeTests) {
 		out.print("wyjs.assert(");
-		writeExpression(c.getOperand(0));
+		writeExpression(c.getOperand(0), typeTests);
 		out.println(");");
 	}
 
-	private void writeAssign(int indent, Location<Bytecode.Assign> stmt) {
+	private void writeAssign(int indent, Location<Bytecode.Assign> stmt, Set<Type> typeTests) {
 		Location<?>[] lhs = stmt.getOperandGroup(SyntaxTree.LEFTHANDSIDE);
 		Location<?>[] rhs = stmt.getOperandGroup(SyntaxTree.RIGHTHANDSIDE);
 		if(lhs.length == 1) {
 			// easy case
-			writeLVal(lhs[0]);
+			writeLVal(lhs[0], typeTests);
 			out.print(" = ");
-			writeExpression(rhs[0]);
+			writeExpression(rhs[0], typeTests);
 			out.println(";");
 		} else if(lhs.length > 1) {
 			// FIXME: this is broken when multiple rhs expressions
-			out.print("var tmp = ");
+			out.print("var $ = ");
 			// Translate right-hand sides
-			writeExpression(rhs[0]);
+			writeExpression(rhs[0], typeTests);
 			out.println(";");
 			// Translate left-hand sides
 			for(int i=0;i!=lhs.length;++i) {
 				tabIndent(indent+1);
-				writeLVal(lhs[i]);
-				out.println(" = tmp[" + i + "];");
+				writeLVal(lhs[i], typeTests);
+				out.println(" = $[" + i + "];");
 			}
 		}
 	}
 
-	private void writeBreak(int indent, Location<Bytecode.Break> b) {
+	private void writeBreak(int indent, Location<Bytecode.Break> b, Set<Type> typeTests) {
 		out.println("break;");
 	}
 
-	private void writeContinue(int indent, Location<Bytecode.Continue> b) {
+	private void writeContinue(int indent, Location<Bytecode.Continue> b, Set<Type> typeTests) {
 		out.println("continue;");
 	}
 
-	private void writeDebug(int indent, Location<Bytecode.Debug> b) {
+	private void writeDebug(int indent, Location<Bytecode.Debug> b, Set<Type> typeTests) {
 
 	}
 
-	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b) {
+	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b, Set<Type> typeTests) {
 		out.println("do {");
 		//
-		writeBlock(indent+1,b.getBlock(0));
+		writeBlock(indent+1,b.getBlock(0), typeTests);
 		tabIndent(indent+1);
 		out.print("} while(");
-		writeExpression(b.getOperand(0));
+		writeExpression(b.getOperand(0), typeTests);
 		out.println(");");
 	}
 
-	private void writeFail(int indent, Location<Bytecode.Fail> c) {
+	private void writeFail(int indent, Location<Bytecode.Fail> c, Set<Type> typeTests) {
 		out.println("fail");
 	}
 
-	private void writeIf(int indent, Location<Bytecode.If> b) {
+	private void writeIf(int indent, Location<Bytecode.If> b, Set<Type> typeTests) {
 		out.print("if(");
-		writeExpression(b.getOperand(0));
+		writeExpression(b.getOperand(0), typeTests);
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0));
+		writeBlock(indent+1,b.getBlock(0), typeTests);
 		if(b.numberOfBlocks() > 1) {
 			tabIndent(indent+1);
 			out.println("} else {");
-			writeBlock(indent+1,b.getBlock(1));
+			writeBlock(indent+1,b.getBlock(1), typeTests);
 		}
 		tabIndent(indent+1);
 		out.println("}");
 	}
 
-	private void writeIndirectInvoke(int indent, Location<Bytecode.IndirectInvoke> stmt) {
+	private void writeIndirectInvoke(int indent, Location<Bytecode.IndirectInvoke> stmt, Set<Type> typeTests) {
 		Location<?>[] operands = stmt.getOperands();
-		writeExpression(operands[0]);
+		writeExpression(operands[0], typeTests);
+		Location<?>[] arguments = stmt.getOperandGroup(0);
 		out.print("(");
-		for(int i=1;i!=operands.length;++i) {
-			if(i!=1) {
+		for(int i=0;i!=arguments.length;++i) {
+			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i]);
+			writeExpression(arguments[i], typeTests);
 		}
 		out.println(");");
 	}
-	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt) {
+	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt, Set<Type> typeTests) {
 		NameID name = stmt.getBytecode().name();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.name());
@@ -424,33 +430,33 @@ public final class JavaScriptFileWriter {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i]);
+			writeExpression(operands[i], typeTests);
 		}
 		out.println(");");
 	}
 
-	private void writeNamedBlock(int indent, Location<Bytecode.NamedBlock> b) {
+	private void writeNamedBlock(int indent, Location<Bytecode.NamedBlock> b, Set<Type> typeTests) {
 		out.print(b.getBytecode().getName());
 		out.println(":");
-		writeBlock(indent+1,b.getBlock(0));
+		writeBlock(indent+1,b.getBlock(0), typeTests);
 	}
 
-	private void writeWhile(int indent, Location<Bytecode.While> b) {
+	private void writeWhile(int indent, Location<Bytecode.While> b, Set<Type> typeTests) {
 		out.print("while(");
-		writeExpression(b.getOperand(0));
+		writeExpression(b.getOperand(0), typeTests);
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0));
+		writeBlock(indent+1,b.getBlock(0), typeTests);
 		tabIndent(indent+1);
 		out.println("}");
 	}
 
-	private void writeReturn(int indent, Location<Bytecode.Return> b) {
+	private void writeReturn(int indent, Location<Bytecode.Return> b, Set<Type> typeTests) {
 		Location<?>[] operands = b.getOperands();
 		out.print("return");
 		if(operands.length == 1) {
 			// easy case
 			out.print(" ");
-			writeExpression(operands[0]);
+			writeExpression(operands[0], typeTests);
 		} else if(operands.length > 0) {
 			// harder case
 			out.print(" [");
@@ -458,20 +464,20 @@ public final class JavaScriptFileWriter {
 				if (i != 0) {
 					out.print(", ");
 				}
-				writeExpression(operands[i]);
+				writeExpression(operands[i], typeTests);
 			}
 			out.print("]");
 		}
 		out.println(";");
 	}
 
-	private void writeSkip(int indent, Location<Bytecode.Skip> b) {
+	private void writeSkip(int indent, Location<Bytecode.Skip> b, Set<Type> typeTests) {
 		out.println("// skip");
 	}
 
-	private void writeSwitch(int indent, Location<Bytecode.Switch> b) {
+	private void writeSwitch(int indent, Location<Bytecode.Switch> b, Set<Type> typeTests) {
 		out.print("switch(");
-		writeExpression(b.getOperand(0));
+		writeExpression(b.getOperand(0), typeTests);
 		out.println(") {");
 		for (int i = 0; i != b.numberOfBlocks(); ++i) {
 			// FIXME: ugly
@@ -488,7 +494,7 @@ public final class JavaScriptFileWriter {
 					out.println(":");
 				}
 			}
-			writeBlock(indent + 1, b.getBlock(i));
+			writeBlock(indent + 1, b.getBlock(i), typeTests);
 			tabIndent(indent + 2);
 			out.println("break;");
 		}
@@ -496,28 +502,14 @@ public final class JavaScriptFileWriter {
 		out.println("}");
 	}
 
-	private void writeVariableMove(Location<VariableAccess> loc) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
-		out.print(vd.getBytecode().getName());
-	}
-
-	private void writeVariableCopy(Location<VariableAccess> loc) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
-		if(isCopyable(vd.getType(),loc)) {
-			out.print(vd.getBytecode().getName());
-		} else {
-			out.print("wyjs.copy(" + vd.getBytecode().getName() + ")");
-		}
-	}
-
-	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc) {
+	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc, Set<Type> typeTests) {
 		Location<?>[] operands = loc.getOperands();
 		out.print("var ");
 		writeType(loc.getType());
 		out.print(loc.getBytecode().getName());
 		if (operands.length > 0) {
 			out.print(" = ");
-			writeExpression(operands[0]);
+			writeExpression(operands[0], typeTests);
 		}
 		out.println(";");
 	}
@@ -530,74 +522,74 @@ public final class JavaScriptFileWriter {
 	 * @param enclosing
 	 * @param out
 	 */
-	private void writeBracketedExpression(Location<?> expr) {
+	private void writeBracketedExpression(Location<?> expr, Set<Type> typeTests) {
 		boolean needsBrackets = needsBrackets(expr.getBytecode());
 		if (needsBrackets) {
 			out.print("(");
 		}
-		writeExpression(expr);
+		writeExpression(expr, typeTests);
 		if (needsBrackets) {
 			out.print(")");
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeExpression(Location<?> expr)  {
+	private void writeExpression(Location<?> expr, Set<Type> typeTests)  {
 		switch (expr.getOpcode()) {
 		case Bytecode.OPCODE_arraylength:
-			writeArrayLength((Location<Bytecode.Operator>) expr);
+			writeArrayLength((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndex((Location<Bytecode.Operator>) expr);
+			writeArrayIndex((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_array:
-			writeArrayInitialiser((Location<Bytecode.Operator>) expr);
+			writeArrayInitialiser((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_arraygen:
-			writeArrayGenerator((Location<Bytecode.Operator>) expr);
+			writeArrayGenerator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_convert:
-			writeConvert((Location<Bytecode.Convert>) expr);
+			writeConvert((Location<Bytecode.Convert>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_const:
-			writeConst((Location<Bytecode.Const>) expr);
+			writeConst((Location<Bytecode.Const>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_fieldload:
-			writeFieldLoad((Location<Bytecode.FieldLoad>) expr);
+			writeFieldLoad((Location<Bytecode.FieldLoad>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke((Location<Bytecode.IndirectInvoke>) expr);
+			writeIndirectInvoke((Location<Bytecode.IndirectInvoke>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_invoke:
-			writeInvoke((Location<Bytecode.Invoke>) expr);
+			writeInvoke((Location<Bytecode.Invoke>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_lambda:
-			writeLambda((Location<Bytecode.Lambda>) expr);
+			writeLambda((Location<Bytecode.Lambda>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_record:
-			writeRecordConstructor((Location<Bytecode.Operator>) expr);
+			writeRecordConstructor((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_newobject:
-			writeNewObject((Location<Bytecode.Operator>) expr);
+			writeNewObject((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_dereference:
-			writeDereference((Location<Bytecode.Operator>) expr);
+			writeDereference((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_logicalnot:
 		case Bytecode.OPCODE_neg:
 		case Bytecode.OPCODE_bitwiseinvert:
-			writePrefixLocations((Location<Bytecode.Operator>) expr);
+			writePrefixLocations((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_all:
 		case Bytecode.OPCODE_some:
-			writeQuantifier((Location<Bytecode.Quantifier>) expr);
+			writeQuantifier((Location<Bytecode.Quantifier>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_eq:
 		case Bytecode.OPCODE_ne:
-			writeEqualityOperator((Location<Bytecode.Operator>) expr);
+			writeEqualityOperator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_div:
-			writeDivideOperator((Location<Bytecode.Operator>) expr);
+			writeDivideOperator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_add:
 		case Bytecode.OPCODE_sub:
@@ -614,16 +606,18 @@ public final class JavaScriptFileWriter {
 		case Bytecode.OPCODE_bitwiseand:
 		case Bytecode.OPCODE_shl:
 		case Bytecode.OPCODE_shr:
+			writeInfixLocations((Location<Bytecode.Operator>) expr, typeTests);
+			break;
 		case Bytecode.OPCODE_is:
-			writeInfixLocations((Location<Bytecode.Operator>) expr);
+			writeIsOperator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_varmove:
 			// FIXME: this needs to be fixed!
 			//writeVariableCopy((Location<VariableAccess>) expr);
-			writeVariableMove((Location<VariableAccess>) expr);
+			writeVariableMove((Location<VariableAccess>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_varcopy:
-			writeVariableCopy((Location<VariableAccess>) expr);
+			writeVariableCopy((Location<VariableAccess>) expr, typeTests);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown bytecode encountered: " + expr.getBytecode());
@@ -631,63 +625,63 @@ public final class JavaScriptFileWriter {
 	}
 
 
-	private void writeArrayLength(Location<Bytecode.Operator> expr) {
-		writeExpression(expr.getOperand(0));
+	private void writeArrayLength(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print(".length");
 	}
 
-	private void writeArrayIndex(Location<Bytecode.Operator> expr) {
-		writeExpression(expr.getOperand(0));
+	private void writeArrayIndex(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print("[");
-		writeExpression(expr.getOperand(1));
+		writeExpression(expr.getOperand(1), typeTests);
 		out.print("]");
 	}
 
-	private void writeArrayInitialiser(Location<Bytecode.Operator> expr) {
+	private void writeArrayInitialiser(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		Location<?>[] operands = expr.getOperands();
 		out.print("[");
 		for(int i=0;i!=operands.length;++i) {
 			if(i != 0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i]);
+			writeExpression(operands[i], typeTests);
 		}
 		out.print("]");
 	}
 
-	private void writeArrayGenerator(Location<Bytecode.Operator> expr) {
+	private void writeArrayGenerator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		out.print("wyjs.array(");
-		writeExpression(expr.getOperand(0));
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print(", ");
-		writeExpression(expr.getOperand(1));
+		writeExpression(expr.getOperand(1), typeTests);
 		out.print(")");
 	}
-	private void writeConvert(Location<Bytecode.Convert> expr) {
-		writeExpression(expr.getOperand(0));
+	private void writeConvert(Location<Bytecode.Convert> expr, Set<Type> typeTests) {
+		writeExpression(expr.getOperand(0), typeTests);
 	}
-	private void writeConst(Location<Bytecode.Const> expr) {
+	private void writeConst(Location<Bytecode.Const> expr, Set<Type> typeTests) {
 		Constant c = expr.getBytecode().constant();
 		writeConstant(c);
 	}
 
-	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr) {
-		writeBracketedExpression(expr.getOperand(0));
+	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr, Set<Type> typeTests) {
+		writeBracketedExpression(expr.getOperand(0), typeTests);
 		out.print("." + expr.getBytecode().fieldName());
 	}
-	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr) {
+	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr, Set<Type> typeTests) {
 		Location<?>[] operands = expr.getOperands();
-		writeExpression(operands[0]);
+		writeExpression(operands[0], typeTests);
 		Location<?>[] arguments = expr.getOperandGroup(0);
 		out.print("(");
 		for(int i=0;i!=arguments.length;++i) {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(arguments[i]);
+			writeExpression(arguments[i], typeTests);
 		}
 		out.print(")");
 	}
-	private void writeInvoke(Location<Bytecode.Invoke> expr) {
+	private void writeInvoke(Location<Bytecode.Invoke> expr, Set<Type> typeTests) {
 		NameID name = expr.getBytecode().name();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.name());
@@ -698,13 +692,13 @@ public final class JavaScriptFileWriter {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(operands[i]);
+			writeExpression(operands[i], typeTests);
 		}
 		out.print(")");
 	}
 
 	@SuppressWarnings("unchecked")
-	private void writeLambda(Location<Bytecode.Lambda> expr) {
+	private void writeLambda(Location<Bytecode.Lambda> expr, Set<Type> typeTests) {
 		out.print("function(");
 		Location<?>[] parameters = expr.getOperandGroup(SyntaxTree.PARAMETERS);
 		for (int i = 0; i != parameters.length; ++i) {
@@ -717,11 +711,11 @@ public final class JavaScriptFileWriter {
 		}
 		out.print(") { ");
 		out.print("return ");
-		writeExpression(expr.getOperand(0));
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print("; }");
 	}
 
-	private void writeRecordConstructor(Location<Bytecode.Operator> expr) {
+	private void writeRecordConstructor(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		try {
 			Type.EffectiveRecord t = typeSystem.expandAsEffectiveRecord(expr.getType());
 			String[] fields = t.getFieldNames();
@@ -733,7 +727,7 @@ public final class JavaScriptFileWriter {
 				}
 				out.print(fields[i]);
 				out.print(": ");
-				writeExpression(operands[i]);
+				writeExpression(operands[i], typeTests);
 			}
 			out.print("}");
 		} catch(ResolveError e) {
@@ -741,83 +735,114 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeNewObject(Location<Bytecode.Operator> expr) {
+	private void writeNewObject(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		out.print("{box: ");
-		writeExpression(expr.getOperand(0));
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print("}");
 	}
 
-	private void writeDereference(Location<Bytecode.Operator> expr) {
-		writeExpression(expr.getOperand(0));
+	private void writeDereference(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeExpression(expr.getOperand(0), typeTests);
 		out.print(".box");
 	}
 
-	private void writePrefixLocations(Location<Bytecode.Operator> expr) {
+	private void writePrefixLocations(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		// Prefix operators
 		out.print(opcode(expr.getBytecode().kind()));
-		writeBracketedExpression(expr.getOperand(0));
+		writeBracketedExpression(expr.getOperand(0), typeTests);
 	}
 
-	private void writeEqualityOperator(Location<Bytecode.Operator> c) {
-		Location<?> lhs = c.getOperand(0);
-		Location<?> rhs = c.getOperand(1);
+	private void writeEqualityOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		Location<?> lhs = expr.getOperand(0);
+		Location<?> rhs = expr.getOperand(1);
 		Type lhsT = lhs.getType();
 		Type rhsT = rhs.getType();
 		//
 		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
-			writeInfixLocations(c);
+			writeInfixLocations(expr, typeTests);
 		} else {
-			if (c.getOpcode() == Bytecode.OPCODE_ne) {
+			if (expr.getOpcode() == Bytecode.OPCODE_ne) {
 				out.print("!");
 			}
 			out.print("wyjs.equals(");
-			writeExpression(lhs);
+			writeExpression(lhs, typeTests);
 			out.print(", ");
-			writeExpression(rhs);
+			writeExpression(rhs, typeTests);
 			out.print(")");
 		}
 	}
 
-	private void writeDivideOperator(Location<Bytecode.Operator> c) {
+	private void writeDivideOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		out.print("Math.floor(");
-		writeBracketedExpression(c.getOperand(0));
+		writeBracketedExpression(expr.getOperand(0), typeTests);
 		out.print(" / ");
-		writeBracketedExpression(c.getOperand(1));
+		writeBracketedExpression(expr.getOperand(1), typeTests);
 		out.print(")");
 	}
 
-	private void writeInfixLocations(Location<Bytecode.Operator> c) {
-		writeBracketedExpression(c.getOperand(0));
+	private void writeInfixLocations(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeBracketedExpression(expr.getOperand(0), typeTests);
 		out.print(" ");
-		out.print(opcode(c.getBytecode().kind()));
+		out.print(opcode(expr.getBytecode().kind()));
 		out.print(" ");
-		writeBracketedExpression(c.getOperand(1));
+		writeBracketedExpression(expr.getOperand(1), typeTests);
 
 	}
 
+	private void writeIsOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		Location<Bytecode.Const> operand = ((Location<Bytecode.Const>) expr.getOperand(1));
+		Constant.Type ct = (Constant.Type) operand.getBytecode().constant();
+		Type t = ct.value();
+		// Handle all non-trivial cases directly
+		if(t == Type.T_NULL) {
+			writeExpression(expr.getOperand(0), typeTests);
+			out.print(" === null");
+		} else if(t == Type.T_INT) {
+			// FIXME: this will need to be updated when unbounded arithmetic is
+			// supported
+			out.print("typeof ");
+			writeExpression(expr.getOperand(0), typeTests);
+			out.print(" === \"number\"");
+		} else if(t == Type.T_BOOL) {
+			out.print("typeof ");
+			writeExpression(expr.getOperand(0), typeTests);
+			out.print(" === \"boolean\"");
+		} else {
+			// Fall back case
+			out.print("is$");
+			writeTypeMangle(ct.value());
+			out.print("(");
+			writeExpression(expr.getOperand(0), typeTests);
+			out.print(")");
+			// Register this type test to be written out as an appropriately
+			// named function.
+			typeTests.add(ct.value());
+		}
+	}
+
 	@SuppressWarnings("unchecked")
-	private void writeQuantifier(Location<Bytecode.Quantifier> c) {
-		out.print(quantifierKind(c));
+	private void writeQuantifier(Location<Bytecode.Quantifier> expr, Set<Type> typeTests) {
+		out.print(quantifierKind(expr));
 		out.print(" { ");
-		for (int i = 0; i != c.numberOfOperandGroups(); ++i) {
-			Location<?>[] range = c.getOperandGroup(i);
+		for (int i = 0; i != expr.numberOfOperandGroups(); ++i) {
+			Location<?>[] range = expr.getOperandGroup(i);
 			if (i != 0) {
 				out.print(", ");
 			}
 			Location<VariableDeclaration>  v = (Location<VariableDeclaration>) range[SyntaxTree.VARIABLE];
 			out.print(v.getBytecode().getName());
 			out.print(" in ");
-			writeExpression(range[SyntaxTree.START]);
+			writeExpression(range[SyntaxTree.START], typeTests);
 			out.print("..");
-			writeExpression(range[SyntaxTree.END]);
+			writeExpression(range[SyntaxTree.END], typeTests);
 		}
 		out.print(" | ");
-		writeExpression(c.getOperand(SyntaxTree.CONDITION));
+		writeExpression(expr.getOperand(SyntaxTree.CONDITION), typeTests);
 		out.print(" } ");
 	}
 
-	private String quantifierKind(Location<Bytecode.Quantifier> c) {
-		switch(c.getOpcode()) {
+	private String quantifierKind(Location<Bytecode.Quantifier> expr) {
+		switch(expr.getOpcode()) {
 		case Bytecode.OPCODE_some:
 			return "some";
 		case Bytecode.OPCODE_all:
@@ -826,45 +851,59 @@ public final class JavaScriptFileWriter {
 		throw new IllegalArgumentException();
 	}
 
-	private void writeLVal(Location<?> lval) {
+	private void writeVariableMove(Location<VariableAccess> expr, Set<Type> typeTests) {
+		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
+		out.print(vd.getBytecode().getName());
+	}
+
+	private void writeVariableCopy(Location<VariableAccess> expr, Set<Type> typeTests) {
+		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
+		if(isCopyable(vd.getType(),expr)) {
+			out.print(vd.getBytecode().getName());
+		} else {
+			out.print("wyjs.copy(" + vd.getBytecode().getName() + ")");
+		}
+	}
+
+	private void writeLVal(Location<?> lval, Set<Type> typeTests) {
 		switch (lval.getOpcode()) {
 		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndexLVal((Location<Bytecode.Operator>) lval);
+			writeArrayIndexLVal((Location<Bytecode.Operator>) lval, typeTests);
 			break;
 		case Bytecode.OPCODE_dereference:
-			writeDereferenceLVal((Location<Bytecode.Operator>) lval);
+			writeDereferenceLVal((Location<Bytecode.Operator>) lval, typeTests);
 			break;
 		case Bytecode.OPCODE_fieldload:
-			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval);
+			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval, typeTests);
 			break;
 		case Bytecode.OPCODE_varcopy:
 		case Bytecode.OPCODE_varmove:
-			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval);
+			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval, typeTests);
 			break;
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
 		}
 	}
 
-	private void writeDereferenceLVal(Location<Bytecode.Operator> expr) {
-		writeLVal(expr.getOperand(0));
+	private void writeDereferenceLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeLVal(expr.getOperand(0), typeTests);
 		out.print(".box");
 	}
 
-	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr) {
-		writeLVal(expr.getOperand(0));
+	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		writeLVal(expr.getOperand(0), typeTests);
 		out.print("[");
-		writeExpression(expr.getOperand(1));
+		writeExpression(expr.getOperand(1), typeTests);
 		out.print("]");
 	}
 
-	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr) {
-		writeLVal(expr.getOperand(0));
+	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr, Set<Type> typeTests) {
+		writeLVal(expr.getOperand(0), typeTests);
 		out.print("." + expr.getBytecode().fieldName());
 	}
 
-	private void writeVariableAccessLVal(Location<VariableAccess> loc) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(loc.getOperand(0));
+	private void writeVariableAccessLVal(Location<VariableAccess> expr, Set<Type> typeTests) {
+		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
 		out.print(vd.getBytecode().getName());
 	}
 
@@ -947,6 +986,189 @@ public final class JavaScriptFileWriter {
 			writeConstant(e.getValue());
 		}
 		out.print("}");
+	}
+
+	private void writeTypeTests(Set<Type> typeTests, Set<Type> allTests) {
+		HashSet<Type> deps = new HashSet<>();
+		for(Type type : typeTests) {
+			out.print("function is$");
+			writeTypeMangle(type);
+			out.print("(val) {");
+			writeTypeTest(type, deps);
+			out.println("}");
+			out.println();
+		}
+		deps.removeAll(allTests);
+		allTests.addAll(deps);
+		if(deps.size() > 0) {
+			writeTypeTests(deps,allTests);
+		}
+	}
+
+	private void writeTypeTest(Type test, Set<Type> deps) {
+		if(test == Type.T_ANY) {
+			writeTypeTestAny((Type.Primitive) test,deps);
+		} else if(test == Type.T_NULL) {
+			writeTypeTestNull((Type.Primitive) test,deps);
+		} else if(test == Type.T_BOOL) {
+			writeTypeTestBool((Type.Primitive) test,deps);
+		} else if(test == Type.T_INT) {
+			writeTypeTestInt((Type.Primitive) test,deps);
+		} else if(test instanceof Type.Nominal) {
+			writeTypeTestNominal((Type.Nominal) test,deps);
+		} else if(test instanceof Type.Array) {
+			writeTypeTestArray((Type.Array) test,deps);
+		} else if(test instanceof Type.Reference) {
+			writeTypeTestReference((Type.Reference) test,deps);
+		} else if(test instanceof Type.Record) {
+			writeTypeTestRecord((Type.Record) test,deps);
+		} else if(test instanceof Type.Negation) {
+			writeTypeTestNegation((Type.Negation) test,deps);
+		} else if(test instanceof Type.Union) {
+			writeTypeTestUnion((Type.Union) test,deps);
+		} else if(test instanceof Type.Intersection) {
+			writeTypeTestIntersection((Type.Intersection) test,deps);
+		} else {
+			throw new RuntimeException("unknown type encountered: " + test);
+		}
+	}
+
+	private void writeTypeTestAny(Type.Primitive test, Set<Type> deps) {
+		out.print(" return true; ");
+	}
+
+	private void writeTypeTestNull(Type.Primitive test, Set<Type> deps) {
+		out.print(" return val === null; ");
+	}
+
+	private void writeTypeTestBool(Type.Primitive test, Set<Type> deps) {
+		out.print(" return typeof val === \"boolean\"; ");
+	}
+
+	private void writeTypeTestInt(Type.Primitive test, Set<Type> deps) {
+		out.print(" return typeof val === \"number\"; ");
+	}
+
+	private void writeTypeTestNominal(Type.Nominal test, Set<Type> deps) {
+		NameID nid = test.name();
+		// First, attempt to locate the enclosing module for this
+		// nominal type.
+//		Path.Entry<WyilFile> entry = project.get(nid.module(), WyilFile.ContentType);
+//		if (entry == null) {
+//			throw new IllegalArgumentException("no WyIL file found: " + nid.module());
+//		}
+		// Read in the module. This may result in it being read from
+		// disk, or from a cache in memory, or even from somewhere else.
+		//WyilFile wyilFile = entry.read();
+		// FIXME: following line is a temporary hack
+		WyilFile wyilFile = this.wyilfile;
+		WyilFile.Type td = wyilFile.type(nid.name());
+		if (td == null) {
+			throw new RuntimeException("undefined nominal type encountered: " + nid);
+		}
+		out.print(" return is$");
+		writeTypeMangle(td.type());
+		out.print("(val) && " + nid.name() + "$(val); ");
+		//
+		deps.add(td.type());
+	}
+
+	private static int variableIndex = 0;
+
+	private void writeTypeTestArray(Type.Array test, Set<Type> deps) {
+		out.println();
+		tabIndent(1);
+		out.println("if(val != null && val.constructor === Array) {");
+		tabIndent(2);
+		// FIXME: could optimise this in the case of element "any"
+		String var = "i" + (variableIndex++);
+		out.println("for(var x=0;x!=val.length;++x) {".replaceAll("x", var));
+		tabIndent(3);
+		out.print("if(!is$");
+		writeTypeMangle(test.element());
+		out.println("(val[" + var +"])) {");
+		tabIndent(4);
+		out.println("return false;");
+		tabIndent(3);
+		out.println("}");
+		tabIndent(2);
+		out.println("}");
+		tabIndent(2);
+		out.println("return true;");
+		tabIndent(1);
+		out.println("}");
+		tabIndent(1);
+		out.println("return false;");
+		// Add a follow-on dependency
+		deps.add(test.element());
+	}
+
+	private void writeTypeTestReference(Type.Reference test, Set<Type> deps) {
+		tabIndent(1);
+		throw new IllegalArgumentException("cannot type test references in javascript");
+	}
+
+	private void writeTypeTestRecord(Type.Record test, Set<Type> deps) {
+		out.println();
+		tabIndent(1);
+		out.print("if(val != null && typeof val === \"object\"");
+		String[] fields = test.getFieldNames();
+		if(!test.isOpen()) {
+			out.print(" && Object.keys(val).length === " + fields.length);
+		}
+		out.println(") {");
+		for (int i = 0; i != fields.length; ++i) {
+			String field = fields[i];
+			Type fieldType = test.getField(field);
+			test.getField(field);
+			tabIndent(2);
+			out.print("if(val." + field + " === \"undefined\" || !is$");
+			writeTypeMangle(fieldType);
+			out.println("(val." + field +")) { return false; }");
+			deps.add(fieldType);
+		}
+		tabIndent(2);
+		out.println("return true;");
+		tabIndent(1);
+		out.println("}");
+		tabIndent(1);
+		out.println("return false;");
+	}
+
+	private void writeTypeTestNegation(Type.Negation test, Set<Type> deps) {
+		out.print(" return !(is$");
+		writeTypeMangle(test.element());
+		out.print("(val)); ");
+		//
+		deps.add(test.element());
+	}
+
+	private void writeTypeTestUnion(Type.Union test, Set<Type> deps) {
+		out.println();
+		for(Type bound : test.bounds()) {
+			tabIndent(1);
+			out.print("if(is$");
+			writeTypeMangle(bound);
+			out.println("(val)) { return true; }");
+			//
+			deps.add(bound);
+		}
+		tabIndent(1);
+		out.print("return false;");
+	}
+
+	private void writeTypeTestIntersection(Type.Intersection test, Set<Type> deps) {
+		out.println();
+		for(Type bound : test.bounds()) {
+			tabIndent(1);
+			out.print("if(!is$");
+			writeTypeMangle(bound);
+			out.println("(val)) { return false; }");
+			//
+			deps.add(bound);
+		}
+		tabIndent(1);
+		out.print("return true;");
 	}
 
 	private void writeTypeMangle(Type.FunctionOrMethod  fmt) {
@@ -1063,6 +1285,8 @@ public final class JavaScriptFileWriter {
 			return true;
 		} else if(type instanceof Type.FunctionOrMethod) {
 			return true;
+		} else if(type instanceof Type.Reference) {
+			return true;
 		} else if(type instanceof Type.Nominal) {
 			Type.Nominal tn = (Type.Nominal) type;
 			NameID nid = tn.name();
@@ -1111,7 +1335,6 @@ public final class JavaScriptFileWriter {
 		case Bytecode.OPCODE_shr:
 		case Bytecode.OPCODE_is:
 		case Bytecode.OPCODE_newobject:
-		case Bytecode.OPCODE_dereference:
 			return true;
 		}
 		return false;
