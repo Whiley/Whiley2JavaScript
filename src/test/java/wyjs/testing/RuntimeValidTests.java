@@ -114,6 +114,7 @@ public class RuntimeValidTests {
 
 		IGNORED.put("ConstrainedList_Valid_23", "#10");
 		IGNORED.put("FunctionRef_Valid_13", "#9");
+		IGNORED.put("Switch_Valid_12", "#12");
 	}
 
 	/**
