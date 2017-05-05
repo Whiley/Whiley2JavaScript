@@ -1267,74 +1267,102 @@ public final class JavaScriptFileWriter {
 		} else if(t == Type.T_INT) {
 			out.print("I");
 		} else if(t instanceof Type.Array) {
-			Type.Array at = (Type.Array) t;
-			out.print("a");
-			writeTypeMangle(at.element());
+			writeTypeMangleArray((Type.Array) t);
 		} else if(t instanceof Type.Reference) {
-			Type.Reference rt = (Type.Reference) t;
-			out.print("p");
-			writeTypeMangle(rt.element());
+			writeTypeMangleReference((Type.Reference) t);
 		} else if(t instanceof Type.Record) {
-			Type.Record rt = (Type.Record) t;
-			out.print("r");
-			String[] fields = rt.getFieldNames();
-			out.print(fields.length);
-			for(int i=0;i!=fields.length;++i) {
-				String field = fields[i];
-				writeTypeMangle(rt.getField(field));
-				out.print(field.length());
-				out.print(field);
-			}
+			writeTypeMangleRecord((Type.Record) t);
 		} else if(t instanceof Type.Nominal) {
-			Type.Nominal nt = (Type.Nominal) t;
-			out.print("n");
-			// FIXME: need to figure out package
-			String name = nt.name().name().toString();
-			out.print(name.length());
-			out.print(name);
+			writeTypeMangleNominal((Type.Nominal) t);
 		} else if(t instanceof Type.FunctionOrMethod) {
-			Type.FunctionOrMethod fmt = (Type.FunctionOrMethod) t;
-			if(fmt instanceof Type.Function) {
-				out.print("f");
-			} else {
-				out.print("m");
-			}
-			Type[] params = fmt.params();
-			out.print(params.length);
-			for(int i=0;i!=params.length;++i) {
-				writeTypeMangle(params[i]);
-			}
-			Type[] returns = fmt.returns();
-			out.print(returns.length);
-			for(int i=0;i!=returns.length;++i) {
-				writeTypeMangle(returns[i]);
-			}
-			out.print("e");
+			writeTypeMangleFunctionOrMethod((Type.FunctionOrMethod) t);
 		} else if(t instanceof Type.Negation) {
-			Type.Negation nt = (Type.Negation) t;
-			out.print("n");
-			writeTypeMangle(nt.element());
+			writeTypeMangleNegation((Type.Negation) t);
 		} else if(t instanceof Type.Union) {
-			Type.Union ut = (Type.Union) t;
-			out.print("u");
-			Type[] bounds = ut.bounds();
-			out.print(bounds.length);
-			for(int i=0;i!=bounds.length;++i) {
-				writeTypeMangle(bounds[i]);
-			}
+			writeTypeMangleUnion((Type.Union) t);
 		} else if(t instanceof Type.Intersection) {
-			Type.Intersection ut = (Type.Intersection) t;
-			out.print("c");
-			Type[] bounds = ut.bounds();
-			out.print(bounds.length);
-			for(int i=0;i!=bounds.length;++i) {
-				writeTypeMangle(bounds[i]);
-			}
+			writeTypeMangleIntersection((Type.Intersection) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
 	}
 
+	private void writeTypeMangleArray(Type.Array t) {
+		out.print("a");
+		writeTypeMangle(t.element());
+	}
+	private void writeTypeMangleReference(Type.Reference t) {
+		out.print("p");
+		String lifetime = t.lifetime();
+		if(lifetime == null || lifetime.equals("*")) {
+			out.print("0");
+		} else {
+			out.print(lifetime.length());
+			out.print(lifetime);
+		}
+		writeTypeMangle(t.element());
+	}
+	private void writeTypeMangleRecord(Type.Record t) {
+		Type.Record rt = (Type.Record) t;
+		out.print("r");
+		String[] fields = rt.getFieldNames();
+		out.print(fields.length);
+		for(int i=0;i!=fields.length;++i) {
+			String field = fields[i];
+			writeTypeMangle(rt.getField(field));
+			out.print(field.length());
+			out.print(field);
+		}
+	}
+	private void writeTypeMangleNominal(Type.Nominal t) {
+		out.print("n");
+		// FIXME: need to figure out package
+		String name = t.name().name().toString();
+		out.print(name.length());
+		out.print(name);
+	}
+
+	private void writeTypeMangleFunctionOrMethod(Type.FunctionOrMethod t) {
+		if(t instanceof Type.Function) {
+			out.print("f");
+		} else {
+			out.print("m");
+		}
+		Type[] params = t.params();
+		out.print(params.length);
+		for(int i=0;i!=params.length;++i) {
+			writeTypeMangle(params[i]);
+		}
+		Type[] returns = t.returns();
+		out.print(returns.length);
+		for(int i=0;i!=returns.length;++i) {
+			writeTypeMangle(returns[i]);
+		}
+		out.print("e");
+	}
+
+	private void writeTypeMangleNegation(Type.Negation t) {
+		out.print("n");
+		writeTypeMangle(t.element());
+	}
+
+	private void writeTypeMangleUnion(Type.Union t) {
+		out.print("u");
+		Type[] bounds = t.bounds();
+		out.print(bounds.length);
+		for(int i=0;i!=bounds.length;++i) {
+			writeTypeMangle(bounds[i]);
+		}
+	}
+
+	private void writeTypeMangleIntersection(Type.Intersection t) {
+		out.print("c");
+		Type[] bounds = t.bounds();
+		out.print(bounds.length);
+		for(int i=0;i!=bounds.length;++i) {
+			writeTypeMangle(bounds[i]);
+		}
+	}
 	private void writeType(Type t) {
 		if(commentTypes) {
 			out.print("/*");

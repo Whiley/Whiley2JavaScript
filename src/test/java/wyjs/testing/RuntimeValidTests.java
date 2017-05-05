@@ -112,6 +112,7 @@ public class RuntimeValidTests {
 		// WyJS problems
 		// ===================================================
 
+		IGNORED.put("ConstrainedList_Valid_23", "#10");
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 	}
 
