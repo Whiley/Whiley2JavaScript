@@ -577,8 +577,10 @@ public final class JavaScriptFileWriter {
 			break;
 		case Bytecode.OPCODE_logicalnot:
 		case Bytecode.OPCODE_neg:
-		case Bytecode.OPCODE_bitwiseinvert:
 			writePrefixLocations((Location<Bytecode.Operator>) expr, typeTests);
+			break;
+		case Bytecode.OPCODE_bitwiseinvert:
+			writeInvertOperator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_all:
 		case Bytecode.OPCODE_some:
@@ -604,9 +606,11 @@ public final class JavaScriptFileWriter {
 		case Bytecode.OPCODE_bitwiseor:
 		case Bytecode.OPCODE_bitwisexor:
 		case Bytecode.OPCODE_bitwiseand:
+			writeInfixLocations((Location<Bytecode.Operator>) expr, typeTests);
+			break;
 		case Bytecode.OPCODE_shl:
 		case Bytecode.OPCODE_shr:
-			writeInfixLocations((Location<Bytecode.Operator>) expr, typeTests);
+			writeShiftOperator((Location<Bytecode.Operator>) expr, typeTests);
 			break;
 		case Bytecode.OPCODE_is:
 			writeIsOperator((Location<Bytecode.Operator>) expr, typeTests);
@@ -753,6 +757,14 @@ public final class JavaScriptFileWriter {
 		writeBracketedExpression(expr.getOperand(0), typeTests);
 	}
 
+	private void writeInvertOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		// Prefix operators
+		out.print("((~");
+		writeBracketedExpression(expr.getOperand(0), typeTests);
+		out.print(") & 0xFF)");
+	}
+
+
 	private void writeEqualityOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		Location<?> lhs = expr.getOperand(0);
 		Location<?> rhs = expr.getOperand(1);
@@ -790,6 +802,16 @@ public final class JavaScriptFileWriter {
 
 	}
 
+	private void writeShiftOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		out.print("((");
+		writeBracketedExpression(expr.getOperand(0), typeTests);
+		out.print(" ");
+		out.print(opcode(expr.getBytecode().kind()));
+		out.print(" ");
+		writeBracketedExpression(expr.getOperand(1), typeTests);
+		out.print(") & 0xFF)");
+	}
+
 	private void writeIsOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		Location<Bytecode.Const> operand = ((Location<Bytecode.Const>) expr.getOperand(1));
 		Constant.Type ct = (Constant.Type) operand.getBytecode().constant();
@@ -823,23 +845,27 @@ public final class JavaScriptFileWriter {
 
 	@SuppressWarnings("unchecked")
 	private void writeQuantifier(Location<Bytecode.Quantifier> expr, Set<Type> typeTests) {
+		out.print("Wy.");
 		out.print(quantifierKind(expr));
-		out.print(" { ");
+		out.print("(");
 		for (int i = 0; i != expr.numberOfOperandGroups(); ++i) {
-			Location<?>[] range = expr.getOperandGroup(i);
-			if (i != 0) {
-				out.print(", ");
+			if(i > 0) {
+				throw new RuntimeException("Need to support multiple operand groups");
 			}
-			Location<VariableDeclaration>  v = (Location<VariableDeclaration>) range[SyntaxTree.VARIABLE];
-			out.print(v.getBytecode().getName());
-			out.print(" in ");
+			Location<?>[] range = expr.getOperandGroup(i);
 			writeExpression(range[SyntaxTree.START], typeTests);
-			out.print("..");
+			out.print(",");
 			writeExpression(range[SyntaxTree.END], typeTests);
 		}
-		out.print(" | ");
+		out.print(",function(");
+		for (int i = 0; i != expr.numberOfOperandGroups(); ++i) {
+			Location<?>[] range = expr.getOperandGroup(i);
+			Location<VariableDeclaration>  v = (Location<VariableDeclaration>) range[SyntaxTree.VARIABLE];
+			out.print(v.getBytecode().getName());
+		}
+		out.print("){return ");
 		writeExpression(expr.getOperand(SyntaxTree.CONDITION), typeTests);
-		out.print(" } ");
+		out.print(";})");
 	}
 
 	private String quantifierKind(Location<Bytecode.Quantifier> expr) {
@@ -938,7 +964,7 @@ public final class JavaScriptFileWriter {
 		// FIXME: support es6 binary literals
 		// out.print("0b");
 		out.print("parseInt('");
-		out.print(Integer.toBinaryString(c.value()));
+		out.print(Integer.toBinaryString(c.value() & 0xFF));
 		out.print("',2)");
 	}
 
