@@ -117,13 +117,18 @@ public final class JavaScriptFileWriter {
 		if(invariant.isEmpty()) {
 			tabIndent(1);
 			out.println("return true;");
+		} else if(invariant.size() == 1) {
+			tabIndent(1);
+			out.print("return ");
+			writeExpression(invariant.get(0), new HashSet<>());
+			out.println(";");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
 				tabIndent(1);
 				if(i == 0) {
 					out.print("var result = (");
 				} else {
-					out.print("result = (");
+					out.print("result = result && (");
 				}
 				writeExpression(invariant.get(i), new HashSet<>());
 				out.println(");");
@@ -1039,6 +1044,12 @@ public final class JavaScriptFileWriter {
 			writeTypeTestNull((Type.Primitive) test,deps);
 		} else if(test == Type.T_BOOL) {
 			writeTypeTestBool((Type.Primitive) test,deps);
+		} else if(test == Type.T_BYTE) {
+			// FIXME: This is clear incorrect. However, there is no better
+			// alternative. The good news is that the byte type is slated to be
+			// removed in future versions of Whiley and, hence, this problem
+			// will go away.
+			writeTypeTestInt((Type.Primitive) test,deps);
 		} else if(test == Type.T_INT) {
 			writeTypeTestInt((Type.Primitive) test,deps);
 		} else if(test instanceof Type.Nominal) {
@@ -1049,6 +1060,8 @@ public final class JavaScriptFileWriter {
 			writeTypeTestReference((Type.Reference) test,deps);
 		} else if(test instanceof Type.Record) {
 			writeTypeTestRecord((Type.Record) test,deps);
+		} else if(test instanceof Type.FunctionOrMethod) {
+			writeTypeTestFunctionOrMethod((Type.FunctionOrMethod) test,deps);
 		} else if(test instanceof Type.Negation) {
 			writeTypeTestNegation((Type.Negation) test,deps);
 		} else if(test instanceof Type.Union) {
@@ -1131,8 +1144,19 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeTypeTestReference(Type.Reference test, Set<Type> deps) {
+		out.println();
 		tabIndent(1);
-		throw new IllegalArgumentException("cannot type test references in javascript");
+		out.println("if(val != null && val.constructor === Wy.Ref) {");
+		tabIndent(2);
+		out.print(" return is$");
+		writeTypeMangle(test.element());
+		out.println("(Wy.deref(val));");
+		tabIndent(1);
+		out.println("}");
+		tabIndent(1);
+		out.println("return false;");
+		//
+		deps.add(test.element());
 	}
 
 	private void writeTypeTestRecord(Type.Record test, Set<Type> deps) {
@@ -1154,6 +1178,29 @@ public final class JavaScriptFileWriter {
 			out.println("(val." + field +")) { return false; }");
 			deps.add(fieldType);
 		}
+		tabIndent(2);
+		out.println("return true;");
+		tabIndent(1);
+		out.println("}");
+		tabIndent(1);
+		out.println("return false;");
+	}
+
+	/**
+	 * Perform a runtime type test looking for a function or method of a given
+	 * type. This is tricky in JavaScript since there is insufficient type
+	 * information available. Specifically, <code>typeof f</code> (for some
+	 * function f) returns only <code>"function"</code>.
+	 *
+	 * @param test
+	 * @param deps
+	 */
+	private void writeTypeTestFunctionOrMethod(Type.FunctionOrMethod test, Set<Type> deps) {
+		out.println();
+		tabIndent(1);
+		out.println("if(val != null && typeof val === \"function\") {");
+		// FIXME: we need to do more here to distinguish functions. We could,
+		// for example, try to embed their signature string.
 		tabIndent(2);
 		out.println("return true;");
 		tabIndent(1);

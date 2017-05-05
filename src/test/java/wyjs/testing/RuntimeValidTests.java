@@ -107,6 +107,12 @@ public class RuntimeValidTests {
 		IGNORED.put("Complex_Valid_3", "#339");
 		IGNORED.put("DoWhile_Valid_4", "#339");
 		IGNORED.put("RecursiveType_Valid_28", "#339");
+
+		// ===================================================
+		// WyJS problems
+		// ===================================================
+
+		IGNORED.put("FunctionRef_Valid_13", "#9");
 	}
 
 	/**
