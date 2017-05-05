@@ -5,7 +5,7 @@ var SQUARE_HEIGHT=30;
  * Determine the appropriate image to use for rendering this square.
  */
 function selectSquareImage(game,square) {
-    if(square.type == EXPOSED) {	
+    if(is$n13ExposedSquare(square)) {
 	if(square.holdsBomb) {
 	    return game.bomb;
 	} else {
@@ -71,9 +71,11 @@ function createRandomBoard(width,height,nBombs) {
 }
 
 /**
- * Update the board state after a left click on the board.
+ * Update the board state after a left click on the board.  This
+ * exposes a square on the board which, in turn, may recursively
+ * expose additional squares as well.
  */
-function onLeftMouseClick(game, x, y) {
+function onExposeEvent(game, x, y) {
     // Convert coordinates into squares, rather than pixels
     x = Math.floor(x / SQUARE_WIDTH);
     y = Math.floor(y / SQUARE_HEIGHT);
@@ -94,6 +96,21 @@ function onLeftMouseClick(game, x, y) {
 }
 
 /**
+ * Update the board state after a right click on the board.  This
+ * marks a hidden square as being flagged, and has no effect on an
+ * exposed square.
+ */
+function onFlagEvent(game, x, y) {
+    // Convert coordinates into squares, rather than pixels
+    x = Math.floor(x / SQUARE_WIDTH);
+    y = Math.floor(y / SQUARE_HEIGHT);
+    // Update the board model
+    game.board = flagSquare(game.board,x,y);
+    // Redraw the board
+    drawBoard(game);
+}
+
+/**
  * Create a new game of Minesweeper
  */
 function startGame(document) {
@@ -105,7 +122,7 @@ function startGame(document) {
 	// Provide access to images for rendering
 	bomb: document.getElementById("bomb"),
 	hidden: document.getElementById("hidden"),
-	flagged: document.getElementById("blank"),
+	flagged: document.getElementById("flagged"),
 	exposed: [document.getElementById("blank"),
 	          document.getElementById("one"),
 		  document.getElementById("two"),
@@ -118,6 +135,10 @@ function startGame(document) {
     drawBoard(game);    
     // Configure mouse listener to capture events
     game.canvas.addEventListener("click", function(event) {
-	onLeftMouseClick(game,event.offsetX,event.offsetY);
-    });
+	if(event.shiftKey) {
+	    onFlagEvent(game,event.offsetX,event.offsetY);
+	} else {
+	    onExposeEvent(game,event.offsetX,event.offsetY);
+	}
+    }, false);
 }
