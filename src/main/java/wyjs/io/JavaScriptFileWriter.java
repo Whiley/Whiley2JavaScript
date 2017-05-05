@@ -331,13 +331,13 @@ public final class JavaScriptFileWriter {
 		out.println();
 	}
 	private void writeAssert(int indent, Location<Bytecode.Assert> c, Set<Type> typeTests) {
-		out.print("wyjs.assert(");
+		out.print("Wy.assert(");
 		writeExpression(c.getOperand(0), typeTests);
 		out.println(");");
 	}
 
 	private void writeAssume(int indent, Location<Bytecode.Assume> c, Set<Type> typeTests) {
-		out.print("wyjs.assert(");
+		out.print("Wy.assert(");
 		writeExpression(c.getOperand(0), typeTests);
 		out.println(");");
 	}
@@ -650,7 +650,7 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeArrayGenerator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("wyjs.array(");
+		out.print("Wy.array(");
 		writeExpression(expr.getOperand(0), typeTests);
 		out.print(", ");
 		writeExpression(expr.getOperand(1), typeTests);
@@ -720,7 +720,7 @@ public final class JavaScriptFileWriter {
 			Type.EffectiveRecord t = typeSystem.expandAsEffectiveRecord(expr.getType());
 			String[] fields = t.getFieldNames();
 			Location<?>[] operands = expr.getOperands();
-			out.print("{");
+			out.print("Wy.record({");
 			for (int i = 0; i != operands.length; ++i) {
 				if (i != 0) {
 					out.print(", ");
@@ -729,21 +729,22 @@ public final class JavaScriptFileWriter {
 				out.print(": ");
 				writeExpression(operands[i], typeTests);
 			}
-			out.print("}");
+			out.print("})");
 		} catch(ResolveError e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	private void writeNewObject(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("{box: ");
+		out.print("new Wy.Ref(");
 		writeExpression(expr.getOperand(0), typeTests);
-		out.print("}");
+		out.print(")");
 	}
 
 	private void writeDereference(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
+		out.print("Wy.deref(");
 		writeExpression(expr.getOperand(0), typeTests);
-		out.print(".box");
+		out.print(")");
 	}
 
 	private void writePrefixLocations(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
@@ -764,7 +765,7 @@ public final class JavaScriptFileWriter {
 			if (expr.getOpcode() == Bytecode.OPCODE_ne) {
 				out.print("!");
 			}
-			out.print("wyjs.equals(");
+			out.print("Wy.equals(");
 			writeExpression(lhs, typeTests);
 			out.print(", ");
 			writeExpression(rhs, typeTests);
@@ -861,7 +862,7 @@ public final class JavaScriptFileWriter {
 		if(isCopyable(vd.getType(),expr)) {
 			out.print(vd.getBytecode().getName());
 		} else {
-			out.print("wyjs.copy(" + vd.getBytecode().getName() + ")");
+			out.print("Wy.copy(" + vd.getBytecode().getName() + ")");
 		}
 	}
 
@@ -887,7 +888,7 @@ public final class JavaScriptFileWriter {
 
 	private void writeDereferenceLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
 		writeLVal(expr.getOperand(0), typeTests);
-		out.print(".box");
+		out.print(".$ref");
 	}
 
 	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {

@@ -75,7 +75,7 @@ public class RuntimeValidTests {
 	 * functions used in generated javascript and is distinct from the Whiley
 	 * standard library.
 	 */
-	public final static String WYJS_RUNTIME = "lib/wyjs.js".replace('/', File.separatorChar);
+	public final static String WYJS_RUNTIME = "lib/wy.js".replace('/', File.separatorChar);
 
 	/**
 	 * Ignored tests and a reason why we ignore them.
