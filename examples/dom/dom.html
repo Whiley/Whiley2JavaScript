@@ -1,0 +1,20 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title></title>
+<script type="text/javascript" src="wy.js"></script>
+<script type="text/javascript" src="dom.js"></script>
+
+</head>
+
+<body bgcolor="#ffffff">
+<h1>DOM Manipulation Test (in Whiley)</h1>
+<div id="test"></div>
+<script>
+window.onload = function() {
+  var element = document.getElementById("test");
+  var contents = createNode("center","Hello world");
+  Wy.embed(element,contents);
+}
+</script>
+</body>
+</html>

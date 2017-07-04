@@ -59,4 +59,12 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 		super(entry);
 		this.bytes = bytes;
 	}
+
+	public byte[] getBytes() {
+		return bytes;
+	}
+	@Override
+	public String toString() {
+		return new String(bytes);
+	}
 }
