@@ -1,26 +1,48 @@
-type JsString is (int[] str)
+import whiley.lang.ASCII
+
+type tagChar is ASCII.letter | ASCII.digit
+type tagName is (tagChar[] str)
 
 // ==================================================================
 // Html Module
 // ==================================================================
 
 type Attribute is {
-    JsString key,
-    JsString value
+    tagName key,
+    tagName value
 }
 
 type Node is {
-    JsString name,
+    tagName name,
     //Attribute[] attributes,
     Node[] children
-} | JsString
+} | ASCII.string
 
 // ==================================================================
-// Html Module
+// Functions
 // ==================================================================
 
-export function createNode(JsString tag, JsString text) -> Node:
+export function create() -> Node:
+    return div([
+        h1("Heading"),
+        center(["Hello World"])
+    ])
+
+function h1(ASCII.string text) -> Node:
     return {
-      name: tag,
-      children: [text]      
+        name: "h1",
+        children: [text]
     }
+
+function center(Node[] children) -> Node:
+    return {
+        name: "center",
+        children: children
+    }
+
+function div(Node[] children) -> Node:
+    return {
+        name: "div",
+        children: children
+    }
+    

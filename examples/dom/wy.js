@@ -141,11 +141,16 @@ Wy.Ref = function(x) {
  * currently does not).
  */
 Wy.embed = function(node,contents) {
-    if(typeof contents === "string") {
-	var child = document.createTextNode(contents);
+    // Check whether we have a leaf which corresponds to a text node.
+    // This is an array because strings are represented as arrays in
+    // Whiley.
+    if(contents.constructor === Array) {
+	var text = Wy.fromString(contents);
+	var child = document.createTextNode(text);
 	node.appendChild(child);
     } else {
-	var child = document.createElement(contents.name);
+	var name = Wy.fromString(contents.name);
+	var child = document.createElement(name);
 	// TODO: handle attributes
 	node.appendChild(child);
 	var children = contents.children;
@@ -153,4 +158,17 @@ Wy.embed = function(node,contents) {
 	    Wy.embed(child,children[i]);
 	}
     }
+}
+
+/**
+ * Convert a Whiley string into a JavaScript string.  This is done by
+ * converting each character code in the array into a JavaScript
+ * string character.
+ */
+Wy.fromString = function(whileyString) {
+    var result = "";
+    for (var i = 0; i < whileyString.length; i++) {
+	result += String.fromCharCode(whileyString[i]);
+    }
+    return result;
 }
