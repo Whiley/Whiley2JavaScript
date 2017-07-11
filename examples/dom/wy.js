@@ -149,10 +149,26 @@ Wy.embed = function(node,contents) {
 	var child = document.createTextNode(text);
 	node.appendChild(child);
     } else {
+	// Create new node
 	var name = Wy.fromString(contents.name);
 	var child = document.createElement(name);
-	// TODO: handle attributes
 	node.appendChild(child);
+	// Set attributes
+	var attributes = contents.attributes;
+	for(var i=0;i!=attributes.length;i=i+1) {
+	    if(attributes[i].key) {
+		// A text attribute
+		var key = Wy.fromString(attributes[i].key);		
+		var value = Wy.fromString(attributes[i].value);
+		child.setAttribute(key,value);
+	    } else {
+		// An event attribute
+		var event = Wy.fromString(attributes[i].event);
+		var handler = attributes[i].event;
+		child.addEventListener(event,handler);
+	    }
+	}
+	// Embed children
 	var children = contents.children;
 	for(var i=0;i!=children.length;i=i+1) {
 	    Wy.embed(child,children[i]);
