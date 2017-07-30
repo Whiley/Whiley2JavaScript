@@ -15,6 +15,7 @@ import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.util.DirectoryRoot;
 import wyil.lang.WyilFile;
+import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
 public class JsCompile extends Compile {
@@ -71,7 +72,7 @@ public class JsCompile extends Compile {
 	}
 
 	@Override
-	protected Result compile(StdProject project, List<Path.Entry<WhileyFile>> entries) {
+	protected Result compile(StdProject project, List<? extends Path.Entry<?>> entries) {
 		try {
 			Result r = super.compile(project, entries);
 			javascriptdir.flush();
@@ -104,5 +105,10 @@ public class JsCompile extends Compile {
 			jsBuilder.setLogger(logger);
 		}
 		project.add(new StdBuildRule(jsBuilder, wyildir, wyilIncludes, wyilExcludes, javascriptdir));
+	}
+
+	@Override
+	public List<? extends Path.Entry<?>> getModifiedSourceFiles() throws IOException {
+		return getModifiedSourceFiles(wyildir, wyilIncludes, javascriptdir, JavaScriptFile.ContentType);
 	}
 }
