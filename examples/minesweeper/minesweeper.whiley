@@ -25,7 +25,7 @@ ensures (r == a) || (r == b):
 type ExposedSquare is {
     int rank,
     bool holdsBomb
-}
+} where rank >= 0 && rank <= 8
 
 // A hidden square is one which has yet to be revealed by the player.  A
 // hidden square may contain a bomb and/or have been "flagged" by the
@@ -57,7 +57,7 @@ type Board is {
    Square[] squares,  // Array of squares making up the board
    nat width,         // Width of the game board (in squares)
    nat height         // Height of the game board (in squares)
-}
+} where width*height == |squares|
 
 // Create a board of given dimensions which contains no bombs, and
 // where all squares are hidden.
