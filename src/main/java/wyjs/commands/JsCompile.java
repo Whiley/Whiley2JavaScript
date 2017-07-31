@@ -10,6 +10,8 @@ import wybs.util.StdProject;
 import wyc.commands.Compile;
 import wyc.commands.Compile.Result;
 import wyc.lang.WhileyFile;
+import wycc.lang.Feature.ConfigurationError;
+import wycc.util.ArrayUtils;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
@@ -58,7 +60,41 @@ public class JsCompile extends Compile {
 
 	@Override
 	public String getDescription() {
-		return "Compile Whiley source files to JavaScript source files";
+		return "Compile Whiley source files to JavaScript source files [EXPERIMENTAL]";
+	}
+
+	private static final String[] SCHEMA = {
+			"jsdir"
+	};
+
+	@Override
+	public String[] getOptions() {
+		return ArrayUtils.append(super.getOptions(),SCHEMA);
+	}
+
+	@Override
+	public void set(String option, Object value) throws ConfigurationError {
+		try {
+			switch(option) {
+			case "jsdir":
+				setJavascriptdir(new File((String)value));
+				break;
+			default:
+				super.set(option, value);
+			}
+		} catch(IOException e) {
+			throw new ConfigurationError(e);
+		}
+	}
+
+	@Override
+	public String describe(String option) {
+		switch(option) {
+		case "jsdir":
+			return "Specify where to place generated javascript files";
+		default:
+			return super.describe(option);
+		}
 	}
 
 	public void setJavascriptdir(File dir) throws IOException {
