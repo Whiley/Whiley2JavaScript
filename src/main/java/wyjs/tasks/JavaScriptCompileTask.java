@@ -14,8 +14,9 @@ import wycc.util.Pair;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.Root;
-import wyil.lang.WyilFile;
-import wyil.util.TypeSystem;
+import wyc.lang.WhileyFile;
+import wyc.lang.WyilFile;
+import wyc.type.TypeSystem;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;
 
@@ -65,14 +66,12 @@ public class JavaScriptCompileTask implements Build.Task {
 
 		for (Pair<Path.Entry<?>, Path.Root> p : delta) {
 			Path.Root dst = p.second();
-			Path.Entry<WyilFile> source = (Path.Entry<WyilFile>) p.first();
+			Path.Entry<WhileyFile> source = (Path.Entry<WhileyFile>) p.first();
 			Path.Entry<JavaScriptFile> target = dst.create(source.id(), JavaScriptFile.ContentType);
 			graph.registerDerivation(source, target);
 			generatedFiles.add(target);
-
 			// Construct the file
 			JavaScriptFile contents = build(source, target);
-
 			// Write class file into its destination
 			target.write(contents);
 		}
@@ -88,7 +87,7 @@ public class JavaScriptCompileTask implements Build.Task {
 		return generatedFiles;
 	}
 
-	private JavaScriptFile build(Path.Entry<WyilFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
+	private JavaScriptFile build(Path.Entry<WhileyFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
