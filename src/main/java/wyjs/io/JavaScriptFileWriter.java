@@ -267,9 +267,11 @@ public final class JavaScriptFileWriter {
 			break;
 		case EXPR_indirectinvoke:
 			writeIndirectInvoke((Expr.IndirectInvoke) stmt, typeTests);
+			out.println(";");
 			break;
-		case EXPR_invoke:
+		case EXPR_qualifiedinvoke:
 			writeInvoke((Expr.Invoke) stmt, typeTests);
+			out.println(";");
 			break;
 		case STMT_namedblock:
 			writeNamedBlock(indent, (Stmt.NamedBlock) stmt, typeTests);
@@ -291,7 +293,7 @@ public final class JavaScriptFileWriter {
 			writeVariableDeclaration(indent, (Declaration.Variable) stmt, typeTests);
 			break;
 		default:
-			throw new IllegalArgumentException("unknown bytecode encountered");
+			throw new IllegalArgumentException("unknown statement encountered (" + stmt.getClass().getName() + ")");
 		}
 	}
 
@@ -504,11 +506,14 @@ public final class JavaScriptFileWriter {
 		case EXPR_indirectinvoke:
 			writeIndirectInvoke((Expr.IndirectInvoke) expr, typeTests);
 			break;
-		case EXPR_invoke:
+		case EXPR_qualifiedinvoke:
 			writeInvoke((Expr.Invoke) expr, typeTests);
 			break;
 		case DECL_lambda:
-			writeLambda((Declaration.Lambda) expr, typeTests);
+			writeLambdaDeclaration((Declaration.Lambda) expr, typeTests);
+			break;
+		case EXPR_qualifiedlambda:
+			writeLambdaAccess((Expr.LambdaAccess) expr, typeTests);
 			break;
 		case EXPR_recinit:
 			writeRecordConstructor((Expr.RecordInitialiser) expr, typeTests);
@@ -544,7 +549,13 @@ public final class JavaScriptFileWriter {
 		case EXPR_bitwiseor:
 		case EXPR_bitwisexor:
 		case EXPR_bitwiseand:
-			writeInfixLocations((Expr.Operator) expr, typeTests);
+			writeInfixOperator((Expr.Operator) expr, typeTests);
+			break;
+		case EXPR_implies:
+			writeLogicalImplication((Expr.LogicalImplication) expr, typeTests);
+			break;
+		case EXPR_iff:
+			writeLogicalIff((Expr.LogicalIff) expr, typeTests);
 			break;
 		case EXPR_bitwiseshl:
 		case EXPR_bitwiseshr:
@@ -553,6 +564,9 @@ public final class JavaScriptFileWriter {
 		case EXPR_is:
 			writeIsOperator((Expr.Is) expr, typeTests);
 			break;
+		case EXPR_staticvar:
+			writeStaticVariableAccess((Expr.StaticVariableAccess) expr, typeTests);
+			break;
 		case EXPR_varmove:
 			writeVariableMove((Expr.VariableAccess) expr, typeTests);
 			break;
@@ -560,7 +574,7 @@ public final class JavaScriptFileWriter {
 			writeVariableCopy((Expr.VariableAccess) expr, typeTests);
 			break;
 		default:
-			throw new IllegalArgumentException("unknown bytecode encountered: " + expr);
+			throw new IllegalArgumentException("unknown expresion encountered: " + expr.getClass().getName());
 		}
 	}
 
@@ -635,8 +649,7 @@ public final class JavaScriptFileWriter {
 		out.print(")");
 	}
 
-	@SuppressWarnings("unchecked")
-	private void writeLambda(Declaration.Lambda expr, Set<Type> typeTests) {
+	private void writeLambdaDeclaration(Declaration.Lambda expr, Set<Type> typeTests) {
 		out.print("function(");
 		Tuple<Declaration.Variable> parameters = expr.getParameters();
 		for (int i = 0; i != parameters.size(); ++i) {
@@ -651,6 +664,32 @@ public final class JavaScriptFileWriter {
 		out.print("return ");
 		writeExpression(expr.getBody(), typeTests);
 		out.print("; }");
+	}
+
+	private void writeLambdaAccess(Expr.LambdaAccess expr, Set<Type> typeTests) {
+		// NOTE: the reason we use a function declaration here (i.e. instead of
+		// just assigning the name) is that it protects against potential name
+		// clashes with local variables.
+		Type.Callable ft = expr.getSignatureType();
+		Tuple<Type> params = ft.getParameters();
+		out.print("function(");
+		for(int i=0;i!=params.size();++i) {
+			if(i!=0) {
+				out.print(",");
+			}
+			out.print("p" + i);
+		}
+		out.print(") { return ");
+		out.print(expr.getName());
+		writeTypeMangle(ft);
+		out.print("(");
+		for(int i=0;i!=params.size();++i) {
+			if(i!=0) {
+				out.print(",");
+			}
+			out.print("p" + i);
+		}
+		out.print("); }");
 	}
 
 	private void writeRecordConstructor(Expr.RecordInitialiser expr, Set<Type> typeTests) {
@@ -696,6 +735,7 @@ public final class JavaScriptFileWriter {
 	private void writeEqualityOperator(Expr.Operator expr, Set<Type> typeTests) {
 		Expr lhs = expr.getOperand(0);
 		Expr rhs = expr.getOperand(1);
+		// FIXME: put this back
 		Type lhsT = typeSystem.inferType(lhs.getType());
 		Type rhsT = typeSystem.inferType(rhs.getType());
 		//
@@ -721,13 +761,25 @@ public final class JavaScriptFileWriter {
 		out.print(")");
 	}
 
-	private void writeInfixLocations(Expr.Operator expr, Set<Type> typeTests) {
+	private void writeInfixOperator(Expr.Operator expr, Set<Type> typeTests) {
 		writeBracketedExpression(expr.getOperand(0), typeTests);
 		out.print(" ");
 		out.print(opcode(expr.getOpcode()));
 		out.print(" ");
 		writeBracketedExpression(expr.getOperand(1), typeTests);
+	}
 
+	private void writeLogicalImplication(Expr.LogicalImplication expr, Set<Type> typeTests) {
+		out.print("!");
+		writeBracketedExpression(expr.getOperand(0), typeTests);
+		out.print("||");
+		writeBracketedExpression(expr.getOperand(1), typeTests);
+	}
+
+	private void writeLogicalIff(Expr.LogicalIff expr, Set<Type> typeTests) {
+		writeBracketedExpression(expr.getOperand(0), typeTests);
+		out.print("==");
+		writeBracketedExpression(expr.getOperand(1), typeTests);
 	}
 
 	private void writeShiftOperator(Expr.Operator expr, Set<Type> typeTests) {
@@ -796,6 +848,11 @@ public final class JavaScriptFileWriter {
 		out.print(";})");
 	}
 
+	private void writeStaticVariableAccess(Expr.StaticVariableAccess  expr, Set<Type> typeTests) {
+		// FIXME: this is horrendously broken
+		out.print("Wy.copy(" + expr.getName() + ")");
+	}
+
 	private void writeVariableMove(Expr.VariableAccess expr, Set<Type> typeTests) {
 		Declaration.Variable vd = expr.getVariableDeclaration();
 		out.print(vd.getName());
@@ -860,6 +917,17 @@ public final class JavaScriptFileWriter {
 			out.print("parseInt('");
 			out.print(Integer.toBinaryString(b.get() & 0xFF));
 			out.print("',2)");
+		} else if(c instanceof Value.UTF8) {
+			Value.UTF8 s = (Value.UTF8) c;
+			byte[] bytes = s.get();
+			out.print("[");
+			for(int i=0;i!=bytes.length;++i) {
+				if(i != 0) {
+					out.print(", ");
+				}
+				out.print(bytes[i]);
+			}
+			out.print("]");
 		} else {
 			out.print(c);
 		}
@@ -883,19 +951,19 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeTypeTest(Type test, Set<Type> deps) {
-		if(test == Type.Any) {
+		if(test instanceof Type.Any) {
 			writeTypeTestAny((Type.Primitive) test,deps);
-		} else if(test == Type.Null) {
+		} else if(test instanceof Type.Null) {
 			writeTypeTestNull((Type.Primitive) test,deps);
-		} else if(test == Type.Bool) {
+		} else if(test instanceof Type.Bool) {
 			writeTypeTestBool((Type.Primitive) test,deps);
-		} else if(test == Type.Byte) {
+		} else if(test instanceof Type.Byte) {
 			// FIXME: This is clear incorrect. However, there is no better
 			// alternative. The good news is that the byte type is slated to be
 			// removed in future versions of Whiley and, hence, this problem
 			// will go away.
 			writeTypeTestInt((Type.Primitive) test,deps);
-		} else if(test == Type.Int) {
+		} else if(test instanceof Type.Int) {
 			writeTypeTestInt((Type.Primitive) test,deps);
 		} else if(test instanceof Type.Nominal) {
 			writeTypeTestNominal((Type.Nominal) test,deps);
@@ -943,10 +1011,10 @@ public final class JavaScriptFileWriter {
 			throw new RuntimeException("undefined nominal type encountered: " + name);
 		}
 		out.print(" return is$");
-		writeTypeMangle(td.getSignature());
+		writeTypeMangle(td.getVariableDeclaration().getType());
 		out.print("(val) && " + name.getLast() + "$(val); ");
 		//
-		deps.add(td.getSignature());
+		deps.add(td.getVariableDeclaration().getType());
 	}
 
 	private static int variableIndex = 0;
@@ -1007,9 +1075,9 @@ public final class JavaScriptFileWriter {
 		for (int i = 0; i != fields.size(); ++i) {
 			Declaration.Variable field = fields.getOperand(i);
 			tabIndent(2);
-			out.print("if(val." + field + " === \"undefined\" || !is$");
+			out.print("if(val." + field.getName() + " === \"undefined\" || !is$");
 			writeTypeMangle(field.getType());
-			out.println("(val." + field + ")) { return false; }");
+			out.println("(val." + field.getName() + ")) { return false; }");
 			deps.add(field.getType());
 		}
 		tabIndent(2);
@@ -1092,15 +1160,15 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeTypeMangle(Type t) {
-		if (t == Type.Any) {
+		if (t instanceof Type.Any) {
 			out.print("T");
-		} else if (t == Type.Null) {
+		} else if (t instanceof Type.Null) {
 			out.print("N");
-		} else if (t == Type.Bool) {
+		} else if (t instanceof Type.Bool) {
 			out.print("B");
-		} else if (t == Type.Byte) {
+		} else if (t instanceof Type.Byte) {
 			out.print("U");
-		} else if (t == Type.Int) {
+		} else if (t instanceof Type.Int) {
 			out.print("I");
 		} else if (t instanceof Type.Array) {
 			writeTypeMangleArray((Type.Array) t);

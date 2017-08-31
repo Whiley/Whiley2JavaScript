@@ -28,7 +28,6 @@ import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.Root;
 import wyc.lang.WhileyFile;
-import wyc.lang.WyilFile;
 import wyc.type.TypeSystem;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;

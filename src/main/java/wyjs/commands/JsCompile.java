@@ -27,7 +27,6 @@ import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.util.DirectoryRoot;
 import wyc.lang.WhileyFile;
-import wyc.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -144,11 +143,11 @@ public class JsCompile extends Compile {
 
 	protected void addWyil2JavaScriptBuildRule(StdProject project) {
 		// Configure build rules for normal compilation
-		Content.Filter<WhileyFile> wyilIncludes = Content.filter("**", WyilFile.ContentType);
+		Content.Filter<WhileyFile> wyilIncludes = Content.filter("**", WhileyFile.BinaryContentType);
 		Content.Filter<WhileyFile> wyilExcludes = null;
 		// Rule for compiling Whiley to WyIL
 		JavaScriptCompileTask jsBuilder = new JavaScriptCompileTask(project);
-		if(verbose) {
+		if (verbose) {
 			jsBuilder.setLogger(logger);
 		}
 		project.add(new StdBuildRule(jsBuilder, wyildir, wyilIncludes, wyilExcludes, javascriptdir));
