@@ -11,6 +11,7 @@ import java.util.*;
 
 import wybs.lang.Build;
 import wybs.lang.NameID;
+import wybs.lang.NameResolver.ResolutionError;
 import wybs.lang.SyntacticElement;
 import static wybs.lang.SyntaxError.*;
 
@@ -19,6 +20,7 @@ import static wyc.lang.WhileyFile.*;
 
 import wyc.lang.WhileyFile;
 import wyc.type.TypeSystem;
+import wyc.util.ErrorMessages;
 
 
 /**
@@ -82,8 +84,8 @@ public final class JavaScriptFileWriter {
 		out.println();
 		HashSet<Type> typeTests = new HashSet<>();
 		for(Declaration d : module.getDeclarations()) {
-			if(d instanceof Declaration.Constant) {
-				write((Declaration.Constant) d, typeTests);
+			if(d instanceof Declaration.StaticVariable) {
+				write((Declaration.StaticVariable) d, typeTests);
 			} else if(d instanceof Declaration.FunctionOrMethod) {
 				write((Declaration.FunctionOrMethod) d, typeTests);
 			} else if(d instanceof Declaration.Type) {
@@ -128,9 +130,12 @@ public final class JavaScriptFileWriter {
 		out.println();
 	}
 
-	private void write(Declaration.Constant cd, Set<Type> typeTests) {
-		out.print("var " + cd.getName() + " = ");
-		writeExpression(cd.getConstantExpr(),typeTests);
+	private void write(Declaration.StaticVariable cd, Set<Type> typeTests) {
+		out.print("var " + cd.getName());
+		if (cd.hasInitialiser()) {
+			out.print(" = ");
+			writeExpression(cd.getInitialiser(), typeTests);
+		}
 		out.println(";");
 	}
 
@@ -142,7 +147,7 @@ public final class JavaScriptFileWriter {
 		//
 		out.print("function ");
 		out.print(method.getName());
-		writeTypeMangle(method.getSignature());
+		writeTypeMangle(method.getType());
 		writeParameters(method.getParameters());
 		if(commentTypes) {
 			if (method.getReturns().size() > 0) {
@@ -195,7 +200,7 @@ public final class JavaScriptFileWriter {
 	 * @param method
 	 */
 	private void writeExportTrampoline(Declaration.FunctionOrMethod method) {
-		Type.Callable ft = method.getSignature();
+		Type.Callable ft = method.getType();
 		Tuple<Declaration.Variable> params = method.getParameters();
 		Tuple<Declaration.Variable> returns = method.getReturns();
 		if (params.size() > 0) {
@@ -269,7 +274,7 @@ public final class JavaScriptFileWriter {
 			writeIndirectInvoke((Expr.IndirectInvoke) stmt, typeTests);
 			out.println(";");
 			break;
-		case EXPR_qualifiedinvoke:
+		case EXPR_invoke:
 			writeInvoke((Expr.Invoke) stmt, typeTests);
 			out.println(";");
 			break;
@@ -475,106 +480,111 @@ public final class JavaScriptFileWriter {
 
 	@SuppressWarnings("unchecked")
 	private void writeExpression(Expr expr, Set<Type> typeTests)  {
-		switch (expr.getOpcode()) {
-		case EXPR_arrlen:
-			writeArrayLength((Expr.ArrayLength) expr, typeTests);
-			break;
-		case EXPR_arridx:
-			writeArrayIndex((Expr.ArrayAccess) expr, typeTests);
-			break;
-		case EXPR_arrinit:
-			writeArrayInitialiser((Expr.ArrayInitialiser) expr, typeTests);
-			break;
-		case EXPR_arrgen:
-			writeArrayGenerator((Expr.ArrayGenerator) expr, typeTests);
-			break;
-		case EXPR_bitwisenot:
-			writeInvertOperator((Expr.BitwiseComplement) expr, typeTests);
-			break;
-		case EXPR_cast:
-			writeConvert((Expr.Cast) expr, typeTests);
-			break;
-		case EXPR_const:
-			writeConst((Expr.Constant) expr, typeTests);
-			break;
-		case EXPR_deref:
-			writeDereference((Expr.Dereference) expr, typeTests);
-			break;
-		case EXPR_recfield:
-			writeFieldLoad((Expr.RecordAccess) expr, typeTests);
-			break;
-		case EXPR_indirectinvoke:
-			writeIndirectInvoke((Expr.IndirectInvoke) expr, typeTests);
-			break;
-		case EXPR_qualifiedinvoke:
-			writeInvoke((Expr.Invoke) expr, typeTests);
-			break;
-		case DECL_lambda:
-			writeLambdaDeclaration((Declaration.Lambda) expr, typeTests);
-			break;
-		case EXPR_qualifiedlambda:
-			writeLambdaAccess((Expr.LambdaAccess) expr, typeTests);
-			break;
-		case EXPR_recinit:
-			writeRecordConstructor((Expr.RecordInitialiser) expr, typeTests);
-			break;
-		case EXPR_new:
-			writeNewObject((Expr.New) expr, typeTests);
-			break;
-		case EXPR_not:
-		case EXPR_neg:
-			writePrefixLocations((Expr.Operator) expr, typeTests);
-			break;
-		case EXPR_forall:
-		case EXPR_exists:
-			writeQuantifier((Expr.Quantifier) expr, typeTests);
-			break;
-		case EXPR_eq:
-		case EXPR_neq:
-			writeEqualityOperator((Expr.Operator) expr, typeTests);
-			break;
-		case EXPR_div:
-			writeDivideOperator((Expr.Division) expr, typeTests);
-			break;
-		case EXPR_add:
-		case EXPR_sub:
-		case EXPR_mul:
-		case EXPR_rem:
-		case EXPR_lt:
-		case EXPR_lteq:
-		case EXPR_gt:
-		case EXPR_gteq:
-		case EXPR_and:
-		case EXPR_or:
-		case EXPR_bitwiseor:
-		case EXPR_bitwisexor:
-		case EXPR_bitwiseand:
-			writeInfixOperator((Expr.Operator) expr, typeTests);
-			break;
-		case EXPR_implies:
-			writeLogicalImplication((Expr.LogicalImplication) expr, typeTests);
-			break;
-		case EXPR_iff:
-			writeLogicalIff((Expr.LogicalIff) expr, typeTests);
-			break;
-		case EXPR_bitwiseshl:
-		case EXPR_bitwiseshr:
-			writeShiftOperator((Expr.Operator) expr, typeTests);
-			break;
-		case EXPR_is:
-			writeIsOperator((Expr.Is) expr, typeTests);
-			break;
-		case EXPR_staticvar:
-			writeStaticVariableAccess((Expr.StaticVariableAccess) expr, typeTests);
-			break;
-		case EXPR_varmove:
-			writeVariableMove((Expr.VariableAccess) expr, typeTests);
-			break;
-		case EXPR_varcopy:
-			writeVariableCopy((Expr.VariableAccess) expr, typeTests);
-			break;
-		default:
-			throw new IllegalArgumentException("unknown expresion encountered: " + expr.getClass().getName());
+		try {
+			switch (expr.getOpcode()) {
+			case EXPR_arrlen:
+				writeArrayLength((Expr.ArrayLength) expr, typeTests);
+				break;
+			case EXPR_arridx:
+				writeArrayIndex((Expr.ArrayAccess) expr, typeTests);
+				break;
+			case EXPR_arrinit:
+				writeArrayInitialiser((Expr.ArrayInitialiser) expr, typeTests);
+				break;
+			case EXPR_arrgen:
+				writeArrayGenerator((Expr.ArrayGenerator) expr, typeTests);
+				break;
+			case EXPR_bitwisenot:
+				writeInvertOperator((Expr.BitwiseComplement) expr, typeTests);
+				break;
+			case EXPR_cast:
+				writeConvert((Expr.Cast) expr, typeTests);
+				break;
+			case EXPR_const:
+				writeConst((Expr.Constant) expr, typeTests);
+				break;
+			case EXPR_deref:
+				writeDereference((Expr.Dereference) expr, typeTests);
+				break;
+			case EXPR_recfield:
+				writeFieldLoad((Expr.RecordAccess) expr, typeTests);
+				break;
+			case EXPR_indirectinvoke:
+				writeIndirectInvoke((Expr.IndirectInvoke) expr, typeTests);
+				break;
+			case EXPR_invoke:
+				writeInvoke((Expr.Invoke) expr, typeTests);
+				break;
+			case DECL_lambda:
+				writeLambdaDeclaration((Declaration.Lambda) expr, typeTests);
+				break;
+			case EXPR_lambda:
+				writeLambdaAccess((Expr.LambdaAccess) expr, typeTests);
+				break;
+			case EXPR_recinit:
+				writeRecordConstructor((Expr.RecordInitialiser) expr, typeTests);
+				break;
+			case EXPR_new:
+				writeNewObject((Expr.New) expr, typeTests);
+				break;
+			case EXPR_not:
+			case EXPR_neg:
+				writePrefixLocations((Expr.Operator) expr, typeTests);
+				break;
+			case EXPR_forall:
+			case EXPR_exists:
+				writeQuantifier((Expr.Quantifier) expr, typeTests);
+				break;
+			case EXPR_eq:
+			case EXPR_neq:
+				writeEqualityOperator((Expr.Operator) expr, typeTests);
+				break;
+			case EXPR_div:
+				writeDivideOperator((Expr.Division) expr, typeTests);
+				break;
+			case EXPR_add:
+			case EXPR_sub:
+			case EXPR_mul:
+			case EXPR_rem:
+			case EXPR_lt:
+			case EXPR_lteq:
+			case EXPR_gt:
+			case EXPR_gteq:
+			case EXPR_and:
+			case EXPR_or:
+			case EXPR_bitwiseor:
+			case EXPR_bitwisexor:
+			case EXPR_bitwiseand:
+				writeInfixOperator((Expr.Operator) expr, typeTests);
+				break;
+			case EXPR_implies:
+				writeLogicalImplication((Expr.LogicalImplication) expr, typeTests);
+				break;
+			case EXPR_iff:
+				writeLogicalIff((Expr.LogicalIff) expr, typeTests);
+				break;
+			case EXPR_bitwiseshl:
+			case EXPR_bitwiseshr:
+				writeShiftOperator((Expr.Operator) expr, typeTests);
+				break;
+			case EXPR_is:
+				writeIsOperator((Expr.Is) expr, typeTests);
+				break;
+			case EXPR_staticvar:
+				writeStaticVariableAccess((Expr.StaticVariableAccess) expr, typeTests);
+				break;
+			case EXPR_varmove:
+				writeVariableMove((Expr.VariableAccess) expr, typeTests);
+				break;
+			case EXPR_varcopy:
+				writeVariableCopy((Expr.VariableAccess) expr, typeTests);
+				break;
+			default:
+				throw new IllegalArgumentException("unknown expresion encountered: " + expr.getClass().getName());
+			}
+		} catch (ResolutionError e) {
+			// FIXME: the latter is rather ugly
+			throw new InternalFailure("resolution failure", ((WhileyFile) expr.getHeap()).getEntry(), expr, e);
 		}
 	}
 
@@ -637,7 +647,7 @@ public final class JavaScriptFileWriter {
 		Name name = expr.getName();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name);
-		writeTypeMangle(expr.getSignatureType());
+		writeTypeMangle(expr.getSignature());
 		out.print("(");
 		Tuple<Expr> args = expr.getArguments();
 		for (int i = 0; i != args.size(); ++i) {
@@ -670,7 +680,7 @@ public final class JavaScriptFileWriter {
 		// NOTE: the reason we use a function declaration here (i.e. instead of
 		// just assigning the name) is that it protects against potential name
 		// clashes with local variables.
-		Type.Callable ft = expr.getSignatureType();
+		Type.Callable ft = expr.getSignature();
 		Tuple<Type> params = ft.getParameters();
 		out.print("function(");
 		for(int i=0;i!=params.size();++i) {
@@ -732,15 +742,15 @@ public final class JavaScriptFileWriter {
 	}
 
 
-	private void writeEqualityOperator(Expr.Operator expr, Set<Type> typeTests) {
+	private void writeEqualityOperator(Expr.Operator expr, Set<Type> typeTests) throws ResolutionError {
 		Expr lhs = expr.getOperand(0);
 		Expr rhs = expr.getOperand(1);
 		// FIXME: put this back
-		Type lhsT = typeSystem.inferType(lhs.getType());
-		Type rhsT = typeSystem.inferType(rhs.getType());
+		Type lhsT = typeSystem.inferType(lhs);
+		Type rhsT = typeSystem.inferType(rhs);
 		//
 		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
-			writeInfixLocations(expr, typeTests);
+			writeInfixOperator(expr, typeTests);
 		} else {
 			if (expr instanceof Expr.NotEqual) {
 				out.print("!");
@@ -1199,8 +1209,12 @@ public final class JavaScriptFileWriter {
 		out.print("p");
 		if (t.hasLifetime()) {
 			String lifetime = t.getLifetime().get();
-			out.print(lifetime.length());
-			out.print(lifetime);
+			if(lifetime.equals("*")) {
+				out.print("_");
+			} else {
+				out.print(lifetime.length());
+				out.print(lifetime);
+			}
 		} else {
 			out.print("0");
 		}
@@ -1302,7 +1316,7 @@ public final class JavaScriptFileWriter {
 				throw new RuntimeException("undefined nominal type encountered: " + nid);
 			}
 			//
-			return isCopyable(td.getSignature(), context);
+			return isCopyable(td.getType(), context);
 		} else {
 			return false;
 		}
