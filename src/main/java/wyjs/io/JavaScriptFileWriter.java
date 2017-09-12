@@ -83,21 +83,21 @@ public final class JavaScriptFileWriter {
 
 		out.println();
 		HashSet<Type> typeTests = new HashSet<>();
-		for(Declaration d : module.getDeclarations()) {
-			if(d instanceof Declaration.StaticVariable) {
-				write((Declaration.StaticVariable) d, typeTests);
-			} else if(d instanceof Declaration.FunctionOrMethod) {
-				write((Declaration.FunctionOrMethod) d, typeTests);
-			} else if(d instanceof Declaration.Type) {
-				write((Declaration.Type) d, typeTests);
+		for(Decl d : module.getDeclarations()) {
+			if(d instanceof Decl.StaticVariable) {
+				write((Decl.StaticVariable) d, typeTests);
+			} else if(d instanceof Decl.FunctionOrMethod) {
+				write((Decl.FunctionOrMethod) d, typeTests);
+			} else if(d instanceof Decl.Type) {
+				write((Decl.Type) d, typeTests);
 			}
 		}
 		writeTypeTests(typeTests, new HashSet<>());
 		out.flush();
 	}
 
-	private void write(Declaration.Type td, Set<Type> typeTests) {
-		Declaration.Variable vardecl = td.getVariableDeclaration();
+	private void write(Decl.Type td, Set<Type> typeTests) {
+		Decl.Variable vardecl = td.getVariableDeclaration();
 		out.print("function ");
 		out.print(td.getName());
 		out.print("$(");
@@ -130,7 +130,7 @@ public final class JavaScriptFileWriter {
 		out.println();
 	}
 
-	private void write(Declaration.StaticVariable cd, Set<Type> typeTests) {
+	private void write(Decl.StaticVariable cd, Set<Type> typeTests) {
 		out.print("var " + cd.getName());
 		if (cd.hasInitialiser()) {
 			out.print(" = ");
@@ -139,7 +139,7 @@ public final class JavaScriptFileWriter {
 		out.println(";");
 	}
 
-	private void write(Declaration.FunctionOrMethod method, Set<Type> typeTests) {
+	private void write(Decl.FunctionOrMethod method, Set<Type> typeTests) {
 		// FIXME: what to do with private methods?
 		if (method.getModifiers().match(Modifier.Export.class) != null) {
 			writeExportTrampoline(method);
@@ -179,13 +179,13 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeParameters(Tuple<Declaration.Variable> parameters) {
+	private void writeParameters(Tuple<Decl.Variable> parameters) {
 		out.print("(");
 		for (int i = 0; i != parameters.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			Declaration.Variable decl = parameters.getOperand(i);
+			Decl.Variable decl = parameters.getOperand(i);
 			writeType(decl.getType());
 			out.print(decl.getName());
 		}
@@ -199,10 +199,10 @@ public final class JavaScriptFileWriter {
 	 *
 	 * @param method
 	 */
-	private void writeExportTrampoline(Declaration.FunctionOrMethod method) {
+	private void writeExportTrampoline(Decl.FunctionOrMethod method) {
 		Type.Callable ft = method.getType();
-		Tuple<Declaration.Variable> params = method.getParameters();
-		Tuple<Declaration.Variable> returns = method.getReturns();
+		Tuple<Decl.Variable> params = method.getParameters();
+		Tuple<Decl.Variable> returns = method.getReturns();
 		if (params.size() > 0) {
 			out.print("function ");
 			out.print(method.getName());
@@ -220,13 +220,13 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeTrampolineArguments(Tuple<Declaration.Variable> parameters) {
+	private void writeTrampolineArguments(Tuple<Decl.Variable> parameters) {
 		out.print("(");
 		for (int i = 0; i != parameters.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			Declaration.Variable decl = parameters.getOperand(i);
+			Decl.Variable decl = parameters.getOperand(i);
 			out.print(decl.getName());
 		}
 		out.println(");");
@@ -293,9 +293,9 @@ public final class JavaScriptFileWriter {
 		case STMT_switch:
 			writeSwitch(indent, (Stmt.Switch) stmt, typeTests);
 			break;
-		case DECL_variable:
-		case DECL_variableinitialiser:
-			writeVariableDeclaration(indent, (Declaration.Variable) stmt, typeTests);
+		case DECL_var:
+		case DECL_varinit:
+			writeVariableDeclaration(indent, (Decl.Variable) stmt, typeTests);
 			break;
 		default:
 			throw new IllegalArgumentException("unknown statement encountered (" + stmt.getClass().getName() + ")");
@@ -395,7 +395,7 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeReturn(int indent, Stmt.Return b, Set<Type> typeTests) {
-		Tuple<Expr> operands = b.getOperand();
+		Tuple<Expr> operands = b.getReturns();
 		out.print("return");
 		if (operands.size() == 1) {
 			// easy case
@@ -448,7 +448,7 @@ public final class JavaScriptFileWriter {
 		out.println("}");
 	}
 
-	private void writeVariableDeclaration(int indent, Declaration.Variable decl, Set<Type> typeTests) {
+	private void writeVariableDeclaration(int indent, Decl.Variable decl, Set<Type> typeTests) {
 		out.print("var ");
 		writeType(decl.getType());
 		out.print(decl.getName());
@@ -482,31 +482,31 @@ public final class JavaScriptFileWriter {
 	private void writeExpression(Expr expr, Set<Type> typeTests)  {
 		try {
 			switch (expr.getOpcode()) {
-			case EXPR_arrlen:
+			case EXPR_alen:
 				writeArrayLength((Expr.ArrayLength) expr, typeTests);
 				break;
-			case EXPR_arridx:
+			case EXPR_aread:
 				writeArrayIndex((Expr.ArrayAccess) expr, typeTests);
 				break;
-			case EXPR_arrinit:
+			case EXPR_ainit:
 				writeArrayInitialiser((Expr.ArrayInitialiser) expr, typeTests);
 				break;
-			case EXPR_arrgen:
+			case EXPR_agen:
 				writeArrayGenerator((Expr.ArrayGenerator) expr, typeTests);
 				break;
-			case EXPR_bitwisenot:
+			case EXPR_bnot:
 				writeInvertOperator((Expr.BitwiseComplement) expr, typeTests);
 				break;
 			case EXPR_cast:
 				writeConvert((Expr.Cast) expr, typeTests);
 				break;
-			case EXPR_const:
+			case EXPR_constant:
 				writeConst((Expr.Constant) expr, typeTests);
 				break;
-			case EXPR_deref:
+			case EXPR_pread:
 				writeDereference((Expr.Dereference) expr, typeTests);
 				break;
-			case EXPR_recfield:
+			case EXPR_rread:
 				writeFieldLoad((Expr.RecordAccess) expr, typeTests);
 				break;
 			case EXPR_indirectinvoke:
@@ -516,55 +516,55 @@ public final class JavaScriptFileWriter {
 				writeInvoke((Expr.Invoke) expr, typeTests);
 				break;
 			case DECL_lambda:
-				writeLambdaDeclaration((Declaration.Lambda) expr, typeTests);
+				writeLambdaDeclaration((Decl.Lambda) expr, typeTests);
 				break;
-			case EXPR_lambda:
+			case EXPR_lread:
 				writeLambdaAccess((Expr.LambdaAccess) expr, typeTests);
 				break;
-			case EXPR_recinit:
+			case EXPR_rinit:
 				writeRecordConstructor((Expr.RecordInitialiser) expr, typeTests);
 				break;
-			case EXPR_new:
+			case EXPR_pinit:
 				writeNewObject((Expr.New) expr, typeTests);
 				break;
-			case EXPR_not:
-			case EXPR_neg:
+			case EXPR_lnot:
+			case EXPR_ineg:
 				writePrefixLocations((Expr.Operator) expr, typeTests);
 				break;
-			case EXPR_forall:
-			case EXPR_exists:
+			case EXPR_lall:
+			case EXPR_lsome:
 				writeQuantifier((Expr.Quantifier) expr, typeTests);
 				break;
 			case EXPR_eq:
 			case EXPR_neq:
 				writeEqualityOperator((Expr.Operator) expr, typeTests);
 				break;
-			case EXPR_div:
+			case EXPR_idiv:
 				writeDivideOperator((Expr.Division) expr, typeTests);
 				break;
-			case EXPR_add:
-			case EXPR_sub:
-			case EXPR_mul:
-			case EXPR_rem:
-			case EXPR_lt:
-			case EXPR_lteq:
-			case EXPR_gt:
-			case EXPR_gteq:
-			case EXPR_and:
-			case EXPR_or:
-			case EXPR_bitwiseor:
-			case EXPR_bitwisexor:
-			case EXPR_bitwiseand:
+			case EXPR_iadd:
+			case EXPR_isub:
+			case EXPR_imul:
+			case EXPR_irem:
+			case EXPR_ilt:
+			case EXPR_ile:
+			case EXPR_igt:
+			case EXPR_igteq:
+			case EXPR_land:
+			case EXPR_lor:
+			case EXPR_bor:
+			case EXPR_bxor:
+			case EXPR_band:
 				writeInfixOperator((Expr.Operator) expr, typeTests);
 				break;
-			case EXPR_implies:
+			case EXPR_limplies:
 				writeLogicalImplication((Expr.LogicalImplication) expr, typeTests);
 				break;
-			case EXPR_iff:
+			case EXPR_liff:
 				writeLogicalIff((Expr.LogicalIff) expr, typeTests);
 				break;
-			case EXPR_bitwiseshl:
-			case EXPR_bitwiseshr:
+			case EXPR_bshl:
+			case EXPR_bshr:
 				writeShiftOperator((Expr.Operator) expr, typeTests);
 				break;
 			case EXPR_is:
@@ -659,11 +659,11 @@ public final class JavaScriptFileWriter {
 		out.print(")");
 	}
 
-	private void writeLambdaDeclaration(Declaration.Lambda expr, Set<Type> typeTests) {
+	private void writeLambdaDeclaration(Decl.Lambda expr, Set<Type> typeTests) {
 		out.print("function(");
-		Tuple<Declaration.Variable> parameters = expr.getParameters();
+		Tuple<Decl.Variable> parameters = expr.getParameters();
 		for (int i = 0; i != parameters.size(); ++i) {
-			Declaration.Variable var = parameters.getOperand(i);
+			Decl.Variable var = parameters.getOperand(i);
 			if (i != 0) {
 				out.print(", ");
 			}
@@ -718,7 +718,7 @@ public final class JavaScriptFileWriter {
 
 	private void writeNewObject(Expr.New expr, Set<Type> typeTests) {
 		out.print("new Wy.Ref(");
-		writeExpression(expr.getOperand(), typeTests);
+		writeExpression(expr.getValue(), typeTests);
 		out.print(")");
 	}
 
@@ -836,9 +836,9 @@ public final class JavaScriptFileWriter {
 		out.print("Wy.");
 		out.print((expr instanceof Expr.UniversalQuantifier) ? "all" : "some");
 		out.print("(");
-		Tuple<Declaration.Variable> params = expr.getParameters();
+		Tuple<Decl.Variable> params = expr.getParameters();
 		for (int i = 0; i != params.size(); ++i) {
-			Declaration.Variable param = params.getOperand(i);
+			Decl.Variable param = params.getOperand(i);
 			if(i > 0) {
 				throw new RuntimeException("Need to support multiple operand groups");
 			}
@@ -850,7 +850,7 @@ public final class JavaScriptFileWriter {
 		}
 		out.print(",function(");
 		for (int i = 0; i != params.size(); ++i) {
-			Declaration.Variable param = params.getOperand(i);
+			Decl.Variable param = params.getOperand(i);
 			out.print(param.getName());
 		}
 		out.print("){return ");
@@ -864,12 +864,12 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeVariableMove(Expr.VariableAccess expr, Set<Type> typeTests) {
-		Declaration.Variable vd = expr.getVariableDeclaration();
+		Decl.Variable vd = expr.getVariableDeclaration();
 		out.print(vd.getName());
 	}
 
 	private void writeVariableCopy(Expr.VariableAccess  expr, Set<Type> typeTests) {
-		Declaration.Variable vd = expr.getVariableDeclaration();
+		Decl.Variable vd = expr.getVariableDeclaration();
 		if (isCopyable(vd.getType(), expr)) {
 			out.print(vd.getName());
 		} else {
@@ -879,13 +879,13 @@ public final class JavaScriptFileWriter {
 
 	private void writeLVal(LVal lval, Set<Type> typeTests) {
 		switch (lval.getOpcode()) {
-		case EXPR_arridx:
+		case EXPR_aread:
 			writeArrayIndexLVal((Expr.ArrayAccess) lval, typeTests);
 			break;
-		case EXPR_deref:
+		case EXPR_pread:
 			writeDereferenceLVal((Expr.Dereference) lval, typeTests);
 			break;
-		case EXPR_recfield:
+		case EXPR_rread:
 			writeFieldLoadLVal((Expr.RecordAccess) lval, typeTests);
 			break;
 		case EXPR_varcopy:
@@ -915,7 +915,7 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeVariableAccessLVal(Expr.VariableAccess expr, Set<Type> typeTests) {
-		Declaration.Variable vd = expr.getVariableDeclaration();
+		Decl.Variable vd = expr.getVariableDeclaration();
 		out.print(vd.getName());
 	}
 
@@ -1016,7 +1016,7 @@ public final class JavaScriptFileWriter {
 		// FIXME: this is so horrendously broken
 		Name name = test.getName();
 		WhileyFile wyilFile = this.wyilfile;
-		Declaration.Type td = wyilFile.getDeclaration(name.getLast(), null, Declaration.Type.class);
+		Decl.Type td = wyilFile.getDeclaration(name.getLast(), null, Decl.Type.class);
 		if (td == null) {
 			throw new RuntimeException("undefined nominal type encountered: " + name);
 		}
@@ -1077,13 +1077,13 @@ public final class JavaScriptFileWriter {
 		out.println();
 		tabIndent(1);
 		out.print("if(val != null && typeof val === \"object\"");
-		Tuple<Declaration.Variable> fields = test.getFields();
+		Tuple<Decl.Variable> fields = test.getFields();
 		if (!test.isOpen()) {
 			out.print(" && Object.keys(val).length === " + fields.size());
 		}
 		out.println(") {");
 		for (int i = 0; i != fields.size(); ++i) {
-			Declaration.Variable field = fields.getOperand(i);
+			Decl.Variable field = fields.getOperand(i);
 			tabIndent(2);
 			out.print("if(val." + field.getName() + " === \"undefined\" || !is$");
 			writeTypeMangle(field.getType());
@@ -1223,10 +1223,10 @@ public final class JavaScriptFileWriter {
 
 	private void writeTypeMangleRecord(Type.Record rt) {
 		out.print("r");
-		Tuple<Declaration.Variable> fields = rt.getFields();
+		Tuple<Decl.Variable> fields = rt.getFields();
 		out.print(fields.size());
 		for (int i = 0; i != fields.size(); ++i) {
-			Declaration.Variable field = fields.getOperand(i);
+			Decl.Variable field = fields.getOperand(i);
 			writeTypeMangle(field.getType());
 			String fieldName = field.getName().get();
 			out.print(fieldName.length());
@@ -1311,7 +1311,7 @@ public final class JavaScriptFileWriter {
 			Name nid = tn.getName();
 			// FIXME: following line is a temporary hack
 			WhileyFile wyilFile = this.wyilfile;
-			Declaration.Type td = wyilFile.getDeclaration(nid.getLast(), null, Declaration.Type.class);
+			Decl.Type td = wyilFile.getDeclaration(nid.getLast(), null, Decl.Type.class);
 			if (td == null) {
 				throw new RuntimeException("undefined nominal type encountered: " + nid);
 			}
@@ -1325,26 +1325,26 @@ public final class JavaScriptFileWriter {
 	private boolean needsBrackets(Expr e) {
 		switch(e.getOpcode()) {
 		case EXPR_cast:
-		case EXPR_add:
-		case EXPR_sub:
-		case EXPR_mul:
-		case EXPR_div:
-		case EXPR_rem:
+		case EXPR_iadd:
+		case EXPR_isub:
+		case EXPR_imul:
+		case EXPR_idiv:
+		case EXPR_irem:
 		case EXPR_eq:
 		case EXPR_neq:
-		case EXPR_lt:
-		case EXPR_lteq:
-		case EXPR_gt:
-		case EXPR_gteq:
-		case EXPR_and:
-		case EXPR_or:
-		case EXPR_bitwiseor:
-		case EXPR_bitwisexor:
-		case EXPR_bitwiseand:
-		case EXPR_bitwiseshl:
-		case EXPR_bitwiseshr:
+		case EXPR_ilt:
+		case EXPR_ile:
+		case EXPR_igt:
+		case EXPR_igteq:
+		case EXPR_land:
+		case EXPR_lor:
+		case EXPR_bor:
+		case EXPR_bxor:
+		case EXPR_band:
+		case EXPR_bshl:
+		case EXPR_bshr:
 		case EXPR_is:
-		case EXPR_new:
+		case EXPR_pinit:
 			return true;
 		}
 		return false;
@@ -1352,54 +1352,54 @@ public final class JavaScriptFileWriter {
 
 	private static String opcode(int k) {
 		switch(k) {
-		case EXPR_neg:
+		case EXPR_ineg:
 			return "-";
-		case EXPR_not:
+		case EXPR_lnot:
 			return "!";
-		case EXPR_bitwisenot:
+		case EXPR_bnot:
 			return "~";
-		case EXPR_deref:
+		case EXPR_pread:
 			return "*";
 		// Binary
-		case EXPR_add:
+		case EXPR_iadd:
 			return "+";
-		case EXPR_sub:
+		case EXPR_isub:
 			return "-";
-		case EXPR_mul:
+		case EXPR_imul:
 			return "*";
-		case EXPR_div:
+		case EXPR_idiv:
 			return "/";
-		case EXPR_rem:
+		case EXPR_irem:
 			return "%";
 		case EXPR_eq:
 			return "==";
 		case EXPR_neq:
 			return "!=";
-		case EXPR_lt:
+		case EXPR_ilt:
 			return "<";
-		case EXPR_lteq:
+		case EXPR_ile:
 			return "<=";
-		case EXPR_gt:
+		case EXPR_igt:
 			return ">";
-		case EXPR_gteq:
+		case EXPR_igteq:
 			return ">=";
-		case EXPR_and:
+		case EXPR_land:
 			return "&&";
-		case EXPR_or:
+		case EXPR_lor:
 			return "||";
-		case EXPR_bitwiseor:
+		case EXPR_bor:
 			return "|";
-		case EXPR_bitwisexor:
+		case EXPR_bxor:
 			return "^";
-		case EXPR_bitwiseand:
+		case EXPR_band:
 			return "&";
-		case EXPR_bitwiseshl:
+		case EXPR_bshl:
 			return "<<";
-		case EXPR_bitwiseshr:
+		case EXPR_bshr:
 			return ">>";
 		case EXPR_is:
 			return "is";
-		case EXPR_new:
+		case EXPR_pinit:
 			return "new";
 		default:
 			throw new IllegalArgumentException("unknown operator kind : " + k);
