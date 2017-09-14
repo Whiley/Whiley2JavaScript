@@ -110,7 +110,7 @@ public final class JavaScriptFileWriter {
 		} else if(invariant.size() == 1) {
 			tabIndent(1);
 			out.print("return ");
-			writeExpression(invariant.getOperand(0), typeTests);
+			writeExpression(invariant.get(0), typeTests);
 			out.println(";");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
@@ -120,7 +120,7 @@ public final class JavaScriptFileWriter {
 				} else {
 					out.print("result = result && (");
 				}
-				writeExpression(invariant.getOperand(i), typeTests);
+				writeExpression(invariant.get(i), typeTests);
 				out.println(");");
 			}
 			tabIndent(1);
@@ -185,7 +185,7 @@ public final class JavaScriptFileWriter {
 			if (i != 0) {
 				out.print(", ");
 			}
-			Decl.Variable decl = parameters.getOperand(i);
+			Decl.Variable decl = parameters.get(i);
 			writeType(decl.getType());
 			out.print(decl.getName());
 		}
@@ -226,7 +226,7 @@ public final class JavaScriptFileWriter {
 			if (i != 0) {
 				out.print(", ");
 			}
-			Decl.Variable decl = parameters.getOperand(i);
+			Decl.Variable decl = parameters.get(i);
 			out.print(decl.getName());
 		}
 		out.println(");");
@@ -234,7 +234,7 @@ public final class JavaScriptFileWriter {
 
 	private void writeBlock(int indent, Stmt.Block block, Set<Type> typeTests) {
 		for (int i = 0; i != block.size(); ++i) {
-			writeStatement(indent, block.getOperand(i), typeTests);
+			writeStatement(indent, block.get(i), typeTests);
 		}
 	}
 
@@ -319,20 +319,20 @@ public final class JavaScriptFileWriter {
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		if (lhs.size() == 1) {
 			// easy case
-			writeLVal(lhs.getOperand(0), typeTests);
+			writeLVal(lhs.get(0), typeTests);
 			out.print(" = ");
-			writeExpression(rhs.getOperand(0), typeTests);
+			writeExpression(rhs.get(0), typeTests);
 			out.println(";");
 		} else if (lhs.size() > 1) {
 			// FIXME: this is broken when multiple rhs expressions
 			out.print("var $ = ");
 			// Translate right-hand sides
-			writeExpression(rhs.getOperand(0), typeTests);
+			writeExpression(rhs.get(0), typeTests);
 			out.println(";");
 			// Translate left-hand sides
 			for (int i = 0; i != lhs.size(); ++i) {
 				tabIndent(indent + 1);
-				writeLVal(lhs.getOperand(i), typeTests);
+				writeLVal(lhs.get(i), typeTests);
 				out.println(" = $[" + i + "];");
 			}
 		}
@@ -400,7 +400,7 @@ public final class JavaScriptFileWriter {
 		if (operands.size() == 1) {
 			// easy case
 			out.print(" ");
-			writeExpression(operands.getOperand(0), typeTests);
+			writeExpression(operands.get(0), typeTests);
 		} else if (operands.size() > 0) {
 			// harder case
 			out.print(" [");
@@ -408,7 +408,7 @@ public final class JavaScriptFileWriter {
 				if (i != 0) {
 					out.print(", ");
 				}
-				writeExpression(operands.getOperand(i), typeTests);
+				writeExpression(operands.get(i), typeTests);
 			}
 			out.print("]");
 		}
@@ -426,7 +426,7 @@ public final class JavaScriptFileWriter {
 		Tuple<Stmt.Case> cases = b.getCases();
 		for (int i = 0; i != cases.size(); ++i) {
 			// FIXME: ugly
-			Stmt.Case cAse = cases.getOperand(i);
+			Stmt.Case cAse = cases.get(i);
 			Tuple<Expr> values = cAse.getConditions();
 			if (values.size() == 0) {
 				tabIndent(indent + 1);
@@ -436,7 +436,7 @@ public final class JavaScriptFileWriter {
 					tabIndent(indent + 1);
 					out.print("case ");
 					// FIXME: this needs to be fixed
-					out.print(values.getOperand(j));
+					out.print(values.get(j));
 					out.println(":");
 				}
 			}
@@ -529,7 +529,7 @@ public final class JavaScriptFileWriter {
 				break;
 			case EXPR_lnot:
 			case EXPR_ineg:
-				writePrefixLocations((Expr.Operator) expr, typeTests);
+				writePrefixLocations((Expr.UnaryOperator) expr, typeTests);
 				break;
 			case EXPR_lall:
 			case EXPR_lsome:
@@ -537,10 +537,10 @@ public final class JavaScriptFileWriter {
 				break;
 			case EXPR_eq:
 			case EXPR_neq:
-				writeEqualityOperator((Expr.Operator) expr, typeTests);
+				writeEqualityOperator((Expr.NaryOperator) expr, typeTests);
 				break;
 			case EXPR_idiv:
-				writeDivideOperator((Expr.Division) expr, typeTests);
+				writeDivideOperator((Expr.IntegerDivision) expr, typeTests);
 				break;
 			case EXPR_iadd:
 			case EXPR_isub:
@@ -555,7 +555,7 @@ public final class JavaScriptFileWriter {
 			case EXPR_bor:
 			case EXPR_bxor:
 			case EXPR_band:
-				writeInfixOperator((Expr.Operator) expr, typeTests);
+				writeInfixOperator((Expr.NaryOperator) expr, typeTests);
 				break;
 			case EXPR_limplies:
 				writeLogicalImplication((Expr.LogicalImplication) expr, typeTests);
@@ -565,7 +565,7 @@ public final class JavaScriptFileWriter {
 				break;
 			case EXPR_bshl:
 			case EXPR_bshr:
-				writeShiftOperator((Expr.Operator) expr, typeTests);
+				writeShiftOperator((Expr.BinaryOperator) expr, typeTests);
 				break;
 			case EXPR_is:
 				writeIsOperator((Expr.Is) expr, typeTests);
@@ -590,44 +590,45 @@ public final class JavaScriptFileWriter {
 
 
 	private void writeArrayLength(Expr.ArrayLength expr, Set<Type> typeTests) {
-		writeExpression(expr.getSource(), typeTests);
+		writeExpression(expr.getOperand(), typeTests);
 		out.print(".length");
 	}
 
 	private void writeArrayIndex(Expr.ArrayAccess expr, Set<Type> typeTests) {
-		writeExpression(expr.getSource(), typeTests);
+		writeExpression(expr.getFirstOperand(), typeTests);
 		out.print("[");
-		writeExpression(expr.getSubscript(), typeTests);
+		writeExpression(expr.getSecondOperand(), typeTests);
 		out.print("]");
 	}
 
 	private void writeArrayInitialiser(Expr.ArrayInitialiser expr, Set<Type> typeTests) {
+		Tuple<Expr> operands = expr.getOperands();
 		out.print("[");
-		for (int i = 0; i != expr.size(); ++i) {
+		for (int i = 0; i != operands.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			writeExpression(expr.getOperand(i), typeTests);
+			writeExpression(operands.get(i), typeTests);
 		}
 		out.print("]");
 	}
 
 	private void writeArrayGenerator(Expr.ArrayGenerator expr, Set<Type> typeTests) {
 		out.print("Wy.array(");
-		writeExpression(expr.getValue(), typeTests);
+		writeExpression(expr.getFirstOperand(), typeTests);
 		out.print(", ");
-		writeExpression(expr.getLength(), typeTests);
+		writeExpression(expr.getSecondOperand(), typeTests);
 		out.print(")");
 	}
 	private void writeConvert(Expr.Cast expr, Set<Type> typeTests) {
-		writeExpression(expr.getCastedExpr(), typeTests);
+		writeExpression(expr.getOperand(), typeTests);
 	}
 	private void writeConst(Expr.Constant expr, Set<Type> typeTests) {
 		writeConstant(expr.getValue());
 	}
 
 	private void writeFieldLoad(Expr.RecordAccess expr, Set<Type> typeTests) {
-		writeBracketedExpression(expr.getSource(), typeTests);
+		writeBracketedExpression(expr.getOperand(), typeTests);
 		out.print("." + expr.getField());
 	}
 	private void writeIndirectInvoke(Expr.IndirectInvoke expr, Set<Type> typeTests) {
@@ -638,7 +639,7 @@ public final class JavaScriptFileWriter {
 			if(i!=0) {
 				out.print(", ");
 			}
-			writeExpression(arguments.getOperand(i), typeTests);
+			writeExpression(arguments.get(i), typeTests);
 		}
 		out.print(")");
 	}
@@ -649,12 +650,12 @@ public final class JavaScriptFileWriter {
 		out.print(name);
 		writeTypeMangle(expr.getSignature());
 		out.print("(");
-		Tuple<Expr> args = expr.getArguments();
+		Tuple<Expr> args = expr.getOperands();
 		for (int i = 0; i != args.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			writeExpression(args.getOperand(i), typeTests);
+			writeExpression(args.get(i), typeTests);
 		}
 		out.print(")");
 	}
@@ -663,7 +664,7 @@ public final class JavaScriptFileWriter {
 		out.print("function(");
 		Tuple<Decl.Variable> parameters = expr.getParameters();
 		for (int i = 0; i != parameters.size(); ++i) {
-			Decl.Variable var = parameters.getOperand(i);
+			Decl.Variable var = parameters.get(i);
 			if (i != 0) {
 				out.print(", ");
 			}
@@ -704,21 +705,22 @@ public final class JavaScriptFileWriter {
 
 	private void writeRecordConstructor(Expr.RecordInitialiser expr, Set<Type> typeTests) {
 		out.print("Wy.record({");
-		for (int i = 0; i != expr.size(); ++i) {
-			Pair<Identifier,Expr> field = expr.getOperand(i);
+		Tuple<Expr> operands = expr.getOperands();
+		Tuple<Identifier> fields = expr.getFields();
+		for (int i = 0; i != operands.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			out.print(field.getFirst());
+			out.print(fields.get(i));
 			out.print(": ");
-			writeExpression(field.getSecond(), typeTests);
+			writeExpression(operands.get(i), typeTests);
 		}
 		out.print("})");
 	}
 
 	private void writeNewObject(Expr.New expr, Set<Type> typeTests) {
 		out.print("new Wy.Ref(");
-		writeExpression(expr.getValue(), typeTests);
+		writeExpression(expr.getOperand(), typeTests);
 		out.print(")");
 	}
 
@@ -728,26 +730,31 @@ public final class JavaScriptFileWriter {
 		out.print(")");
 	}
 
-	private void writePrefixLocations(Expr.Operator expr, Set<Type> typeTests) {
+	private void writePrefixLocations(Expr.UnaryOperator expr, Set<Type> typeTests) {
 		// Prefix operators
 		out.print(opcode(expr.getOpcode()));
-		writeBracketedExpression(expr.getOperand(0), typeTests);
+		writeBracketedExpression(expr.getOperand(), typeTests);
 	}
 
 	private void writeInvertOperator(Expr.BitwiseComplement expr, Set<Type> typeTests) {
 		// Prefix operators
 		out.print("((~");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
+		writeBracketedExpression(expr.getOperand(), typeTests);
 		out.print(") & 0xFF)");
 	}
 
 
-	private void writeEqualityOperator(Expr.Operator expr, Set<Type> typeTests) throws ResolutionError {
-		Expr lhs = expr.getOperand(0);
-		Expr rhs = expr.getOperand(1);
+	private void writeEqualityOperator(Expr.NaryOperator expr, Set<Type> typeTests) throws ResolutionError {
+		Tuple<Expr> operands = expr.getOperands();
+		if(operands.size() > 2) {
+			throw new IllegalArgumentException();
+		}
+		// Extract the type information
+		Expr lhs = operands.get(0);
+		Expr rhs = operands.get(1);
 		// FIXME: put this back
-		Type lhsT = typeSystem.inferType(lhs);
-		Type rhsT = typeSystem.inferType(rhs);
+		Type lhsT = lhs.getType();
+		Type rhsT = rhs.getType();
 		//
 		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
 			writeInfixOperator(expr, typeTests);
@@ -763,42 +770,52 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	private void writeDivideOperator(Expr.Division expr, Set<Type> typeTests) {
+	private void writeDivideOperator(Expr.IntegerDivision expr, Set<Type> typeTests) {
 		out.print("Math.floor(");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(" / ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
+		writeInfixOperator(expr,typeTests);
 		out.print(")");
 	}
 
-	private void writeInfixOperator(Expr.Operator expr, Set<Type> typeTests) {
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(" ");
-		out.print(opcode(expr.getOpcode()));
-		out.print(" ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
+	private void writeInfixOperator(Expr.NaryOperator expr, Set<Type> typeTests) {
+		Tuple<Expr> operands = expr.getOperands();
+		for(int i=0;i!=operands.size();++i) {
+			if(i != 0) {
+				out.print(" ");
+				out.print(opcode(expr.getOpcode()));
+				out.print(" ");
+			}
+			writeBracketedExpression(operands.get(i), typeTests);
+		}
 	}
 
 	private void writeLogicalImplication(Expr.LogicalImplication expr, Set<Type> typeTests) {
+		Tuple<Expr> operands = expr.getOperands();
+		if(operands.size() > 2) {
+			throw new IllegalArgumentException();
+		}
 		out.print("!");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
+		writeBracketedExpression(operands.get(0), typeTests);
 		out.print("||");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
+		writeBracketedExpression(operands.get(1), typeTests);
 	}
 
 	private void writeLogicalIff(Expr.LogicalIff expr, Set<Type> typeTests) {
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print("==");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
+		Tuple<Expr> operands = expr.getOperands();
+		for(int i=0;i!=operands.size();++i) {
+			if(i != 0) {
+				out.print(" == ");
+			}
+			writeBracketedExpression(operands.get(i), typeTests);
+		}
 	}
 
-	private void writeShiftOperator(Expr.Operator expr, Set<Type> typeTests) {
+	private void writeShiftOperator(Expr.BinaryOperator expr, Set<Type> typeTests) {
 		out.print("((");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
+		writeBracketedExpression(expr.getFirstOperand(), typeTests);
 		out.print(" ");
 		out.print(opcode(expr.getOpcode()));
 		out.print(" ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
+		writeBracketedExpression(expr.getSecondOperand(), typeTests);
 		out.print(") & 0xFF)");
 	}
 
@@ -806,24 +823,24 @@ public final class JavaScriptFileWriter {
 		Type t = expr.getTestType();
 		// Handle all non-trivial cases directly
 		if(t instanceof Type.Null) {
-			writeExpression(expr.getTestExpr(), typeTests);
+			writeExpression(expr.getOperand(), typeTests);
 			out.print(" === null");
 		} else if(t instanceof Type.Int) {
 			// FIXME: this will need to be updated when unbounded arithmetic is
 			// supported
 			out.print("typeof ");
-			writeExpression(expr.getTestExpr(), typeTests);
+			writeExpression(expr.getOperand(), typeTests);
 			out.print(" === \"number\"");
 		} else if(t instanceof Type.Bool) {
 			out.print("typeof ");
-			writeExpression(expr.getTestExpr(), typeTests);
+			writeExpression(expr.getOperand(), typeTests);
 			out.print(" === \"boolean\"");
 		} else {
 			// Fall back case
 			out.print("is$");
 			writeTypeMangle(t);
 			out.print("(");
-			writeExpression(expr.getTestExpr(), typeTests);
+			writeExpression(expr.getOperand(), typeTests);
 			out.print(")");
 			// Register this type test to be written out as an appropriately
 			// named function.
@@ -838,23 +855,23 @@ public final class JavaScriptFileWriter {
 		out.print("(");
 		Tuple<Decl.Variable> params = expr.getParameters();
 		for (int i = 0; i != params.size(); ++i) {
-			Decl.Variable param = params.getOperand(i);
+			Decl.Variable param = params.get(i);
 			if(i > 0) {
 				throw new RuntimeException("Need to support multiple operand groups");
 			}
 			// FIXME: for now assume initialiser must be an array range.
 			Expr.ArrayRange range = (Expr.ArrayRange) param.getInitialiser();
-			writeExpression(range.getStart(), typeTests);
+			writeExpression(range.getFirstOperand(), typeTests);
 			out.print(",");
-			writeExpression(range.getEnd(), typeTests);
+			writeExpression(range.getSecondOperand(), typeTests);
 		}
 		out.print(",function(");
 		for (int i = 0; i != params.size(); ++i) {
-			Decl.Variable param = params.getOperand(i);
+			Decl.Variable param = params.get(i);
 			out.print(param.getName());
 		}
 		out.print("){return ");
-		writeExpression(expr.getBody(), typeTests);
+		writeExpression(expr.getOperand(), typeTests);
 		out.print(";})");
 	}
 
@@ -903,14 +920,14 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeArrayIndexLVal(Expr.ArrayAccess expr, Set<Type> typeTests) {
-		writeLVal((LVal) expr.getSource(), typeTests);
+		writeLVal((LVal) expr.getFirstOperand(), typeTests);
 		out.print("[");
-		writeExpression(expr.getSubscript(), typeTests);
+		writeExpression(expr.getSecondOperand(), typeTests);
 		out.print("]");
 	}
 
 	private void writeFieldLoadLVal(Expr.RecordAccess expr, Set<Type> typeTests) {
-		writeLVal((LVal) expr.getSource(), typeTests);
+		writeLVal((LVal) expr.getOperand(), typeTests);
 		out.print("." + expr.getField());
 	}
 
@@ -1083,7 +1100,7 @@ public final class JavaScriptFileWriter {
 		}
 		out.println(") {");
 		for (int i = 0; i != fields.size(); ++i) {
-			Decl.Variable field = fields.getOperand(i);
+			Decl.Variable field = fields.get(i);
 			tabIndent(2);
 			out.print("if(val." + field.getName() + " === \"undefined\" || !is$");
 			writeTypeMangle(field.getType());
@@ -1132,7 +1149,7 @@ public final class JavaScriptFileWriter {
 	private void writeTypeTestUnion(Type.Union test, Set<Type> deps) {
 		out.println();
 		for(int i=0;i!=test.size();++i) {
-			Type bound = test.getOperand(i);
+			Type bound = test.get(i);
 			tabIndent(1);
 			out.print("if(is$");
 			writeTypeMangle(bound);
@@ -1147,7 +1164,7 @@ public final class JavaScriptFileWriter {
 	private void writeTypeTestIntersection(Type.Intersection test, Set<Type> deps) {
 		out.println();
 		for(int i=0;i!=test.size();++i) {
-			Type bound = test.getOperand(i);
+			Type bound = test.get(i);
 			tabIndent(1);
 			out.print("if(!is$");
 			writeTypeMangle(bound);
@@ -1165,7 +1182,7 @@ public final class JavaScriptFileWriter {
 			if (i == 0) {
 				out.print("_");
 			}
-			writeTypeMangle(params.getOperand(i));
+			writeTypeMangle(params.get(i));
 		}
 	}
 
@@ -1226,7 +1243,7 @@ public final class JavaScriptFileWriter {
 		Tuple<Decl.Variable> fields = rt.getFields();
 		out.print(fields.size());
 		for (int i = 0; i != fields.size(); ++i) {
-			Decl.Variable field = fields.getOperand(i);
+			Decl.Variable field = fields.get(i);
 			writeTypeMangle(field.getType());
 			String fieldName = field.getName().get();
 			out.print(fieldName.length());
@@ -1250,12 +1267,12 @@ public final class JavaScriptFileWriter {
 		Tuple<Type> params = t.getParameters();
 		out.print(params.size());
 		for (int i = 0; i != params.size(); ++i) {
-			writeTypeMangle(params.getOperand(i));
+			writeTypeMangle(params.get(i));
 		}
 		Tuple<Type> returns = t.getReturns();
 		out.print(returns.size());
 		for (int i = 0; i != returns.size(); ++i) {
-			writeTypeMangle(returns.getOperand(i));
+			writeTypeMangle(returns.get(i));
 		}
 		out.print("e");
 	}
@@ -1269,7 +1286,7 @@ public final class JavaScriptFileWriter {
 		out.print("u");
 		out.print(t.size());
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.getOperand(i));
+			writeTypeMangle(t.get(i));
 		}
 	}
 
@@ -1277,7 +1294,7 @@ public final class JavaScriptFileWriter {
 		out.print("c");
 		out.print(t.size());
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.getOperand(i));
+			writeTypeMangle(t.get(i));
 		}
 	}
 	private void writeType(Type t) {
@@ -1300,7 +1317,9 @@ public final class JavaScriptFileWriter {
 	 * @return
 	 */
 	private boolean isCopyable(Type type, SyntacticElement context) {
-		if (type instanceof Type.Primitive) {
+		if(type instanceof Type.Any) {
+			return false;
+		} else if (type instanceof Type.Primitive) {
 			return true;
 		} else if (type instanceof Type.Callable) {
 			return true;
