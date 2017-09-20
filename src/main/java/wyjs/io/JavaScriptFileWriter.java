@@ -16,12 +16,13 @@ import wybs.lang.SyntacticElement;
 import static wybs.lang.SyntaxError.*;
 
 import wyfs.lang.Path;
+import wyil.type.TypeSystem;
+
 import static wyc.lang.WhileyFile.*;
 
 import wyc.lang.WhileyFile;
-import wyc.type.TypeSystem;
 import wyc.util.ErrorMessages;
-import wyc.util.SingleParameterVisitor;
+import wyc.util.AbstractConsumer;
 
 
 /**
@@ -34,7 +35,7 @@ import wyc.util.SingleParameterVisitor;
 * @author David J. Pearce
 *
 */
-public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScriptFileWriter.Context> {
+public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileWriter.Context> {
 	private final PrintWriter out;
 
 	/**
@@ -512,14 +513,10 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 		visitEqualityOperator(expr, context);
 	}
 
-	private void visitEqualityOperator(Expr.NaryOperator expr, Context context) {
-		Tuple<Expr> operands = expr.getOperands();
-		if (operands.size() > 2) {
-			throw new IllegalArgumentException();
-		}
+	private void visitEqualityOperator(Expr.BinaryOperator expr, Context context) {
 		// Extract the type information
-		Expr lhs = operands.get(0);
-		Expr rhs = operands.get(1);
+		Expr lhs = expr.getFirstOperand();
+		Expr rhs = expr.getSecondOperand();
 		// FIXME: put this back
 		Type lhsT = lhs.getType();
 		Type rhsT = rhs.getType();
@@ -804,24 +801,14 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 	}
 
 	@Override public void visitLogicalImplication(Expr.LogicalImplication expr, Context context) {
-		Tuple<Expr> operands = expr.getOperands();
-		if(operands.size() > 2) {
-			throw new IllegalArgumentException();
-		}
 		out.print("!");
-		writeBracketedExpression(operands.get(0), context);
+		writeBracketedExpression(expr.getFirstOperand(), context);
 		out.print("||");
-		writeBracketedExpression(operands.get(1), context);
+		writeBracketedExpression(expr.getSecondOperand(), context);
 	}
 
 	@Override public void visitLogicalIff(Expr.LogicalIff expr, Context context) {
-		Tuple<Expr> operands = expr.getOperands();
-		for(int i=0;i!=operands.size();++i) {
-			if(i != 0) {
-				out.print(" == ");
-			}
-			writeBracketedExpression(operands.get(i), context);
-		}
+		writeInfixOperator(expr,context);
 	}
 
 	@Override
@@ -929,6 +916,14 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 		}
 	}
 
+	private void writeInfixOperator(Expr.BinaryOperator expr, Context context) {
+		writeBracketedExpression(expr.getFirstOperand(), context);
+		out.print(" ");
+		out.print(opcode(expr.getOpcode()));
+		out.print(" ");
+		writeBracketedExpression(expr.getSecondOperand(), context);
+	}
+
 	private void writeInfixOperator(Expr.NaryOperator expr, Context context) {
 		Tuple<Expr> operands = expr.getOperands();
 		for (int i = 0; i != operands.size(); ++i) {
@@ -943,17 +938,17 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 
 	private void writeLVal(LVal lval, Context context) {
 		switch (lval.getOpcode()) {
-		case EXPR_aread:
+		case EXPR_arrayaccess:
 			writeArrayIndexLVal((Expr.ArrayAccess) lval, context);
 			break;
-		case EXPR_pread:
+		case EXPR_dereference:
 			writeDereferenceLVal((Expr.Dereference) lval, context);
 			break;
-		case EXPR_rread:
+		case EXPR_recordaccess:
 			writeFieldLoadLVal((Expr.RecordAccess) lval, context);
 			break;
-		case EXPR_varcopy:
-		case EXPR_varmove:
+		case EXPR_variablecopy:
+		case EXPR_variablemove:
 			writeVariableAccessLVal((Expr.VariableAccess) lval, context);
 			break;
 		default:
@@ -1366,26 +1361,26 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 	private boolean needsBrackets(Expr e) {
 		switch(e.getOpcode()) {
 		case EXPR_cast:
-		case EXPR_iadd:
-		case EXPR_isub:
-		case EXPR_imul:
-		case EXPR_idiv:
-		case EXPR_irem:
-		case EXPR_eq:
-		case EXPR_neq:
-		case EXPR_ilt:
-		case EXPR_ile:
-		case EXPR_igt:
-		case EXPR_igteq:
-		case EXPR_land:
-		case EXPR_lor:
-		case EXPR_bor:
-		case EXPR_bxor:
-		case EXPR_band:
-		case EXPR_bshl:
-		case EXPR_bshr:
+		case EXPR_integeraddition:
+		case EXPR_integersubtraction:
+		case EXPR_integermultiplication:
+		case EXPR_integerdivision:
+		case EXPR_integerremainder:
+		case EXPR_equal:
+		case EXPR_notequal:
+		case EXPR_integerlessthan:
+		case EXPR_integerlessequal:
+		case EXPR_integergreaterthan:
+		case EXPR_integergreaterequal:
+		case EXPR_logicaland:
+		case EXPR_logicalor:
+		case EXPR_bitwiseor:
+		case EXPR_bitwisexor:
+		case EXPR_bitwiseand:
+		case EXPR_bitwiseshl:
+		case EXPR_bitwiseshr:
 		case EXPR_is:
-		case EXPR_pinit:
+		case EXPR_new:
 			return true;
 		}
 		return false;
@@ -1393,54 +1388,54 @@ public final class JavaScriptFileWriter extends SingleParameterVisitor<JavaScrip
 
 	private static String opcode(int k) {
 		switch(k) {
-		case EXPR_ineg:
+		case EXPR_integernegation:
 			return "-";
-		case EXPR_lnot:
+		case EXPR_logicalnot:
 			return "!";
-		case EXPR_bnot:
+		case EXPR_bitwisenot:
 			return "~";
-		case EXPR_pread:
+		case EXPR_dereference:
 			return "*";
 		// Binary
-		case EXPR_iadd:
+		case EXPR_integeraddition:
 			return "+";
-		case EXPR_isub:
+		case EXPR_integersubtraction:
 			return "-";
-		case EXPR_imul:
+		case EXPR_integermultiplication:
 			return "*";
-		case EXPR_idiv:
+		case EXPR_integerdivision:
 			return "/";
-		case EXPR_irem:
+		case EXPR_integerremainder:
 			return "%";
-		case EXPR_eq:
+		case EXPR_equal:
 			return "==";
-		case EXPR_neq:
+		case EXPR_notequal:
 			return "!=";
-		case EXPR_ilt:
+		case EXPR_integerlessthan:
 			return "<";
-		case EXPR_ile:
+		case EXPR_integerlessequal:
 			return "<=";
-		case EXPR_igt:
+		case EXPR_integergreaterthan:
 			return ">";
-		case EXPR_igteq:
+		case EXPR_integergreaterequal:
 			return ">=";
-		case EXPR_land:
+		case EXPR_logicaland:
 			return "&&";
-		case EXPR_lor:
+		case EXPR_logicalor:
 			return "||";
-		case EXPR_bor:
+		case EXPR_bitwiseor:
 			return "|";
-		case EXPR_bxor:
+		case EXPR_bitwisexor:
 			return "^";
-		case EXPR_band:
+		case EXPR_bitwiseand:
 			return "&";
-		case EXPR_bshl:
+		case EXPR_bitwiseshl:
 			return "<<";
-		case EXPR_bshr:
+		case EXPR_bitwiseshr:
 			return ">>";
 		case EXPR_is:
 			return "is";
-		case EXPR_pinit:
+		case EXPR_new:
 			return "new";
 		default:
 			throw new IllegalArgumentException("unknown operator kind : " + k);
