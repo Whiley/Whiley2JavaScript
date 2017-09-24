@@ -1,32 +1,36 @@
-//Copyright (c) 2011, David J. Pearce (djp@ecs.vuw.ac.nz)
-//All rights reserved.
+// Copyright 2011 The Whiley Project Developers
 //
-//This software may be modified and distributed under the terms
-//of the BSD license.  See the LICENSE file for details.
-
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package wyjs.io;
 
 import java.io.*;
 import java.util.*;
 
-import wyal.lang.WyalFile.Opcode;
 import wybs.lang.Build;
 import wybs.lang.NameID;
+import wybs.lang.NameResolver.ResolutionError;
 import wybs.lang.SyntacticElement;
-import wybs.util.ResolveError;
-
 import static wybs.lang.SyntaxError.*;
+
 import wyfs.lang.Path;
-import wyil.lang.*;
-import wyil.lang.Constant;
-import wyil.lang.Bytecode.AliasDeclaration;
-import wyil.lang.Bytecode.Expr;
-import wyil.lang.Bytecode.VariableAccess;
-import wyil.lang.Bytecode.VariableDeclaration;
-import wyil.lang.SyntaxTree.Location;
-import wyil.lang.Type;
-import wyil.lang.WyilFile.*;
-import wyil.util.TypeSystem;
+import wyil.type.TypeSystem;
+
+import static wyc.lang.WhileyFile.*;
+
+import wyc.lang.WhileyFile;
+import wyc.util.ErrorMessages;
+import wyc.util.AbstractConsumer;
+
 
 /**
 * Writes WYIL bytecodes in a textual from to a given file.
@@ -38,7 +42,7 @@ import wyil.util.TypeSystem;
 * @author David J. Pearce
 *
 */
-public final class JavaScriptFileWriter {
+public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileWriter.Context> {
 	private final PrintWriter out;
 
 	/**
@@ -56,7 +60,7 @@ public final class JavaScriptFileWriter {
 	private boolean commentTypes = false;
 	private boolean commentSpecifications = false;
 
-	private WyilFile wyilfile;
+	private WhileyFile wyilfile;
 
 	public JavaScriptFileWriter(Build.Project project, TypeSystem typeSystem, PrintWriter writer) {
 		this.project = project;
@@ -82,45 +86,29 @@ public final class JavaScriptFileWriter {
 	// Apply Method
 	// ======================================================================
 
-	public void apply(WyilFile module) throws IOException {
-		// FIXME: this is a hack
-		this.wyilfile = module;
-
-		out.println();
-		for(WyilFile.Constant cd : module.constants()) {
-			write(cd);
-		}
-		if(!module.constants().isEmpty()) {
-			out.println();
-		}
-		for (WyilFile.Type td : module.types()) {
-			write(td);
-		}
-		HashSet<Type> typeTests = new HashSet<>();
-		for(FunctionOrMethod md : module.functionOrMethods()) {
-			write(md,typeTests);
-			out.println();
-		}
-		writeTypeTests(typeTests, new HashSet<>());
+	public void apply(WhileyFile module) {
+		Context context = new Context(0,new HashSet<>());
+		this.visitWhileyFile(module, context);
+		writeTypeTests(context.typeTests, new HashSet<>());
 		out.flush();
 	}
 
-	private void write(WyilFile.Type td) {
-		SyntaxTree tree = td.getTree();
-		Location<Bytecode.VariableDeclaration> vardecl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(0);
+	@Override
+	public void visitType(Decl.Type td, Context context) {
+		Decl.Variable vardecl = td.getVariableDeclaration();
 		out.print("function ");
-		out.print(td.name());
-		out.print("$(");
-		out.print(vardecl.getBytecode().getName());
+		out.print(td.getName());
+		out.print("$type(");
+		out.print(vardecl.getName());
 		out.println(") {");
-		List<Location<Expr>> invariant = td.getInvariant();
-		if(invariant.isEmpty()) {
+		Tuple<Expr> invariant = td.getInvariant();
+		if(invariant.size() == 0) {
 			tabIndent(1);
 			out.println("return true;");
 		} else if(invariant.size() == 1) {
 			tabIndent(1);
 			out.print("return ");
-			writeExpression(invariant.get(0), new HashSet<>());
+			visitExpression(invariant.get(0), context);
 			out.println(";");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
@@ -130,7 +118,7 @@ public final class JavaScriptFileWriter {
 				} else {
 					out.print("result = result && (");
 				}
-				writeExpression(invariant.get(i), new HashSet<>());
+				visitExpression(invariant.get(i), context);
 				out.println(");");
 			}
 			tabIndent(1);
@@ -140,32 +128,31 @@ public final class JavaScriptFileWriter {
 		out.println();
 	}
 
-	private void write(WyilFile.Constant cd) {
-		out.print("var " + cd.name() + " = ");
-		writeConstant(cd.constant());
+	@Override
+	public void visitStaticVariable(Decl.StaticVariable cd, Context context) {
+		out.print("var " + cd.getName());
+		if (cd.hasInitialiser()) {
+			out.print(" = ");
+			visitExpression(cd.getInitialiser(), context);
+		}
 		out.println(";");
 	}
 
-	private void write(FunctionOrMethod method, Set<Type> typeTests) {
+	@Override
+	public void visitFunctionOrMethod(Decl.FunctionOrMethod method, Context context) {
 		// FIXME: what to do with private methods?
-		if(method.hasModifier(Modifier.EXPORT)) {
+		if (method.getModifiers().match(Modifier.Export.class) != null) {
 			writeExportTrampoline(method);
 		}
 		//
-		if(verbose) {
-			writeLocationsAsComments(method.getTree());
-		}
-		//
-		Type.FunctionOrMethod ft = method.type();
-		SyntaxTree tree = method.getTree();
 		out.print("function ");
-		out.print(method.name());
-		writeTypeMangle(method.type());
-		writeParameters(tree,0,ft.params());
+		out.print(method.getName());
+		writeTypeMangle(method.getType());
+		visitVariables(method.getParameters(), context);
 		if(commentTypes) {
-			if (ft.returns().length != 0) {
+			if (method.getReturns().size() > 0) {
 				out.print("// -> ");
-				writeParameters(tree,ft.params().length,ft.returns());
+				visitVariables(method.getReturns(), context);
 				out.println();
 			} else {
 				out.println();
@@ -175,44 +162,91 @@ public final class JavaScriptFileWriter {
 		}
 		if(commentSpecifications) {
 			//
-			for (Location<Expr> precondition : method.getPrecondition()) {
+			for (Expr precondition : method.getRequires()) {
 				out.print("// requires ");
-				writeExpression(precondition,new HashSet<>());
+				visitExpression(precondition, context);
 			}
-			for (Location<Expr> postcondition : method.getPostcondition()) {
+			for (Expr postcondition : method.getEnsures()) {
 				out.print("// ensures ");
-				writeExpression(postcondition, new HashSet<>());
+				visitExpression(postcondition, context);
 				out.println();
 			}
 		}
+		out.println("{");
+		writeInvariantCheck(method.getRequires(), context.indent());
 		if (method.getBody() != null) {
-			out.println("{");
-			writeBlock(0, method.getBody(), typeTests);
-			out.println("}");
+			visitBlock(method.getBody(), context);
 		}
+		out.println("}");
 	}
 
-	private void writeLocationsAsComments(SyntaxTree tree) {
-		List<Location<?>> locations = tree.getLocations();
-		for(int i=0;i!=locations.size();++i) {
-			Location<?> loc = locations.get(i);
-			String id = String.format("%1$" + 3 + "s", "#" + i);
-			String type = String.format("%1$-" + 8 + "s", Arrays.toString(loc.getTypes()));
-			out.println("// " + id + " " + type + " " + loc.getBytecode());
+	@Override
+	public void visitProperty(Decl.Property method, Context context) {
+		out.print("function ");
+		out.print(method.getName());
+		writeTypeMangle(method.getType());
+		out.print("$property");
+		visitVariables(method.getParameters(), context);
+		if(commentTypes) {
+			if (method.getReturns().size() > 0) {
+				out.print("// -> ");
+				visitVariables(method.getReturns(), context);
+				out.println();
+			} else {
+				out.println();
+			}
+		} else {
+			out.print(" ");
 		}
+		out.println("{");
+		writeInvariantCheck(method.getInvariant(), context.indent());
+		tabIndent(1);
+		out.println("return true;");
+		out.println("}");
 	}
 
-	private void writeParameters(SyntaxTree tree, int n, Type[] parameters) {
+	@Override
+	public void visitVariables(Tuple<Decl.Variable> parameters, Context context) {
 		out.print("(");
-		for (int i = 0; i != parameters.length; ++i) {
+		for (int i = 0; i != parameters.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			writeType(parameters[i]);
-			Location<Bytecode.VariableDeclaration> decl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(n+i);
-			out.print(decl.getBytecode().getName());
+			Decl.Variable decl = parameters.get(i);
+			writeType(decl.getType());
+			out.print(decl.getName());
 		}
 		out.print(")");
+	}
+
+	@Override
+	public void visitVariable(Decl.Variable decl, Context context) {
+		out.print("var ");
+		writeType(decl.getType());
+		out.print(decl.getName());
+		if (decl.hasInitialiser()) {
+			out.print(" = ");
+			visitExpression(decl.getInitialiser(), context);
+		}
+		out.println(";");
+	}
+
+	@Override
+	public void visitLambda(Decl.Lambda expr, Context context) {
+		out.print("function(");
+		Tuple<Decl.Variable> parameters = expr.getParameters();
+		for (int i = 0; i != parameters.size(); ++i) {
+			Decl.Variable var = parameters.get(i);
+			if (i != 0) {
+				out.print(", ");
+			}
+			writeType(var.getType());
+			out.print(var.getName());
+		}
+		out.print(") { ");
+		out.print("return ");
+		visitExpression(expr.getBody(), context);
+		out.print("; }");
 	}
 
 	/**
@@ -222,301 +256,208 @@ public final class JavaScriptFileWriter {
 	 *
 	 * @param method
 	 */
-	private void writeExportTrampoline(FunctionOrMethod method) {
-		Type.FunctionOrMethod ft = method.type();
-		Type[] params = ft.params();
-		if (params.length > 0) {
+	private void writeExportTrampoline(Decl.FunctionOrMethod method) {
+		Type.Callable ft = method.getType();
+		Tuple<Decl.Variable> params = method.getParameters();
+		Tuple<Decl.Variable> returns = method.getReturns();
+		if (params.size() > 0) {
 			out.print("function ");
-			out.print(method.name());
-
-			SyntaxTree tree = method.getTree();
-			writeParameters(tree, 0, params);
+			out.print(method.getName());
+			visitVariables(params, null);
 			out.println(" {");
 			tabIndent(1);
-			if (ft.returns().length > 0) {
+			if (returns.size() > 0) {
 				out.print("return ");
 			}
-			out.print(method.name());
+			out.print(method.getName());
 			writeTypeMangle(ft);
-			writeTrampolineArguments(tree, ft.params());
+			writeTrampolineArguments(params);
 			out.println("}");
 			out.println();
 		}
 	}
 
-	private void writeTrampolineArguments(SyntaxTree tree, Type[] parameters) {
+	private void writeTrampolineArguments(Tuple<Decl.Variable> parameters) {
 		out.print("(");
-		for (int i = 0; i != parameters.length; ++i) {
+		for (int i = 0; i != parameters.size(); ++i) {
 			if (i != 0) {
 				out.print(", ");
 			}
-			Location<Bytecode.VariableDeclaration> decl = (Location<Bytecode.VariableDeclaration>) tree.getLocation(i);
-			out.print(decl.getBytecode().getName());
+			Decl.Variable decl = parameters.get(i);
+			out.print(decl.getName());
 		}
 		out.println(");");
 	}
 
-	private void writeBlock(int indent, Location<Bytecode.Block> block, Set<Type> typeTests) {
-		for (int i = 0; i != block.numberOfOperands(); ++i) {
-			writeStatement(indent, block.getOperand(i), typeTests);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void writeStatement(int indent, Location<?> stmt, Set<Type> typeTests) {
-		tabIndent(indent+1);
+	@Override public void visitStatement(Stmt stmt, Context context) {
+		tabIndent(context.indent+1);
+		super.visitStatement(stmt, context);
+		//
 		switch(stmt.getOpcode()) {
-		case Bytecode.OPCODE_aliasdecl:
-			writeAliasDeclaration(indent, (Location<Bytecode.AliasDeclaration>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_assert:
-			writeAssert(indent, (Location<Bytecode.Assert>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_assume:
-			writeAssume(indent, (Location<Bytecode.Assume>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_assign:
-			writeAssign(indent, (Location<Bytecode.Assign>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_break:
-			writeBreak(indent, (Location<Bytecode.Break>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_continue:
-			writeContinue(indent, (Location<Bytecode.Continue>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_debug:
-			writeDebug(indent, (Location<Bytecode.Debug>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_dowhile:
-			writeDoWhile(indent, (Location<Bytecode.DoWhile>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_fail:
-			writeFail(indent, (Location<Bytecode.Fail>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_if:
-		case Bytecode.OPCODE_ifelse:
-			writeIf(indent, (Location<Bytecode.If>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke(indent, (Location<Bytecode.IndirectInvoke>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_invoke:
-			writeInvoke(indent, (Location<Bytecode.Invoke>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_namedblock:
-			writeNamedBlock(indent, (Location<Bytecode.NamedBlock>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_while:
-			writeWhile(indent, (Location<Bytecode.While>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_return:
-			writeReturn(indent, (Location<Bytecode.Return>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_skip:
-			writeSkip(indent, (Location<Bytecode.Skip>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_switch:
-			writeSwitch(indent, (Location<Bytecode.Switch>) stmt, typeTests);
-			break;
-		case Bytecode.OPCODE_vardecl:
-		case Bytecode.OPCODE_vardeclinit:
-			writeVariableDeclaration(indent, (Location<Bytecode.VariableDeclaration>) stmt, typeTests);
-			break;
-		default:
-			throw new IllegalArgumentException("unknown bytecode encountered");
+		case EXPR_invoke:
+		case EXPR_indirectinvoke:
+			// Need as an invocation expression won't terminate itself.
+			out.println(";");
 		}
 	}
 
-	private void writeAliasDeclaration(int indent, Location<AliasDeclaration> loc, Set<Type> typeTests) {
-		out.print("alias ");
-		out.print(loc.getType());
-		out.print(" ");
-		Location<VariableDeclaration> aliased = getVariableDeclaration(loc);
-		out.print(aliased.getBytecode().getName());
-		out.println();
-	}
-	private void writeAssert(int indent, Location<Bytecode.Assert> c, Set<Type> typeTests) {
+	@Override public void visitAssert(Stmt.Assert c, Context context) {
 		out.print("Wy.assert(");
-		writeExpression(c.getOperand(0), typeTests);
+		visitExpression(c.getCondition(), context);
 		out.println(");");
 	}
 
-	private void writeAssume(int indent, Location<Bytecode.Assume> c, Set<Type> typeTests) {
+	@Override public void visitAssume(Stmt.Assume c, Context context) {
 		out.print("Wy.assert(");
-		writeExpression(c.getOperand(0), typeTests);
+		visitExpression(c.getCondition(), context);
 		out.println(");");
 	}
 
-	private void writeAssign(int indent, Location<Bytecode.Assign> stmt, Set<Type> typeTests) {
-		Location<?>[] lhs = stmt.getOperandGroup(SyntaxTree.LEFTHANDSIDE);
-		Location<?>[] rhs = stmt.getOperandGroup(SyntaxTree.RIGHTHANDSIDE);
-		if(lhs.length == 1) {
+	@Override
+	public void visitAssign(Stmt.Assign stmt, Context context) {
+		Tuple<LVal> lhs = stmt.getLeftHandSide();
+		Tuple<Expr> rhs = stmt.getRightHandSide();
+		if (lhs.size() == 1) {
 			// easy case
-			writeLVal(lhs[0], typeTests);
+			writeLVal(lhs.get(0), context);
 			out.print(" = ");
-			writeExpression(rhs[0], typeTests);
+			visitExpression(rhs.get(0), context);
 			out.println(";");
-		} else if(lhs.length > 1) {
+		} else if (lhs.size() > 1) {
 			// FIXME: this is broken when multiple rhs expressions
 			out.print("var $ = ");
 			// Translate right-hand sides
-			writeExpression(rhs[0], typeTests);
+			visitExpression(rhs.get(0), context);
 			out.println(";");
 			// Translate left-hand sides
-			for(int i=0;i!=lhs.length;++i) {
-				tabIndent(indent+1);
-				writeLVal(lhs[i], typeTests);
+			for (int i = 0; i != lhs.size(); ++i) {
+				tabIndent(context.indent + 1);
+				writeLVal(lhs.get(i), context);
 				out.println(" = $[" + i + "];");
 			}
 		}
 	}
 
-	private void writeBreak(int indent, Location<Bytecode.Break> b, Set<Type> typeTests) {
+	@Override
+	public void visitBreak(Stmt.Break b, Context context) {
 		out.println("break;");
 	}
 
-	private void writeContinue(int indent, Location<Bytecode.Continue> b, Set<Type> typeTests) {
+	@Override
+	public void visitContinue(Stmt.Continue b, Context context) {
 		out.println("continue;");
 	}
 
-	private void writeDebug(int indent, Location<Bytecode.Debug> b, Set<Type> typeTests) {
+	@Override
+	public void visitDebug(Stmt.Debug b, Context context) {
 
 	}
 
-	private void writeDoWhile(int indent, Location<Bytecode.DoWhile> b, Set<Type> typeTests) {
+	@Override
+	public void visitDoWhile(Stmt.DoWhile b, Context context) {
 		out.println("do {");
 		//
-		writeBlock(indent+1,b.getBlock(0), typeTests);
-		tabIndent(indent+1);
+		visitBlock(b.getBody(), context.indent());
+		tabIndent(context.indent + 1);
+		// FIXME: write loop invariant if DEBUG mode
 		out.print("} while(");
-		writeExpression(b.getOperand(0), typeTests);
+		visitExpression(b.getCondition(), context);
 		out.println(");");
 	}
 
-	private void writeFail(int indent, Location<Bytecode.Fail> c, Set<Type> typeTests) {
+	@Override public void visitFail(Stmt.Fail c, Context context) {
 		out.println("fail");
 	}
 
-	private void writeIf(int indent, Location<Bytecode.If> b, Set<Type> typeTests) {
+	@Override
+	public void visitIfElse(Stmt.IfElse b, Context context) {
 		out.print("if(");
-		writeExpression(b.getOperand(0), typeTests);
+		visitExpression(b.getCondition(), context);
+		context = context.indent();
+		//
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0), typeTests);
-		if(b.numberOfBlocks() > 1) {
-			tabIndent(indent+1);
+		visitBlock(b.getTrueBranch(), context);
+		if (b.hasFalseBranch()) {
+			tabIndent(context.indent);
 			out.println("} else {");
-			writeBlock(indent+1,b.getBlock(1), typeTests);
+			visitBlock(b.getFalseBranch(), context);
 		}
-		tabIndent(indent+1);
+		tabIndent(context.indent);
 		out.println("}");
 	}
 
-	private void writeIndirectInvoke(int indent, Location<Bytecode.IndirectInvoke> stmt, Set<Type> typeTests) {
-		Location<?>[] operands = stmt.getOperands();
-		writeExpression(operands[0], typeTests);
-		Location<?>[] arguments = stmt.getOperandGroup(0);
-		out.print("(");
-		for(int i=0;i!=arguments.length;++i) {
-			if(i!=0) {
-				out.print(", ");
-			}
-			writeExpression(arguments[i], typeTests);
-		}
-		out.println(");");
-	}
-	private void writeInvoke(int indent, Location<Bytecode.Invoke> stmt, Set<Type> typeTests) {
-		NameID name = stmt.getBytecode().name();
-		// FIXME: this doesn't work for imported function symbols!
-		out.print(name.name());
-		writeTypeMangle(stmt.getBytecode().type());
-		out.print("(");
-		Location<?>[] operands = stmt.getOperands();
-		for(int i=0;i!=operands.length;++i) {
-			if(i!=0) {
-				out.print(", ");
-			}
-			writeExpression(operands[i], typeTests);
-		}
-		out.println(");");
-	}
-
-	private void writeNamedBlock(int indent, Location<Bytecode.NamedBlock> b, Set<Type> typeTests) {
-		out.print(b.getBytecode().getName());
+	@Override
+	public void visitNamedBlock(Stmt.NamedBlock b, Context context) {
+		out.print(b.getName());
 		out.println(":");
-		writeBlock(indent+1,b.getBlock(0), typeTests);
+		visitBlock(b.getBlock(), context.indent());
 	}
 
-	private void writeWhile(int indent, Location<Bytecode.While> b, Set<Type> typeTests) {
+	@Override
+	public void visitWhile(Stmt.While b, Context context) {
 		out.print("while(");
-		writeExpression(b.getOperand(0), typeTests);
+		visitExpression(b.getCondition(), context);
 		out.println(") {");
-		writeBlock(indent+1,b.getBlock(0), typeTests);
-		tabIndent(indent+1);
+		visitBlock(b.getBody(), context.indent());
+		tabIndent(context.indent + 1);
 		out.println("}");
 	}
 
-	private void writeReturn(int indent, Location<Bytecode.Return> b, Set<Type> typeTests) {
-		Location<?>[] operands = b.getOperands();
+	@Override
+	public void visitReturn(Stmt.Return b, Context context) {
+		Tuple<Expr> operands = b.getReturns();
 		out.print("return");
-		if(operands.length == 1) {
+		if (operands.size() == 1) {
 			// easy case
 			out.print(" ");
-			writeExpression(operands[0], typeTests);
-		} else if(operands.length > 0) {
+			visitExpression(operands.get(0), context);
+		} else if (operands.size() > 0) {
 			// harder case
 			out.print(" [");
-			for (int i = 0; i != operands.length; ++i) {
+			for (int i = 0; i != operands.size(); ++i) {
 				if (i != 0) {
 					out.print(", ");
 				}
-				writeExpression(operands[i], typeTests);
+				visitExpression(operands.get(i), context);
 			}
 			out.print("]");
 		}
 		out.println(";");
 	}
 
-	private void writeSkip(int indent, Location<Bytecode.Skip> b, Set<Type> typeTests) {
+	@Override
+	public void visitSkip(Stmt.Skip b, Context context) {
 		out.println("// skip");
 	}
 
-	private void writeSwitch(int indent, Location<Bytecode.Switch> b, Set<Type> typeTests) {
+	@Override
+	public void visitSwitch(Stmt.Switch b, Context context) {
 		out.print("switch(");
-		writeExpression(b.getOperand(0), typeTests);
+		visitExpression(b.getCondition(), context);
 		out.println(") {");
-		for (int i = 0; i != b.numberOfBlocks(); ++i) {
+		Tuple<Stmt.Case> cases = b.getCases();
+		for (int i = 0; i != cases.size(); ++i) {
 			// FIXME: ugly
-			Bytecode.Case cAse = b.getBytecode().cases()[i];
-			Constant[] values = cAse.values();
-			if (values.length == 0) {
-				tabIndent(indent + 1);
+			Stmt.Case cAse = cases.get(i);
+			Tuple<Expr> values = cAse.getConditions();
+			if (values.size() == 0) {
+				tabIndent(context.indent + 1);
 				out.println("default:");
 			} else {
-				for (int j = 0; j != values.length; ++j) {
-					tabIndent(indent + 1);
+				for (int j = 0; j != values.size(); ++j) {
+					tabIndent(context.indent + 1);
 					out.print("case ");
-					out.print(values[j]);
+					// FIXME: this needs to be fixed
+					out.print(values.get(j));
 					out.println(":");
 				}
 			}
-			writeBlock(indent + 1, b.getBlock(i), typeTests);
-			tabIndent(indent + 2);
+			visitBlock(cAse.getBlock(), context.indent());
+			tabIndent(context.indent + 2);
 			out.println("break;");
 		}
-		tabIndent(indent + 1);
+		tabIndent(context.indent + 1);
 		out.println("}");
-	}
-
-	private void writeVariableDeclaration(int indent, Location<VariableDeclaration> loc, Set<Type> typeTests) {
-		Location<?>[] operands = loc.getOperands();
-		out.print("var ");
-		writeType(loc.getType());
-		out.print(loc.getBytecode().getName());
-		if (operands.length > 0) {
-			out.print(" = ");
-			writeExpression(operands[0], typeTests);
-		}
-		out.println(";");
 	}
 
 	/**
@@ -527,497 +468,521 @@ public final class JavaScriptFileWriter {
 	 * @param enclosing
 	 * @param out
 	 */
-	private void writeBracketedExpression(Location<?> expr, Set<Type> typeTests) {
-		boolean needsBrackets = needsBrackets(expr.getBytecode());
+	private void writeBracketedExpression(Expr expr, Context context) {
+		boolean needsBrackets = needsBrackets(expr);
 		if (needsBrackets) {
 			out.print("(");
 		}
-		writeExpression(expr, typeTests);
+		visitExpression(expr, context);
 		if (needsBrackets) {
 			out.print(")");
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void writeExpression(Location<?> expr, Set<Type> typeTests)  {
-		switch (expr.getOpcode()) {
-		case Bytecode.OPCODE_arraylength:
-			writeArrayLength((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndex((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_array:
-			writeArrayInitialiser((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_arraygen:
-			writeArrayGenerator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_convert:
-			writeConvert((Location<Bytecode.Convert>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_const:
-			writeConst((Location<Bytecode.Const>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_fieldload:
-			writeFieldLoad((Location<Bytecode.FieldLoad>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_indirectinvoke:
-			writeIndirectInvoke((Location<Bytecode.IndirectInvoke>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_invoke:
-			writeInvoke((Location<Bytecode.Invoke>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_lambda:
-			writeLambda((Location<Bytecode.Lambda>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_record:
-			writeRecordConstructor((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_newobject:
-			writeNewObject((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_dereference:
-			writeDereference((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_logicalnot:
-		case Bytecode.OPCODE_neg:
-			writePrefixLocations((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_bitwiseinvert:
-			writeInvertOperator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_all:
-		case Bytecode.OPCODE_some:
-			writeQuantifier((Location<Bytecode.Quantifier>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_eq:
-		case Bytecode.OPCODE_ne:
-			writeEqualityOperator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_div:
-			writeDivideOperator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_add:
-		case Bytecode.OPCODE_sub:
-		case Bytecode.OPCODE_mul:
-		case Bytecode.OPCODE_rem:
-		case Bytecode.OPCODE_lt:
-		case Bytecode.OPCODE_le:
-		case Bytecode.OPCODE_gt:
-		case Bytecode.OPCODE_ge:
-		case Bytecode.OPCODE_logicaland:
-		case Bytecode.OPCODE_logicalor:
-		case Bytecode.OPCODE_bitwiseor:
-		case Bytecode.OPCODE_bitwisexor:
-		case Bytecode.OPCODE_bitwiseand:
-			writeInfixLocations((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_shl:
-		case Bytecode.OPCODE_shr:
-			writeShiftOperator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_is:
-			writeIsOperator((Location<Bytecode.Operator>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_varmove:
-			// FIXME: this needs to be fixed!
-			//writeVariableCopy((Location<VariableAccess>) expr);
-			writeVariableMove((Location<VariableAccess>) expr, typeTests);
-			break;
-		case Bytecode.OPCODE_varcopy:
-			writeVariableCopy((Location<VariableAccess>) expr, typeTests);
-			break;
-		default:
-			throw new IllegalArgumentException("unknown bytecode encountered: " + expr.getBytecode());
-		}
+	@Override
+	public void visitCast(Expr.Cast expr, Context context) {
+		visitExpression(expr.getOperand(), context);
 	}
 
-
-	private void writeArrayLength(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print(".length");
-	}
-
-	private void writeArrayIndex(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print("[");
-		writeExpression(expr.getOperand(1), typeTests);
-		out.print("]");
-	}
-
-	private void writeArrayInitialiser(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		Location<?>[] operands = expr.getOperands();
-		out.print("[");
-		for(int i=0;i!=operands.length;++i) {
-			if(i != 0) {
-				out.print(", ");
-			}
-			writeExpression(operands[i], typeTests);
-		}
-		out.print("]");
-	}
-
-	private void writeArrayGenerator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("Wy.array(");
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print(", ");
-		writeExpression(expr.getOperand(1), typeTests);
-		out.print(")");
-	}
-	private void writeConvert(Location<Bytecode.Convert> expr, Set<Type> typeTests) {
-		writeExpression(expr.getOperand(0), typeTests);
-	}
-	private void writeConst(Location<Bytecode.Const> expr, Set<Type> typeTests) {
-		Constant c = expr.getBytecode().constant();
-		writeConstant(c);
-	}
-
-	private void writeFieldLoad(Location<Bytecode.FieldLoad> expr, Set<Type> typeTests) {
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print("." + expr.getBytecode().fieldName());
-	}
-	private void writeIndirectInvoke(Location<Bytecode.IndirectInvoke> expr, Set<Type> typeTests) {
-		Location<?>[] operands = expr.getOperands();
-		writeExpression(operands[0], typeTests);
-		Location<?>[] arguments = expr.getOperandGroup(0);
-		out.print("(");
-		for(int i=0;i!=arguments.length;++i) {
-			if(i!=0) {
-				out.print(", ");
-			}
-			writeExpression(arguments[i], typeTests);
-		}
-		out.print(")");
-	}
-	private void writeInvoke(Location<Bytecode.Invoke> expr, Set<Type> typeTests) {
-		NameID name = expr.getBytecode().name();
-		// FIXME: this doesn't work for imported function symbols!
-		out.print(name.name());
-		writeTypeMangle(expr.getBytecode().type());
-		out.print("(");
-		Location<?>[] operands = expr.getOperands();
-		for(int i=0;i!=operands.length;++i) {
-			if(i!=0) {
-				out.print(", ");
-			}
-			writeExpression(operands[i], typeTests);
-		}
-		out.print(")");
-	}
-
-	@SuppressWarnings("unchecked")
-	private void writeLambda(Location<Bytecode.Lambda> expr, Set<Type> typeTests) {
-		out.print("function(");
-		Location<?>[] parameters = expr.getOperandGroup(SyntaxTree.PARAMETERS);
-		for (int i = 0; i != parameters.length; ++i) {
-			Location<VariableDeclaration> var = (Location<VariableDeclaration>) parameters[i];
-			if (i != 0) {
-				out.print(", ");
-			}
-			writeType(var.getType());
-			out.print(var.getBytecode().getName());
-		}
-		out.print(") { ");
-		out.print("return ");
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print("; }");
-	}
-
-	private void writeRecordConstructor(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		try {
-			Type.EffectiveRecord t = typeSystem.expandAsEffectiveRecord(expr.getType());
-			String[] fields = t.getFieldNames();
-			Location<?>[] operands = expr.getOperands();
-			out.print("Wy.record({");
-			for (int i = 0; i != operands.length; ++i) {
+	@Override
+	public void visitConstant(Expr.Constant expr, Context context) {
+		Value val = expr.getValue();
+		if (val instanceof Value.Byte) {
+			Value.Byte b = (Value.Byte) val;
+			// FIXME: support es6 binary literals
+			// out.print("0b");
+			out.print("parseInt('");
+			out.print(Integer.toBinaryString(b.get() & 0xFF));
+			out.print("',2)");
+		} else if (val instanceof Value.UTF8) {
+			Value.UTF8 s = (Value.UTF8) val;
+			byte[] bytes = s.get();
+			out.print("[");
+			for (int i = 0; i != bytes.length; ++i) {
 				if (i != 0) {
 					out.print(", ");
 				}
-				out.print(fields[i]);
-				out.print(": ");
-				writeExpression(operands[i], typeTests);
+				out.print(bytes[i]);
 			}
-			out.print("})");
-		} catch(ResolveError e) {
-			throw new RuntimeException(e);
+			out.print("]");
+		} else {
+			out.print(val);
 		}
 	}
 
-	private void writeNewObject(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("new Wy.Ref(");
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print(")");
+	@Override
+	public void visitEqual(Expr.Equal expr, Context context) {
+		visitEqualityOperator(expr, context);
 	}
 
-	private void writeDereference(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("Wy.deref(");
-		writeExpression(expr.getOperand(0), typeTests);
-		out.print(")");
+	@Override
+	public void visitNotEqual(Expr.NotEqual expr, Context context) {
+		visitEqualityOperator(expr, context);
 	}
 
-	private void writePrefixLocations(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		// Prefix operators
-		out.print(opcode(expr.getBytecode().kind()));
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-	}
-
-	private void writeInvertOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		// Prefix operators
-		out.print("((~");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(") & 0xFF)");
-	}
-
-
-	private void writeEqualityOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		Location<?> lhs = expr.getOperand(0);
-		Location<?> rhs = expr.getOperand(1);
+	private void visitEqualityOperator(Expr.BinaryOperator expr, Context context) {
+		// Extract the type information
+		Expr lhs = expr.getFirstOperand();
+		Expr rhs = expr.getSecondOperand();
+		// FIXME: put this back
 		Type lhsT = lhs.getType();
 		Type rhsT = rhs.getType();
 		//
-		if(isCopyable(lhsT,lhs) && isCopyable(rhsT,rhs)) {
-			writeInfixLocations(expr, typeTests);
+		if (isCopyable(lhsT, lhs) && isCopyable(rhsT, rhs)) {
+			writeInfixOperator(expr, context);
 		} else {
-			if (expr.getOpcode() == Bytecode.OPCODE_ne) {
+			if (expr instanceof Expr.NotEqual) {
 				out.print("!");
 			}
 			out.print("Wy.equals(");
-			writeExpression(lhs, typeTests);
+			visitExpression(lhs, context);
 			out.print(", ");
-			writeExpression(rhs, typeTests);
+			visitExpression(rhs, context);
 			out.print(")");
 		}
 	}
 
-	private void writeDivideOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("Math.floor(");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(" / ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
-		out.print(")");
-	}
-
-	private void writeInfixLocations(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(" ");
-		out.print(opcode(expr.getBytecode().kind()));
-		out.print(" ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
-
-	}
-
-	private void writeShiftOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		out.print("((");
-		writeBracketedExpression(expr.getOperand(0), typeTests);
-		out.print(" ");
-		out.print(opcode(expr.getBytecode().kind()));
-		out.print(" ");
-		writeBracketedExpression(expr.getOperand(1), typeTests);
-		out.print(") & 0xFF)");
-	}
-
-	private void writeIsOperator(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		Location<Bytecode.Const> operand = ((Location<Bytecode.Const>) expr.getOperand(1));
-		Constant.Type ct = (Constant.Type) operand.getBytecode().constant();
-		Type t = ct.value();
+	@Override
+	public void visitIs(Expr.Is expr, Context context) {
+		Type t = expr.getTestType();
 		// Handle all non-trivial cases directly
-		if(t == Type.T_NULL) {
-			writeExpression(expr.getOperand(0), typeTests);
+		if (t instanceof Type.Null) {
+			visitExpression(expr.getOperand(), context);
 			out.print(" === null");
-		} else if(t == Type.T_INT) {
+		} else if (t instanceof Type.Int) {
 			// FIXME: this will need to be updated when unbounded arithmetic is
 			// supported
 			out.print("typeof ");
-			writeExpression(expr.getOperand(0), typeTests);
+			visitExpression(expr.getOperand(), context);
 			out.print(" === \"number\"");
-		} else if(t == Type.T_BOOL) {
+		} else if (t instanceof Type.Bool) {
 			out.print("typeof ");
-			writeExpression(expr.getOperand(0), typeTests);
+			visitExpression(expr.getOperand(), context);
 			out.print(" === \"boolean\"");
 		} else {
 			// Fall back case
 			out.print("is$");
-			writeTypeMangle(ct.value());
+			writeTypeMangle(t);
 			out.print("(");
-			writeExpression(expr.getOperand(0), typeTests);
+			visitExpression(expr.getOperand(), context);
 			out.print(")");
 			// Register this type test to be written out as an appropriately
 			// named function.
-			typeTests.add(ct.value());
+			context.typeTests.add(t);
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void writeQuantifier(Location<Bytecode.Quantifier> expr, Set<Type> typeTests) {
-		out.print("Wy.");
-		out.print(quantifierKind(expr));
+	@Override
+	public void visitStaticVariableAccess(Expr.StaticVariableAccess expr, Context context) {
+		// FIXME: this is horrendously broken
+		out.print("Wy.copy(" + expr.getName() + ")");
+	}
+
+	@Override
+	public void visitVariableAccess(Expr.VariableAccess expr, Context context) {
+		Decl.Variable vd = expr.getVariableDeclaration();
+		// Variable move needs to be supported here
+		if (isCopyable(vd.getType(), expr)) {
+			out.print(vd.getName());
+		} else {
+			out.print("Wy.copy(" + vd.getName() + ")");
+		}
+	}
+
+	// ================================================================================
+	// Arrays
+	// ================================================================================
+
+	@Override
+	public void visitArrayLength(Expr.ArrayLength expr, Context context) {
+		visitExpression(expr.getOperand(), context);
+		out.print(".length");
+	}
+
+	@Override
+	public void visitArrayAccess(Expr.ArrayAccess expr, Context context) {
+		visitExpression(expr.getFirstOperand(), context);
+		out.print("[");
+		visitExpression(expr.getSecondOperand(), context);
+		out.print("]");
+	}
+
+	@Override
+	public void visitArrayInitialiser(Expr.ArrayInitialiser expr, Context context) {
+		Tuple<Expr> operands = expr.getOperands();
+		out.print("[");
+		for (int i = 0; i != operands.size(); ++i) {
+			if (i != 0) {
+				out.print(", ");
+			}
+			visitExpression(operands.get(i), context);
+		}
+		out.print("]");
+	}
+
+	@Override
+	public void visitArrayGenerator(Expr.ArrayGenerator expr, Context context) {
+		out.print("Wy.array(");
+		visitExpression(expr.getFirstOperand(), context);
+		out.print(", ");
+		visitExpression(expr.getSecondOperand(), context);
+		out.print(")");
+	}
+
+	// ================================================================================
+	// Bitwise
+	// ================================================================================
+
+	@Override
+	public void visitBitwiseAnd(Expr.BitwiseAnd expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitBitwiseComplement(Expr.BitwiseComplement expr, Context context) {
+		// Prefix operators
+		out.print("((~");
+		writeBracketedExpression(expr.getOperand(), context);
+		out.print(") & 0xFF)");
+	}
+
+	@Override
+	public void visitBitwiseOr(Expr.BitwiseOr expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitBitwiseShiftLeft(Expr.BitwiseShiftLeft expr, Context context) {
+		out.print("((");
+		writeBracketedExpression(expr.getFirstOperand(), context);
+		out.print(" << ");
+		writeBracketedExpression(expr.getSecondOperand(), context);
+		out.print(") & 0xFF)");
+	}
+
+	@Override
+	public void visitBitwiseShiftRight(Expr.BitwiseShiftRight expr, Context context) {
+		out.print("((");
+		writeBracketedExpression(expr.getFirstOperand(), context);
+		out.print(" >> ");
+		writeBracketedExpression(expr.getSecondOperand(), context);
+		out.print(") & 0xFF)");
+	}
+
+	@Override
+	public void visitBitwiseXor(Expr.BitwiseXor expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	// ================================================================================
+	// Callables
+	// ================================================================================
+
+	@Override
+	public void visitIndirectInvoke(Expr.IndirectInvoke expr, Context context) {
+		visitExpression(expr.getSource(), context);
+		Tuple<Expr> arguments = expr.getArguments();
 		out.print("(");
-		for (int i = 0; i != expr.numberOfOperandGroups(); ++i) {
+		for (int i = 0; i != arguments.size(); ++i) {
+			if (i != 0) {
+				out.print(", ");
+			}
+			visitExpression(arguments.get(i), context);
+		}
+		out.print(")");
+	}
+
+	@Override
+	public void visitInvoke(Expr.Invoke expr, Context context) {
+		Name name = expr.getName();
+		// FIXME: this doesn't work for imported function symbols!
+		out.print(name);
+		writeTypeMangle(expr.getSignature());
+		if(expr.getSignature() instanceof Type.Property) {
+			out.print("$property");
+		}
+		out.print("(");
+		Tuple<Expr> args = expr.getOperands();
+		for (int i = 0; i != args.size(); ++i) {
+			if (i != 0) {
+				out.print(", ");
+			}
+			visitExpression(args.get(i), context);
+		}
+		out.print(")");
+	}
+
+
+	@Override
+	public void visitLambdaAccess(Expr.LambdaAccess expr, Context context) {
+		// NOTE: the reason we use a function declaration here (i.e. instead of
+		// just assigning the name) is that it protects against potential name
+		// clashes with local variables.
+		Type.Callable ft = expr.getSignature();
+		Tuple<Type> params = ft.getParameters();
+		out.print("function(");
+		for (int i = 0; i != params.size(); ++i) {
+			if (i != 0) {
+				out.print(",");
+			}
+			out.print("p" + i);
+		}
+		out.print(") { return ");
+		out.print(expr.getName());
+		writeTypeMangle(ft);
+		out.print("(");
+		for (int i = 0; i != params.size(); ++i) {
+			if (i != 0) {
+				out.print(",");
+			}
+			out.print("p" + i);
+		}
+		out.print("); }");
+	}
+
+	// ================================================================================
+	// Integers
+	// ================================================================================
+
+	@Override
+	public void visitIntegerAddition(Expr.IntegerAddition expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerDivision(Expr.IntegerDivision expr, Context context) {
+		out.print("Math.floor(");
+		writeInfixOperator(expr, context);
+		out.print(")");
+	}
+
+	@Override
+	public void visitIntegerRemainder(Expr.IntegerRemainder expr, Context context) {
+		writeInfixOperator(expr, context);
+	}
+
+	@Override
+	public void visitIntegerGreaterThan(Expr.IntegerGreaterThan expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerGreaterThanOrEqual(Expr.IntegerGreaterThanOrEqual expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerLessThan(Expr.IntegerLessThan expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerLessThanOrEqual(Expr.IntegerLessThanOrEqual expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerMultiplication(Expr.IntegerMultiplication expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitIntegerNegation(Expr.IntegerNegation expr, Context context) {
+		// Prefix operators
+		out.print("-");
+		writeBracketedExpression(expr.getOperand(), context);
+	}
+
+	@Override
+	public void visitIntegerSubtraction(Expr.IntegerSubtraction expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	// ================================================================================
+	// Logical
+	// ================================================================================
+
+	@Override
+	public void visitLogicalAnd(Expr.LogicalAnd expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override public void visitLogicalImplication(Expr.LogicalImplication expr, Context context) {
+		out.print("!");
+		writeBracketedExpression(expr.getFirstOperand(), context);
+		out.print("||");
+		writeBracketedExpression(expr.getSecondOperand(), context);
+	}
+
+	@Override public void visitLogicalIff(Expr.LogicalIff expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitLogicalNot(Expr.LogicalNot expr, Context context) {
+		// Prefix operators
+		out.print("!");
+		writeBracketedExpression(expr.getOperand(), context);
+	}
+
+	@Override
+	public void visitLogicalOr(Expr.LogicalOr expr, Context context) {
+		writeInfixOperator(expr,context);
+	}
+
+	@Override
+	public void visitUniversalQuantifier(Expr.UniversalQuantifier expr, Context context) {
+		writeQuantifier(expr,context);
+	}
+
+	@Override
+	public void visitExistentialQuantifier(Expr.ExistentialQuantifier expr, Context context) {
+		writeQuantifier(expr,context);
+	}
+
+	public void writeQuantifier(Expr.Quantifier expr, Context context) {
+		out.print("Wy.");
+		out.print((expr instanceof Expr.UniversalQuantifier) ? "all" : "some");
+		out.print("(");
+		Tuple<Decl.Variable> params = expr.getParameters();
+		for (int i = 0; i != params.size(); ++i) {
+			Decl.Variable param = params.get(i);
 			if(i > 0) {
 				throw new RuntimeException("Need to support multiple operand groups");
 			}
-			Location<?>[] range = expr.getOperandGroup(i);
-			writeExpression(range[SyntaxTree.START], typeTests);
+			// FIXME: for now assume initialiser must be an array range.
+			Expr.ArrayRange range = (Expr.ArrayRange) param.getInitialiser();
+			visitExpression(range.getFirstOperand(), context);
 			out.print(",");
-			writeExpression(range[SyntaxTree.END], typeTests);
+			visitExpression(range.getSecondOperand(), context);
 		}
 		out.print(",function(");
-		for (int i = 0; i != expr.numberOfOperandGroups(); ++i) {
-			Location<?>[] range = expr.getOperandGroup(i);
-			Location<VariableDeclaration>  v = (Location<VariableDeclaration>) range[SyntaxTree.VARIABLE];
-			out.print(v.getBytecode().getName());
+		for (int i = 0; i != params.size(); ++i) {
+			Decl.Variable param = params.get(i);
+			out.print(param.getName());
 		}
 		out.print("){return ");
-		writeExpression(expr.getOperand(SyntaxTree.CONDITION), typeTests);
+		visitExpression(expr.getOperand(), context);
 		out.print(";})");
 	}
 
-	private String quantifierKind(Location<Bytecode.Quantifier> expr) {
-		switch(expr.getOpcode()) {
-		case Bytecode.OPCODE_some:
-			return "some";
-		case Bytecode.OPCODE_all:
-			return "all";
+	// ================================================================================
+	// Objects
+	// ================================================================================
+
+	@Override
+	public void visitNew(Expr.New expr, Context context) {
+		out.print("new Wy.Ref(");
+		visitExpression(expr.getOperand(), context);
+		out.print(")");
+	}
+
+	@Override
+	public void visitDereference(Expr.Dereference expr, Context context) {
+		out.print("Wy.deref(");
+		visitExpression(expr.getOperand(), context);
+		out.print(")");
+	}
+
+	// ================================================================================
+	// Records
+	// ================================================================================
+
+	@Override
+	public void visitRecordAccess(Expr.RecordAccess expr, Context context) {
+		writeBracketedExpression(expr.getOperand(), context);
+		out.print("." + expr.getField());
+	}
+
+	@Override
+	public void visitRecordInitialiser(Expr.RecordInitialiser expr, Context context) {
+		out.print("Wy.record({");
+		Tuple<Expr> operands = expr.getOperands();
+		Tuple<Identifier> fields = expr.getFields();
+		for (int i = 0; i != operands.size(); ++i) {
+			if (i != 0) {
+				out.print(", ");
+			}
+			out.print(fields.get(i));
+			out.print(": ");
+			visitExpression(operands.get(i), context);
 		}
-		throw new IllegalArgumentException();
+		out.print("})");
 	}
 
-	private void writeVariableMove(Location<VariableAccess> expr, Set<Type> typeTests) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
-		out.print(vd.getBytecode().getName());
-	}
+	// ================================================================================
+	// Helpers
+	// ================================================================================
 
-	private void writeVariableCopy(Location<VariableAccess> expr, Set<Type> typeTests) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
-		if(isCopyable(vd.getType(),expr)) {
-			out.print(vd.getBytecode().getName());
-		} else {
-			out.print("Wy.copy(" + vd.getBytecode().getName() + ")");
+	private void writeInvariantCheck(Tuple<Expr> invariant, Context context) {
+		for(int i=0;i!=invariant.size();++i) {
+			tabIndent(context.indent);
+			out.print("Wy.assert(");
+			visitExpression(invariant.get(i), context);
+			out.println(");");
 		}
 	}
 
-	private void writeLVal(Location<?> lval, Set<Type> typeTests) {
+	private void writeInfixOperator(Expr.BinaryOperator expr, Context context) {
+		writeBracketedExpression(expr.getFirstOperand(), context);
+		out.print(" ");
+		out.print(opcode(expr.getOpcode()));
+		out.print(" ");
+		writeBracketedExpression(expr.getSecondOperand(), context);
+	}
+
+	private void writeInfixOperator(Expr.NaryOperator expr, Context context) {
+		Tuple<Expr> operands = expr.getOperands();
+		for (int i = 0; i != operands.size(); ++i) {
+			if (i != 0) {
+				out.print(" ");
+				out.print(opcode(expr.getOpcode()));
+				out.print(" ");
+			}
+			writeBracketedExpression(operands.get(i), context);
+		}
+	}
+
+	private void writeLVal(LVal lval, Context context) {
 		switch (lval.getOpcode()) {
-		case Bytecode.OPCODE_arrayindex:
-			writeArrayIndexLVal((Location<Bytecode.Operator>) lval, typeTests);
+		case EXPR_arrayaccess:
+			writeArrayIndexLVal((Expr.ArrayAccess) lval, context);
 			break;
-		case Bytecode.OPCODE_dereference:
-			writeDereferenceLVal((Location<Bytecode.Operator>) lval, typeTests);
+		case EXPR_dereference:
+			writeDereferenceLVal((Expr.Dereference) lval, context);
 			break;
-		case Bytecode.OPCODE_fieldload:
-			writeFieldLoadLVal((Location<Bytecode.FieldLoad>) lval, typeTests);
+		case EXPR_recordaccess:
+			writeFieldLoadLVal((Expr.RecordAccess) lval, context);
 			break;
-		case Bytecode.OPCODE_varcopy:
-		case Bytecode.OPCODE_varmove:
-			writeVariableAccessLVal((Location<Bytecode.VariableAccess>) lval, typeTests);
+		case EXPR_variablecopy:
+		case EXPR_variablemove:
+			writeVariableAccessLVal((Expr.VariableAccess) lval, context);
 			break;
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
 		}
 	}
 
-	private void writeDereferenceLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		writeLVal(expr.getOperand(0), typeTests);
+	private void writeDereferenceLVal(Expr.Dereference expr, Context context) {
+		writeLVal((LVal) expr.getOperand(), context);
 		out.print(".$ref");
 	}
 
-	private void writeArrayIndexLVal(Location<Bytecode.Operator> expr, Set<Type> typeTests) {
-		writeLVal(expr.getOperand(0), typeTests);
+	private void writeArrayIndexLVal(Expr.ArrayAccess expr, Context context) {
+		writeLVal((LVal) expr.getFirstOperand(), context);
 		out.print("[");
-		writeExpression(expr.getOperand(1), typeTests);
+		visitExpression(expr.getSecondOperand(), context);
 		out.print("]");
 	}
 
-	private void writeFieldLoadLVal(Location<Bytecode.FieldLoad> expr, Set<Type> typeTests) {
-		writeLVal(expr.getOperand(0), typeTests);
-		out.print("." + expr.getBytecode().fieldName());
+	private void writeFieldLoadLVal(Expr.RecordAccess expr, Context context) {
+		writeLVal((LVal) expr.getOperand(), context);
+		out.print("." + expr.getField());
 	}
 
-	private void writeVariableAccessLVal(Location<VariableAccess> expr, Set<Type> typeTests) {
-		Location<VariableDeclaration> vd = getVariableDeclaration(expr.getOperand(0));
-		out.print(vd.getBytecode().getName());
-	}
-
-	private void writeConstant(Constant c) {
-		if(c instanceof Constant.Byte) {
-			writeByteConstant((Constant.Byte) c);
-		} else if(c instanceof Constant.Array) {
-			writeArrayConstant((Constant.Array) c);
-		} else if(c instanceof Constant.FunctionOrMethod) {
-			writeFunctionOrMethodConstant((Constant.FunctionOrMethod) c);
-		} else if(c instanceof Constant.Record) {
-			writeRecordConstant((Constant.Record) c);
-		} else {
-			out.print(c);
-		}
-	}
-
-	private void writeArrayConstant(Constant.Array c) {
-		out.print("[");
-		List<Constant> values = c.values();
-		for(int i=0;i!=values.size();++i) {
-			if(i != 0) {
-				out.print(", ");
-			}
-			writeConstant(values.get(i));
-		}
-		out.print("]");
-	}
-
-	private void writeByteConstant(Constant.Byte c) {
-		// FIXME: support es6 binary literals
-		// out.print("0b");
-		out.print("parseInt('");
-		out.print(Integer.toBinaryString(c.value() & 0xFF));
-		out.print("',2)");
-	}
-
-	private void writeFunctionOrMethodConstant(Constant.FunctionOrMethod c) {
-		Type.FunctionOrMethod fmt = c.type();
-		NameID name = c.name();
-		List<Constant> args = c.arguments();
-		out.print("function(");
-		Type[] params = fmt.params();
-		for(int i=0;i!=params.length;++i) {
-			if(i != 0) {
-				out.print(", ");
-			}
-			out.print("p" + i);
-		}
-		out.print(") {");
-		if(c.type().returns().length > 0) {
-			out.print("return ");
-		}
-		// FIXME: need to handle package
-		out.print(name.name());
-		writeTypeMangle(fmt);
-		out.print("(");
-		for(int i=0;i!=params.length;++i) {
-			if(i != 0) {
-				out.print(", ");
-			}
-			out.print("p" + i);
-		}
-//		for(int i=0;i!=args.size();++i) {
-//			writeConstant(args.get(i));
-//		}
-		out.print(");}");
-	}
-
-	private void writeRecordConstant(Constant.Record c) {
-		out.print("{");
-		boolean firstTime = true;
-		for(Map.Entry<String,Constant> e : c.values().entrySet()) {
-			if(!firstTime) {
-				out.print(", ");
-			}
-			firstTime = false;
-			out.print(e.getKey());
-			out.print(": ");
-			writeConstant(e.getValue());
-		}
-		out.print("}");
+	private void writeVariableAccessLVal(Expr.VariableAccess expr, Context context) {
+		Decl.Variable vd = expr.getVariableDeclaration();
+		out.print(vd.getName());
 	}
 
 	private void writeTypeTests(Set<Type> typeTests, Set<Type> allTests) {
@@ -1038,19 +1003,19 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeTypeTest(Type test, Set<Type> deps) {
-		if(test == Type.T_ANY) {
+		if(test instanceof Type.Any) {
 			writeTypeTestAny((Type.Primitive) test,deps);
-		} else if(test == Type.T_NULL) {
+		} else if(test instanceof Type.Null) {
 			writeTypeTestNull((Type.Primitive) test,deps);
-		} else if(test == Type.T_BOOL) {
+		} else if(test instanceof Type.Bool) {
 			writeTypeTestBool((Type.Primitive) test,deps);
-		} else if(test == Type.T_BYTE) {
+		} else if(test instanceof Type.Byte) {
 			// FIXME: This is clear incorrect. However, there is no better
 			// alternative. The good news is that the byte type is slated to be
 			// removed in future versions of Whiley and, hence, this problem
 			// will go away.
 			writeTypeTestInt((Type.Primitive) test,deps);
-		} else if(test == Type.T_INT) {
+		} else if(test instanceof Type.Int) {
 			writeTypeTestInt((Type.Primitive) test,deps);
 		} else if(test instanceof Type.Nominal) {
 			writeTypeTestNominal((Type.Nominal) test,deps);
@@ -1060,8 +1025,8 @@ public final class JavaScriptFileWriter {
 			writeTypeTestReference((Type.Reference) test,deps);
 		} else if(test instanceof Type.Record) {
 			writeTypeTestRecord((Type.Record) test,deps);
-		} else if(test instanceof Type.FunctionOrMethod) {
-			writeTypeTestFunctionOrMethod((Type.FunctionOrMethod) test,deps);
+		} else if(test instanceof Type.Callable) {
+			writeTypeTestFunctionOrMethod((Type.Callable) test,deps);
 		} else if(test instanceof Type.Negation) {
 			writeTypeTestNegation((Type.Negation) test,deps);
 		} else if(test instanceof Type.Union) {
@@ -1090,27 +1055,18 @@ public final class JavaScriptFileWriter {
 	}
 
 	private void writeTypeTestNominal(Type.Nominal test, Set<Type> deps) {
-		NameID nid = test.name();
-		// First, attempt to locate the enclosing module for this
-		// nominal type.
-//		Path.Entry<WyilFile> entry = project.get(nid.module(), WyilFile.ContentType);
-//		if (entry == null) {
-//			throw new IllegalArgumentException("no WyIL file found: " + nid.module());
-//		}
-		// Read in the module. This may result in it being read from
-		// disk, or from a cache in memory, or even from somewhere else.
-		//WyilFile wyilFile = entry.read();
-		// FIXME: following line is a temporary hack
-		WyilFile wyilFile = this.wyilfile;
-		WyilFile.Type td = wyilFile.type(nid.name());
-		if (td == null) {
-			throw new RuntimeException("undefined nominal type encountered: " + nid);
+		// FIXME: this is so horrendously broken
+		Name name = test.getName();
+		try {
+			Decl.Type td = typeSystem.resolveExactly(name, Decl.Type.class);
+			out.print(" return is$");
+			writeTypeMangle(td.getVariableDeclaration().getType());
+			out.print("(val) && " + name.getLast() + "$type(val); ");
+			//
+		deps.add(td.getVariableDeclaration().getType());
+		} catch (ResolutionError e) {
+			throw new RuntimeException(e);
 		}
-		out.print(" return is$");
-		writeTypeMangle(td.type());
-		out.print("(val) && " + nid.name() + "$(val); ");
-		//
-		deps.add(td.type());
 	}
 
 	private static int variableIndex = 0;
@@ -1125,7 +1081,7 @@ public final class JavaScriptFileWriter {
 		out.println("for(var x=0;x!=val.length;++x) {".replaceAll("x", var));
 		tabIndent(3);
 		out.print("if(!is$");
-		writeTypeMangle(test.element());
+		writeTypeMangle(test.getElement());
 		out.println("(val[" + var +"])) {");
 		tabIndent(4);
 		out.println("return false;");
@@ -1140,7 +1096,7 @@ public final class JavaScriptFileWriter {
 		tabIndent(1);
 		out.println("return false;");
 		// Add a follow-on dependency
-		deps.add(test.element());
+		deps.add(test.getElement());
 	}
 
 	private void writeTypeTestReference(Type.Reference test, Set<Type> deps) {
@@ -1149,34 +1105,32 @@ public final class JavaScriptFileWriter {
 		out.println("if(val != null && val.constructor === Wy.Ref) {");
 		tabIndent(2);
 		out.print(" return is$");
-		writeTypeMangle(test.element());
+		writeTypeMangle(test.getElement());
 		out.println("(Wy.deref(val));");
 		tabIndent(1);
 		out.println("}");
 		tabIndent(1);
 		out.println("return false;");
 		//
-		deps.add(test.element());
+		deps.add(test.getElement());
 	}
 
 	private void writeTypeTestRecord(Type.Record test, Set<Type> deps) {
 		out.println();
 		tabIndent(1);
 		out.print("if(val != null && typeof val === \"object\"");
-		String[] fields = test.getFieldNames();
-		if(!test.isOpen()) {
-			out.print(" && Object.keys(val).length === " + fields.length);
+		Tuple<Decl.Variable> fields = test.getFields();
+		if (!test.isOpen()) {
+			out.print(" && Object.keys(val).length === " + fields.size());
 		}
 		out.println(") {");
-		for (int i = 0; i != fields.length; ++i) {
-			String field = fields[i];
-			Type fieldType = test.getField(field);
-			test.getField(field);
+		for (int i = 0; i != fields.size(); ++i) {
+			Decl.Variable field = fields.get(i);
 			tabIndent(2);
-			out.print("if(val." + field + " === \"undefined\" || !is$");
-			writeTypeMangle(fieldType);
-			out.println("(val." + field +")) { return false; }");
-			deps.add(fieldType);
+			out.print("if(val." + field.getName() + " === \"undefined\" || !is$");
+			writeTypeMangle(field.getType());
+			out.println("(val." + field.getName() + ")) { return false; }");
+			deps.add(field.getType());
 		}
 		tabIndent(2);
 		out.println("return true;");
@@ -1195,7 +1149,7 @@ public final class JavaScriptFileWriter {
 	 * @param test
 	 * @param deps
 	 */
-	private void writeTypeTestFunctionOrMethod(Type.FunctionOrMethod test, Set<Type> deps) {
+	private void writeTypeTestFunctionOrMethod(Type.Callable test, Set<Type> deps) {
 		out.println();
 		tabIndent(1);
 		out.println("if(val != null && typeof val === \"function\") {");
@@ -1211,15 +1165,16 @@ public final class JavaScriptFileWriter {
 
 	private void writeTypeTestNegation(Type.Negation test, Set<Type> deps) {
 		out.print(" return !(is$");
-		writeTypeMangle(test.element());
+		writeTypeMangle(test.getElement());
 		out.print("(val)); ");
 		//
-		deps.add(test.element());
+		deps.add(test.getElement());
 	}
 
 	private void writeTypeTestUnion(Type.Union test, Set<Type> deps) {
 		out.println();
-		for(Type bound : test.bounds()) {
+		for(int i=0;i!=test.size();++i) {
+			Type bound = test.get(i);
 			tabIndent(1);
 			out.print("if(is$");
 			writeTypeMangle(bound);
@@ -1233,7 +1188,8 @@ public final class JavaScriptFileWriter {
 
 	private void writeTypeTestIntersection(Type.Intersection test, Set<Type> deps) {
 		out.println();
-		for(Type bound : test.bounds()) {
+		for(int i=0;i!=test.size();++i) {
+			Type bound = test.get(i);
 			tabIndent(1);
 			out.print("if(!is$");
 			writeTypeMangle(bound);
@@ -1245,42 +1201,42 @@ public final class JavaScriptFileWriter {
 		out.print("return true;");
 	}
 
-	private void writeTypeMangle(Type.FunctionOrMethod  fmt) {
-		Type[] params = fmt.params();
-		for(int i=0;i!=params.length;++i) {
-			if(i == 0) {
+	private void writeTypeMangle(Type.Callable fmt) {
+		Tuple<Type> params = fmt.getParameters();
+		for (int i = 0; i != params.size(); ++i) {
+			if (i == 0) {
 				out.print("_");
 			}
-			writeTypeMangle(params[i]);
+			writeTypeMangle(params.get(i));
 		}
 	}
 
 	private void writeTypeMangle(Type t) {
-		if(t == Type.T_ANY) {
+		if (t instanceof Type.Any) {
 			out.print("T");
-		} else if(t == Type.T_NULL) {
+		} else if (t instanceof Type.Null) {
 			out.print("N");
-		} else if(t == Type.T_BOOL) {
+		} else if (t instanceof Type.Bool) {
 			out.print("B");
-		} else if(t == Type.T_BYTE) {
+		} else if (t instanceof Type.Byte) {
 			out.print("U");
-		} else if(t == Type.T_INT) {
+		} else if (t instanceof Type.Int) {
 			out.print("I");
-		} else if(t instanceof Type.Array) {
+		} else if (t instanceof Type.Array) {
 			writeTypeMangleArray((Type.Array) t);
-		} else if(t instanceof Type.Reference) {
+		} else if (t instanceof Type.Reference) {
 			writeTypeMangleReference((Type.Reference) t);
-		} else if(t instanceof Type.Record) {
+		} else if (t instanceof Type.Record) {
 			writeTypeMangleRecord((Type.Record) t);
-		} else if(t instanceof Type.Nominal) {
+		} else if (t instanceof Type.Nominal) {
 			writeTypeMangleNominal((Type.Nominal) t);
-		} else if(t instanceof Type.FunctionOrMethod) {
-			writeTypeMangleFunctionOrMethod((Type.FunctionOrMethod) t);
-		} else if(t instanceof Type.Negation) {
+		} else if (t instanceof Type.Callable) {
+			writeTypeMangleFunctionOrMethod((Type.Callable) t);
+		} else if (t instanceof Type.Negation) {
 			writeTypeMangleNegation((Type.Negation) t);
-		} else if(t instanceof Type.Union) {
+		} else if (t instanceof Type.Union) {
 			writeTypeMangleUnion((Type.Union) t);
-		} else if(t instanceof Type.Intersection) {
+		} else if (t instanceof Type.Intersection) {
 			writeTypeMangleIntersection((Type.Intersection) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
@@ -1289,80 +1245,84 @@ public final class JavaScriptFileWriter {
 
 	private void writeTypeMangleArray(Type.Array t) {
 		out.print("a");
-		writeTypeMangle(t.element());
+		writeTypeMangle(t.getElement());
 	}
 	private void writeTypeMangleReference(Type.Reference t) {
 		out.print("p");
-		String lifetime = t.lifetime();
-		if(lifetime == null || lifetime.equals("*")) {
-			out.print("0");
+		if (t.hasLifetime()) {
+			String lifetime = t.getLifetime().get();
+			if(lifetime.equals("*")) {
+				out.print("_");
+			} else {
+				out.print(lifetime.length());
+				out.print(lifetime);
+			}
 		} else {
-			out.print(lifetime.length());
-			out.print(lifetime);
+			out.print("0");
 		}
-		writeTypeMangle(t.element());
+		writeTypeMangle(t.getElement());
 	}
-	private void writeTypeMangleRecord(Type.Record t) {
-		Type.Record rt = (Type.Record) t;
+
+	private void writeTypeMangleRecord(Type.Record rt) {
 		out.print("r");
-		String[] fields = rt.getFieldNames();
-		out.print(fields.length);
-		for(int i=0;i!=fields.length;++i) {
-			String field = fields[i];
-			writeTypeMangle(rt.getField(field));
-			out.print(field.length());
-			out.print(field);
+		Tuple<Decl.Variable> fields = rt.getFields();
+		out.print(fields.size());
+		for (int i = 0; i != fields.size(); ++i) {
+			Decl.Variable field = fields.get(i);
+			writeTypeMangle(field.getType());
+			String fieldName = field.getName().get();
+			out.print(fieldName.length());
+			out.print(fieldName);
 		}
 	}
 	private void writeTypeMangleNominal(Type.Nominal t) {
 		out.print("n");
 		// FIXME: need to figure out package
-		String name = t.name().name().toString();
+		String name = t.getName().getLast().get();
 		out.print(name.length());
 		out.print(name);
 	}
 
-	private void writeTypeMangleFunctionOrMethod(Type.FunctionOrMethod t) {
-		if(t instanceof Type.Function) {
+	private void writeTypeMangleFunctionOrMethod(Type.Callable t) {
+		if (t instanceof Type.Function) {
 			out.print("f");
 		} else {
 			out.print("m");
 		}
-		Type[] params = t.params();
-		out.print(params.length);
-		for(int i=0;i!=params.length;++i) {
-			writeTypeMangle(params[i]);
+		Tuple<Type> params = t.getParameters();
+		out.print(params.size());
+		for (int i = 0; i != params.size(); ++i) {
+			writeTypeMangle(params.get(i));
 		}
-		Type[] returns = t.returns();
-		out.print(returns.length);
-		for(int i=0;i!=returns.length;++i) {
-			writeTypeMangle(returns[i]);
+		Tuple<Type> returns = t.getReturns();
+		out.print(returns.size());
+		for (int i = 0; i != returns.size(); ++i) {
+			writeTypeMangle(returns.get(i));
 		}
 		out.print("e");
 	}
 
 	private void writeTypeMangleNegation(Type.Negation t) {
 		out.print("n");
-		writeTypeMangle(t.element());
+		writeTypeMangle(t.getElement());
 	}
 
 	private void writeTypeMangleUnion(Type.Union t) {
 		out.print("u");
-		Type[] bounds = t.bounds();
-		out.print(bounds.length);
-		for(int i=0;i!=bounds.length;++i) {
-			writeTypeMangle(bounds[i]);
+		out.print(t.size());
+		for(int i=0;i!=t.size();++i) {
+			writeTypeMangle(t.get(i));
 		}
 	}
 
 	private void writeTypeMangleIntersection(Type.Intersection t) {
 		out.print("c");
-		Type[] bounds = t.bounds();
-		out.print(bounds.length);
-		for(int i=0;i!=bounds.length;++i) {
-			writeTypeMangle(bounds[i]);
+		out.print(t.size());
+		for(int i=0;i!=t.size();++i) {
+			writeTypeMangle(t.get(i));
 		}
 	}
+
 	private void writeType(Type t) {
 		if(commentTypes) {
 			out.print("/*");
@@ -1383,115 +1343,106 @@ public final class JavaScriptFileWriter {
 	 * @return
 	 */
 	private boolean isCopyable(Type type, SyntacticElement context) {
-		if (type instanceof Type.Primitive) {
+		if(type instanceof Type.Any) {
+			return false;
+		} else if (type instanceof Type.Primitive) {
 			return true;
-		} else if(type instanceof Type.FunctionOrMethod) {
+		} else if (type instanceof Type.Callable) {
 			return true;
-		} else if(type instanceof Type.Reference) {
+		} else if (type instanceof Type.Reference) {
 			return true;
-		} else if(type instanceof Type.Nominal) {
+		} else if (type instanceof Type.Nominal) {
 			Type.Nominal tn = (Type.Nominal) type;
-			NameID nid = tn.name();
-			// First, attempt to locate the enclosing module for this
-			// nominal type.
-//			Path.Entry<WyilFile> entry = project.get(nid.module(), WyilFile.ContentType);
-//			if (entry == null) {
-//				throw new IllegalArgumentException("no WyIL file found: " + nid.module());
-//			}
-			// Read in the module. This may result in it being read from
-			// disk, or from a cache in memory, or even from somewhere else.
-			//WyilFile wyilFile = entry.read();
-			// FIXME: following line is a temporary hack
-			WyilFile wyilFile = this.wyilfile;
-			WyilFile.Type td = wyilFile.type(nid.name());
-			if (td == null) {
-				throw new RuntimeException("undefined nominal type encountered: " + nid);
-			}
 			//
-			return isCopyable(td.type(),context);
+			try {
+				Decl.Type td = typeSystem.resolveExactly(tn.getName(), Decl.Type.class);
+				return isCopyable(td.getType(), context);
+			} catch (ResolutionError e) {
+				throw new RuntimeException(e);
+			}
 		} else {
 			return false;
 		}
 	}
 
-	private boolean needsBrackets(Bytecode e) {
+	private boolean needsBrackets(Expr e) {
 		switch(e.getOpcode()) {
-		case Bytecode.OPCODE_convert:
-		case Bytecode.OPCODE_add:
-		case Bytecode.OPCODE_sub:
-		case Bytecode.OPCODE_mul:
-		case Bytecode.OPCODE_div:
-		case Bytecode.OPCODE_rem:
-		case Bytecode.OPCODE_eq:
-		case Bytecode.OPCODE_ne:
-		case Bytecode.OPCODE_lt:
-		case Bytecode.OPCODE_le:
-		case Bytecode.OPCODE_gt:
-		case Bytecode.OPCODE_ge:
-		case Bytecode.OPCODE_logicaland:
-		case Bytecode.OPCODE_logicalor:
-		case Bytecode.OPCODE_bitwiseor:
-		case Bytecode.OPCODE_bitwisexor:
-		case Bytecode.OPCODE_bitwiseand:
-		case Bytecode.OPCODE_shl:
-		case Bytecode.OPCODE_shr:
-		case Bytecode.OPCODE_is:
-		case Bytecode.OPCODE_newobject:
+		case EXPR_cast:
+		case EXPR_integeraddition:
+		case EXPR_integersubtraction:
+		case EXPR_integermultiplication:
+		case EXPR_integerdivision:
+		case EXPR_integerremainder:
+		case EXPR_equal:
+		case EXPR_notequal:
+		case EXPR_integerlessthan:
+		case EXPR_integerlessequal:
+		case EXPR_integergreaterthan:
+		case EXPR_integergreaterequal:
+		case EXPR_logicaland:
+		case EXPR_logicalor:
+		case EXPR_bitwiseor:
+		case EXPR_bitwisexor:
+		case EXPR_bitwiseand:
+		case EXPR_bitwiseshl:
+		case EXPR_bitwiseshr:
+		case EXPR_is:
+		case EXPR_new:
 			return true;
 		}
 		return false;
 	}
 
-	private static String opcode(Bytecode.OperatorKind k) {
+	private static String opcode(int k) {
 		switch(k) {
-		case NEG:
+		case EXPR_integernegation:
 			return "-";
-		case NOT:
+		case EXPR_logicalnot:
 			return "!";
-		case BITWISEINVERT:
+		case EXPR_bitwisenot:
 			return "~";
-		case DEREFERENCE:
+		case EXPR_dereference:
 			return "*";
 		// Binary
-		case ADD:
+		case EXPR_integeraddition:
 			return "+";
-		case SUB:
+		case EXPR_integersubtraction:
 			return "-";
-		case MUL:
+		case EXPR_integermultiplication:
 			return "*";
-		case DIV:
+		case EXPR_integerdivision:
 			return "/";
-		case REM:
+		case EXPR_integerremainder:
 			return "%";
-		case EQ:
+		case EXPR_equal:
 			return "==";
-		case NEQ:
+		case EXPR_notequal:
 			return "!=";
-		case LT:
+		case EXPR_integerlessthan:
 			return "<";
-		case LTEQ:
+		case EXPR_integerlessequal:
 			return "<=";
-		case GT:
+		case EXPR_integergreaterthan:
 			return ">";
-		case GTEQ:
+		case EXPR_integergreaterequal:
 			return ">=";
-		case AND:
+		case EXPR_logicaland:
 			return "&&";
-		case OR:
+		case EXPR_logicalor:
 			return "||";
-		case BITWISEOR:
+		case EXPR_bitwiseor:
 			return "|";
-		case BITWISEXOR:
+		case EXPR_bitwisexor:
 			return "^";
-		case BITWISEAND:
+		case EXPR_bitwiseand:
 			return "&";
-		case LEFTSHIFT:
+		case EXPR_bitwiseshl:
 			return "<<";
-		case RIGHTSHIFT:
+		case EXPR_bitwiseshr:
 			return ">>";
-		case IS:
+		case EXPR_is:
 			return "is";
-		case NEW:
+		case EXPR_new:
 			return "new";
 		default:
 			throw new IllegalArgumentException("unknown operator kind : " + k);
@@ -1505,15 +1456,17 @@ public final class JavaScriptFileWriter {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private Location<VariableDeclaration> getVariableDeclaration(Location<?> loc) {
-		switch (loc.getOpcode()) {
-		case Bytecode.OPCODE_vardecl:
-		case Bytecode.OPCODE_vardeclinit:
-			return (Location<VariableDeclaration>) loc;
-		case Bytecode.OPCODE_aliasdecl:
-			return getVariableDeclaration(loc.getOperand(0));
+	public static class Context {
+		public final int indent;
+		public final HashSet<Type> typeTests;
+
+		public Context(int indent, HashSet<Type> typeTests) {
+			this.indent = indent;
+			this.typeTests = typeTests;
 		}
-		throw new IllegalArgumentException("invalid location provided: " + loc);
+
+		public Context indent() {
+			return new Context(indent+1,typeTests);
+		}
 	}
 }

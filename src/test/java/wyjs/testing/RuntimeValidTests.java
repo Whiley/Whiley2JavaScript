@@ -1,28 +1,16 @@
-// Copyright (c) 2011, David J. Pearce (djp@ecs.vuw.ac.nz)
-// All rights reserved.
+// Copyright 2011 The Whiley Project Developers
 //
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are met:
-//    * Redistributions of source code must retain the above copyright
-//      notice, this list of conditions and the following disclaimer.
-//    * Redistributions in binary form must reproduce the above copyright
-//      notice, this list of conditions and the following disclaimer in the
-//      documentation and/or other materials provided with the distribution.
-//    * Neither the name of the <organization> nor the
-//      names of its contributors may be used to endorse or promote products
-//      derived from this software without specific prior written permission.
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL DAVID J. PEARCE BE LIABLE FOR ANY
-// DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-// (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-// ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package wyjs.testing;
 
 import static org.junit.Assert.fail;
@@ -44,7 +32,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wyc.commands.Compile;
+import wyc.command.Compile;
 import wyc.util.TestUtils;
 import wycc.util.Logger;
 import wycc.util.Pair;
@@ -83,39 +71,38 @@ public class RuntimeValidTests {
 	public final static Map<String, String> IGNORED = new HashMap<>();
 
 	static {
-		// Bring over all the currently failing tests for the compiler. There's
-		// absolutely no point trying to see whether these work or not, since we
-		// already know they will not.
-		IGNORED.put("RecursiveType_Valid_12", "#339");
-		IGNORED.put("RecursiveType_Valid_22", "#339");
-		//
-		IGNORED.put("Function_Valid_15", "#566");
-		IGNORED.put("TypeEquals_Valid_23", "#566");
-		IGNORED.put("TypeEquals_Valid_41", "#566");
-		//
-		IGNORED.put("Lifetime_Lambda_Valid_4", "#645");
-		//
+		// ===================================================
+		// WyC problems
+		// ===================================================
+
+		// Problem Type Checking Union Type
 		IGNORED.put("RecordSubtype_Valid_1", "#696");
 		IGNORED.put("RecordSubtype_Valid_2", "#696");
-		IGNORED.put("RecursiveType_Valid_3", "#696");
-		IGNORED.put("TypeEquals_Valid_36", "#696");
-		IGNORED.put("TypeEquals_Valid_37", "#696");
-		IGNORED.put("TypeEquals_Valid_38", "#696");
-		//
+		// Function Overloading for Nominal Types
 		IGNORED.put("Function_Valid_11", "#702");
-		//
-		IGNORED.put("Complex_Valid_3", "#339");
-		IGNORED.put("DoWhile_Valid_4", "#339");
-		IGNORED.put("RecursiveType_Valid_28", "#339");
+		IGNORED.put("Function_Valid_15", "#702");
+		//  Normalisation for Method Subtyping
+		IGNORED.put("Lifetime_Lambda_Valid_2", "#794");
+		IGNORED.put("Lifetime_Lambda_Valid_5", "#794");
+		IGNORED.put("Lifetime_Lambda_Valid_6", "#794");
+		// Support Captured Lifetime Parameters
+		IGNORED.put("Lifetime_Lambda_Valid_7", "#795");
+		// Type Tests with Invariants
+		IGNORED.put("TypeEquals_Valid_23", "#787");
+		IGNORED.put("TypeEquals_Valid_25", "#787");
+		IGNORED.put("TypeEquals_Valid_30", "#787");
+		IGNORED.put("TypeEquals_Valid_41", "#787");
+		// Unclassified
+		IGNORED.put("Lifetime_Valid_8", "???");
 
 		// ===================================================
 		// WyJS problems
 		// ===================================================
 
-		IGNORED.put("ConstrainedList_Valid_22", "???");
 		IGNORED.put("ConstrainedList_Valid_23", "#10");
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		IGNORED.put("Switch_Valid_12", "#12");
+		IGNORED.put("Switch_Valid_4", "???");
 	}
 
 	/**

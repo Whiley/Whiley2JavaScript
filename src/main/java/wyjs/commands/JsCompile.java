@@ -1,3 +1,16 @@
+// Copyright 2011 The Whiley Project Developers
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package wyjs.commands;
 
 import java.io.File;
@@ -7,16 +20,13 @@ import java.util.List;
 
 import wybs.util.StdBuildRule;
 import wybs.util.StdProject;
-import wyc.commands.Compile;
-import wyc.commands.Compile.Result;
-import wyc.lang.WhileyFile;
-import wycc.lang.Feature.ConfigurationError;
+import wyc.command.Compile;
 import wycc.util.ArrayUtils;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.util.DirectoryRoot;
-import wyil.lang.WyilFile;
+import wyc.lang.WhileyFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -133,11 +143,11 @@ public class JsCompile extends Compile {
 
 	protected void addWyil2JavaScriptBuildRule(StdProject project) {
 		// Configure build rules for normal compilation
-		Content.Filter<WyilFile> wyilIncludes = Content.filter("**", WyilFile.ContentType);
-		Content.Filter<WyilFile> wyilExcludes = null;
+		Content.Filter<WhileyFile> wyilIncludes = Content.filter("**", WhileyFile.BinaryContentType);
+		Content.Filter<WhileyFile> wyilExcludes = null;
 		// Rule for compiling Whiley to WyIL
 		JavaScriptCompileTask jsBuilder = new JavaScriptCompileTask(project);
-		if(verbose) {
+		if (verbose) {
 			jsBuilder.setLogger(logger);
 		}
 		project.add(new StdBuildRule(jsBuilder, wyildir, wyilIncludes, wyilExcludes, javascriptdir));

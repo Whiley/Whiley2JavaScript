@@ -24,10 +24,17 @@ By participating, you are expected to uphold this code.
 ### Licensing and Copyright
 
 This project is licensed under the
-[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.  such
-As, you must adhere to this license when working with this project.
-This project employs a **Copyright Licensing Agreement**, whereby
-copyright is retained by contributors.
+[Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) license.
+such As, you must adhere to this license when working with this
+project.  This project employs a **Copyright Licensing Agreement**,
+whereby copyright is retained by contributors:
+
+> "In a Contributor License Agreement (CLA), the original contributor
+> retains copyright ownership of their contributions, but grants the
+> project a broad set of rights such that the project can incorporate
+> and distribute the contributions as it needs to"
+
+(from [opensource.org](https://opensource.org/faq))
 
 ### The Whiley Compiler Collection
 

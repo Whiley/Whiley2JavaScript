@@ -1,6 +1,6 @@
-import whiley.lang.ASCII
+import std.ascii
 
-type tagChar is ASCII.letter | ASCII.digit
+type tagChar is ascii.letter | ascii.digit
 type tagName is (tagChar[] str)
 
 // ==================================================================
@@ -13,16 +13,16 @@ type tagName is (tagChar[] str)
 
 type TextAttribute is {
     tagName key,
-    ASCII.string value
+    ascii.string value
 }
 
-function id(ASCII.string text) -> Attribute:
+function id(ascii.string text) -> Attribute:
     return {
         key: "id",
         value: text
     }
 
-function style(ASCII.string text) -> Attribute:
+function style(ascii.string text) -> Attribute:
     return {
         key: "style",
         value: text
@@ -32,7 +32,7 @@ function style(ASCII.string text) -> Attribute:
 // Event Attributes
 // ==================================================================
 
-type eventHandler is function()->(ASCII.string)
+type eventHandler is function()->(ascii.string)
 
 type EventAttribute is {
     tagName event,
@@ -59,23 +59,23 @@ type Node is {
     tagName name,
     Attribute[] attributes,
     Node[] children
-} | ASCII.string
+} | ascii.string
 
-function h1(ASCII.string text) -> Node:
+function h1(ascii.string text) -> Node:
     return {
         name: "h1",
         attributes: [id("");0],
         children: [text]
     }
 
-function h2(ASCII.string text) -> Node:
+function h2(ascii.string text) -> Node:
     return {
         name: "h2",
         attributes: [id("");0],
         children: [text]
     }
 
-function h3(ASCII.string text) -> Node:
+function h3(ascii.string text) -> Node:
     return {
         name: "h2",
         attributes: [id("");0],
@@ -114,7 +114,7 @@ function button(Attribute[] attributes, Node[] children) -> Node:
 // Functions
 // ==================================================================
 
-function f() -> ASCII.string:
+function f() -> ascii.string:
     return "HELLO"
 
 export function create() -> Node:
