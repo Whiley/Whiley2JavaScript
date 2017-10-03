@@ -100,11 +100,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitType(Decl.Type td, Context context) {
 		Decl.Variable vardecl = td.getVariableDeclaration();
+		String name = vardecl.getName().get();
 		out.print("function ");
 		out.print(td.getName());
-		out.print("$type(");
-		out.print(vardecl.getName());
-		out.println(") {");
+		out.println("$type(" + name + ") {");
+		// Check type invariant
+		writeInvariantTest(vardecl,context.indent());
+		// Check local invariant
 		Tuple<Expr> invariant = td.getInvariant();
 		if(invariant.size() == 0) {
 			tabIndent(context.indent());
@@ -236,8 +238,11 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		if (decl.hasInitialiser()) {
 			out.print(" = ");
 			visitExpression(decl.getInitialiser(), context);
+			out.println(";");
+			writeInvariantCheck(decl,context);
+		} else {
+			out.println(";");
 		}
-		out.println(";");
 	}
 
 	@Override
@@ -341,6 +346,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(" = ");
 			visitExpression(rhs.get(0), context);
 			out.println(";");
+			writeInvariantCheck(lhs.get(0),context);
 		} else if (lhs.size() > 1) {
 			// FIXME: this is broken when multiple rhs expressions
 			out.print("var $ = ");
@@ -352,6 +358,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				tabIndent(context.indent());
 				writeLVal(lhs.get(i), context);
 				out.println(" = $[" + i + "];");
+				writeInvariantCheck(lhs.get(i),context);
 			}
 		}
 	}
@@ -994,6 +1001,16 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	// Helpers
 	// ================================================================================
 
+	private void writeName(Name name) {
+		for(int i=0;i!=name.size();++i) {
+			if (i != 0) {
+				// FIXME: this is a temporary hack for now.
+				out.print("$");
+			}
+			out.print(name.get(i).get());
+		}
+	}
+
 	private void writeShadowVariables(Tuple<Decl.Variable> parameters, boolean restore, Context context) {
 		if (debug) {
 			tabIndent(context);
@@ -1016,6 +1033,166 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				out.print(";");
 			}
 			out.println();
+		}
+	}
+
+	private void writeInvariantTest(Decl.Variable var, Context context) {
+		String name = var.getName().get();
+		writeInvariantTest(name, 0, var.getType(), context);
+	}
+
+	private void writeInvariantTest(String access, int depth, Type type, Context context) {
+		switch(type.getOpcode()) {
+		case TYPE_record:
+			writeInvariantTest(access, depth, (Type.Record) type, context);
+			break;
+		case TYPE_array:
+			writeInvariantTest(access, depth, (Type.Array) type, context);
+			 break;
+		case TYPE_reference:
+			writeInvariantTest(access, depth, (Type.Reference) type, context);
+			break;
+		case TYPE_negation:
+			writeInvariantTest(access, depth, (Type.Negation) type, context);
+			break;
+		case TYPE_union:
+			writeInvariantTest(access, depth, (Type.Union) type, context);
+			break;
+		case TYPE_intersection:
+			writeInvariantTest(access, depth, (Type.Intersection) type, context);
+			break;
+		case TYPE_nominal:
+			writeInvariantTest(access, depth, (Type.Nominal) type, context);
+			break;
+		default:
+			// Do nothing
+		}
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Record type, Context context) {
+		Tuple<Decl.Variable> fields = type.getFields();
+		for (int i = 0; i != fields.size(); ++i) {
+			Decl.Variable field = fields.get(i);
+			writeInvariantTest(access + "." + field.getName().get(), depth, field.getType(), context);
+		}
+	}
+
+	private static String[] indexVariableNames = { "i", "j", "k", "l", "m" };
+
+	private void writeInvariantTest(String access, int depth, Type.Array type, Context context) {
+		int variableNameIndex = depth % indexVariableNames.length;
+		int variableNameGroup = depth / indexVariableNames.length;
+		String var = indexVariableNames[variableNameIndex];
+		if(variableNameGroup > 0) {
+			// In case we wrap around the selection of variable names.
+			var = var + variableNameGroup;
+		}
+		tabIndent(context);
+		out.println("for(var " + var + "=0; " + var + "<" + access + ".length; " + var + "++) {");
+		writeInvariantTest(access + "[" + var + "]", depth + 1, type.getElement(), context.indent());
+		tabIndent(context);
+		out.println("}");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Reference type, Context context) {
+		// FIXME: to do.
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Negation type, Context context) {
+		out.println("if(" + getTypeTest(type.getElement(),access,context) + ") { return false; }");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Union type, Context context) {
+		for (int i = 0; i != type.size(); ++i) {
+			Type bound = type.get(i);
+			tabIndent(context);
+			if(i != 0) {
+				out.print("else ");
+			}
+			// FIXME: this could be made more efficient
+			out.println("if(" + getTypeTest(bound,access,context) + ") {}");
+		}
+		tabIndent(context);
+		out.println("else { return false; }");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Intersection type, Context context) {
+		for (int i = 0; i != type.size(); ++i) {
+			Type bound = type.get(i);
+			writeInvariantTest(access, depth, bound, context);
+		}
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Nominal type, Context context) {
+		tabIndent(context);
+		out.print("if(!");
+		writeName(type.getName());
+		out.println("$type(" + access + ")) { return false; }");
+	}
+
+	private String getTypeTest(Type t, String access, Context context) {
+		// Handle all non-trivial cases directly
+		if (t instanceof Type.Null) {
+			return access + " === null";
+		} else if (t instanceof Type.Int) {
+			return "typeof " + access + " === \"number\"";
+		} else if (t instanceof Type.Bool) {
+			return "typeof " + access + " === \"boolean\"";
+		} else {
+			// Fall back case
+			String r = "is$" + getTypeMangle(t) + "(" + access + ")";
+			// Register this type test to be written out as an appropriately
+			// named function.
+			context.typeTests.add(t);
+			return r;
+		}
+	}
+
+
+	private void writeInvariantCheck(LVal lval, Context context) {
+		switch (lval.getOpcode()) {
+		case EXPR_arrayaccess:
+		case EXPR_arrayborrow: {
+			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
+			writeInvariantCheck((LVal) e.getFirstOperand(), context);
+			break;
+		}
+		case EXPR_dereference: {
+			Expr.Dereference e = (Expr.Dereference) lval;
+			writeInvariantCheck((LVal) e.getOperand(), context);
+			break;
+		}
+		case EXPR_recordaccess:
+		case EXPR_recordborrow: {
+			Expr.RecordAccess e = (Expr.RecordAccess) lval;
+			writeInvariantCheck((LVal) e.getOperand(), context);
+			break;
+		}
+		case EXPR_variablecopy:
+		case EXPR_variablemove: {
+			Expr.VariableAccess e = (Expr.VariableAccess) lval;
+			writeInvariantCheck(e.getVariableDeclaration(), context);
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("invalid lval: " + lval);
+		}
+	}
+
+	private void writeInvariantCheck(Decl.Variable var, Context context) {
+		if (debug) {
+			// FIXME: This is completely broken. For example, consider the type "nat[]" ...
+			// it gets completely ignored here.
+			Type type = var.getType();
+			if (type instanceof Type.Nominal) {
+				Type.Nominal nom = (Type.Nominal) type;
+				tabIndent(context);
+				out.println("// check type invariant");
+				tabIndent(context);
+				out.print("Wy.assert(");
+				writeName(nom.getName());
+				out.println("$type(" + var.getName().get() + "));");
+			}
 		}
 	}
 
@@ -1323,115 +1500,114 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeTypeMangle(Type t) {
+		out.print(getTypeMangle(t));
+	}
+
+	private String getTypeMangle(Type t) {
 		if (t instanceof Type.Any) {
-			out.print("T");
+			return "T";
 		} else if (t instanceof Type.Null) {
-			out.print("N");
+			return "N";
 		} else if (t instanceof Type.Bool) {
-			out.print("B");
+			return "B";
 		} else if (t instanceof Type.Byte) {
-			out.print("U");
+			return "U";
 		} else if (t instanceof Type.Int) {
-			out.print("I");
+			return "I";
 		} else if (t instanceof Type.Array) {
-			writeTypeMangleArray((Type.Array) t);
+			return getTypeMangleArray((Type.Array) t);
 		} else if (t instanceof Type.Reference) {
-			writeTypeMangleReference((Type.Reference) t);
+			return getTypeMangleReference((Type.Reference) t);
 		} else if (t instanceof Type.Record) {
-			writeTypeMangleRecord((Type.Record) t);
+			return getTypeMangleRecord((Type.Record) t);
 		} else if (t instanceof Type.Nominal) {
-			writeTypeMangleNominal((Type.Nominal) t);
+			return getTypeMangleNominal((Type.Nominal) t);
 		} else if (t instanceof Type.Callable) {
-			writeTypeMangleFunctionOrMethod((Type.Callable) t);
+			return getTypeMangleFunctionOrMethod((Type.Callable) t);
 		} else if (t instanceof Type.Negation) {
-			writeTypeMangleNegation((Type.Negation) t);
+			return getTypeMangleNegation((Type.Negation) t);
 		} else if (t instanceof Type.Union) {
-			writeTypeMangleUnion((Type.Union) t);
+			return getTypeMangleUnion((Type.Union) t);
 		} else if (t instanceof Type.Intersection) {
-			writeTypeMangleIntersection((Type.Intersection) t);
+			return getTypeMangleIntersection((Type.Intersection) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
 	}
 
-	private void writeTypeMangleArray(Type.Array t) {
-		out.print("a");
-		writeTypeMangle(t.getElement());
+	private String getTypeMangleArray(Type.Array t) {
+		return "a" + getTypeMangle(t.getElement());
 	}
-	private void writeTypeMangleReference(Type.Reference t) {
-		out.print("p");
+	private String getTypeMangleReference(Type.Reference t) {
+		String r = "p";
 		if (t.hasLifetime()) {
 			String lifetime = t.getLifetime().get();
 			if(lifetime.equals("*")) {
-				out.print("_");
+				r += "_";
 			} else {
-				out.print(lifetime.length());
-				out.print(lifetime);
+				r += lifetime.length();
+				r += lifetime;
 			}
 		} else {
-			out.print("0");
+			r += "0";
 		}
-		writeTypeMangle(t.getElement());
+		return r + getTypeMangle(t.getElement());
 	}
 
-	private void writeTypeMangleRecord(Type.Record rt) {
-		out.print("r");
+	private String getTypeMangleRecord(Type.Record rt) {
+		String r = "r";
 		Tuple<Decl.Variable> fields = rt.getFields();
-		out.print(fields.size());
+		r += fields.size();
 		for (int i = 0; i != fields.size(); ++i) {
 			Decl.Variable field = fields.get(i);
-			writeTypeMangle(field.getType());
+			r += getTypeMangle(field.getType());
 			String fieldName = field.getName().get();
-			out.print(fieldName.length());
-			out.print(fieldName);
+			r += fieldName.length();
+			r += fieldName;
 		}
+		return r;
 	}
-	private void writeTypeMangleNominal(Type.Nominal t) {
-		out.print("n");
+	private String getTypeMangleNominal(Type.Nominal t) {
 		// FIXME: need to figure out package
 		String name = t.getName().getLast().get();
-		out.print(name.length());
-		out.print(name);
+		return "n" + name.length() + name;
 	}
 
-	private void writeTypeMangleFunctionOrMethod(Type.Callable t) {
-		if (t instanceof Type.Function) {
-			out.print("f");
-		} else {
-			out.print("m");
-		}
+	private String getTypeMangleFunctionOrMethod(Type.Callable t) {
+		String r = (t instanceof Type.Function) ? "f" : "m";
 		Tuple<Type> params = t.getParameters();
-		out.print(params.size());
+		r += params.size();
 		for (int i = 0; i != params.size(); ++i) {
-			writeTypeMangle(params.get(i));
+			r += getTypeMangle(params.get(i));
 		}
 		Tuple<Type> returns = t.getReturns();
-		out.print(returns.size());
+		r += returns.size();
 		for (int i = 0; i != returns.size(); ++i) {
-			writeTypeMangle(returns.get(i));
+			r += getTypeMangle(returns.get(i));
 		}
-		out.print("e");
+		return r + "e";
 	}
 
-	private void writeTypeMangleNegation(Type.Negation t) {
-		out.print("n");
-		writeTypeMangle(t.getElement());
+	private String getTypeMangleNegation(Type.Negation t) {
+		return "n" + getTypeMangle(t.getElement());
 	}
 
-	private void writeTypeMangleUnion(Type.Union t) {
-		out.print("u");
-		out.print(t.size());
+	private String getTypeMangleUnion(Type.Union t) {
+		String r = "u";
+		r += t.size();
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.get(i));
+			r += getTypeMangle(t.get(i));
 		}
+		return r;
 	}
 
-	private void writeTypeMangleIntersection(Type.Intersection t) {
-		out.print("c");
-		out.print(t.size());
+	private String getTypeMangleIntersection(Type.Intersection t) {
+		String r = "c";
+		r += t.size();
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.get(i));
+			r += getTypeMangle(t.get(i));
 		}
+		return r;
 	}
 
 	private void writeType(Type t) {
