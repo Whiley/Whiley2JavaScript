@@ -57,8 +57,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 */
 	protected final TypeSystem typeSystem;
 	private boolean verbose = false;
-	private boolean commentTypes = false;
-	private boolean commentSpecifications = false;
+	// Debug options
+	private boolean debug = true;
 
 	private WhileyFile wyilfile;
 
@@ -82,6 +82,10 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		this.verbose = flag;
 	}
 
+	public void setDebug(boolean flag) {
+		this.debug = flag;
+	}
+
 	// ======================================================================
 	// Apply Method
 	// ======================================================================
@@ -103,16 +107,16 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println(") {");
 		Tuple<Expr> invariant = td.getInvariant();
 		if(invariant.size() == 0) {
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.println("return true;");
 		} else if(invariant.size() == 1) {
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.print("return ");
 			visitExpression(invariant.get(0), context);
 			out.println(";");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
-				tabIndent(1);
+				tabIndent(context.indent());
 				if(i == 0) {
 					out.print("var result = (");
 				} else {
@@ -121,7 +125,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				visitExpression(invariant.get(i), context);
 				out.println(");");
 			}
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.println("return result;");
 		}
 		out.println("}");
@@ -142,29 +146,28 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	public void visitFunctionOrMethod(Decl.FunctionOrMethod method, Context context) {
 		// FIXME: what to do with private methods?
 		if (method.getModifiers().match(Modifier.Export.class) != null) {
-			writeExportTrampoline(method);
+			writeExportTrampoline(method,context);
 		}
 		//
 		out.print("function ");
 		out.print(method.getName());
 		writeTypeMangle(method.getType());
 		visitVariables(method.getParameters(), context);
-		if(commentTypes) {
+		if(debug) {
 			if (method.getReturns().size() > 0) {
 				out.print("// -> ");
 				visitVariables(method.getReturns(), context);
-				out.println();
-			} else {
-				out.println();
 			}
 		} else {
 			out.print(" ");
 		}
-		if(commentSpecifications) {
+		if(debug) {
 			//
+			out.println();
 			for (Expr precondition : method.getRequires()) {
 				out.print("// requires ");
 				visitExpression(precondition, context);
+				out.println();
 			}
 			for (Expr postcondition : method.getEnsures()) {
 				out.print("// ensures ");
@@ -173,8 +176,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			}
 		}
 		out.println("{");
-		writeInvariantCheck(method.getRequires(), context.indent());
+		writeInvariantCheck(method.getRequires(), "precondition", context.indent());
+		writeShadowVariables(method.getParameters(), false, context.indent());
 		if (method.getBody() != null) {
+			if(debug) {
+				tabIndent(context.indent());
+				out.println("// function or method body");
+			}
 			visitBlock(method.getBody(), context);
 		}
 		out.println("}");
@@ -187,7 +195,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		writeTypeMangle(method.getType());
 		out.print("$property");
 		visitVariables(method.getParameters(), context);
-		if(commentTypes) {
+		if(debug) {
 			if (method.getReturns().size() > 0) {
 				out.print("// -> ");
 				visitVariables(method.getReturns(), context);
@@ -199,8 +207,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(" ");
 		}
 		out.println("{");
-		writeInvariantCheck(method.getInvariant(), context.indent());
-		tabIndent(1);
+		writeInvariantCheck(method.getInvariant(), "invariant", context.indent());
+		tabIndent(context.indent());
 		out.println("return true;");
 		out.println("}");
 	}
@@ -221,6 +229,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitVariable(Decl.Variable decl, Context context) {
+		tabIndent(context);
 		out.print("var ");
 		writeType(decl.getType());
 		out.print(decl.getName());
@@ -256,7 +265,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 *
 	 * @param method
 	 */
-	private void writeExportTrampoline(Decl.FunctionOrMethod method) {
+	private void writeExportTrampoline(Decl.FunctionOrMethod method, Context context) {
 		Type.Callable ft = method.getType();
 		Tuple<Decl.Variable> params = method.getParameters();
 		Tuple<Decl.Variable> returns = method.getReturns();
@@ -265,7 +274,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(method.getName());
 			visitVariables(params, null);
 			out.println(" {");
-			tabIndent(1);
+			tabIndent(context.indent());
 			if (returns.size() > 0) {
 				out.print("return ");
 			}
@@ -289,8 +298,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println(");");
 	}
 
-	@Override public void visitStatement(Stmt stmt, Context context) {
-		tabIndent(context.indent+1);
+	@Override
+	public void visitBlock(Stmt.Block stmt, Context context) {
+		super.visitBlock(stmt, context.indent());
+	}
+
+	@Override
+	public void visitStatement(Stmt stmt, Context context) {
 		super.visitStatement(stmt, context);
 		//
 		switch(stmt.getOpcode()) {
@@ -301,13 +315,16 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 	}
 
-	@Override public void visitAssert(Stmt.Assert c, Context context) {
+	@Override
+	public void visitAssert(Stmt.Assert c, Context context) {
+		tabIndent(context);
 		out.print("Wy.assert(");
 		visitExpression(c.getCondition(), context);
 		out.println(");");
 	}
 
 	@Override public void visitAssume(Stmt.Assume c, Context context) {
+		tabIndent(context);
 		out.print("Wy.assert(");
 		visitExpression(c.getCondition(), context);
 		out.println(");");
@@ -315,6 +332,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitAssign(Stmt.Assign stmt, Context context) {
+		tabIndent(context);
 		Tuple<LVal> lhs = stmt.getLeftHandSide();
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		if (lhs.size() == 1) {
@@ -331,7 +349,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.println(";");
 			// Translate left-hand sides
 			for (int i = 0; i != lhs.size(); ++i) {
-				tabIndent(context.indent + 1);
+				tabIndent(context.indent());
 				writeLVal(lhs.get(i), context);
 				out.println(" = $[" + i + "];");
 			}
@@ -340,11 +358,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitBreak(Stmt.Break b, Context context) {
+		tabIndent(context);
 		out.println("break;");
 	}
 
 	@Override
 	public void visitContinue(Stmt.Continue b, Context context) {
+		tabIndent(context);
 		out.println("continue;");
 	}
 
@@ -355,10 +375,12 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitDoWhile(Stmt.DoWhile b, Context context) {
+		tabIndent(context);
 		out.println("do {");
 		//
-		visitBlock(b.getBody(), context.indent());
-		tabIndent(context.indent + 1);
+		visitBlock(b.getBody(), context);
+		writeInvariantCheck(b.getInvariant(), "loop invariant", context.indent());
+		tabIndent(context.indent());
 		// FIXME: write loop invariant if DEBUG mode
 		out.print("} while(");
 		visitExpression(b.getCondition(), context);
@@ -366,11 +388,15 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	@Override public void visitFail(Stmt.Fail c, Context context) {
-		out.println("fail");
+		if(debug) {
+			tabIndent(context);
+			out.println("Wy.assert(false);");
+		}
 	}
 
 	@Override
 	public void visitIfElse(Stmt.IfElse b, Context context) {
+		tabIndent(context);
 		out.print("if(");
 		visitExpression(b.getCondition(), context);
 		context = context.indent();
@@ -378,42 +404,93 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println(") {");
 		visitBlock(b.getTrueBranch(), context);
 		if (b.hasFalseBranch()) {
-			tabIndent(context.indent);
+			tabIndent(context);
 			out.println("} else {");
 			visitBlock(b.getFalseBranch(), context);
 		}
-		tabIndent(context.indent);
+		tabIndent(context);
 		out.println("}");
 	}
 
 	@Override
 	public void visitNamedBlock(Stmt.NamedBlock b, Context context) {
+		tabIndent(context.indent());
 		out.print(b.getName());
 		out.println(":");
-		visitBlock(b.getBlock(), context.indent());
+		visitBlock(b.getBlock(), context);
 	}
 
 	@Override
 	public void visitWhile(Stmt.While b, Context context) {
+		writeInvariantCheck(b.getInvariant(),"loop invariant on entry",context);
+		tabIndent(context);
 		out.print("while(");
 		visitExpression(b.getCondition(), context);
 		out.println(") {");
-		visitBlock(b.getBody(), context.indent());
-		tabIndent(context.indent + 1);
+		visitBlock(b.getBody(), context);
+		writeInvariantCheck(b.getInvariant(),"loop invariant restored",context.indent());
+		tabIndent(context);
 		out.println("}");
 	}
 
 	@Override
-	public void visitReturn(Stmt.Return b, Context context) {
-		Tuple<Expr> operands = b.getReturns();
-		out.print("return");
+	public void visitReturn(Stmt.Return stmt, Context context) {
+		if(debug) {
+			// Write return values
+			writeReturnsWithChecks(stmt, context);
+		} else {
+			writeReturnsWithoutChecks(stmt, context);
+		}
+	}
+
+	private void writeReturnsWithChecks(Stmt.Return stmt, Context context) {
+		Decl.FunctionOrMethod decl = stmt.getAncestor(Decl.FunctionOrMethod.class);
+		Tuple<Decl.Variable> returns = decl.getReturns();
+		Tuple<Expr> operands = stmt.getReturns();
+		tabIndent(context);
+		for (int i = 0; i != returns.size(); ++i) {
+			if (i != 0) {
+				out.print(" ");
+			}
+			out.print("var ");
+			out.print(returns.get(i).getName().get() + " = ");
+			visitExpression(operands.get(i), context);
+			out.print(";");
+		}
+		out.println();
+		writeShadowVariables(decl.getParameters(),true,context);
+		writeInvariantCheck(decl.getEnsures(), "postcondition", context);
+		tabIndent(context);
+		//
+		out.print("return ");
+		if (returns.size() == 1) {
+			// easy case
+			out.print(returns.get(0).getName().get());
+		} else if (returns.size() > 0) {
+			// harder case
+			out.print("[");
+			for (int i = 0; i != returns.size(); ++i) {
+				if (i != 0) {
+					out.print(", ");
+				}
+				out.print(returns.get(i).getName().get());
+			}
+			out.print("]");
+		}
+		out.println(";");
+	}
+
+	private void writeReturnsWithoutChecks(Stmt.Return stmt, Context context) {
+		Tuple<Expr> operands = stmt.getReturns();
+		//
+		tabIndent(context);
+		out.print("return ");
 		if (operands.size() == 1) {
 			// easy case
-			out.print(" ");
 			visitExpression(operands.get(0), context);
 		} else if (operands.size() > 0) {
 			// harder case
-			out.print(" [");
+			out.print("[");
 			for (int i = 0; i != operands.size(); ++i) {
 				if (i != 0) {
 					out.print(", ");
@@ -441,22 +518,22 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			Stmt.Case cAse = cases.get(i);
 			Tuple<Expr> values = cAse.getConditions();
 			if (values.size() == 0) {
-				tabIndent(context.indent + 1);
+				tabIndent(context);
 				out.println("default:");
 			} else {
 				for (int j = 0; j != values.size(); ++j) {
-					tabIndent(context.indent + 1);
+					tabIndent(context);
 					out.print("case ");
 					// FIXME: this needs to be fixed
 					out.print(values.get(j));
 					out.println(":");
 				}
 			}
-			visitBlock(cAse.getBlock(), context.indent());
-			tabIndent(context.indent + 2);
+			visitBlock(cAse.getBlock(), context);
+			tabIndent(context);
 			out.println("break;");
 		}
-		tabIndent(context.indent + 1);
+		tabIndent(context);
 		out.println("}");
 	}
 
@@ -582,7 +659,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	public void visitVariableAccess(Expr.VariableAccess expr, Context context) {
 		Decl.Variable vd = expr.getVariableDeclaration();
 		// Variable move needs to be supported here
-		if (isCopyable(vd.getType(), expr)) {
+		if (isCopyable(vd.getType(), expr) || expr.isMove()) {
 			out.print(vd.getName());
 		} else {
 			out.print("Wy.copy(" + vd.getName() + ")");
@@ -601,6 +678,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitArrayAccess(Expr.ArrayAccess expr, Context context) {
+		// FIXME: need to clone here
 		visitExpression(expr.getFirstOperand(), context);
 		out.print("[");
 		visitExpression(expr.getSecondOperand(), context);
@@ -879,6 +957,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitDereference(Expr.Dereference expr, Context context) {
+		// FIXME: need to clone here
 		out.print("Wy.deref(");
 		visitExpression(expr.getOperand(), context);
 		out.print(")");
@@ -890,6 +969,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitRecordAccess(Expr.RecordAccess expr, Context context) {
+		// FIXME: need to clone here
 		writeBracketedExpression(expr.getOperand(), context);
 		out.print("." + expr.getField());
 	}
@@ -914,12 +994,41 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	// Helpers
 	// ================================================================================
 
-	private void writeInvariantCheck(Tuple<Expr> invariant, Context context) {
-		for(int i=0;i!=invariant.size();++i) {
-			tabIndent(context.indent);
-			out.print("Wy.assert(");
-			visitExpression(invariant.get(i), context);
-			out.println(");");
+	private void writeShadowVariables(Tuple<Decl.Variable> parameters, boolean restore, Context context) {
+		if (debug) {
+			tabIndent(context);
+			if(restore) {
+				out.println("// restore shadow variables");
+			} else {
+				out.println("// create shadow variables");
+			}
+			tabIndent(context);
+			for (int i = 0; i != parameters.size(); ++i) {
+				if (i != 0) {
+					out.print(" ");
+				}
+				String var = parameters.get(i).getName().get();
+				if (restore) {
+					out.print(var + " = $" + var);
+				} else {
+					out.print("var $" + var + " = " + var);
+				}
+				out.print(";");
+			}
+			out.println();
+		}
+	}
+
+	private void writeInvariantCheck(Tuple<Expr> invariant, String comment, Context context) {
+		if(debug && invariant.size() > 0) {
+			tabIndent(context);
+			out.println("// check " + comment);
+			for(int i=0;i!=invariant.size();++i) {
+				tabIndent(context);
+				out.print("Wy.assert(");
+				visitExpression(invariant.get(i), context);
+				out.println(");");
+			}
 		}
 	}
 
@@ -946,12 +1055,14 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	private void writeLVal(LVal lval, Context context) {
 		switch (lval.getOpcode()) {
 		case EXPR_arrayaccess:
+		case EXPR_arrayborrow:
 			writeArrayIndexLVal((Expr.ArrayAccess) lval, context);
 			break;
 		case EXPR_dereference:
 			writeDereferenceLVal((Expr.Dereference) lval, context);
 			break;
 		case EXPR_recordaccess:
+		case EXPR_recordborrow:
 			writeFieldLoadLVal((Expr.RecordAccess) lval, context);
 			break;
 		case EXPR_variablecopy:
@@ -1324,10 +1435,10 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeType(Type t) {
-		if(commentTypes) {
+		if(debug) {
 			out.print("/*");
 			out.print(t);
-			out.print("*/");
+			out.print("*/ ");
 		}
 	}
 
@@ -1430,6 +1541,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			return "&&";
 		case EXPR_logicalor:
 			return "||";
+		case EXPR_logicaliff:
+			return "==";
 		case EXPR_bitwiseor:
 			return "|";
 		case EXPR_bitwisexor:
@@ -1449,9 +1562,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 	}
 
+	private void tabIndent(Context context) {
+		tabIndent(context.indent);
+	}
+
 	private void tabIndent(int indent) {
 		indent = indent * 4;
-		for(int i=0;i<indent;++i) {
+		for (int i = 0; i < indent; ++i) {
 			out.print(" ");
 		}
 	}
