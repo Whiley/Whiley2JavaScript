@@ -47,6 +47,11 @@ public class JavaScriptCompileTask implements Build.Task {
 	protected final TypeSystem typeSystem;
 
 	/**
+	 * Enable debug mode
+	 */
+	protected boolean debug = true;
+
+	/**
 	 * For logging information.
 	 */
 	private Logger logger = Logger.NULL;
@@ -58,6 +63,10 @@ public class JavaScriptCompileTask implements Build.Task {
 
 	public void setLogger(Logger logger) {
 		this.logger = logger;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 	@Override
@@ -108,6 +117,7 @@ public class JavaScriptCompileTask implements Build.Task {
 		// different module systems (e.g. CommonJS).
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,typeSystem,bos);
+		jsfw.setDebug(debug);
 		jsfw.apply(source.read());
 		return new JavaScriptFile(target,bos.toByteArray());
 	}
