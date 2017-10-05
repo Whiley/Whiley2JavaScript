@@ -310,13 +310,17 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitStatement(Stmt stmt, Context context) {
-		super.visitStatement(stmt, context);
 		//
 		switch(stmt.getOpcode()) {
 		case EXPR_invoke:
 		case EXPR_indirectinvoke:
+			tabIndent(context);
+			super.visitStatement(stmt, context);
 			// Need as an invocation expression won't terminate itself.
 			out.println(";");
+			break;
+		default:
+			super.visitStatement(stmt, context);
 		}
 	}
 
@@ -781,7 +785,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	public void visitInvoke(Expr.Invoke expr, Context context) {
 		Name name = expr.getName();
 		// FIXME: this doesn't work for imported function symbols!
-		out.print(name);
+		out.print(name.getLast());
 		writeTypeMangle(expr.getSignature());
 		if(expr.getSignature() instanceof Type.Property) {
 			out.print("$property");
