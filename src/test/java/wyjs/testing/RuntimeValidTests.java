@@ -103,6 +103,13 @@ public class RuntimeValidTests {
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		IGNORED.put("Switch_Valid_12", "#12");
 		IGNORED.put("Switch_Valid_4", "???");
+		// Following related to runtime assertion checking
+		IGNORED.put("Cast_Valid_5", "??");
+		IGNORED.put("OpenRecord_Valid_9", "??");
+		IGNORED.put("Return_Valid_1", "??");
+		IGNORED.put("Subtype_Valid_5", "??");
+		IGNORED.put("UnionType_Valid_2", "??");
+		IGNORED.put("While_Valid_42", "??");
 	}
 
 	/**
