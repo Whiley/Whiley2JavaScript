@@ -57,8 +57,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 */
 	protected final TypeSystem typeSystem;
 	private boolean verbose = false;
-	private boolean commentTypes = false;
-	private boolean commentSpecifications = false;
+	// Debug options
+	private boolean debug = true;
 
 	private WhileyFile wyilfile;
 
@@ -82,6 +82,10 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		this.verbose = flag;
 	}
 
+	public void setDebug(boolean flag) {
+		this.debug = flag;
+	}
+
 	// ======================================================================
 	// Apply Method
 	// ======================================================================
@@ -96,23 +100,25 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitType(Decl.Type td, Context context) {
 		Decl.Variable vardecl = td.getVariableDeclaration();
+		String name = vardecl.getName().get();
 		out.print("function ");
 		out.print(td.getName());
-		out.print("$type(");
-		out.print(vardecl.getName());
-		out.println(") {");
+		out.println("$type(" + name + ") {");
+		// Check type invariant
+		writeInvariantTest(vardecl,context.indent());
+		// Check local invariant
 		Tuple<Expr> invariant = td.getInvariant();
 		if(invariant.size() == 0) {
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.println("return true;");
 		} else if(invariant.size() == 1) {
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.print("return ");
 			visitExpression(invariant.get(0), context);
 			out.println(";");
 		} else {
 			for(int i=0;i!=invariant.size();++i) {
-				tabIndent(1);
+				tabIndent(context.indent());
 				if(i == 0) {
 					out.print("var result = (");
 				} else {
@@ -121,7 +127,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				visitExpression(invariant.get(i), context);
 				out.println(");");
 			}
-			tabIndent(1);
+			tabIndent(context.indent());
 			out.println("return result;");
 		}
 		out.println("}");
@@ -142,29 +148,28 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	public void visitFunctionOrMethod(Decl.FunctionOrMethod method, Context context) {
 		// FIXME: what to do with private methods?
 		if (method.getModifiers().match(Modifier.Export.class) != null) {
-			writeExportTrampoline(method);
+			writeExportTrampoline(method,context);
 		}
 		//
 		out.print("function ");
 		out.print(method.getName());
 		writeTypeMangle(method.getType());
 		visitVariables(method.getParameters(), context);
-		if(commentTypes) {
+		if(debug) {
 			if (method.getReturns().size() > 0) {
 				out.print("// -> ");
 				visitVariables(method.getReturns(), context);
-				out.println();
-			} else {
-				out.println();
 			}
 		} else {
 			out.print(" ");
 		}
-		if(commentSpecifications) {
+		if(debug) {
 			//
+			out.println();
 			for (Expr precondition : method.getRequires()) {
 				out.print("// requires ");
 				visitExpression(precondition, context);
+				out.println();
 			}
 			for (Expr postcondition : method.getEnsures()) {
 				out.print("// ensures ");
@@ -173,8 +178,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			}
 		}
 		out.println("{");
-		writeInvariantCheck(method.getRequires(), context.indent());
+		writeInvariantCheck(method.getRequires(), "precondition", context.indent());
+		writeShadowVariables(method.getParameters(), false, context.indent());
 		if (method.getBody() != null) {
+			if(debug) {
+				tabIndent(context.indent());
+				out.println("// function or method body");
+			}
 			visitBlock(method.getBody(), context);
 		}
 		out.println("}");
@@ -187,7 +197,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		writeTypeMangle(method.getType());
 		out.print("$property");
 		visitVariables(method.getParameters(), context);
-		if(commentTypes) {
+		if(debug) {
 			if (method.getReturns().size() > 0) {
 				out.print("// -> ");
 				visitVariables(method.getReturns(), context);
@@ -199,8 +209,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(" ");
 		}
 		out.println("{");
-		writeInvariantCheck(method.getInvariant(), context.indent());
-		tabIndent(1);
+		writeInvariantCheck(method.getInvariant(), "invariant", context.indent());
+		tabIndent(context.indent());
 		out.println("return true;");
 		out.println("}");
 	}
@@ -221,14 +231,18 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitVariable(Decl.Variable decl, Context context) {
+		tabIndent(context);
 		out.print("var ");
 		writeType(decl.getType());
 		out.print(decl.getName());
 		if (decl.hasInitialiser()) {
 			out.print(" = ");
 			visitExpression(decl.getInitialiser(), context);
+			out.println(";");
+			writeInvariantCheck(decl,context);
+		} else {
+			out.println(";");
 		}
-		out.println(";");
 	}
 
 	@Override
@@ -256,7 +270,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 *
 	 * @param method
 	 */
-	private void writeExportTrampoline(Decl.FunctionOrMethod method) {
+	private void writeExportTrampoline(Decl.FunctionOrMethod method, Context context) {
 		Type.Callable ft = method.getType();
 		Tuple<Decl.Variable> params = method.getParameters();
 		Tuple<Decl.Variable> returns = method.getReturns();
@@ -265,7 +279,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(method.getName());
 			visitVariables(params, null);
 			out.println(" {");
-			tabIndent(1);
+			tabIndent(context.indent());
 			if (returns.size() > 0) {
 				out.print("return ");
 			}
@@ -289,8 +303,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println(");");
 	}
 
-	@Override public void visitStatement(Stmt stmt, Context context) {
-		tabIndent(context.indent+1);
+	@Override
+	public void visitBlock(Stmt.Block stmt, Context context) {
+		super.visitBlock(stmt, context.indent());
+	}
+
+	@Override
+	public void visitStatement(Stmt stmt, Context context) {
 		super.visitStatement(stmt, context);
 		//
 		switch(stmt.getOpcode()) {
@@ -301,13 +320,16 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 	}
 
-	@Override public void visitAssert(Stmt.Assert c, Context context) {
+	@Override
+	public void visitAssert(Stmt.Assert c, Context context) {
+		tabIndent(context);
 		out.print("Wy.assert(");
 		visitExpression(c.getCondition(), context);
 		out.println(");");
 	}
 
 	@Override public void visitAssume(Stmt.Assume c, Context context) {
+		tabIndent(context);
 		out.print("Wy.assert(");
 		visitExpression(c.getCondition(), context);
 		out.println(");");
@@ -315,6 +337,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitAssign(Stmt.Assign stmt, Context context) {
+		tabIndent(context);
 		Tuple<LVal> lhs = stmt.getLeftHandSide();
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		if (lhs.size() == 1) {
@@ -323,6 +346,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print(" = ");
 			visitExpression(rhs.get(0), context);
 			out.println(";");
+			writeInvariantCheck(lhs.get(0),context);
 		} else if (lhs.size() > 1) {
 			// FIXME: this is broken when multiple rhs expressions
 			out.print("var $ = ");
@@ -331,20 +355,23 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.println(";");
 			// Translate left-hand sides
 			for (int i = 0; i != lhs.size(); ++i) {
-				tabIndent(context.indent + 1);
+				tabIndent(context.indent());
 				writeLVal(lhs.get(i), context);
 				out.println(" = $[" + i + "];");
+				writeInvariantCheck(lhs.get(i),context);
 			}
 		}
 	}
 
 	@Override
 	public void visitBreak(Stmt.Break b, Context context) {
+		tabIndent(context);
 		out.println("break;");
 	}
 
 	@Override
 	public void visitContinue(Stmt.Continue b, Context context) {
+		tabIndent(context);
 		out.println("continue;");
 	}
 
@@ -355,10 +382,12 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitDoWhile(Stmt.DoWhile b, Context context) {
+		tabIndent(context);
 		out.println("do {");
 		//
-		visitBlock(b.getBody(), context.indent());
-		tabIndent(context.indent + 1);
+		visitBlock(b.getBody(), context);
+		writeInvariantCheck(b.getInvariant(), "loop invariant", context.indent());
+		tabIndent(context.indent());
 		// FIXME: write loop invariant if DEBUG mode
 		out.print("} while(");
 		visitExpression(b.getCondition(), context);
@@ -366,11 +395,15 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	@Override public void visitFail(Stmt.Fail c, Context context) {
-		out.println("fail");
+		if(debug) {
+			tabIndent(context);
+			out.println("Wy.assert(false);");
+		}
 	}
 
 	@Override
 	public void visitIfElse(Stmt.IfElse b, Context context) {
+		tabIndent(context);
 		out.print("if(");
 		visitExpression(b.getCondition(), context);
 		context = context.indent();
@@ -378,42 +411,93 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println(") {");
 		visitBlock(b.getTrueBranch(), context);
 		if (b.hasFalseBranch()) {
-			tabIndent(context.indent);
+			tabIndent(context);
 			out.println("} else {");
 			visitBlock(b.getFalseBranch(), context);
 		}
-		tabIndent(context.indent);
+		tabIndent(context);
 		out.println("}");
 	}
 
 	@Override
 	public void visitNamedBlock(Stmt.NamedBlock b, Context context) {
+		tabIndent(context.indent());
 		out.print(b.getName());
 		out.println(":");
-		visitBlock(b.getBlock(), context.indent());
+		visitBlock(b.getBlock(), context);
 	}
 
 	@Override
 	public void visitWhile(Stmt.While b, Context context) {
+		writeInvariantCheck(b.getInvariant(),"loop invariant on entry",context);
+		tabIndent(context);
 		out.print("while(");
 		visitExpression(b.getCondition(), context);
 		out.println(") {");
-		visitBlock(b.getBody(), context.indent());
-		tabIndent(context.indent + 1);
+		visitBlock(b.getBody(), context);
+		writeInvariantCheck(b.getInvariant(),"loop invariant restored",context.indent());
+		tabIndent(context);
 		out.println("}");
 	}
 
 	@Override
-	public void visitReturn(Stmt.Return b, Context context) {
-		Tuple<Expr> operands = b.getReturns();
-		out.print("return");
+	public void visitReturn(Stmt.Return stmt, Context context) {
+		if(debug) {
+			// Write return values
+			writeReturnsWithChecks(stmt, context);
+		} else {
+			writeReturnsWithoutChecks(stmt, context);
+		}
+	}
+
+	private void writeReturnsWithChecks(Stmt.Return stmt, Context context) {
+		Decl.FunctionOrMethod decl = stmt.getAncestor(Decl.FunctionOrMethod.class);
+		Tuple<Decl.Variable> returns = decl.getReturns();
+		Tuple<Expr> operands = stmt.getReturns();
+		tabIndent(context);
+		for (int i = 0; i != returns.size(); ++i) {
+			if (i != 0) {
+				out.print(" ");
+			}
+			out.print("var ");
+			out.print(returns.get(i).getName().get() + " = ");
+			visitExpression(operands.get(i), context);
+			out.print(";");
+		}
+		out.println();
+		writeShadowVariables(decl.getParameters(),true,context);
+		writeInvariantCheck(decl.getEnsures(), "postcondition", context);
+		tabIndent(context);
+		//
+		out.print("return ");
+		if (returns.size() == 1) {
+			// easy case
+			out.print(returns.get(0).getName().get());
+		} else if (returns.size() > 0) {
+			// harder case
+			out.print("[");
+			for (int i = 0; i != returns.size(); ++i) {
+				if (i != 0) {
+					out.print(", ");
+				}
+				out.print(returns.get(i).getName().get());
+			}
+			out.print("]");
+		}
+		out.println(";");
+	}
+
+	private void writeReturnsWithoutChecks(Stmt.Return stmt, Context context) {
+		Tuple<Expr> operands = stmt.getReturns();
+		//
+		tabIndent(context);
+		out.print("return ");
 		if (operands.size() == 1) {
 			// easy case
-			out.print(" ");
 			visitExpression(operands.get(0), context);
 		} else if (operands.size() > 0) {
 			// harder case
-			out.print(" [");
+			out.print("[");
 			for (int i = 0; i != operands.size(); ++i) {
 				if (i != 0) {
 					out.print(", ");
@@ -441,22 +525,22 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			Stmt.Case cAse = cases.get(i);
 			Tuple<Expr> values = cAse.getConditions();
 			if (values.size() == 0) {
-				tabIndent(context.indent + 1);
+				tabIndent(context);
 				out.println("default:");
 			} else {
 				for (int j = 0; j != values.size(); ++j) {
-					tabIndent(context.indent + 1);
+					tabIndent(context);
 					out.print("case ");
 					// FIXME: this needs to be fixed
 					out.print(values.get(j));
 					out.println(":");
 				}
 			}
-			visitBlock(cAse.getBlock(), context.indent());
-			tabIndent(context.indent + 2);
+			visitBlock(cAse.getBlock(), context);
+			tabIndent(context);
 			out.println("break;");
 		}
-		tabIndent(context.indent + 1);
+		tabIndent(context);
 		out.println("}");
 	}
 
@@ -582,7 +666,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	public void visitVariableAccess(Expr.VariableAccess expr, Context context) {
 		Decl.Variable vd = expr.getVariableDeclaration();
 		// Variable move needs to be supported here
-		if (isCopyable(vd.getType(), expr)) {
+		if (isCopyable(vd.getType(), expr) || expr.isMove()) {
 			out.print(vd.getName());
 		} else {
 			out.print("Wy.copy(" + vd.getName() + ")");
@@ -601,6 +685,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitArrayAccess(Expr.ArrayAccess expr, Context context) {
+		// FIXME: need to clone here
 		visitExpression(expr.getFirstOperand(), context);
 		out.print("[");
 		visitExpression(expr.getSecondOperand(), context);
@@ -879,6 +964,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitDereference(Expr.Dereference expr, Context context) {
+		// FIXME: need to clone here
 		out.print("Wy.deref(");
 		visitExpression(expr.getOperand(), context);
 		out.print(")");
@@ -890,6 +976,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitRecordAccess(Expr.RecordAccess expr, Context context) {
+		// FIXME: need to clone here
 		writeBracketedExpression(expr.getOperand(), context);
 		out.print("." + expr.getField());
 	}
@@ -914,12 +1001,211 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	// Helpers
 	// ================================================================================
 
-	private void writeInvariantCheck(Tuple<Expr> invariant, Context context) {
-		for(int i=0;i!=invariant.size();++i) {
-			tabIndent(context.indent);
-			out.print("Wy.assert(");
-			visitExpression(invariant.get(i), context);
-			out.println(");");
+	private void writeName(Name name) {
+		for(int i=0;i!=name.size();++i) {
+			if (i != 0) {
+				// FIXME: this is a temporary hack for now.
+				out.print("$");
+			}
+			out.print(name.get(i).get());
+		}
+	}
+
+	private void writeShadowVariables(Tuple<Decl.Variable> parameters, boolean restore, Context context) {
+		if (debug) {
+			tabIndent(context);
+			if(restore) {
+				out.println("// restore shadow variables");
+			} else {
+				out.println("// create shadow variables");
+			}
+			tabIndent(context);
+			for (int i = 0; i != parameters.size(); ++i) {
+				if (i != 0) {
+					out.print(" ");
+				}
+				String var = parameters.get(i).getName().get();
+				if (restore) {
+					out.print(var + " = $" + var);
+				} else {
+					out.print("var $" + var + " = " + var);
+				}
+				out.print(";");
+			}
+			out.println();
+		}
+	}
+
+	private void writeInvariantTest(Decl.Variable var, Context context) {
+		String name = var.getName().get();
+		writeInvariantTest(name, 0, var.getType(), context);
+	}
+
+	private void writeInvariantTest(String access, int depth, Type type, Context context) {
+		switch(type.getOpcode()) {
+		case TYPE_record:
+			writeInvariantTest(access, depth, (Type.Record) type, context);
+			break;
+		case TYPE_array:
+			writeInvariantTest(access, depth, (Type.Array) type, context);
+			 break;
+		case TYPE_reference:
+			writeInvariantTest(access, depth, (Type.Reference) type, context);
+			break;
+		case TYPE_negation:
+			writeInvariantTest(access, depth, (Type.Negation) type, context);
+			break;
+		case TYPE_union:
+			writeInvariantTest(access, depth, (Type.Union) type, context);
+			break;
+		case TYPE_intersection:
+			writeInvariantTest(access, depth, (Type.Intersection) type, context);
+			break;
+		case TYPE_nominal:
+			writeInvariantTest(access, depth, (Type.Nominal) type, context);
+			break;
+		default:
+			// Do nothing
+		}
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Record type, Context context) {
+		Tuple<Decl.Variable> fields = type.getFields();
+		for (int i = 0; i != fields.size(); ++i) {
+			Decl.Variable field = fields.get(i);
+			writeInvariantTest(access + "." + field.getName().get(), depth, field.getType(), context);
+		}
+	}
+
+	private static String[] indexVariableNames = { "i", "j", "k", "l", "m" };
+
+	private void writeInvariantTest(String access, int depth, Type.Array type, Context context) {
+		int variableNameIndex = depth % indexVariableNames.length;
+		int variableNameGroup = depth / indexVariableNames.length;
+		String var = indexVariableNames[variableNameIndex];
+		if(variableNameGroup > 0) {
+			// In case we wrap around the selection of variable names.
+			var = var + variableNameGroup;
+		}
+		tabIndent(context);
+		out.println("for(var " + var + "=0; " + var + "<" + access + ".length; " + var + "++) {");
+		writeInvariantTest(access + "[" + var + "]", depth + 1, type.getElement(), context.indent());
+		tabIndent(context);
+		out.println("}");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Reference type, Context context) {
+		// FIXME: to do.
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Negation type, Context context) {
+		out.println("if(" + getTypeTest(type.getElement(),access,context) + ") { return false; }");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Union type, Context context) {
+		for (int i = 0; i != type.size(); ++i) {
+			Type bound = type.get(i);
+			tabIndent(context);
+			if(i != 0) {
+				out.print("else ");
+			}
+			// FIXME: this could be made more efficient
+			out.println("if(" + getTypeTest(bound,access,context) + ") {}");
+		}
+		tabIndent(context);
+		out.println("else { return false; }");
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Intersection type, Context context) {
+		for (int i = 0; i != type.size(); ++i) {
+			Type bound = type.get(i);
+			writeInvariantTest(access, depth, bound, context);
+		}
+	}
+
+	private void writeInvariantTest(String access, int depth, Type.Nominal type, Context context) {
+		tabIndent(context);
+		out.print("if(!");
+		writeName(type.getName());
+		out.println("$type(" + access + ")) { return false; }");
+	}
+
+	private String getTypeTest(Type t, String access, Context context) {
+		// Handle all non-trivial cases directly
+		if (t instanceof Type.Null) {
+			return access + " === null";
+		} else if (t instanceof Type.Int) {
+			return "typeof " + access + " === \"number\"";
+		} else if (t instanceof Type.Bool) {
+			return "typeof " + access + " === \"boolean\"";
+		} else {
+			// Fall back case
+			String r = "is$" + getTypeMangle(t) + "(" + access + ")";
+			// Register this type test to be written out as an appropriately
+			// named function.
+			context.typeTests.add(t);
+			return r;
+		}
+	}
+
+
+	private void writeInvariantCheck(LVal lval, Context context) {
+		switch (lval.getOpcode()) {
+		case EXPR_arrayaccess:
+		case EXPR_arrayborrow: {
+			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
+			writeInvariantCheck((LVal) e.getFirstOperand(), context);
+			break;
+		}
+		case EXPR_dereference: {
+			Expr.Dereference e = (Expr.Dereference) lval;
+			writeInvariantCheck((LVal) e.getOperand(), context);
+			break;
+		}
+		case EXPR_recordaccess:
+		case EXPR_recordborrow: {
+			Expr.RecordAccess e = (Expr.RecordAccess) lval;
+			writeInvariantCheck((LVal) e.getOperand(), context);
+			break;
+		}
+		case EXPR_variablecopy:
+		case EXPR_variablemove: {
+			Expr.VariableAccess e = (Expr.VariableAccess) lval;
+			writeInvariantCheck(e.getVariableDeclaration(), context);
+			break;
+		}
+		default:
+			throw new IllegalArgumentException("invalid lval: " + lval);
+		}
+	}
+
+	private void writeInvariantCheck(Decl.Variable var, Context context) {
+		if (debug) {
+			// FIXME: This is completely broken. For example, consider the type "nat[]" ...
+			// it gets completely ignored here.
+			Type type = var.getType();
+			if (type instanceof Type.Nominal) {
+				Type.Nominal nom = (Type.Nominal) type;
+				tabIndent(context);
+				out.println("// check type invariant");
+				tabIndent(context);
+				out.print("Wy.assert(");
+				writeName(nom.getName());
+				out.println("$type(" + var.getName().get() + "));");
+			}
+		}
+	}
+
+	private void writeInvariantCheck(Tuple<Expr> invariant, String comment, Context context) {
+		if(debug && invariant.size() > 0) {
+			tabIndent(context);
+			out.println("// check " + comment);
+			for(int i=0;i!=invariant.size();++i) {
+				tabIndent(context);
+				out.print("Wy.assert(");
+				visitExpression(invariant.get(i), context);
+				out.println(");");
+			}
 		}
 	}
 
@@ -946,12 +1232,14 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	private void writeLVal(LVal lval, Context context) {
 		switch (lval.getOpcode()) {
 		case EXPR_arrayaccess:
+		case EXPR_arrayborrow:
 			writeArrayIndexLVal((Expr.ArrayAccess) lval, context);
 			break;
 		case EXPR_dereference:
 			writeDereferenceLVal((Expr.Dereference) lval, context);
 			break;
 		case EXPR_recordaccess:
+		case EXPR_recordborrow:
 			writeFieldLoadLVal((Expr.RecordAccess) lval, context);
 			break;
 		case EXPR_variablecopy:
@@ -1212,122 +1500,121 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeTypeMangle(Type t) {
+		out.print(getTypeMangle(t));
+	}
+
+	private String getTypeMangle(Type t) {
 		if (t instanceof Type.Any) {
-			out.print("T");
+			return "T";
 		} else if (t instanceof Type.Null) {
-			out.print("N");
+			return "N";
 		} else if (t instanceof Type.Bool) {
-			out.print("B");
+			return "B";
 		} else if (t instanceof Type.Byte) {
-			out.print("U");
+			return "U";
 		} else if (t instanceof Type.Int) {
-			out.print("I");
+			return "I";
 		} else if (t instanceof Type.Array) {
-			writeTypeMangleArray((Type.Array) t);
+			return getTypeMangleArray((Type.Array) t);
 		} else if (t instanceof Type.Reference) {
-			writeTypeMangleReference((Type.Reference) t);
+			return getTypeMangleReference((Type.Reference) t);
 		} else if (t instanceof Type.Record) {
-			writeTypeMangleRecord((Type.Record) t);
+			return getTypeMangleRecord((Type.Record) t);
 		} else if (t instanceof Type.Nominal) {
-			writeTypeMangleNominal((Type.Nominal) t);
+			return getTypeMangleNominal((Type.Nominal) t);
 		} else if (t instanceof Type.Callable) {
-			writeTypeMangleFunctionOrMethod((Type.Callable) t);
+			return getTypeMangleFunctionOrMethod((Type.Callable) t);
 		} else if (t instanceof Type.Negation) {
-			writeTypeMangleNegation((Type.Negation) t);
+			return getTypeMangleNegation((Type.Negation) t);
 		} else if (t instanceof Type.Union) {
-			writeTypeMangleUnion((Type.Union) t);
+			return getTypeMangleUnion((Type.Union) t);
 		} else if (t instanceof Type.Intersection) {
-			writeTypeMangleIntersection((Type.Intersection) t);
+			return getTypeMangleIntersection((Type.Intersection) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
 	}
 
-	private void writeTypeMangleArray(Type.Array t) {
-		out.print("a");
-		writeTypeMangle(t.getElement());
+	private String getTypeMangleArray(Type.Array t) {
+		return "a" + getTypeMangle(t.getElement());
 	}
-	private void writeTypeMangleReference(Type.Reference t) {
-		out.print("p");
+	private String getTypeMangleReference(Type.Reference t) {
+		String r = "p";
 		if (t.hasLifetime()) {
 			String lifetime = t.getLifetime().get();
 			if(lifetime.equals("*")) {
-				out.print("_");
+				r += "_";
 			} else {
-				out.print(lifetime.length());
-				out.print(lifetime);
+				r += lifetime.length();
+				r += lifetime;
 			}
 		} else {
-			out.print("0");
+			r += "0";
 		}
-		writeTypeMangle(t.getElement());
+		return r + getTypeMangle(t.getElement());
 	}
 
-	private void writeTypeMangleRecord(Type.Record rt) {
-		out.print("r");
+	private String getTypeMangleRecord(Type.Record rt) {
+		String r = "r";
 		Tuple<Decl.Variable> fields = rt.getFields();
-		out.print(fields.size());
+		r += fields.size();
 		for (int i = 0; i != fields.size(); ++i) {
 			Decl.Variable field = fields.get(i);
-			writeTypeMangle(field.getType());
+			r += getTypeMangle(field.getType());
 			String fieldName = field.getName().get();
-			out.print(fieldName.length());
-			out.print(fieldName);
+			r += fieldName.length();
+			r += fieldName;
 		}
+		return r;
 	}
-	private void writeTypeMangleNominal(Type.Nominal t) {
-		out.print("n");
+	private String getTypeMangleNominal(Type.Nominal t) {
 		// FIXME: need to figure out package
 		String name = t.getName().getLast().get();
-		out.print(name.length());
-		out.print(name);
+		return "n" + name.length() + name;
 	}
 
-	private void writeTypeMangleFunctionOrMethod(Type.Callable t) {
-		if (t instanceof Type.Function) {
-			out.print("f");
-		} else {
-			out.print("m");
-		}
+	private String getTypeMangleFunctionOrMethod(Type.Callable t) {
+		String r = (t instanceof Type.Function) ? "f" : "m";
 		Tuple<Type> params = t.getParameters();
-		out.print(params.size());
+		r += params.size();
 		for (int i = 0; i != params.size(); ++i) {
-			writeTypeMangle(params.get(i));
+			r += getTypeMangle(params.get(i));
 		}
 		Tuple<Type> returns = t.getReturns();
-		out.print(returns.size());
+		r += returns.size();
 		for (int i = 0; i != returns.size(); ++i) {
-			writeTypeMangle(returns.get(i));
+			r += getTypeMangle(returns.get(i));
 		}
-		out.print("e");
+		return r + "e";
 	}
 
-	private void writeTypeMangleNegation(Type.Negation t) {
-		out.print("n");
-		writeTypeMangle(t.getElement());
+	private String getTypeMangleNegation(Type.Negation t) {
+		return "n" + getTypeMangle(t.getElement());
 	}
 
-	private void writeTypeMangleUnion(Type.Union t) {
-		out.print("u");
-		out.print(t.size());
+	private String getTypeMangleUnion(Type.Union t) {
+		String r = "u";
+		r += t.size();
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.get(i));
+			r += getTypeMangle(t.get(i));
 		}
+		return r;
 	}
 
-	private void writeTypeMangleIntersection(Type.Intersection t) {
-		out.print("c");
-		out.print(t.size());
+	private String getTypeMangleIntersection(Type.Intersection t) {
+		String r = "c";
+		r += t.size();
 		for(int i=0;i!=t.size();++i) {
-			writeTypeMangle(t.get(i));
+			r += getTypeMangle(t.get(i));
 		}
+		return r;
 	}
 
 	private void writeType(Type t) {
-		if(commentTypes) {
+		if(debug) {
 			out.print("/*");
 			out.print(t);
-			out.print("*/");
+			out.print("*/ ");
 		}
 	}
 
@@ -1430,6 +1717,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			return "&&";
 		case EXPR_logicalor:
 			return "||";
+		case EXPR_logicaliff:
+			return "==";
 		case EXPR_bitwiseor:
 			return "|";
 		case EXPR_bitwisexor:
@@ -1449,9 +1738,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 	}
 
+	private void tabIndent(Context context) {
+		tabIndent(context.indent);
+	}
+
 	private void tabIndent(int indent) {
 		indent = indent * 4;
-		for(int i=0;i<indent;++i) {
+		for (int i = 0; i < indent; ++i) {
 			out.print(" ");
 		}
 	}

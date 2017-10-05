@@ -39,6 +39,11 @@ public class JsCompile extends Compile {
 	protected DirectoryRoot javascriptdir;
 
 	/**
+	 * Determine whether or not to generate in debug mode.
+	 */
+	protected boolean debug = true;
+
+	/**
 	 * Construct a new instance of this command.
 	 *
 	 * @param registry
@@ -74,7 +79,8 @@ public class JsCompile extends Compile {
 	}
 
 	private static final String[] SCHEMA = {
-			"jsdir"
+			"jsdir",
+			"debug"
 	};
 
 	@Override
@@ -89,6 +95,9 @@ public class JsCompile extends Compile {
 			case "jsdir":
 				setJavascriptdir(new File((String)value));
 				break;
+			case "debug":
+				setDebug((boolean)value);
+				break;
 			default:
 				super.set(option, value);
 			}
@@ -102,6 +111,8 @@ public class JsCompile extends Compile {
 		switch(option) {
 		case "jsdir":
 			return "Specify where to place generated javascript files";
+		case "debug":
+			return "Set debug mode (default is ON)";
 		default:
 			return super.describe(option);
 		}
@@ -109,6 +120,10 @@ public class JsCompile extends Compile {
 
 	public void setJavascriptdir(File dir) throws IOException {
 		this.javascriptdir = new DirectoryRoot(dir,registry);
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
 	}
 
 	@Override
@@ -150,6 +165,7 @@ public class JsCompile extends Compile {
 		if (verbose) {
 			jsBuilder.setLogger(logger);
 		}
+		jsBuilder.setDebug(debug);
 		project.add(new StdBuildRule(jsBuilder, wyildir, wyilIncludes, wyilExcludes, javascriptdir));
 	}
 
