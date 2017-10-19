@@ -936,9 +936,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		Tuple<Decl.Variable> params = expr.getParameters();
 		for (int i = 0; i != params.size(); ++i) {
 			Decl.Variable param = params.get(i);
-			if(i > 0) {
-				throw new RuntimeException("Need to support multiple operand groups");
-			}
 			// FIXME: for now assume initialiser must be an array range.
 			Expr.ArrayRange range = (Expr.ArrayRange) param.getInitialiser();
 			visitExpression(range.getFirstOperand(), context);
