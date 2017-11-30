@@ -1292,9 +1292,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeTypeTest(Type test, Set<Type> deps) {
-		if(test instanceof Type.Any) {
-			writeTypeTestAny((Type.Primitive) test,deps);
-		} else if(test instanceof Type.Null) {
+		if(test instanceof Type.Null) {
 			writeTypeTestNull((Type.Primitive) test,deps);
 		} else if(test instanceof Type.Bool) {
 			writeTypeTestBool((Type.Primitive) test,deps);
@@ -1325,10 +1323,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		} else {
 			throw new RuntimeException("unknown type encountered: " + test);
 		}
-	}
-
-	private void writeTypeTestAny(Type.Primitive test, Set<Type> deps) {
-		out.print(" return true; ");
 	}
 
 	private void writeTypeTestNull(Type.Primitive test, Set<Type> deps) {
@@ -1505,9 +1499,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private String getTypeMangle(Type t) {
-		if (t instanceof Type.Any) {
-			return "T";
-		} else if (t instanceof Type.Null) {
+		if (t instanceof Type.Null) {
 			return "N";
 		} else if (t instanceof Type.Bool) {
 			return "B";
@@ -1631,9 +1623,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 * @return
 	 */
 	private boolean isCopyable(Type type, SyntacticElement context) {
-		if(type instanceof Type.Any) {
-			return false;
-		} else if (type instanceof Type.Primitive) {
+		if (type instanceof Type.Primitive) {
 			return true;
 		} else if (type instanceof Type.Callable) {
 			return true;
