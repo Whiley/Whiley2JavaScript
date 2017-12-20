@@ -99,7 +99,12 @@ public class RuntimeValidTests {
 		// WyJS problems
 		// ===================================================
 
-		IGNORED.put("ConstrainedList_Valid_23", "#10");
+		IGNORED.put("Assign_Valid_3", "??");
+		IGNORED.put("Assign_Valid_4", "??");
+		IGNORED.put("Assign_Valid_5", "??");
+		IGNORED.put("Complex_Valid_10", "??");
+		IGNORED.put("Complex_Valid_11", "??");
+		IGNORED.put("ConstrainedReference_Valid_1", "??");
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		IGNORED.put("Switch_Valid_12", "#12");
 		IGNORED.put("Switch_Valid_4", "???");

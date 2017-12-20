@@ -1053,9 +1053,9 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		case TYPE_reference:
 			writeInvariantTest(access, depth, (Type.Reference) type, context);
 			break;
-		case TYPE_negation:
-			writeInvariantTest(access, depth, (Type.Negation) type, context);
-			break;
+//		case TYPE_negation:
+//			writeInvariantTest(access, depth, (Type.Negation) type, context);
+//			break;
 		case TYPE_union:
 			writeInvariantTest(access, depth, (Type.Union) type, context);
 			break;
@@ -1099,9 +1099,9 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		// FIXME: to do.
 	}
 
-	private void writeInvariantTest(String access, int depth, Type.Negation type, Context context) {
-		out.println("if(" + getTypeTest(type.getElement(),access,context) + ") { return false; }");
-	}
+//	private void writeInvariantTest(String access, int depth, Type.Negation type, Context context) {
+//		out.println("if(" + getTypeTest(type.getElement(),access,context) + ") { return false; }");
+//	}
 
 	private void writeInvariantTest(String access, int depth, Type.Union type, Context context) {
 		for (int i = 0; i != type.size(); ++i) {
@@ -1292,9 +1292,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeTypeTest(Type test, Set<Type> deps) {
-		if(test instanceof Type.Any) {
-			writeTypeTestAny((Type.Primitive) test,deps);
-		} else if(test instanceof Type.Null) {
+		if(test instanceof Type.Null) {
 			writeTypeTestNull((Type.Primitive) test,deps);
 		} else if(test instanceof Type.Bool) {
 			writeTypeTestBool((Type.Primitive) test,deps);
@@ -1316,8 +1314,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			writeTypeTestRecord((Type.Record) test,deps);
 		} else if(test instanceof Type.Callable) {
 			writeTypeTestFunctionOrMethod((Type.Callable) test,deps);
-		} else if(test instanceof Type.Negation) {
-			writeTypeTestNegation((Type.Negation) test,deps);
 		} else if(test instanceof Type.Union) {
 			writeTypeTestUnion((Type.Union) test,deps);
 		} else if(test instanceof Type.Intersection) {
@@ -1325,10 +1321,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		} else {
 			throw new RuntimeException("unknown type encountered: " + test);
 		}
-	}
-
-	private void writeTypeTestAny(Type.Primitive test, Set<Type> deps) {
-		out.print(" return true; ");
 	}
 
 	private void writeTypeTestNull(Type.Primitive test, Set<Type> deps) {
@@ -1452,14 +1444,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println("return false;");
 	}
 
-	private void writeTypeTestNegation(Type.Negation test, Set<Type> deps) {
-		out.print(" return !(is$");
-		writeTypeMangle(test.getElement());
-		out.print("(val)); ");
-		//
-		deps.add(test.getElement());
-	}
-
 	private void writeTypeTestUnion(Type.Union test, Set<Type> deps) {
 		out.println();
 		for(int i=0;i!=test.size();++i) {
@@ -1505,9 +1489,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private String getTypeMangle(Type t) {
-		if (t instanceof Type.Any) {
-			return "T";
-		} else if (t instanceof Type.Null) {
+		if (t instanceof Type.Null) {
 			return "N";
 		} else if (t instanceof Type.Bool) {
 			return "B";
@@ -1525,8 +1507,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			return getTypeMangleNominal((Type.Nominal) t);
 		} else if (t instanceof Type.Callable) {
 			return getTypeMangleFunctionOrMethod((Type.Callable) t);
-		} else if (t instanceof Type.Negation) {
-			return getTypeMangleNegation((Type.Negation) t);
 		} else if (t instanceof Type.Union) {
 			return getTypeMangleUnion((Type.Union) t);
 		} else if (t instanceof Type.Intersection) {
@@ -1589,10 +1569,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		return r + "e";
 	}
 
-	private String getTypeMangleNegation(Type.Negation t) {
-		return "n" + getTypeMangle(t.getElement());
-	}
-
 	private String getTypeMangleUnion(Type.Union t) {
 		String r = "u";
 		r += t.size();
@@ -1631,9 +1607,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 * @return
 	 */
 	private boolean isCopyable(Type type, SyntacticElement context) {
-		if(type instanceof Type.Any) {
-			return false;
-		} else if (type instanceof Type.Primitive) {
+		if (type instanceof Type.Primitive) {
 			return true;
 		} else if (type instanceof Type.Callable) {
 			return true;
