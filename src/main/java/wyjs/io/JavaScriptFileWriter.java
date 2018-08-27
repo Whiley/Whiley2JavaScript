@@ -18,12 +18,12 @@ import java.util.*;
 
 import wybs.lang.Build;
 import wybs.lang.NameID;
+import wybs.lang.NameResolver;
 import wybs.lang.NameResolver.ResolutionError;
 import wybs.lang.SyntacticElement;
 import static wybs.lang.SyntaxError.*;
 
 import wyfs.lang.Path;
-import wyil.type.TypeSystem;
 
 import static wyc.lang.WhileyFile.*;
 
@@ -51,27 +51,30 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 * and/or defined in external resources (e.g. jar files).
 	 */
 	private final Build.Project project;
+
 	/**
-	 * The type system is useful for managing nominal types and converting them
-	 * into their underlying types.
+	 * Provides mechanism for operating on types. For example, expanding them
+	 * and performing subtype tests, etc. This object may cache results to
+	 * improve performance of some operations.
 	 */
-	protected final TypeSystem typeSystem;
+	private final NameResolver resolver;
+
 	private boolean verbose = false;
 	// Debug options
 	private boolean debug = true;
 
 	private WhileyFile wyilfile;
 
-	public JavaScriptFileWriter(Build.Project project, TypeSystem typeSystem, PrintWriter writer) {
+	public JavaScriptFileWriter(Build.Project project, NameResolver resolver,  PrintWriter writer) {
 		this.project = project;
-		this.typeSystem = typeSystem;
 		this.out = writer;
+		this.resolver = resolver;
 	}
 
-	public JavaScriptFileWriter(Build.Project project, TypeSystem typeSystem, OutputStream stream) {
+	public JavaScriptFileWriter(Build.Project project, NameResolver resolver, OutputStream stream) {
 		this.project = project;
-		this.typeSystem = typeSystem;
 		this.out = new PrintWriter(new OutputStreamWriter(stream));
+		this.resolver = resolver;
 	}
 
 	// ======================================================================
@@ -1059,9 +1062,9 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		case TYPE_union:
 			writeInvariantTest(access, depth, (Type.Union) type, context);
 			break;
-		case TYPE_intersection:
-			writeInvariantTest(access, depth, (Type.Intersection) type, context);
-			break;
+//		case TYPE_intersection:
+//			writeInvariantTest(access, depth, (Type.Intersection) type, context);
+//			break;
 		case TYPE_nominal:
 			writeInvariantTest(access, depth, (Type.Nominal) type, context);
 			break;
@@ -1071,9 +1074,9 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 
 	private void writeInvariantTest(String access, int depth, Type.Record type, Context context) {
-		Tuple<Decl.Variable> fields = type.getFields();
+		Tuple<Type.Field> fields = type.getFields();
 		for (int i = 0; i != fields.size(); ++i) {
-			Decl.Variable field = fields.get(i);
+			Type.Field field = fields.get(i);
 			writeInvariantTest(access + "." + field.getName().get(), depth, field.getType(), context);
 		}
 	}
@@ -1115,13 +1118,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 		tabIndent(context);
 		out.println("else { return false; }");
-	}
-
-	private void writeInvariantTest(String access, int depth, Type.Intersection type, Context context) {
-		for (int i = 0; i != type.size(); ++i) {
-			Type bound = type.get(i);
-			writeInvariantTest(access, depth, bound, context);
-		}
 	}
 
 	private void writeInvariantTest(String access, int depth, Type.Nominal type, Context context) {
@@ -1316,8 +1312,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			writeTypeTestFunctionOrMethod((Type.Callable) test,deps);
 		} else if(test instanceof Type.Union) {
 			writeTypeTestUnion((Type.Union) test,deps);
-		} else if(test instanceof Type.Intersection) {
-			writeTypeTestIntersection((Type.Intersection) test,deps);
 		} else {
 			throw new RuntimeException("unknown type encountered: " + test);
 		}
@@ -1339,7 +1333,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		// FIXME: this is so horrendously broken
 		Name name = test.getName();
 		try {
-			Decl.Type td = typeSystem.resolveExactly(name, Decl.Type.class);
+			Decl.Type td = resolver.resolveExactly(name, Decl.Type.class);
 			out.print(" return is$");
 			writeTypeMangle(td.getVariableDeclaration().getType());
 			out.print("(val) && " + name.getLast() + "$type(val); ");
@@ -1400,13 +1394,13 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.println();
 		tabIndent(1);
 		out.print("if(val != null && typeof val === \"object\"");
-		Tuple<Decl.Variable> fields = test.getFields();
+		Tuple<Type.Field> fields = test.getFields();
 		if (!test.isOpen()) {
 			out.print(" && Object.keys(val).length === " + fields.size());
 		}
 		out.println(") {");
 		for (int i = 0; i != fields.size(); ++i) {
-			Decl.Variable field = fields.get(i);
+			Type.Field field = fields.get(i);
 			tabIndent(2);
 			out.print("if(val." + field.getName() + " === \"undefined\" || !is$");
 			writeTypeMangle(field.getType());
@@ -1459,21 +1453,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.print("return false;");
 	}
 
-	private void writeTypeTestIntersection(Type.Intersection test, Set<Type> deps) {
-		out.println();
-		for(int i=0;i!=test.size();++i) {
-			Type bound = test.get(i);
-			tabIndent(1);
-			out.print("if(!is$");
-			writeTypeMangle(bound);
-			out.println("(val)) { return false; }");
-			//
-			deps.add(bound);
-		}
-		tabIndent(1);
-		out.print("return true;");
-	}
-
 	private void writeTypeMangle(Type.Callable fmt) {
 		Tuple<Type> params = fmt.getParameters();
 		for (int i = 0; i != params.size(); ++i) {
@@ -1509,8 +1488,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			return getTypeMangleFunctionOrMethod((Type.Callable) t);
 		} else if (t instanceof Type.Union) {
 			return getTypeMangleUnion((Type.Union) t);
-		} else if (t instanceof Type.Intersection) {
-			return getTypeMangleIntersection((Type.Intersection) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
@@ -1537,10 +1514,10 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	private String getTypeMangleRecord(Type.Record rt) {
 		String r = "r";
-		Tuple<Decl.Variable> fields = rt.getFields();
+		Tuple<Type.Field> fields = rt.getFields();
 		r += fields.size();
 		for (int i = 0; i != fields.size(); ++i) {
-			Decl.Variable field = fields.get(i);
+			Type.Field field = fields.get(i);
 			r += getTypeMangle(field.getType());
 			String fieldName = field.getName().get();
 			r += fieldName.length();
@@ -1578,15 +1555,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		return r;
 	}
 
-	private String getTypeMangleIntersection(Type.Intersection t) {
-		String r = "c";
-		r += t.size();
-		for(int i=0;i!=t.size();++i) {
-			r += getTypeMangle(t.get(i));
-		}
-		return r;
-	}
-
 	private void writeType(Type t) {
 		if(debug) {
 			out.print("/*");
@@ -1617,7 +1585,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			Type.Nominal tn = (Type.Nominal) type;
 			//
 			try {
-				Decl.Type td = typeSystem.resolveExactly(tn.getName(), Decl.Type.class);
+				Decl.Type td = resolver.resolveExactly(tn.getName(), Decl.Type.class);
 				return isCopyable(td.getType(), context);
 			} catch (ResolutionError e) {
 				throw new RuntimeException(e);

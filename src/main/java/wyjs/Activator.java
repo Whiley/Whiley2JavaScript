@@ -13,43 +13,68 @@
 // limitations under the License.
 package wyjs;
 
-import wycc.lang.Command;
+import java.io.IOException;
+
+import wybs.lang.Build;
+import wybs.lang.Build.Task;
+import wyc.lang.WhileyFile;
 import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
-import wyjs.commands.JsCompile;
+import wyfs.lang.Content.Type;
+import wyfs.util.Trie;
+import wyjs.core.JavaScriptFile;
+import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Module.Activator {
+
 	// =======================================================================
-	// Content Registry
+	// Build Platform
 	// =======================================================================
 
-	/**
-	 * Default implementation of a content registry. This associates whiley and
-	 * wyil files with their respective content types.
-	 *
-	 * @author David J. Pearce
-	 *
-	 */
-	public static class Registry extends wyc.Activator.Registry {
+	private static Build.Platform JS_PLATFORM = new Build.Platform() {
+
 		@Override
-		public void associate(Path.Entry e) {
-			super.associate(e);
+		public String getName() {
+			return "js";
 		}
 
 		@Override
-		public String suffix(Content.Type<?> t) {
-			return t.getSuffix();
+		public Task initialise(Build.Project project) {
+			return new JavaScriptCompileTask(project);
 		}
-	}
 
-	/**
-	 * The master project content type registry. This is needed for the build
-	 * system to determine the content type of files it finds on the file
-	 * system.
-	 */
-	public final Content.Registry registry = new Registry();
+		@Override
+		public Type<?> getSourceType() {
+			return WhileyFile.BinaryContentType;
+		}
+
+		@Override
+		public Type<?> getTargetType() {
+			return JavaScriptFile.ContentType;
+		}
+
+		@Override
+		public Content.Filter<?> getSourceFilter() {
+			return Content.filter("**", WhileyFile.BinaryContentType);
+		}
+
+		@Override
+		public Content.Filter<?> getTargetFilter() {
+			return Content.filter("**", JavaScriptFile.ContentType);
+		}
+
+		@Override
+		public Path.Root getSourceRoot(Path.Root root) throws IOException {
+			return root.createRelativeRoot(Trie.fromString("bin"));
+		}
+
+		@Override
+		public Path.Root getTargetRoot(Path.Root root) throws IOException {
+			return root.createRelativeRoot(Trie.fromString("bin/js"));
+		}
+	};
 
 	// =======================================================================
 	// Start
@@ -59,13 +84,10 @@ public class Activator implements Module.Activator {
 	public Module start(Module.Context context) {
 		// FIXME: logger is a hack!
 		final Logger logger = new Logger.Default(System.err);
-		// List of commands to use
-		final Command[] commands = {
-				new JsCompile(registry, logger)};
-		// Register all commands
-		for (Command c : commands) {
-			context.register(wycc.lang.Command.class, c);
-		}
+		// Register build platform
+		context.register(Build.Platform.class, JS_PLATFORM);
+		// Register JavaScript Content Type
+		context.register(Content.Type.class, JavaScriptFile.ContentType);
 		// Done
 		return new Module() {
 			// what goes here?
