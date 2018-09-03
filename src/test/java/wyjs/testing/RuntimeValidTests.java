@@ -19,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,12 +34,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wyc.command.Compile;
+import wybs.lang.SyntaxError;
+import wybs.util.StdBuildRule;
+import wybs.util.StdProject;
+import wyc.lang.WhileyFile;
+import wyc.task.CompileTask;
 import wyc.util.TestUtils;
 import wycc.util.Logger;
 import wycc.util.Pair;
 import wyfs.lang.Content;
-import wyjs.commands.JsCompile;
+import wyfs.lang.Path;
+import wyfs.util.DirectoryRoot;
+import wyjs.tasks.JavaScriptCompileTask;
 
 /**
  * Run through all valid test cases with verification enabled. Since every test
@@ -74,7 +82,6 @@ public class RuntimeValidTests {
 		// ===================================================
 		// WyC problems
 		// ===================================================
-
 		// Problem Type Checking Union Type
 		IGNORED.put("RecordSubtype_Valid_1", "#696");
 		IGNORED.put("RecordSubtype_Valid_2", "#696");
@@ -92,8 +99,24 @@ public class RuntimeValidTests {
 		IGNORED.put("TypeEquals_Valid_25", "#787");
 		IGNORED.put("TypeEquals_Valid_30", "#787");
 		IGNORED.put("TypeEquals_Valid_41", "#787");
+		// Remove Any and Negation Types
+		IGNORED.put("ConstrainedReference_Valid_1", "#827");
+		// Temporary Removal of Intersections
+		IGNORED.put("Intersection_Valid_1", "#843");
+		IGNORED.put("Intersection_Valid_2", "#843");
+		IGNORED.put("NegationType_Valid_3", "#843");
+		// Problems with relaxed versus strict subtype operator
+		IGNORED.put("Function_Valid_22", "#845");
 		// Unclassified
 		IGNORED.put("Lifetime_Valid_8", "???");
+		// Readable Reference Types
+		IGNORED.put("UnionType_Valid_26", "#849");
+		// Rethinking Runtime Type Test Operator ?
+		IGNORED.put("RecordAssign_Valid_11", "#850");
+		// Ambiguous coercions
+		IGNORED.put("TypeEquals_Valid_33", "#837");
+		IGNORED.put("TypeEquals_Valid_35", "#837");
+		IGNORED.put("Coercion_Valid_10", "#837");
 
 		// ===================================================
 		// WyJS problems
@@ -128,19 +151,16 @@ public class RuntimeValidTests {
 	// ======================================================================
 
  	protected void runTest(String name) throws IOException {
- 		String whileyFilename = WHILEY_SRC_DIR + File.separatorChar + name + ".whiley";
- 		String jsFilename = WHILEY_SRC_DIR + File.separatorChar + name + ".js";
+		String jsFilename = WHILEY_SRC_DIR + File.separatorChar + name + ".js";
 		// Compile to Java Bytecode
-		Pair<Compile.Result, String> p = compileWhiley2JavaScript(
+		Pair<Boolean, String> p = compileWhiley2JavaScript(
 				WHILEY_SRC_DIR, // location of source directory
-				whileyFilename); // name of test to compile
+				name); // name of test to compile
 
-		Compile.Result r = p.first();
+		boolean r = p.first();
 		System.out.print(p.second());
 
-		if (r == Compile.Result.INTERNAL_FAILURE) {
-			fail("Test caused internal failure!");
-		} else if (r != Compile.Result.SUCCESS) {
+		if (!r) {
 			fail("Test failed to compile!");
 		}
 		// Execute the generated JavaScript Program.
@@ -154,6 +174,10 @@ public class RuntimeValidTests {
 			fail("unexpected output!");
 		}
 	}
+ 	/**
+	 * A simple default registry which knows about whiley files and wyil files.
+	 */
+	private static final Content.Registry registry = new wyc.Activator.Registry();
 
  	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
@@ -165,18 +189,55 @@ public class RuntimeValidTests {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Pair<Compile.Result,String> compileWhiley2JavaScript(String whileydir, String... args) throws IOException {
+	public static Pair<Boolean,String> compileWhiley2JavaScript(String whileydir, String... args) throws IOException {
 		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
 		ByteArrayOutputStream sysout = new ByteArrayOutputStream();
-		Content.Registry registry = new wyc.Activator.Registry();
-		JsCompile cmd = new JsCompile(registry,Logger.NULL,sysout,syserr);
-		cmd.setWhileydir(new File(whileydir));
-		cmd.setVerbose();
-		Compile.Result result = cmd.execute(args);
+		//
+		boolean result = true;
+		//
+		try {
+			// Construct the project
+			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
+			StdProject project = new StdProject(Arrays.asList(root));
+			// Add build rules
+			addCompilationRules(project,root,false);
+			// Identify source files and build project
+			project.build(TestUtils.findSourceFiles(root,args));
+			// Flush any created resources (e.g. wyil files)
+			root.flush();
+		} catch (SyntaxError e) {
+			// Print out the syntax error
+			e.outputSourceError(new PrintStream(syserr),false);
+			result = false;
+		} catch (Exception e) {
+			// Print out the syntax error
+			e.printStackTrace(new PrintStream(syserr));
+			result = false;
+		}
+		// Convert bytes produced into resulting string.
 		byte[] errBytes = syserr.toByteArray();
 		byte[] outBytes = sysout.toByteArray();
 		String output = new String(errBytes) + new String(outBytes);
-		return new Pair<>(result,output);
+		return new Pair<>(result, output);
+	}
+
+	/**
+	 * Add build rules to project for compiling from Whiley source to JavaScript.
+	 * This is a two step process whereby we first using the Whiley Compiler (WyC)
+	 * to generate wyil files, and then use the JavaScript compiler for the final
+	 * stage.
+	 *
+	 * @param project
+	 * @param root
+	 * @param verify
+	 */
+	private static void addCompilationRules(StdProject project, Path.Root root, boolean verify) {
+		CompileTask wyTask = new CompileTask(project);
+		JavaScriptCompileTask jsTask = new JavaScriptCompileTask(project);
+		// Add compilation rule(s) (whiley => wyil)
+		project.add(new StdBuildRule(wyTask, root, Content.filter("**", WhileyFile.ContentType), null, root));
+		// Add compilation rule(s) (wyil => js)
+		project.add(new StdBuildRule(jsTask, root, Content.filter("**", WhileyFile.BinaryContentType), null, root));
 	}
 
 	/**

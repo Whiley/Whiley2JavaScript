@@ -21,30 +21,33 @@ import java.util.HashSet;
 import java.util.Set;
 
 import wybs.lang.Build;
+import wybs.lang.NameResolver;
 import wybs.lang.Build.Graph;
 import wycc.util.Logger;
 import wycc.util.Pair;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.Root;
-import wyil.type.TypeSystem;
 import wyc.lang.WhileyFile;
+import wyc.util.WhileyFileResolver;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;
 
 public class JavaScriptCompileTask implements Build.Task {
-	/**
-	 * The master project for identifying all resources available to the
-	 * builder. This includes all modules declared in the project being verified
-	 * and/or defined in external resources (e.g. jar files).
-	 */
-	protected final Build.Project project;
 
 	/**
-	 * The type system is useful for managing nominal types and converting them
-	 * into their underlying types.
+	 * The master project for identifying all resources available to the
+	 * builder. This includes all modules declared in the project being compiled
+	 * and/or defined in external resources (e.g. jar files).
 	 */
-	protected final TypeSystem typeSystem;
+	private final Build.Project project;
+
+	/**
+	 * Provides mechanism for operating on types. For example, expanding them
+	 * and performing subtype tests, etc. This object may cache results to
+	 * improve performance of some operations.
+	 */
+	private final NameResolver resolver;
 
 	/**
 	 * Enable debug mode
@@ -58,7 +61,7 @@ public class JavaScriptCompileTask implements Build.Task {
 
 	public JavaScriptCompileTask(Build.Project project) {
 		this.project = project;
-		this.typeSystem = new TypeSystem(project);
+		this.resolver = new WhileyFileResolver(project);
 	}
 
 	public void setLogger(Logger logger) {
@@ -76,6 +79,7 @@ public class JavaScriptCompileTask implements Build.Task {
 
 	@Override
 	public Set<Entry<?>> build(Collection<Pair<Entry<?>, Root>> delta, Graph graph) throws IOException {
+		//
 		Runtime runtime = Runtime.getRuntime();
 		long start = System.currentTimeMillis();
 		long memory = runtime.freeMemory();
@@ -116,7 +120,7 @@ public class JavaScriptCompileTask implements Build.Task {
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,typeSystem,bos);
+		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,resolver,bos);
 		jsfw.setDebug(debug);
 		jsfw.apply(source.read());
 		return new JavaScriptFile(target,bos.toByteArray());

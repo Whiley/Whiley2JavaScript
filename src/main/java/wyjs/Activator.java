@@ -13,43 +13,112 @@
 // limitations under the License.
 package wyjs;
 
-import wycc.lang.Command;
+import java.io.IOException;
+
+import wybs.lang.Build;
+import wybs.lang.Build.Project;
+import wybs.lang.Build.Task;
+import wybs.util.AbstractCompilationUnit.Value;
+import wyc.lang.WhileyFile;
+import wycc.cfg.Configuration;
 import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
-import wyjs.commands.JsCompile;
+import wyfs.lang.Path.ID;
+import wyfs.lang.Content.Type;
+import wyfs.util.Trie;
+import wyjs.core.JavaScriptFile;
+import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Module.Activator {
+
+	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
+	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
+	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
+
 	// =======================================================================
-	// Content Registry
+	// Build Platform
 	// =======================================================================
 
-	/**
-	 * Default implementation of a content registry. This associates whiley and
-	 * wyil files with their respective content types.
-	 *
-	 * @author David J. Pearce
-	 *
-	 */
-	public static class Registry extends wyc.Activator.Registry {
+	private static Build.Platform JS_PLATFORM = new Build.Platform() {
+		// Specify directory where generated JS files are dumped.
+		private Trie source = Trie.fromString("bin");
+		// Specify directory where generated JS files are dumped.
+		private Trie target = Trie.fromString("bin/js");
+		// Specify whether debug mode enabled or not.
+		private boolean debug = true;
+
 		@Override
-		public void associate(Path.Entry e) {
-			super.associate(e);
+		public String getName() {
+			return "js";
 		}
 
 		@Override
-		public String suffix(Content.Type<?> t) {
-			return t.getSuffix();
+		public Configuration.Schema getConfigurationSchema() {
+			return Configuration.fromArray(
+					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", false),
+					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", false));
 		}
-	}
 
-	/**
-	 * The master project content type registry. This is needed for the build
-	 * system to determine the content type of files it finds on the file
-	 * system.
-	 */
-	public final Content.Registry registry = new Registry();
+		@Override
+		public void apply(Configuration configuration) {
+			//
+			if(!configuration.matchAll(DEBUG_CONFIG_OPTION).isEmpty()) {
+				debug = configuration.get(Value.Bool.class, Trie.fromString(DEBUG_CONFIG_OPTION)).get();
+			}
+			if(!configuration.matchAll(TARGET_CONFIG_OPTION).isEmpty()) {
+				String path = configuration.get(Value.UTF8.class, Trie.fromString(TARGET_CONFIG_OPTION)).unwrap();
+				target = Trie.fromString(path);
+			}
+			if(!configuration.matchAll(SOURCE_CONFIG_OPTION).isEmpty()) {
+				String path = configuration.get(Value.UTF8.class, Trie.fromString(SOURCE_CONFIG_OPTION)).unwrap();
+				source = Trie.fromString(path);
+			}
+		}
+
+		@Override
+		public Task initialise(Build.Project project) {
+			JavaScriptCompileTask task = new JavaScriptCompileTask(project);
+			task.setDebug(debug);
+			return task;
+		}
+
+		@Override
+		public Type<?> getSourceType() {
+			return WhileyFile.BinaryContentType;
+		}
+
+		@Override
+		public Type<?> getTargetType() {
+			return JavaScriptFile.ContentType;
+		}
+
+		@Override
+		public Content.Filter<?> getSourceFilter() {
+			return Content.filter("**", WhileyFile.BinaryContentType);
+		}
+
+		@Override
+		public Content.Filter<?> getTargetFilter() {
+			return Content.filter("**", JavaScriptFile.ContentType);
+		}
+
+		@Override
+		public Path.Root getSourceRoot(Path.Root root) throws IOException {
+			return root.createRelativeRoot(source);
+		}
+
+		@Override
+		public Path.Root getTargetRoot(Path.Root root) throws IOException {
+			return root.createRelativeRoot(target);
+		}
+
+		@Override
+		public void execute(Project project, ID path, String name, Value... args) {
+			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
+		}
+	};
 
 	// =======================================================================
 	// Start
@@ -59,13 +128,10 @@ public class Activator implements Module.Activator {
 	public Module start(Module.Context context) {
 		// FIXME: logger is a hack!
 		final Logger logger = new Logger.Default(System.err);
-		// List of commands to use
-		final Command[] commands = {
-				new JsCompile(registry, logger)};
-		// Register all commands
-		for (Command c : commands) {
-			context.register(wycc.lang.Command.class, c);
-		}
+		// Register build platform
+		context.register(Build.Platform.class, JS_PLATFORM);
+		// Register JavaScript Content Type
+		context.register(Content.Type.class, JavaScriptFile.ContentType);
 		// Done
 		return new Module() {
 			// what goes here?
