@@ -21,15 +21,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import wybs.lang.Build;
-import wybs.lang.NameResolver;
 import wybs.lang.Build.Graph;
 import wycc.util.Logger;
 import wycc.util.Pair;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.Root;
+import wyil.lang.WyilFile;
 import wyc.lang.WhileyFile;
-import wyc.util.WhileyFileResolver;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;
 
@@ -43,13 +42,6 @@ public class JavaScriptCompileTask implements Build.Task {
 	private final Build.Project project;
 
 	/**
-	 * Provides mechanism for operating on types. For example, expanding them
-	 * and performing subtype tests, etc. This object may cache results to
-	 * improve performance of some operations.
-	 */
-	private final NameResolver resolver;
-
-	/**
 	 * Enable debug mode
 	 */
 	protected boolean debug = true;
@@ -61,7 +53,6 @@ public class JavaScriptCompileTask implements Build.Task {
 
 	public JavaScriptCompileTask(Build.Project project) {
 		this.project = project;
-		this.resolver = new WhileyFileResolver(project);
 	}
 
 	public void setLogger(Logger logger) {
@@ -90,15 +81,17 @@ public class JavaScriptCompileTask implements Build.Task {
 		HashSet<Path.Entry<?>> generatedFiles = new HashSet<>();
 
 		for (Pair<Path.Entry<?>, Path.Root> p : delta) {
-			Path.Root dst = p.second();
-			Path.Entry<WhileyFile> source = (Path.Entry<WhileyFile>) p.first();
-			Path.Entry<JavaScriptFile> target = dst.create(source.id(), JavaScriptFile.ContentType);
-			graph.registerDerivation(source, target);
-			generatedFiles.add(target);
-			// Construct the file
-			JavaScriptFile contents = build(source, target);
-			// Write class file into its destination
-			target.write(contents);
+			Path.Entry<?> entry = p.first();
+			if (entry.contentType() == WyilFile.ContentType) {
+				Path.Root dst = p.second();
+				Path.Entry<WyilFile> source = (Path.Entry<WyilFile>) p.first();
+				Path.Entry<JavaScriptFile> target = dst.create(source.id(), JavaScriptFile.ContentType);
+				generatedFiles.add(target);
+				// Construct the file
+				JavaScriptFile contents = build(source, target);
+				// Write class file into its destination
+				target.write(contents);
+			}
 		}
 
 		// ========================================================================
@@ -112,7 +105,7 @@ public class JavaScriptCompileTask implements Build.Task {
 		return generatedFiles;
 	}
 
-	private JavaScriptFile build(Path.Entry<WhileyFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
+	private JavaScriptFile build(Path.Entry<WyilFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
@@ -120,7 +113,7 @@ public class JavaScriptCompileTask implements Build.Task {
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,resolver,bos);
+		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,bos);
 		jsfw.setDebug(debug);
 		jsfw.apply(source.read());
 		return new JavaScriptFile(target,bos.toByteArray());

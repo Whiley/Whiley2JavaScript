@@ -17,19 +17,16 @@ import java.io.*;
 import java.util.*;
 
 import wybs.lang.Build;
-import wybs.lang.NameID;
-import wybs.lang.NameResolver;
-import wybs.lang.NameResolver.ResolutionError;
 import wybs.lang.SyntacticElement;
 import static wybs.lang.SyntaxError.*;
 
 import wyfs.lang.Path;
+import wyil.util.AbstractConsumer;
 
-import static wyc.lang.WhileyFile.*;
+import static wyil.lang.WyilFile.*;
 
-import wyc.lang.WhileyFile;
+import wyil.lang.WyilFile;
 import wyc.util.ErrorMessages;
-import wyc.util.AbstractConsumer;
 
 
 /**
@@ -52,29 +49,20 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 */
 	private final Build.Project project;
 
-	/**
-	 * Provides mechanism for operating on types. For example, expanding them
-	 * and performing subtype tests, etc. This object may cache results to
-	 * improve performance of some operations.
-	 */
-	private final NameResolver resolver;
-
 	private boolean verbose = false;
 	// Debug options
 	private boolean debug = true;
 
-	private WhileyFile wyilfile;
+	private WyilFile wyilfile;
 
-	public JavaScriptFileWriter(Build.Project project, NameResolver resolver,  PrintWriter writer) {
+	public JavaScriptFileWriter(Build.Project project, PrintWriter writer) {
 		this.project = project;
 		this.out = writer;
-		this.resolver = resolver;
 	}
 
-	public JavaScriptFileWriter(Build.Project project, NameResolver resolver, OutputStream stream) {
+	public JavaScriptFileWriter(Build.Project project, OutputStream stream) {
 		this.project = project;
 		this.out = new PrintWriter(new OutputStreamWriter(stream));
-		this.resolver = resolver;
 	}
 
 	// ======================================================================
@@ -93,9 +81,9 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	// Apply Method
 	// ======================================================================
 
-	public void apply(WhileyFile module) {
+	public void apply(WyilFile module) {
 		Context context = new Context(0,new HashSet<>());
-		this.visitWhileyFile(module, context);
+		this.visitModule(module, context);
 		writeTypeTests(context.typeTests, new HashSet<>());
 		out.flush();
 	}
@@ -786,11 +774,12 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitInvoke(Expr.Invoke expr, Context context) {
+		Type.Callable type = expr.getDeclaration().getType();
 		Name name = expr.getName();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.getLast());
-		writeTypeMangle(expr.getSignature());
-		if(expr.getSignature() instanceof Type.Property) {
+		writeTypeMangle(type);
+		if(type instanceof Type.Property) {
 			out.print("$property");
 		}
 		out.print("(");
@@ -810,7 +799,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		// NOTE: the reason we use a function declaration here (i.e. instead of
 		// just assigning the name) is that it protects against potential name
 		// clashes with local variables.
-		Type.Callable ft = expr.getSignature();
+		Type.Callable ft = expr.getDeclaration().getType();
 		Tuple<Type> params = ft.getParameters();
 		out.print("function(");
 		for (int i = 0; i != params.size(); ++i) {
@@ -1332,16 +1321,12 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	private void writeTypeTestNominal(Type.Nominal test, Set<Type> deps) {
 		// FIXME: this is so horrendously broken
 		Name name = test.getName();
-		try {
-			Decl.Type td = resolver.resolveExactly(name, Decl.Type.class);
-			out.print(" return is$");
-			writeTypeMangle(td.getVariableDeclaration().getType());
-			out.print("(val) && " + name.getLast() + "$type(val); ");
-			//
+		Decl.Type td = test.getDeclaration();
+		out.print(" return is$");
+		writeTypeMangle(td.getVariableDeclaration().getType());
+		out.print("(val) && " + name.getLast() + "$type(val); ");
+		//
 		deps.add(td.getVariableDeclaration().getType());
-		} catch (ResolutionError e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private static int variableIndex = 0;
@@ -1584,12 +1569,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		} else if (type instanceof Type.Nominal) {
 			Type.Nominal tn = (Type.Nominal) type;
 			//
-			try {
-				Decl.Type td = resolver.resolveExactly(tn.getName(), Decl.Type.class);
-				return isCopyable(td.getType(), context);
-			} catch (ResolutionError e) {
-				throw new RuntimeException(e);
-			}
+			Decl.Type td = tn.getDeclaration();
+			return isCopyable(td.getType(), context);
 		} else {
 			return false;
 		}

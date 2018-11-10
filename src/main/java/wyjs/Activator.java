@@ -28,6 +28,7 @@ import wyfs.lang.Path;
 import wyfs.lang.Path.ID;
 import wyfs.lang.Content.Type;
 import wyfs.util.Trie;
+import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -86,7 +87,7 @@ public class Activator implements Module.Activator {
 
 		@Override
 		public Type<?> getSourceType() {
-			return WhileyFile.BinaryContentType;
+			return WyilFile.ContentType;
 		}
 
 		@Override
@@ -96,7 +97,7 @@ public class Activator implements Module.Activator {
 
 		@Override
 		public Content.Filter<?> getSourceFilter() {
-			return Content.filter("**", WhileyFile.BinaryContentType);
+			return Content.filter("**", WyilFile.ContentType);
 		}
 
 		@Override

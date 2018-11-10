@@ -34,7 +34,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import wybs.lang.Build;
 import wybs.lang.SyntaxError;
+import wybs.util.StdBuildGraph;
 import wybs.util.StdBuildRule;
 import wybs.util.StdProject;
 import wyc.lang.WhileyFile;
@@ -45,6 +47,7 @@ import wycc.util.Pair;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.util.DirectoryRoot;
+import wyil.lang.WyilFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
 /**
@@ -201,8 +204,10 @@ public class RuntimeValidTests {
 			StdProject project = new StdProject(Arrays.asList(root));
 			// Add build rules
 			addCompilationRules(project,root,false);
+			// Create empty build graph
+			Build.Graph graph = new StdBuildGraph();
 			// Identify source files and build project
-			project.build(TestUtils.findSourceFiles(root,args));
+			project.build(TestUtils.findSourceFiles(root, graph, args), graph);
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 		} catch (SyntaxError e) {
@@ -237,7 +242,7 @@ public class RuntimeValidTests {
 		// Add compilation rule(s) (whiley => wyil)
 		project.add(new StdBuildRule(wyTask, root, Content.filter("**", WhileyFile.ContentType), null, root));
 		// Add compilation rule(s) (wyil => js)
-		project.add(new StdBuildRule(jsTask, root, Content.filter("**", WhileyFile.BinaryContentType), null, root));
+		project.add(new StdBuildRule(jsTask, root, Content.filter("**", WyilFile.ContentType), null, root));
 	}
 
 	/**
