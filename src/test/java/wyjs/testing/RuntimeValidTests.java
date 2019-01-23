@@ -177,10 +177,11 @@ public class RuntimeValidTests {
 			fail("unexpected output!");
 		}
 	}
+
  	/**
-	 * A simple default registry which knows about whiley files and wyil files.
-	 */
-	private static final Content.Registry registry = new wyc.Activator.Registry();
+ 	 * A simple default registry which knows about whiley files and wyil files.
+ 	 */
+ 	private static final Content.Registry registry = new TestUtils.Registry();
 
  	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
@@ -201,7 +202,7 @@ public class RuntimeValidTests {
 		try {
 			// Construct the project
 			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-			StdProject project = new StdProject(Arrays.asList(root));
+			StdProject project = new StdProject(root);
 			// Add build rules
 			addCompilationRules(project,root,false);
 			// Create empty build graph

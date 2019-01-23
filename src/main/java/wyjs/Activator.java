@@ -16,6 +16,7 @@ package wyjs;
 import java.io.IOException;
 
 import wybs.lang.Build;
+import wybs.lang.Build.Graph;
 import wybs.lang.Build.Project;
 import wybs.lang.Build.Task;
 import wybs.util.AbstractCompilationUnit.Value;
@@ -26,6 +27,7 @@ import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.lang.Path.ID;
+import wyfs.lang.Path.Root;
 import wyfs.lang.Content.Type;
 import wyfs.util.Trie;
 import wyil.lang.WyilFile;
@@ -34,15 +36,18 @@ import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Module.Activator {
 
+	private static Trie PKGNAME_CONFIG_OPTION = Trie.fromString("package/name");
 	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
 	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
 	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
+	private static Value.UTF8 TARGET_DEFAULT = new Value.UTF8("bin".getBytes());
 
 	// =======================================================================
 	// Build Platform
 	// =======================================================================
 
 	private static Build.Platform JS_PLATFORM = new Build.Platform() {
+		private Trie pkg;
 		// Specify directory where generated JS files are dumped.
 		private Trie source = Trie.fromString("bin");
 		// Specify directory where generated JS files are dumped.
@@ -59,23 +64,16 @@ public class Activator implements Module.Activator {
 		public Configuration.Schema getConfigurationSchema() {
 			return Configuration.fromArray(
 					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", false),
-					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", false));
+					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", TARGET_DEFAULT));
 		}
 
 		@Override
 		public void apply(Configuration configuration) {
+			this.pkg = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 			//
-			if(!configuration.matchAll(DEBUG_CONFIG_OPTION).isEmpty()) {
-				debug = configuration.get(Value.Bool.class, Trie.fromString(DEBUG_CONFIG_OPTION)).get();
-			}
-			if(!configuration.matchAll(TARGET_CONFIG_OPTION).isEmpty()) {
-				String path = configuration.get(Value.UTF8.class, Trie.fromString(TARGET_CONFIG_OPTION)).unwrap();
-				target = Trie.fromString(path);
-			}
-			if(!configuration.matchAll(SOURCE_CONFIG_OPTION).isEmpty()) {
-				String path = configuration.get(Value.UTF8.class, Trie.fromString(SOURCE_CONFIG_OPTION)).unwrap();
-				source = Trie.fromString(path);
-			}
+			this.debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();
+			this.target = Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
+			this.source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
 		}
 
 		@Override
@@ -96,12 +94,12 @@ public class Activator implements Module.Activator {
 		}
 
 		@Override
-		public Content.Filter<?> getSourceFilter() {
+		public Content.Filter<WyilFile> getSourceFilter() {
 			return Content.filter("**", WyilFile.ContentType);
 		}
 
 		@Override
-		public Content.Filter<?> getTargetFilter() {
+		public Content.Filter<JavaScriptFile> getTargetFilter() {
 			return Content.filter("**", JavaScriptFile.ContentType);
 		}
 
@@ -118,6 +116,21 @@ public class Activator implements Module.Activator {
 		@Override
 		public void execute(Project project, ID path, String name, Value... args) {
 			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
+		}
+
+		@Override
+		public void refresh(Graph graph, Root src, Root bin) throws IOException {
+			// Basically, for the pkg wyil we will create a corresponding js file.
+			//
+			Path.Entry<WyilFile> source = src.get(pkg, WyilFile.ContentType);
+			Path.Entry<JavaScriptFile> binary = bin.get(pkg, JavaScriptFile.ContentType);
+			// Check whether target binary exists or not
+			if (binary == null) {
+				// Doesn't exist, so create with default value
+				binary = bin.create(pkg, JavaScriptFile.ContentType);
+			}
+			// Register source converted by us into the js file.
+			graph.connect(source, binary);
 		}
 	};
 
