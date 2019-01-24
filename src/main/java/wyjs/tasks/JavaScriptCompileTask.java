@@ -83,21 +83,23 @@ public class JavaScriptCompileTask implements Build.Task {
 		for (Pair<Path.Entry<?>, Path.Root> p : delta) {
 			Path.Entry<?> entry = p.first();
 			if (entry.contentType() == WyilFile.ContentType) {
-				Path.Root dst = p.second();
 				Path.Entry<WyilFile> source = (Path.Entry<WyilFile>) p.first();
-				Path.Entry<JavaScriptFile> target = dst.create(source.id(), JavaScriptFile.ContentType);
-				generatedFiles.add(target);
-				// Construct the file
-				JavaScriptFile contents = build(source, target);
-				// Write class file into its destination
-				target.write(contents);
+				for(Path.Entry<?> child : graph.getChildren(entry)) {
+					Path.Entry<JavaScriptFile> target =  (Path.Entry<JavaScriptFile>) child;
+					generatedFiles.add(target);
+					// 	Construct the file
+					JavaScriptFile contents = build(source, target);
+					// 	Write class file into its destination
+					target.write(contents);
+					// 	Flush contents to disk
+					target.flush();
+				}
 			}
 		}
 
 		// ========================================================================
 		// Done
 		// ========================================================================
-
 		long endTime = System.currentTimeMillis();
 		logger.logTimedMessage("Wyil => JavaScript: compiled " + delta.size() + " file(s)", endTime - start,
 				memory - runtime.freeMemory());

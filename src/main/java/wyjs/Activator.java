@@ -40,6 +40,7 @@ public class Activator implements Module.Activator {
 	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
 	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
 	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
+	private static Value.Bool DEBUG_DEFAULT = new Value.Bool(false);
 	private static Value.UTF8 TARGET_DEFAULT = new Value.UTF8("bin".getBytes());
 
 	// =======================================================================
@@ -63,7 +64,7 @@ public class Activator implements Module.Activator {
 		@Override
 		public Configuration.Schema getConfigurationSchema() {
 			return Configuration.fromArray(
-					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", false),
+					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", DEBUG_DEFAULT),
 					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", TARGET_DEFAULT));
 		}
 
@@ -128,6 +129,7 @@ public class Activator implements Module.Activator {
 			if (binary == null) {
 				// Doesn't exist, so create with default value
 				binary = bin.create(pkg, JavaScriptFile.ContentType);
+				binary.write(new JavaScriptFile(binary, new byte[0]));
 			}
 			// Register source converted by us into the js file.
 			graph.connect(source, binary);
