@@ -41,7 +41,7 @@ public class Activator implements Module.Activator {
 	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
 	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
 	private static Value.Bool DEBUG_DEFAULT = new Value.Bool(false);
-	private static Value.UTF8 TARGET_DEFAULT = new Value.UTF8("bin".getBytes());
+	private static Value.UTF8 TARGET_DEFAULT = new Value.UTF8("bin/js".getBytes());
 
 	// =======================================================================
 	// Build Platform
@@ -50,9 +50,9 @@ public class Activator implements Module.Activator {
 	private static Build.Platform JS_PLATFORM = new Build.Platform() {
 		private Trie pkg;
 		// Specify directory where generated JS files are dumped.
-		private Trie source = Trie.fromString("bin");
+		private Trie source;
 		// Specify directory where generated JS files are dumped.
-		private Trie target = Trie.fromString("bin/js");
+		private Trie target;
 		// Specify whether debug mode enabled or not.
 		private boolean debug = true;
 
