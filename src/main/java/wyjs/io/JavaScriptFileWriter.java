@@ -17,17 +17,10 @@ import java.io.*;
 import java.util.*;
 
 import wybs.lang.Build;
-import wybs.lang.SyntacticElement;
-import static wybs.lang.SyntaxError.*;
-
-import wyfs.lang.Path;
+import wybs.lang.SyntacticItem;
 import wyil.util.AbstractConsumer;
-
 import static wyil.lang.WyilFile.*;
-
 import wyil.lang.WyilFile;
-import wyc.util.ErrorMessages;
-
 
 /**
 * Writes WYIL bytecodes in a textual from to a given file.
@@ -654,7 +647,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitStaticVariableAccess(Expr.StaticVariableAccess expr, Context context) {
 		// FIXME: this is horrendously broken
-		out.print("Wy.copy(" + expr.getName() + ")");
+		out.print("Wy.copy(" + expr.getLink() + ")");
 	}
 
 	@Override
@@ -774,8 +767,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitInvoke(Expr.Invoke expr, Context context) {
-		Type.Callable type = expr.getDeclaration().getType();
-		Name name = expr.getName();
+		Type.Callable type = expr.getLink().getTarget().getType();
+		Name name = expr.getLink().getName();
 		// FIXME: this doesn't work for imported function symbols!
 		out.print(name.getLast());
 		writeTypeMangle(type);
@@ -799,7 +792,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		// NOTE: the reason we use a function declaration here (i.e. instead of
 		// just assigning the name) is that it protects against potential name
 		// clashes with local variables.
-		Type.Callable ft = expr.getDeclaration().getType();
+		Type.Callable ft = expr.getLink().getTarget().getType();
 		Tuple<Type> params = ft.getParameters();
 		out.print("function(");
 		for (int i = 0; i != params.size(); ++i) {
@@ -809,7 +802,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			out.print("p" + i);
 		}
 		out.print(") { return ");
-		out.print(expr.getName());
+		out.print(expr.getLink());
 		writeTypeMangle(ft);
 		out.print("(");
 		for (int i = 0; i != params.size(); ++i) {
@@ -1112,7 +1105,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	private void writeInvariantTest(String access, int depth, Type.Nominal type, Context context) {
 		tabIndent(context);
 		out.print("if(!");
-		writeName(type.getName());
+		writeName(type.getLink().getName());
 		out.println("$type(" + access + ")) { return false; }");
 	}
 
@@ -1176,7 +1169,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				out.println("// check type invariant");
 				tabIndent(context);
 				out.print("Wy.assert(");
-				writeName(nom.getName());
+				writeName(nom.getLink().getName());
 				out.println("$type(" + var.getName().get() + "));");
 			}
 		}
@@ -1320,8 +1313,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	private void writeTypeTestNominal(Type.Nominal test, Set<Type> deps) {
 		// FIXME: this is so horrendously broken
-		Name name = test.getName();
-		Decl.Type td = test.getDeclaration();
+		Name name = test.getLink().getName();
+		Decl.Type td = test.getLink().getTarget();
 		out.print(" return is$");
 		writeTypeMangle(td.getVariableDeclaration().getType());
 		out.print("(val) && " + name.getLast() + "$type(val); ");
@@ -1512,7 +1505,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	}
 	private String getTypeMangleNominal(Type.Nominal t) {
 		// FIXME: need to figure out package
-		String name = t.getName().getLast().get();
+		String name = t.getLink().getName().getLast().get();
 		return "n" + name.length() + name;
 	}
 
@@ -1559,7 +1552,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	 * @param type
 	 * @return
 	 */
-	private boolean isCopyable(Type type, SyntacticElement context) {
+	private boolean isCopyable(Type type, SyntacticItem context) {
 		if (type instanceof Type.Primitive) {
 			return true;
 		} else if (type instanceof Type.Callable) {
@@ -1569,7 +1562,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		} else if (type instanceof Type.Nominal) {
 			Type.Nominal tn = (Type.Nominal) type;
 			//
-			Decl.Type td = tn.getDeclaration();
+			Decl.Type td = tn.getLink().getTarget();
 			return isCopyable(td.getType(), context);
 		} else {
 			return false;

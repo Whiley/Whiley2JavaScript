@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -193,9 +195,10 @@ public class RuntimeValidTests {
 	 * @return
 	 * @throws IOException
 	 */
-	public static Pair<Boolean,String> compileWhiley2JavaScript(String whileydir, String... args) throws IOException {
+	public static Pair<Boolean,String> compileWhiley2JavaScript(String whileydir, String arg) throws IOException {
 		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
 		ByteArrayOutputStream sysout = new ByteArrayOutputStream();
+		PrintStream psyserr = new PrintStream(syserr);
 		//
 		boolean result = true;
 		//
@@ -208,7 +211,19 @@ public class RuntimeValidTests {
 			// Create empty build graph
 			Build.Graph graph = new StdBuildGraph();
 			// Identify source files and build project
-			project.build(TestUtils.findSourceFiles(root, graph, args), graph);
+			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,graph,arg);
+			Path.Entry<WhileyFile> source = p.first();
+			Path.Entry<WyilFile> target = p.second();
+			// Build the project
+			ArrayList<Path.Entry<?>> sources = new ArrayList<>();
+			sources.add(source);
+			project.build(sources, graph);
+			// Flush any created resources (e.g. wyil files)
+			root.flush();
+			// Check whether any syntax error produced
+			result = !TestUtils.findSyntaxErrors(target.read().getRootItem(), new BitSet());
+			// Print out any error messages
+			wycc.commands.Build.printSyntacticMarkers(psyserr, sources, target);
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 		} catch (SyntaxError e) {
@@ -238,7 +253,7 @@ public class RuntimeValidTests {
 	 * @param verify
 	 */
 	private static void addCompilationRules(StdProject project, Path.Root root, boolean verify) {
-		CompileTask wyTask = new CompileTask(project);
+		CompileTask wyTask = new CompileTask(project, root);
 		JavaScriptCompileTask jsTask = new JavaScriptCompileTask(project);
 		// Add compilation rule(s) (whiley => wyil)
 		project.add(new StdBuildRule(wyTask, root, Content.filter("**", WhileyFile.ContentType), null, root));
