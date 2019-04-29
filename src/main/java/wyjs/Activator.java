@@ -14,11 +14,15 @@
 package wyjs;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import wybs.lang.Build;
-import wybs.lang.Build.Graph;
 import wybs.lang.Build.Project;
 import wybs.lang.Build.Task;
+import wybs.util.AbstractBuildRule;
+import wybs.util.AbstractCompilationUnit.Name;
+import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
 import wyc.lang.WhileyFile;
 import wycc.cfg.Configuration;
@@ -26,6 +30,7 @@ import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
+import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.ID;
 import wyfs.lang.Path.Root;
 import wyfs.lang.Content.Type;
@@ -48,13 +53,6 @@ public class Activator implements Module.Activator {
 	// =======================================================================
 
 	private static Build.Platform JS_PLATFORM = new Build.Platform() {
-		private Trie pkg;
-		// Specify directory where generated JS files are dumped.
-		private Trie source;
-		// Specify directory where generated JS files are dumped.
-		private Trie target;
-		// Specify whether debug mode enabled or not.
-		private boolean debug = true;
 
 		@Override
 		public String getName() {
@@ -69,19 +67,33 @@ public class Activator implements Module.Activator {
 		}
 
 		@Override
-		public void apply(Configuration configuration) {
-			this.pkg = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
-			//
-			this.debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();
-			this.target = Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
-			this.source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
-		}
+		public void initialise(Configuration configuration, Build.Project project) throws IOException {
+			Trie pkg = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+			// Specify directory where generated JS files are dumped.
+			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
+			// Specify directory where generated JS files are dumped.
+			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
+			// Specify set of files included
+			Content.Filter<WyilFile> includes = Content.filter("**", WyilFile.ContentType);
+			// Specify whether debug mode enabled or not.
+			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
+			// Construct the source root
+			Path.Root sourceRoot = project.getRoot().createRelativeRoot(source);
+			// Construct the binary root
+			Path.Root binaryRoot = project.getRoot().createRelativeRoot(target);
+			// Initialise the target file being built
+			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot,pkg);
+			// Add build rule to project.
+			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, includes, null) {
 
-		@Override
-		public Task initialise(Build.Project project) {
-			JavaScriptCompileTask task = new JavaScriptCompileTask(project);
-			task.setDebug(debug);
-			return task;
+				@Override
+				protected void apply(List<Entry<WyilFile>> matches, Collection<Task> tasks) throws IOException {
+					JavaScriptCompileTask task = new JavaScriptCompileTask(project,binary,matches.get(0));
+					task.setDebug(debug);
+					tasks.add(task);
+				}
+
+			});
 		}
 
 		@Override
@@ -95,44 +107,24 @@ public class Activator implements Module.Activator {
 		}
 
 		@Override
-		public Content.Filter<WyilFile> getSourceFilter() {
-			return Content.filter("**", WyilFile.ContentType);
-		}
-
-		@Override
-		public Content.Filter<JavaScriptFile> getTargetFilter() {
-			return Content.filter("**", JavaScriptFile.ContentType);
-		}
-
-		@Override
-		public Path.Root getSourceRoot(Path.Root root) throws IOException {
-			return root.createRelativeRoot(source);
-		}
-
-		@Override
-		public Path.Root getTargetRoot(Path.Root root) throws IOException {
-			return root.createRelativeRoot(target);
-		}
-
-		@Override
 		public void execute(Project project, ID path, String name, Value... args) {
 			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
 		}
 
-		@Override
-		public void refresh(Graph graph, Root src, Root bin) throws IOException {
-			// Basically, for the pkg wyil we will create a corresponding js file.
-			//
-			Path.Entry<WyilFile> source = src.get(pkg, WyilFile.ContentType);
-			Path.Entry<JavaScriptFile> binary = bin.get(pkg, JavaScriptFile.ContentType);
-			// Check whether target binary exists or not
-			if (binary == null) {
-				// Doesn't exist, so create with default value
-				binary = bin.create(pkg, JavaScriptFile.ContentType);
-				binary.write(new JavaScriptFile(binary, new byte[0]));
+		private Path.Entry<JavaScriptFile> initialiseBinaryTarget(Path.Root binroot, Path.ID id) throws IOException {
+			if (binroot.exists(id, JavaScriptFile.ContentType)) {
+				// Yes, it does so reuse it.
+				return binroot.get(id, JavaScriptFile.ContentType);
+			} else {
+				// No, it doesn't so create and initialise it
+				Path.Entry<JavaScriptFile> target = binroot.create(id, JavaScriptFile.ContentType);
+				// Initialise with empty javascript file
+				JavaScriptFile jsf = new JavaScriptFile(new byte[0]);
+				// Write
+				target.write(jsf);
+				// Done
+				return target;
 			}
-			// Register source converted by us into the js file.
-			graph.connect(source, binary);
 		}
 	};
 

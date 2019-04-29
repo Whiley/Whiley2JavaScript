@@ -15,31 +15,18 @@ package wyjs.tasks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 import wybs.lang.Build;
-import wybs.lang.Build.Graph;
+import wybs.util.AbstractBuildTask;
 import wycc.util.Logger;
-import wycc.util.Pair;
 import wyfs.lang.Path;
-import wyfs.lang.Path.Entry;
-import wyfs.lang.Path.Root;
 import wyil.lang.WyilFile;
-import wyc.lang.WhileyFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;
 
-public class JavaScriptCompileTask implements Build.Task {
-
-	/**
-	 * The master project for identifying all resources available to the
-	 * builder. This includes all modules declared in the project being compiled
-	 * and/or defined in external resources (e.g. jar files).
-	 */
-	private final Build.Project project;
+public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScriptFile> {
 
 	/**
 	 * Enable debug mode
@@ -51,8 +38,9 @@ public class JavaScriptCompileTask implements Build.Task {
 	 */
 	private Logger logger = Logger.NULL;
 
-	public JavaScriptCompileTask(Build.Project project) {
-		this.project = project;
+	public JavaScriptCompileTask(Build.Project project,Path.Entry<JavaScriptFile> target,
+			Path.Entry<WyilFile> sources) {
+		super(project, target, Arrays.asList(sources));
 	}
 
 	public void setLogger(Logger logger) {
@@ -69,45 +57,18 @@ public class JavaScriptCompileTask implements Build.Task {
 	}
 
 	@Override
-	public Set<Entry<?>> build(Collection<Pair<Entry<?>, Root>> delta, Graph graph) throws IOException {
-		//
-		Runtime runtime = Runtime.getRuntime();
-		long start = System.currentTimeMillis();
-		long memory = runtime.freeMemory();
-
-		// ========================================================================
-		// Translate files
-		// ========================================================================
-		HashSet<Path.Entry<?>> generatedFiles = new HashSet<>();
-
-		for (Pair<Path.Entry<?>, Path.Root> p : delta) {
-			Path.Entry<?> entry = p.first();
-			if (entry.contentType() == WyilFile.ContentType) {
-				Path.Entry<WyilFile> source = (Path.Entry<WyilFile>) p.first();
-				for(Path.Entry<?> child : graph.getChildren(entry)) {
-					Path.Entry<JavaScriptFile> target =  (Path.Entry<JavaScriptFile>) child;
-					generatedFiles.add(target);
-					// 	Construct the file
-					JavaScriptFile contents = build(source, target);
-					// 	Write class file into its destination
-					target.write(contents);
-					// 	Flush contents to disk
-					target.flush();
-				}
-			}
-		}
-
-		// ========================================================================
-		// Done
-		// ========================================================================
-		long endTime = System.currentTimeMillis();
-		logger.logTimedMessage("Wyil => JavaScript: compiled " + delta.size() + " file(s)", endTime - start,
-				memory - runtime.freeMemory());
-
-		return generatedFiles;
+	public Callable<Boolean> initialise() throws IOException {
+		// Extract target and source files for compilation. This is the component which
+		// requires I/O.
+		JavaScriptFile jsf = target.read();
+		WyilFile wyf = sources.get(0).read();
+		// Construct the lambda for subsequent execution. This will eventually make its
+		// way into some kind of execution pool, possibly for concurrent execution with
+		// other tasks.
+		return () -> execute(jsf, wyf);
 	}
 
-	private JavaScriptFile build(Path.Entry<WyilFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
+	public boolean execute(JavaScriptFile target, WyilFile source) {
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
@@ -117,7 +78,10 @@ public class JavaScriptCompileTask implements Build.Task {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,bos);
 		jsfw.setDebug(debug);
-		jsfw.apply(source.read());
-		return new JavaScriptFile(target,bos.toByteArray());
+		jsfw.apply(source);
+		// Write out contents
+		target.setBytes(bos.toByteArray());
+		// How can this fail?
+		return true;
 	}
 }

@@ -25,7 +25,9 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -37,10 +39,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import wybs.lang.Build;
-import wybs.lang.SyntaxError;
-import wybs.util.StdBuildGraph;
-import wybs.util.StdBuildRule;
-import wybs.util.StdProject;
+import wybs.lang.SyntacticException;
+import wybs.util.SequentialBuildProject;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
@@ -50,6 +50,7 @@ import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.util.DirectoryRoot;
 import wyil.lang.WyilFile;
+import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
 /**
@@ -205,28 +206,46 @@ public class RuntimeValidTests {
 		try {
 			// Construct the project
 			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-			StdProject project = new StdProject(root);
-			// Add build rules
-			addCompilationRules(project,root,false);
-			// Create empty build graph
-			Build.Graph graph = new StdBuildGraph();
-			// Identify source files and build project
-			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,graph,arg);
-			Path.Entry<WhileyFile> source = p.first();
-			Path.Entry<WyilFile> target = p.second();
-			// Build the project
-			ArrayList<Path.Entry<?>> sources = new ArrayList<>();
-			sources.add(source);
-			project.build(sources, graph);
+			SequentialBuildProject project = new SequentialBuildProject(root);
+			// Identify source files and target files
+			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
+			List<Path.Entry<WhileyFile>> sources = Arrays.asList(p.first());
+			Path.Entry<WyilFile> wyilTarget = p.second();
+			// Add Whiley => WyIL build rule
+			project.add(new Build.Rule() {
+				@Override
+				public void apply(Collection<Build.Task> tasks) throws IOException {
+					// Construct a new build task
+					CompileTask task = new CompileTask(project, root, wyilTarget, sources);
+					// Submit the task for execution
+					tasks.add(task);
+				}
+			});
+			// Construct an empty JavaScriptFile
+			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
+			jsTarget.write(new JavaScriptFile(new byte[0]));
+			// Add WyIL => JavaScript Build Rule
+			project.add(new Build.Rule() {
+				@Override
+				public void apply(Collection<Build.Task> tasks) throws IOException {
+					// Construct a new build task
+					JavaScriptCompileTask task = new JavaScriptCompileTask(project, jsTarget, wyilTarget);
+					// Submit the task for execution
+					tasks.add(task);
+				}
+			});
+			project.refresh();
+			// Actually force the project to build
+			project.build(ForkJoinPool.commonPool()).get();
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 			// Check whether any syntax error produced
-			result = !TestUtils.findSyntaxErrors(target.read().getRootItem(), new BitSet());
+			result = !TestUtils.findSyntaxErrors(wyilTarget.read().getRootItem(), new BitSet());
 			// Print out any error messages
-			wycc.commands.Build.printSyntacticMarkers(psyserr, sources, target);
+			wycc.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (Path.Entry) wyilTarget);
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
-		} catch (SyntaxError e) {
+		} catch (SyntacticException e) {
 			// Print out the syntax error
 			e.outputSourceError(new PrintStream(syserr),false);
 			result = false;
@@ -240,25 +259,6 @@ public class RuntimeValidTests {
 		byte[] outBytes = sysout.toByteArray();
 		String output = new String(errBytes) + new String(outBytes);
 		return new Pair<>(result, output);
-	}
-
-	/**
-	 * Add build rules to project for compiling from Whiley source to JavaScript.
-	 * This is a two step process whereby we first using the Whiley Compiler (WyC)
-	 * to generate wyil files, and then use the JavaScript compiler for the final
-	 * stage.
-	 *
-	 * @param project
-	 * @param root
-	 * @param verify
-	 */
-	private static void addCompilationRules(StdProject project, Path.Root root, boolean verify) {
-		CompileTask wyTask = new CompileTask(project, root);
-		JavaScriptCompileTask jsTask = new JavaScriptCompileTask(project);
-		// Add compilation rule(s) (whiley => wyil)
-		project.add(new StdBuildRule(wyTask, root, Content.filter("**", WhileyFile.ContentType), null, root));
-		// Add compilation rule(s) (wyil => js)
-		project.add(new StdBuildRule(jsTask, root, Content.filter("**", WyilFile.ContentType), null, root));
 	}
 
 	/**
