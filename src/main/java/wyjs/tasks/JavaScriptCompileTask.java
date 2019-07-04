@@ -15,36 +15,18 @@ package wyjs.tasks;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
+import java.util.concurrent.Callable;
 
 import wybs.lang.Build;
-import wybs.lang.Build.Graph;
+import wybs.util.AbstractBuildTask;
 import wycc.util.Logger;
-import wycc.util.Pair;
 import wyfs.lang.Path;
-import wyfs.lang.Path.Entry;
-import wyfs.lang.Path.Root;
-import wyil.type.TypeSystem;
-import wyc.lang.WhileyFile;
+import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.io.JavaScriptFileWriter;
 
-public class JavaScriptCompileTask implements Build.Task {
-	/**
-	 * The master project for identifying all resources available to the
-	 * builder. This includes all modules declared in the project being verified
-	 * and/or defined in external resources (e.g. jar files).
-	 */
-	protected final Build.Project project;
-
-	/**
-	 * The type system is useful for managing nominal types and converting them
-	 * into their underlying types.
-	 */
-	protected final TypeSystem typeSystem;
+public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScriptFile> {
 
 	/**
 	 * Enable debug mode
@@ -56,9 +38,9 @@ public class JavaScriptCompileTask implements Build.Task {
 	 */
 	private Logger logger = Logger.NULL;
 
-	public JavaScriptCompileTask(Build.Project project) {
-		this.project = project;
-		this.typeSystem = new TypeSystem(project);
+	public JavaScriptCompileTask(Build.Project project,Path.Entry<JavaScriptFile> target,
+			Path.Entry<WyilFile> sources) {
+		super(project, target, Arrays.asList(sources));
 	}
 
 	public void setLogger(Logger logger) {
@@ -75,40 +57,18 @@ public class JavaScriptCompileTask implements Build.Task {
 	}
 
 	@Override
-	public Set<Entry<?>> build(Collection<Pair<Entry<?>, Root>> delta, Graph graph) throws IOException {
-		Runtime runtime = Runtime.getRuntime();
-		long start = System.currentTimeMillis();
-		long memory = runtime.freeMemory();
-
-		// ========================================================================
-		// Translate files
-		// ========================================================================
-		HashSet<Path.Entry<?>> generatedFiles = new HashSet<>();
-
-		for (Pair<Path.Entry<?>, Path.Root> p : delta) {
-			Path.Root dst = p.second();
-			Path.Entry<WhileyFile> source = (Path.Entry<WhileyFile>) p.first();
-			Path.Entry<JavaScriptFile> target = dst.create(source.id(), JavaScriptFile.ContentType);
-			graph.registerDerivation(source, target);
-			generatedFiles.add(target);
-			// Construct the file
-			JavaScriptFile contents = build(source, target);
-			// Write class file into its destination
-			target.write(contents);
-		}
-
-		// ========================================================================
-		// Done
-		// ========================================================================
-
-		long endTime = System.currentTimeMillis();
-		logger.logTimedMessage("Wyil => JavaScript: compiled " + delta.size() + " file(s)", endTime - start,
-				memory - runtime.freeMemory());
-
-		return generatedFiles;
+	public Callable<Boolean> initialise() throws IOException {
+		// Extract target and source files for compilation. This is the component which
+		// requires I/O.
+		JavaScriptFile jsf = target.read();
+		WyilFile wyf = sources.get(0).read();
+		// Construct the lambda for subsequent execution. This will eventually make its
+		// way into some kind of execution pool, possibly for concurrent execution with
+		// other tasks.
+		return () -> execute(jsf, wyf);
 	}
 
-	private JavaScriptFile build(Path.Entry<WhileyFile> source, Path.Entry<JavaScriptFile> target) throws IOException {
+	public boolean execute(JavaScriptFile target, WyilFile source) {
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
@@ -116,9 +76,12 @@ public class JavaScriptCompileTask implements Build.Task {
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,typeSystem,bos);
+		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,bos);
 		jsfw.setDebug(debug);
-		jsfw.apply(source.read());
-		return new JavaScriptFile(target,bos.toByteArray());
+		jsfw.apply(source);
+		// Write out contents
+		target.setBytes(bos.toByteArray());
+		// How can this fail?
+		return true;
 	}
 }

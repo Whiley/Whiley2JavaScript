@@ -19,11 +19,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import wybs.lang.CompilationUnit;
+import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit;
+import wybs.util.AbstractSyntacticItem;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 
-public class JavaScriptFile extends AbstractCompilationUnit {
+public class JavaScriptFile  {
 	// =========================================================================
 	// Content Type
 	// =========================================================================
@@ -68,14 +70,18 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 	 */
 	private byte[] bytes;
 
-	public JavaScriptFile(Path.Entry<? extends CompilationUnit> entry, byte[] bytes) {
-		super(entry);
+	public JavaScriptFile(byte[] bytes) {
 		this.bytes = bytes;
 	}
 
 	public byte[] getBytes() {
 		return bytes;
 	}
+
+	public void setBytes(byte[] bytes) {
+		this.bytes = bytes;
+	}
+
 	@Override
 	public String toString() {
 		return new String(bytes);

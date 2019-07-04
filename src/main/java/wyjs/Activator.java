@@ -13,43 +13,120 @@
 // limitations under the License.
 package wyjs;
 
-import wycc.lang.Command;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import wybs.lang.Build;
+import wybs.lang.Build.Project;
+import wybs.lang.Build.Task;
+import wybs.util.AbstractBuildRule;
+import wybs.util.AbstractCompilationUnit.Name;
+import wybs.util.AbstractCompilationUnit.Tuple;
+import wybs.util.AbstractCompilationUnit.Value;
+import wyc.lang.WhileyFile;
+import wycc.cfg.Configuration;
 import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
-import wyjs.commands.JsCompile;
+import wyfs.lang.Path.Entry;
+import wyfs.lang.Path.ID;
+import wyfs.lang.Path.Root;
+import wyfs.lang.Content.Type;
+import wyfs.util.Trie;
+import wyil.lang.WyilFile;
+import wyjs.core.JavaScriptFile;
+import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Module.Activator {
+
+	private static Trie PKGNAME_CONFIG_OPTION = Trie.fromString("package/name");
+	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
+	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
+	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
+	private static Value.Bool DEBUG_DEFAULT = new Value.Bool(false);
+	private static Value.UTF8 TARGET_DEFAULT = new Value.UTF8("bin/js".getBytes());
+
 	// =======================================================================
-	// Content Registry
+	// Build Platform
 	// =======================================================================
 
-	/**
-	 * Default implementation of a content registry. This associates whiley and
-	 * wyil files with their respective content types.
-	 *
-	 * @author David J. Pearce
-	 *
-	 */
-	public static class Registry extends wyc.Activator.Registry {
+	private static Build.Platform JS_PLATFORM = new Build.Platform() {
+
 		@Override
-		public void associate(Path.Entry e) {
-			super.associate(e);
+		public String getName() {
+			return "js";
 		}
 
 		@Override
-		public String suffix(Content.Type<?> t) {
-			return t.getSuffix();
+		public Configuration.Schema getConfigurationSchema() {
+			return Configuration.fromArray(
+					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", DEBUG_DEFAULT),
+					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", TARGET_DEFAULT));
 		}
-	}
 
-	/**
-	 * The master project content type registry. This is needed for the build
-	 * system to determine the content type of files it finds on the file
-	 * system.
-	 */
-	public final Content.Registry registry = new Registry();
+		@Override
+		public void initialise(Configuration configuration, Build.Project project) throws IOException {
+			Trie pkg = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+			// Specify directory where generated JS files are dumped.
+			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
+			// Specify directory where generated JS files are dumped.
+			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
+			// Specify set of files included
+			Content.Filter<WyilFile> includes = Content.filter("**", WyilFile.ContentType);
+			// Specify whether debug mode enabled or not.
+			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
+			// Construct the source root
+			Path.Root sourceRoot = project.getRoot().createRelativeRoot(source);
+			// Construct the binary root
+			Path.Root binaryRoot = project.getRoot().createRelativeRoot(target);
+			// Initialise the target file being built
+			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot,pkg);
+			// Add build rule to project.
+			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, includes, null) {
+
+				@Override
+				protected void apply(List<Entry<WyilFile>> matches, Collection<Task> tasks) throws IOException {
+					JavaScriptCompileTask task = new JavaScriptCompileTask(project,binary,matches.get(0));
+					task.setDebug(debug);
+					tasks.add(task);
+				}
+
+			});
+		}
+
+		@Override
+		public Type<?> getSourceType() {
+			return WyilFile.ContentType;
+		}
+
+		@Override
+		public Type<?> getTargetType() {
+			return JavaScriptFile.ContentType;
+		}
+
+		@Override
+		public void execute(Project project, ID path, String name, Value... args) {
+			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
+		}
+
+		private Path.Entry<JavaScriptFile> initialiseBinaryTarget(Path.Root binroot, Path.ID id) throws IOException {
+			if (binroot.exists(id, JavaScriptFile.ContentType)) {
+				// Yes, it does so reuse it.
+				return binroot.get(id, JavaScriptFile.ContentType);
+			} else {
+				// No, it doesn't so create and initialise it
+				Path.Entry<JavaScriptFile> target = binroot.create(id, JavaScriptFile.ContentType);
+				// Initialise with empty javascript file
+				JavaScriptFile jsf = new JavaScriptFile(new byte[0]);
+				// Write
+				target.write(jsf);
+				// Done
+				return target;
+			}
+		}
+	};
 
 	// =======================================================================
 	// Start
@@ -59,13 +136,10 @@ public class Activator implements Module.Activator {
 	public Module start(Module.Context context) {
 		// FIXME: logger is a hack!
 		final Logger logger = new Logger.Default(System.err);
-		// List of commands to use
-		final Command[] commands = {
-				new JsCompile(registry, logger)};
-		// Register all commands
-		for (Command c : commands) {
-			context.register(wycc.lang.Command.class, c);
-		}
+		// Register build platform
+		context.register(Build.Platform.class, JS_PLATFORM);
+		// Register JavaScript Content Type
+		context.register(Content.Type.class, JavaScriptFile.ContentType);
 		// Done
 		return new Module() {
 			// what goes here?
