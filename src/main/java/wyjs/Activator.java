@@ -52,7 +52,7 @@ public class Activator implements Module.Activator {
 	// Build Platform
 	// =======================================================================
 
-	private static Build.Platform JS_PLATFORM = new Build.Platform() {
+	public static Build.Platform JS_PLATFORM = new Build.Platform() {
 
 		@Override
 		public String getName() {
