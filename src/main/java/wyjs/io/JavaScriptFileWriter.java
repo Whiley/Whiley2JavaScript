@@ -1294,6 +1294,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			writeTypeTestFunctionOrMethod((Type.Callable) test,deps);
 		} else if(test instanceof Type.Union) {
 			writeTypeTestUnion((Type.Union) test,deps);
+		} else if(test instanceof Type.Variable) {
+			writeTypeTestVariable((Type.Variable) test,deps);
 		} else {
 			throw new RuntimeException("unknown type encountered: " + test);
 		}
@@ -1431,6 +1433,10 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		out.print("return false;");
 	}
 
+	private void writeTypeTestVariable(Type.Variable test, Set<Type> deps) {
+		out.print(" return true; ");
+	}
+
 	private void writeTypeMangle(Type.Callable fmt) {
 		Tuple<Type> params = fmt.getParameters();
 		for (int i = 0; i != params.size(); ++i) {
@@ -1466,6 +1472,8 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			return getTypeMangleFunctionOrMethod((Type.Callable) t);
 		} else if (t instanceof Type.Union) {
 			return getTypeMangleUnion((Type.Union) t);
+		} else if (t instanceof Type.Variable) {
+			return getTypeMangleVariable((Type.Variable) t);
 		} else {
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
@@ -1531,6 +1539,11 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			r += getTypeMangle(t.get(i));
 		}
 		return r;
+	}
+
+	private String getTypeMangleVariable(Type.Variable t) {
+		String name = t.getOperand().toString();
+		return "v" + name.length() + name;
 	}
 
 	private void writeType(Type t) {
