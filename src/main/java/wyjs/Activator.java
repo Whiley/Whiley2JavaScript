@@ -21,19 +21,15 @@ import wybs.lang.Build;
 import wybs.lang.Build.Project;
 import wybs.lang.Build.Task;
 import wybs.util.AbstractBuildRule;
-import wybs.util.AbstractCompilationUnit.Name;
-import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
-import wyc.lang.WhileyFile;
 import wycc.cfg.Configuration;
 import wycc.lang.Module;
 import wycc.util.Logger;
 import wyfs.lang.Content;
+import wyfs.lang.Content.Type;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
 import wyfs.lang.Path.ID;
-import wyfs.lang.Path.Root;
-import wyfs.lang.Content.Type;
 import wyfs.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
@@ -119,7 +115,7 @@ public class Activator implements Module.Activator {
 				// No, it doesn't so create and initialise it
 				Path.Entry<JavaScriptFile> target = binroot.create(id, JavaScriptFile.ContentType);
 				// Initialise with empty javascript file
-				JavaScriptFile jsf = new JavaScriptFile(new byte[0]);
+				JavaScriptFile jsf = new JavaScriptFile(target);
 				// Write
 				target.write(jsf);
 				// Done

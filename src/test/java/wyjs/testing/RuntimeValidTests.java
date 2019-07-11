@@ -223,7 +223,7 @@ public class RuntimeValidTests {
 			});
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
-			jsTarget.write(new JavaScriptFile(new byte[0]));
+			jsTarget.write(new JavaScriptFile(jsTarget));
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override
