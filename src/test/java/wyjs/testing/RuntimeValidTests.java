@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
@@ -33,7 +32,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import org.junit.*;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
@@ -44,7 +45,6 @@ import wybs.util.SequentialBuildProject;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
-import wycc.util.Logger;
 import wycc.util.Pair;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
@@ -171,7 +171,7 @@ public class RuntimeValidTests {
 		}
 		// Execute the generated JavaScript Program.
 		try {
-			execJS(jsFilename);
+			execJS(jsFilename,name);
 		} catch(ScriptException e) {
 			System.err.println("=========================================================");
 			System.err.println("TEST: " + name);
@@ -271,14 +271,14 @@ public class RuntimeValidTests {
 	 * @throws ScriptException
 	 * @throws IOException
 	 */
-	private void execJS(String filename) throws ScriptException, IOException {
+	private void execJS(String filename, String name) throws ScriptException, IOException {
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 		// Load the WyJS runtime which provides necessary support methods.
 		engine.eval(new FileReader(WYJS_RUNTIME));
 		// Load the js script from the filesystem
 		engine.eval(new FileReader(filename));
 		// Execute the test() method
-		engine.eval("test();");
+		engine.eval(name + "$test();");
 	}
 	// ======================================================================
 	// Tests
