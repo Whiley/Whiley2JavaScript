@@ -13,14 +13,68 @@
 // limitations under the License.
 package wyjs.io;
 
-import java.io.*;
-import java.util.*;
+import static wyil.lang.WyilFile.EXPR_arrayaccess;
+import static wyil.lang.WyilFile.EXPR_arrayborrow;
+import static wyil.lang.WyilFile.EXPR_bitwiseand;
+import static wyil.lang.WyilFile.EXPR_bitwisenot;
+import static wyil.lang.WyilFile.EXPR_bitwiseor;
+import static wyil.lang.WyilFile.EXPR_bitwiseshl;
+import static wyil.lang.WyilFile.EXPR_bitwiseshr;
+import static wyil.lang.WyilFile.EXPR_bitwisexor;
+import static wyil.lang.WyilFile.EXPR_cast;
+import static wyil.lang.WyilFile.EXPR_dereference;
+import static wyil.lang.WyilFile.EXPR_equal;
+import static wyil.lang.WyilFile.EXPR_indirectinvoke;
+import static wyil.lang.WyilFile.EXPR_integeraddition;
+import static wyil.lang.WyilFile.EXPR_integerdivision;
+import static wyil.lang.WyilFile.EXPR_integergreaterequal;
+import static wyil.lang.WyilFile.EXPR_integergreaterthan;
+import static wyil.lang.WyilFile.EXPR_integerlessequal;
+import static wyil.lang.WyilFile.EXPR_integerlessthan;
+import static wyil.lang.WyilFile.EXPR_integermultiplication;
+import static wyil.lang.WyilFile.EXPR_integernegation;
+import static wyil.lang.WyilFile.EXPR_integerremainder;
+import static wyil.lang.WyilFile.EXPR_integersubtraction;
+import static wyil.lang.WyilFile.EXPR_invoke;
+import static wyil.lang.WyilFile.EXPR_is;
+import static wyil.lang.WyilFile.EXPR_logicaland;
+import static wyil.lang.WyilFile.EXPR_logicaliff;
+import static wyil.lang.WyilFile.EXPR_logicalnot;
+import static wyil.lang.WyilFile.EXPR_logicalor;
+import static wyil.lang.WyilFile.EXPR_new;
+import static wyil.lang.WyilFile.EXPR_notequal;
+import static wyil.lang.WyilFile.EXPR_recordaccess;
+import static wyil.lang.WyilFile.EXPR_recordborrow;
+import static wyil.lang.WyilFile.EXPR_variablecopy;
+import static wyil.lang.WyilFile.EXPR_variablemove;
+import static wyil.lang.WyilFile.TYPE_array;
+import static wyil.lang.WyilFile.TYPE_nominal;
+import static wyil.lang.WyilFile.TYPE_record;
+import static wyil.lang.WyilFile.TYPE_reference;
+import static wyil.lang.WyilFile.TYPE_union;
+
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 
 import wybs.lang.Build;
 import wybs.lang.SyntacticItem;
-import wyil.util.AbstractConsumer;
-import static wyil.lang.WyilFile.*;
+import wybs.util.AbstractCompilationUnit.Identifier;
+import wybs.util.AbstractCompilationUnit.Name;
+import wybs.util.AbstractCompilationUnit.Tuple;
+import wybs.util.AbstractCompilationUnit.Value;
 import wyil.lang.WyilFile;
+import wyil.lang.WyilFile.Decl;
+import wyil.lang.WyilFile.Decl.Link;
+import wyil.lang.WyilFile.Expr;
+import wyil.lang.WyilFile.LVal;
+import wyil.lang.WyilFile.Modifier;
+import wyil.lang.WyilFile.QualifiedName;
+import wyil.lang.WyilFile.Stmt;
+import wyil.lang.WyilFile.Type;
+import wyil.util.AbstractConsumer;
 
 /**
 * Writes WYIL bytecodes in a textual from to a given file.
@@ -86,7 +140,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		Decl.Variable vardecl = td.getVariableDeclaration();
 		String name = vardecl.getName().get();
 		out.print("function ");
-		out.print(td.getName());
+		out.print(getQualifiedName(td.getQualifiedName()));
 		out.println("$type(" + name + ") {");
 		// Check type invariant
 		writeInvariantTest(vardecl,context.indent());
@@ -120,7 +174,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	@Override
 	public void visitStaticVariable(Decl.StaticVariable cd, Context context) {
-		out.print("var " + cd.getName());
+		out.print("var " + getQualifiedName(cd.getQualifiedName()));
 		if (cd.hasInitialiser()) {
 			out.print(" = ");
 			visitExpression(cd.getInitialiser(), context);
@@ -136,7 +190,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		}
 		//
 		out.print("function ");
-		out.print(method.getName());
+		out.print(getQualifiedName(method.getQualifiedName()));
 		writeTypeMangle(method.getType());
 		visitVariables(method.getParameters(), context);
 		if(debug) {
@@ -177,7 +231,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitProperty(Decl.Property method, Context context) {
 		out.print("function ");
-		out.print(method.getName());
+		out.print(getQualifiedName(method.getQualifiedName()));
 		writeTypeMangle(method.getType());
 		out.print("$property");
 		visitVariables(method.getParameters(), context);
@@ -647,7 +701,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitStaticVariableAccess(Expr.StaticVariableAccess expr, Context context) {
 		// FIXME: this is horrendously broken
-		out.print("Wy.copy(" + expr.getLink() + ")");
+		out.print("Wy.copy(" + getQualifiedName(expr.getLink()) + ")");
 	}
 
 	@Override
@@ -768,9 +822,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	@Override
 	public void visitInvoke(Expr.Invoke expr, Context context) {
 		Type.Callable type = expr.getLink().getTarget().getType();
-		Name name = expr.getLink().getName();
-		// FIXME: this doesn't work for imported function symbols!
-		out.print(name.getLast());
+		out.print(getQualifiedName(expr.getLink()));
 		writeTypeMangle(type);
 		if(type instanceof Type.Property) {
 			out.print("$property");
@@ -987,16 +1039,6 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	// Helpers
 	// ================================================================================
 
-	private void writeName(Name name) {
-		for(int i=0;i!=name.size();++i) {
-			if (i != 0) {
-				// FIXME: this is a temporary hack for now.
-				out.print("$");
-			}
-			out.print(name.get(i).get());
-		}
-	}
-
 	private void writeShadowVariables(Tuple<Decl.Variable> parameters, boolean restore, Context context) {
 		if (debug) {
 			tabIndent(context);
@@ -1105,7 +1147,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 	private void writeInvariantTest(String access, int depth, Type.Nominal type, Context context) {
 		tabIndent(context);
 		out.print("if(!");
-		writeName(type.getLink().getName());
+		out.print(getQualifiedName(type.getLink()));
 		out.println("$type(" + access + ")) { return false; }");
 	}
 
@@ -1169,7 +1211,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 				out.println("// check type invariant");
 				tabIndent(context);
 				out.print("Wy.assert(");
-				writeName(nom.getLink().getName());
+				out.print(getQualifiedName(nom.getLink()));
 				out.println("$type(" + var.getName().get() + "));");
 			}
 		}
@@ -1319,7 +1361,7 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 		Decl.Type td = test.getLink().getTarget();
 		out.print(" return is$");
 		writeTypeMangle(td.getVariableDeclaration().getType());
-		out.print("(val) && " + name.getLast() + "$type(val); ");
+		out.print("(val) && " + getQualifiedName(test.getLink()) + "$type(val); ");
 		//
 		deps.add(td.getVariableDeclaration().getType());
 	}
@@ -1445,6 +1487,14 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 			}
 			writeTypeMangle(params.get(i));
 		}
+	}
+
+	private String getQualifiedName(Link<? extends Decl.Named<?>> link) {
+		return getQualifiedName(link.getTarget().getQualifiedName());
+	}
+
+	private String getQualifiedName(QualifiedName name) {
+		return name.toString().replace("::", "$");
 	}
 
 	private void writeTypeMangle(Type t) {
