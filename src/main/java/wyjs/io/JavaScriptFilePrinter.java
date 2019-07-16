@@ -301,9 +301,6 @@ public class JavaScriptFilePrinter {
 			out.print("\"");
 			out.print(term.getValue());
 			out.print("\"");
-		} else if(value instanceof Long) {
-			out.print(term.getValue());
-			out.print("L");
 		} else if(value instanceof Byte){
 			byte b = (Byte) value;
 			if(es6) {

@@ -251,11 +251,26 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 	}
 
 	public static class Constant implements Term {
+		public final static Constant NULL = new Constant(null);
+		public final static Constant TRUE = new Constant(true);
+		public final static Constant FALSE = new Constant(false);
+
 		private Object value;
 
-		public Constant(Object value) {
-			if (value == null || value instanceof Boolean || value instanceof Byte || value instanceof Integer
-					|| value instanceof String) {
+		public Constant(boolean v) {
+			this.value = v;
+		}
+		public Constant(byte v) {
+			this.value = v;
+		}
+		public Constant(long v) {
+			this.value = v;
+		}
+		public Constant(double v) {
+			this.value = v;
+		}
+		private Constant(Object value) {
+			if (value == null) {
 				this.value = value;
 			} else {
 				throw new IllegalArgumentException("invalid constant value: " + value);

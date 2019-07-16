@@ -1,5 +1,4 @@
 package wyjs.tasks;
-
 import static wybs.util.AbstractCompilationUnit.ITEM_bool;
 import static wybs.util.AbstractCompilationUnit.ITEM_byte;
 import static wybs.util.AbstractCompilationUnit.ITEM_int;
@@ -7,29 +6,7 @@ import static wybs.util.AbstractCompilationUnit.ITEM_null;
 import static wybs.util.AbstractCompilationUnit.ITEM_utf8;
 import static wyil.lang.WyilFile.EXPR_arrayaccess;
 import static wyil.lang.WyilFile.EXPR_arrayborrow;
-import static wyil.lang.WyilFile.EXPR_bitwiseand;
-import static wyil.lang.WyilFile.EXPR_bitwisenot;
-import static wyil.lang.WyilFile.EXPR_bitwiseor;
-import static wyil.lang.WyilFile.EXPR_bitwiseshl;
-import static wyil.lang.WyilFile.EXPR_bitwiseshr;
-import static wyil.lang.WyilFile.EXPR_bitwisexor;
 import static wyil.lang.WyilFile.EXPR_dereference;
-import static wyil.lang.WyilFile.EXPR_equal;
-import static wyil.lang.WyilFile.EXPR_integeraddition;
-import static wyil.lang.WyilFile.EXPR_integerdivision;
-import static wyil.lang.WyilFile.EXPR_integergreaterequal;
-import static wyil.lang.WyilFile.EXPR_integergreaterthan;
-import static wyil.lang.WyilFile.EXPR_integerlessequal;
-import static wyil.lang.WyilFile.EXPR_integerlessthan;
-import static wyil.lang.WyilFile.EXPR_integermultiplication;
-import static wyil.lang.WyilFile.EXPR_integernegation;
-import static wyil.lang.WyilFile.EXPR_integerremainder;
-import static wyil.lang.WyilFile.EXPR_integersubtraction;
-import static wyil.lang.WyilFile.EXPR_logicaland;
-import static wyil.lang.WyilFile.EXPR_logicaliff;
-import static wyil.lang.WyilFile.EXPR_logicalnot;
-import static wyil.lang.WyilFile.EXPR_logicalor;
-import static wyil.lang.WyilFile.EXPR_notequal;
 import static wyil.lang.WyilFile.EXPR_recordaccess;
 import static wyil.lang.WyilFile.EXPR_recordborrow;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
@@ -54,18 +31,19 @@ import wyil.lang.WyilFile.Type;
 import wyil.type.subtyping.EmptinessTest.LifetimeRelation;
 import wyil.type.subtyping.StrictTypeEmptinessTest;
 import wyil.type.subtyping.SubtypeOperator;
-import wyil.util.AbstractFunction;
 import wyil.util.AbstractVisitor;
 import wyjs.core.JavaScriptFile;
 import wyjs.core.JavaScriptFile.ArrayAccess;
+import wyjs.core.JavaScriptFile.ArrayInitialiser;
+import wyjs.core.JavaScriptFile.ArrayLength;
 import wyjs.core.JavaScriptFile.Assignment;
 import wyjs.core.JavaScriptFile.Block;
 import wyjs.core.JavaScriptFile.Break;
 import wyjs.core.JavaScriptFile.Constant;
+import wyjs.core.JavaScriptFile.Continue;
 import wyjs.core.JavaScriptFile.Declaration;
 import wyjs.core.JavaScriptFile.DoWhile;
 import wyjs.core.JavaScriptFile.IfElse;
-import wyjs.core.JavaScriptFile.IndirectInvoke;
 import wyjs.core.JavaScriptFile.Invoke;
 import wyjs.core.JavaScriptFile.Lambda;
 import wyjs.core.JavaScriptFile.Operator;
@@ -78,15 +56,11 @@ import wyjs.core.JavaScriptFile.VariableAccess;
 import wyjs.core.JavaScriptFile.VariableDeclaration;
 import wyjs.core.JavaScriptFile.While;
 import wyjs.core.TypeMangler;
+import wyjs.util.AbstractTranslator;
 import wyjs.util.StdTypeMangler;
 
-/**
- * Key invariant maintained is ownership.
- *
- * @author David J. Pearce
- *
- */
-public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
+
+public class NewJavaScriptCompiler extends AbstractTranslator<Term> {
 	/**
 	 * Provides a standard mechanism for writing out type mangles.
 	 */
@@ -108,8 +82,18 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	 */
 	private int temporaryIndex = 0;
 
-	public JavaScriptCompiler(JavaScriptFile jsFile) {
+	public NewJavaScriptCompiler(JavaScriptFile jsFile) {
+		super(subtyping);
 		this.jsFile = jsFile;
+	}
+
+	@Override
+	public Term visitDeclaration(Decl decl) {
+		Term t = super.visitDeclaration(decl);
+		if(t != null) {
+			jsFile.getDeclarations().add((Declaration) t);
+		}
+		return null;
 	}
 
 	// ====================================================================================
@@ -117,66 +101,73 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	// ====================================================================================
 
 	@Override
-	public Term visitDeclaration(Decl decl, Object data) {
-		Term t = super.visitDeclaration(decl, data);
-		if(t != null) {
-			jsFile.getDeclarations().add((Declaration) t);
-		}
+	public Term constructType(Decl.Type d, List<Term> invariant) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Declaration visitStaticVariable(Decl.StaticVariable decl, Object data) {
-		// Determine qualified name
-		String name = toMangledName(decl);
-		//
+	public Term constructVariable(Decl.Variable decl, Term initialiser) {
+		String name = decl.getName().toString();
+		// TODO: ES6 supports let modifier
 		if (decl.hasInitialiser()) {
-			Term initialiser = visitExpression(decl.getInitialiser(), data);
-			return new VariableDeclaration(name, initialiser);
+			return new JavaScriptFile.VariableDeclaration(name,initialiser);
 		} else {
-			return new VariableDeclaration(name);
+			return new JavaScriptFile.VariableDeclaration(name);
 		}
 	}
 
 	@Override
-	public Term visitFunctionOrMethod(Decl.FunctionOrMethod decl, Object data) {
+	public Term constructStaticVariable(Decl.StaticVariable decl, Term initialiser) {
 		// Determine qualified name
 		String name = toMangledName(decl);
-		// Translate parameters
-		List<String> parameters = toParameterNames(decl.getParameters());
-		// Translate body
-		Block body = visitBlock(decl.getBody(), data);
-		//
-		return new JavaScriptFile.Method(name, parameters, body);
+		// TODO: ES6 supports const modifier
+		if (decl.hasInitialiser()) {
+			return new JavaScriptFile.VariableDeclaration(name,initialiser);
+		} else {
+			return new JavaScriptFile.VariableDeclaration(name);
+		}
 	}
 
 	@Override
-	public Term visitProperty(Decl.Property decl, Object data) {
+	public Term constructProperty(Decl.Property decl, List<Term> clauses) {
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Translate parameters
 		List<String> parameters = toParameterNames(decl.getParameters());
-		// Translate property clauses
-		Term[] clauses = translateOperands(decl.getInvariant());
+		// Construct body from translated clauses
 		Term body = new Return(new Operator(Kind.AND, clauses));
 		// Done
 		return new JavaScriptFile.Method(name, parameters, new Block(body));
 	}
 
-	// ====================================================================================
-	// Blocks
-	// ====================================================================================
+	@Override
+	public Term constructFunction(Decl.Function decl, List<Term> precondition, List<Term> postcondition, Term body) {
+		// Determine qualified name
+		String name = toMangledName(decl);
+		// Translate parameters
+		List<String> parameters = toParameterNames(decl.getParameters());
+		// Done
+		return new JavaScriptFile.Method(name, parameters, (Block) body);
+	}
 
 	@Override
-	public Block visitBlock(Stmt.Block block, Object data) {
-		ArrayList<Term> terms = new ArrayList<>();
-		for(int i=0;i!=block.size();++i) {
-			Term term = visitStatement(block.get(i), data);
-			if(term != null) {
-				terms.add(term);
-			}
-		}
-		return new JavaScriptFile.Block(terms);
+	public Term constructMethod(Decl.Method decl, List<Term> precondition, List<Term> postcondition, Term body) {
+		// Determine qualified name
+		String name = toMangledName(decl);
+		// Translate parameters
+		List<String> parameters = toParameterNames(decl.getParameters());
+		// Done
+		return new JavaScriptFile.Method(name, parameters, (Block) body);
+	}
+
+	@Override
+	public Term constructLambda(Decl.Lambda decl, Term term) {
+		List<String> parameters = toParameterNames(decl.getParameters());
+		// Construct body
+		Term body = new Return(term);
+		//
+		return new Lambda(parameters,new Block(body));
 	}
 
 	// ====================================================================================
@@ -184,32 +175,28 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	// ====================================================================================
 
 	@Override
-	public Term visitAssert(Stmt.Assert stmt, Object data) {
-		Term condition = visitExpression(stmt.getCondition(), data);
+	public Term constructAssert(Stmt.Assert stmt, Term condition) {
 		return WY_ASSERT(condition);
 	}
 
 	@Override
-	public Term visitAssign(Stmt.Assign stmt, Object data) {
-		Term[] lhs = translateLVals(stmt.getLeftHandSide());
-		Term[] rhs = translateOperands(stmt.getRightHandSide());
+	public Term constructAssign(Stmt.Assign stmt, List<Term> lhs, List<Term> rhs) {
 		//
 		// FIXME: es6 supports destructuring assignment which could be used here.
 		//
-		if(lhs.length == 1) {
+		if(lhs.size() == 1) {
 			// Easy case
-			return new JavaScriptFile.Assignment(lhs[0], rhs[0]);
+			return new JavaScriptFile.Assignment(lhs.get(0), rhs.get(0));
 		} else if(isSimpleAssignment(stmt)) {
 			// NOTE: what we know here is that there is no interference between the left and
 			// right-hand sides. Also, that we have no multi-assignment
 			ArrayList<Term> stmts = new ArrayList<>();
-			for(int i=0;i!=lhs.length;++i) {
-				stmts.add(new JavaScriptFile.Assignment(lhs[i], rhs[i]));
+			for(int i=0;i!=lhs.size();++i) {
+				stmts.add(new JavaScriptFile.Assignment(lhs.get(i), rhs.get(i)));
 			}
 			return new Block(stmts);
 		} else {
 			// Harder case as have to workaround interference.
-			Tuple<LVal> lvals = stmt.getLeftHandSide();
 			Tuple<Expr> exprs = stmt.getRightHandSide();
 			ArrayList<Term> first = new ArrayList<>();
 			ArrayList<Term> second = new ArrayList<>();
@@ -219,16 +206,16 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 				Tuple<Type> types = e.getTypes();
 				// Translate right-hand side
 				VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
-				first.add(new VariableDeclaration(tmp.getName(), visitExpression(e, data)));
+				first.add(new VariableDeclaration(tmp.getName(), rhs.get(i)));
 				// Translate left-hand side
 				if(types == null) {
 					// Unit assignment
-					second.add(new JavaScriptFile.Assignment(lhs[j++], tmp));
+					second.add(new JavaScriptFile.Assignment(lhs.get(j++), tmp));
 				} else {
 					// Multi-assignment
 					for(int k=0;k!=types.size();++k) {
 						Term t = new ArrayAccess(tmp,new Constant(k));
-						second.add(new JavaScriptFile.Assignment(lhs[j++], t));
+						second.add(new JavaScriptFile.Assignment(lhs.get(j++), t));
 					}
 				}
 			}
@@ -239,69 +226,89 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	}
 
 	@Override
-	public Term visitAssume(Stmt.Assume stmt, Object data) {
-		Term condition = visitExpression(stmt.getCondition(), data);
+	public Term constructAssume(Stmt.Assume stmt, Term condition) {
 		return WY_ASSERT(condition);
 	}
 
 	@Override
-	public Term visitBreak(Stmt.Break stmt, Object data) {
-		return new JavaScriptFile.Break();
+	public Term constructBlock(Stmt.Block s, List<Term> stmts) {
+		return new Block(stmts);
+	}
+
+
+	@Override
+	public Term constructBreak(Stmt.Break stmt) {
+		return new Break();
 	}
 
 	@Override
-	public Term visitContinue(Stmt.Continue stmt, Object data) {
-		return new JavaScriptFile.Continue();
+	public Term constructContinue(Stmt.Continue stmt) {
+		return new Continue();
 	}
 
 	@Override
-	public Term visitDoWhile(Stmt.DoWhile stmt, Object data) {
-		// Translation body
-		Block body = visitBlock(stmt.getBody(), data);
-		// Translate condition
-		Term condition = visitExpression(stmt.getCondition(), data);
-		// FIXME: loop invariants
-		// Done
-		return new DoWhile(body, condition);
+	public Term constructDebug(Stmt.Debug stmt, Term operand) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Term visitFail(Stmt.Fail stmt, Object data) {
+	public Term constructDoWhile(Stmt.DoWhile stmt, Term body, Term condition, List<Term> invariant) {
+		// FIXME: support loop invariant
+		return new DoWhile((Block) body,condition);
+	}
+
+	@Override
+	public Term constructFail(Stmt.Fail stmt) {
 		return WY_ASSERT(new JavaScriptFile.Constant(false));
 	}
 
 	@Override
-	public Term visitIfElse(Stmt.IfElse stmt, Object data) {
+	public Term constructIfElse(Stmt.IfElse stmt, Term condition, Term trueBranch, Term falseBranch) {
 		ArrayList<IfElse.Case> cases = new ArrayList<>();
 		// Translate true branch
-		Term condition = visitExpression(stmt.getCondition(), data);
-		Block trueBlock = visitBlock(stmt.getTrueBranch(), null);
-		cases.add(new IfElse.Case(condition, trueBlock));
+		cases.add(new IfElse.Case(condition, (Block) trueBranch));
 		// Translate false branch (if applicable)
 		if (stmt.hasFalseBranch()) {
-			Block falseBlock = visitBlock(stmt.getFalseBranch(), null);
-			cases.add(new IfElse.Case(null, falseBlock));
+			cases.add(new IfElse.Case(null, (Block) falseBranch));
 		}
 		return new JavaScriptFile.IfElse(cases);
 	}
 
 	@Override
-	public Term visitNamedBlock(Stmt.NamedBlock stmt, Object data) {
-		return visitBlock(stmt.getBlock(), data);
+	public Term constructNamedBlock(Stmt.NamedBlock stmt, List<Term> stmts) {
+		return new Block(stmts);
 	}
 
 	@Override
-	public Term visitReturn(Stmt.Return stmt, Object data) {
-		if(stmt.getReturns().size() > 0) {
-			Term term = visitExpressions(stmt.getReturns(),data);
-			return new JavaScriptFile.Return(term);
+	public Term constructReturn(Stmt.Return stmt, List<Term> returns) {
+		Term rval;
+		if(returns.size() == 0) {
+			rval = null;
+		} else if (returns.size() == 1) {
+			// Easy case
+			rval = returns.get(0);
 		} else {
-			return new JavaScriptFile.Return();
+			//
+			if (allUnitExpressions(stmt.getReturns())) {
+				// Easier as direct mapping between expressions.
+				rval = new JavaScriptFile.ArrayInitialiser(returns);
+			} else {
+				// FIXME: implement multiple expressions!!
+				throw new UnsupportedOperationException();
+			}
 		}
+		//
+		return new Return(rval);
 	}
 
 	@Override
-	public Term visitSwitch(Stmt.Switch stmt, Object data) {
+	public Term constructSkip(Stmt.Skip stmt) {
+		// There is no skip statement in JavaScript!
+		return new Block();
+	}
+
+	@Override
+	public Term constructSwitch(Stmt.Switch stmt, Term condition, List<Pair<List<Term>,Term>> cases) {
 		// NOTE: switches are challenging because we cannot necessarily translate a
 		// Whiley switch directly as a JavaScript switch. This is because switches in
 		// Whiley are valid for any datatype, whilst in JavaScript they are only valid
@@ -311,70 +318,51 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 		//
 		if(!simple) {
 			// hard case
-			return translateSwitchAsIfElse(stmt);
+			return translateSwitchAsIfElse(stmt, condition, cases);
 		} else {
-			return translateSwitchAsSwitch(stmt);
-		}
-
-	}
-
-	@Override
-	public Term visitWhile(Stmt.While stmt, Object data) {
-		// Translate condition
-		Term condition = visitExpression(stmt.getCondition(), data);
-		// Translation body
-		Block body = visitBlock(stmt.getBody(), data);
-		// FIXME: loop invariants
-		// Done
-		return new While(condition, body);
-	}
-
-	@Override
-	public Term visitVariable(Decl.Variable stmt, Object data) {
-		String name = stmt.getName().toString();
-		if (stmt.hasInitialiser()) {
-			Term initialiser = visitExpression(stmt.getInitialiser(), data);
-			return new JavaScriptFile.VariableDeclaration(name,initialiser);
-		} else {
-			return new JavaScriptFile.VariableDeclaration(name);
+			return translateSwitchAsSwitch(stmt, condition, cases);
 		}
 	}
 
-	// ====================================================================================
-	// Multi-Expressions
-	// ====================================================================================
-
 	@Override
-	public Term visitExpressions(Tuple<Expr> exprs, Object data) {
-		if(exprs.size() == 1) {
-			// Easy case
-			return visitExpression(exprs.get(0),data);
-		} else  {
-			// Hard cases
-			ArrayList<Term> terms = new ArrayList<>();
-			for (int i = 0; i != exprs.size(); ++i) {
-				terms.add(visitExpression(exprs.get(i),data));
-			}
-			//
-			if(allUnitExpressions(exprs)) {
-				// Easier as direct mapping between expressions.
-				return new JavaScriptFile.ArrayInitialiser(terms);
-			} else {
-				throw new UnsupportedOperationException();
-			}
-		}
+	public Term constructWhile(Stmt.While stmt, Term condition, List<Term> invariant, Term body) {
+		// FIXME: support loop invariant
+		return new While(condition,(Block) body);
 	}
 
 	// ====================================================================================
-	// Expressions
+	// LVal Constructors
 	// ====================================================================================
 
 	@Override
-	public Term visitArrayAccess(Expr.ArrayAccess expr, Object data) {
-		Term src = visitExpression(expr.getFirstOperand(),data);
-		Term index = visitExpression(expr.getSecondOperand(),data);
-		Term term = new JavaScriptFile.ArrayAccess(src, index);
-		if(expr.isMove()) {
+	public Term constructArrayAccessLVal(Expr.ArrayAccess expr, Term source, Term index) {
+		return new ArrayAccess(source,index);
+	}
+
+	@Override
+	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
+		return new PropertyAccess(operand,"$ref");
+	}
+
+	@Override
+	public Term constructRecordAccessLVal(Expr.RecordAccess expr, Term source) {
+		return new JavaScriptFile.PropertyAccess(source, expr.getField().toString());
+	}
+
+	@Override
+	public Term constructVariableAccessLVal(Expr.VariableAccess expr) {
+		String name = expr.getVariableDeclaration().getName().toString();
+		return new JavaScriptFile.VariableAccess(name);
+	}
+
+	// ====================================================================================
+	// Expression Constructors
+	// ====================================================================================
+
+	@Override
+	public Term constructArrayAccess(Expr.ArrayAccess expr, Term source, Term index) {
+		Term term = new ArrayAccess(source,index);
+		if(expr.isMove() || isCopyable(expr.getType())) {
 			return term;
 		} else {
 			return WY_COPY(term);
@@ -382,74 +370,58 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	}
 
 	@Override
-	public Term visitArrayGenerator(Expr.ArrayGenerator expr, Object data) {
-		Term value = visitExpression(expr.getFirstOperand(),data);
-		Term length = visitExpression(expr.getSecondOperand(),data);
+	public Term constructArrayLength(Expr.ArrayLength expr, Term source) {
+		return new ArrayLength(source);
+	}
+
+	@Override
+	public Term constructArrayGenerator(Expr.ArrayGenerator expr, Term value, Term length) {
 		return WY_ARRAY(value,length);
 	}
 
 	@Override
-	public Term visitArrayInitialiser(Expr.ArrayInitialiser expr, Object data) {
-		Term[] terms = translateOperands(expr.getOperands());
-		return new JavaScriptFile.ArrayInitialiser(terms);
+	public Term constructArrayInitialiser(Expr.ArrayInitialiser expr, List<Term> values) {
+		return new ArrayInitialiser(values);
 	}
 
 	@Override
-	public Term visitArrayLength(Expr.ArrayLength expr, Object data) {
-		Term src = visitExpression(expr.getOperand(),data);
-		return new JavaScriptFile.ArrayLength(src);
+	public Term constructBitwiseComplement(Expr.BitwiseComplement expr, Term operand) {
+		return MASK_FF(new Operator(Kind.BITWISEINVERT, operand));
 	}
 
 	@Override
-	public Term visitArrayRange(Expr.ArrayRange expr, Object data) {
-		throw new UnsupportedOperationException();
+	public Term constructBitwiseAnd(Expr.BitwiseAnd expr, List<Term> operands) {
+		return new JavaScriptFile.Operator(Kind.BITWISEAND, operands);
 	}
 
 	@Override
-	public Term visitBitwiseComplement(Expr.BitwiseComplement expr, Object data) {
-		Term src = visitExpression(expr.getOperand(),data);
-		return MASK_FF(new Operator(Kind.BITWISEINVERT,src));
+	public Term constructBitwiseOr(Expr.BitwiseOr expr, List<Term> operands) {
+		return new JavaScriptFile.Operator(Kind.BITWISEOR, operands);
 	}
 
 	@Override
-	public Term visitBitwiseAnd(Expr.BitwiseAnd expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructBitwiseXor(Expr.BitwiseXor expr, List<Term> operands) {
+		return new JavaScriptFile.Operator(Kind.BITWISEXOR, operands);
 	}
 
 	@Override
-	public Term visitBitwiseOr(Expr.BitwiseOr expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructBitwiseShiftLeft(Expr.BitwiseShiftLeft expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.LEFTSHIFT, lhs, rhs);
 	}
 
 	@Override
-	public Term visitBitwiseXor(Expr.BitwiseXor expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructBitwiseShiftRight(Expr.BitwiseShiftRight expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.RIGHTSHIFT, lhs, rhs);
 	}
 
 	@Override
-	public Term visitBitwiseShiftLeft(Expr.BitwiseShiftLeft expr, Object data) {
-		return MASK_FF(translateInfixOperator(expr));
+	public Term constructCast(Expr.Cast expr, Term operand) {
+		// TODO: implement this properly
+		return operand;
 	}
 
 	@Override
-	public Term visitBitwiseShiftRight(Expr.BitwiseShiftRight expr, Object data) {
-		return MASK_FF(translateInfixOperator(expr));
-	}
-
-	@Override
-	public Term visitCast(Expr.Cast expr, Object data) {
-		// FIXME: need to do much more here
-		return visitExpression(expr.getOperand(),data);
-	}
-
-	@Override
-	public Term visitDereference(Expr.Dereference expr, Object data) {
-		Term term = visitExpression(expr.getOperand(),data);
-		return WY_DEREF(term);
-	}
-
-	@Override
-	public Term visitConstant(Expr.Constant expr, Object data) {
+	public Term constructConstant(Expr.Constant expr) {
 		Value val = expr.getValue();
 		Object c;
 		switch (val.getOpcode()) {
@@ -478,147 +450,126 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	}
 
 	@Override
-	public Term visitEqual(Expr.Equal expr, Object data) {
+	public Term constructDereference(Expr.Dereference expr, Term operand) {
+		return WY_DEREF(operand);
+	}
+
+	@Override
+	public Term constructEqual(Expr.Equal expr, Term lhs, Term rhs) {
 		Type lhsT = expr.getFirstOperand().getType();
 		Type rhsT = expr.getSecondOperand().getType();
-		Term lhs = visitExpression(expr.getFirstOperand(),data);
-		Term rhs = visitExpression(expr.getSecondOperand(),data);
 		return translateEquality(true, lhs, lhsT, rhs, rhsT);
 	}
 
 	@Override
-	public Term visitNotEqual(Expr.NotEqual expr, Object data) {
-		Type lhsT = expr.getFirstOperand().getType();
-		Type rhsT = expr.getSecondOperand().getType();
-		Term lhs = visitExpression(expr.getFirstOperand(),data);
-		Term rhs = visitExpression(expr.getSecondOperand(),data);
-		return translateEquality(false, lhs, lhsT, rhs, rhsT);
-	}
-
-
-	@Override
-	public Term visitIntegerAddition(Expr.IntegerAddition expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerLessThan(Expr.IntegerLessThan expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.LT, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerDivision(Expr.IntegerDivision expr, Object data) {
-		return MATH_FLOOR(translateInfixOperator(expr));
+	public Term constructIntegerLessThanOrEqual(Expr.IntegerLessThanOrEqual expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.LTEQ, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerRemainder(Expr.IntegerRemainder expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerGreaterThan(Expr.IntegerGreaterThan expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.GT, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerGreaterThan(Expr.IntegerGreaterThan expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerGreaterThanOrEqual(Expr.IntegerGreaterThanOrEqual expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.GTEQ, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerGreaterThanOrEqual(Expr.IntegerGreaterThanOrEqual expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerNegation(Expr.IntegerNegation expr, Term operand) {
+		return new JavaScriptFile.Operator(Kind.NEG, operand);
 	}
 
 	@Override
-	public Term visitIntegerLessThan(Expr.IntegerLessThan expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerAddition(Expr.IntegerAddition expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.ADD, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerLessThanOrEqual(Expr.IntegerLessThanOrEqual expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerSubtraction(Expr.IntegerSubtraction expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.SUB, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerMultiplication(Expr.IntegerMultiplication expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerMultiplication(Expr.IntegerMultiplication expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.MUL, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIntegerNegation(Expr.IntegerNegation expr, Object data) {
-		Term t1 = visitExpression(expr.getOperand(),data);
-		return new JavaScriptFile.Operator(Kind.NEG, t1);
+	public Term constructIntegerDivision(Expr.IntegerDivision expr, Term lhs, Term rhs) {
+		// NOTE: must floor result as JavaScript numbers are floating point.
+		return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
 	}
 
 	@Override
-	public Term visitIntegerSubtraction(Expr.IntegerSubtraction expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructIntegerRemainder(Expr.IntegerRemainder expr, Term lhs, Term rhs) {
+		return new JavaScriptFile.Operator(Kind.REM, lhs, rhs);
 	}
 
 	@Override
-	public Term visitIs(Expr.Is expr, Object data) {
+	public Term constructIs(Expr.Is expr, Term operand) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Term visitLogicalAnd(Expr.LogicalAnd expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructLogicalAnd(Expr.LogicalAnd expr, List<Term> operands) {
+		return new JavaScriptFile.Operator(Kind.AND, operands);
 	}
 
 	@Override
-	public Term visitLogicalImplication(Expr.LogicalImplication expr, Object data) {
-		Term t1 = visitExpression(expr.getFirstOperand(), null);
-		Term t2 = visitExpression(expr.getSecondOperand(), null);
+	public Term constructLogicalImplication(Expr.LogicalImplication expr, Term lhs, Term rhs) {
 		// A ==> B equivalent to (!A) || B
-		return new JavaScriptFile.Operator(Kind.OR, new JavaScriptFile.Operator(Kind.NOT, t1), t2);
-	}
-
-	@Override public Term visitLogicalIff(Expr.LogicalIff expr, Object data) {
-		return translateInfixOperator(expr);
+		return new JavaScriptFile.Operator(Kind.OR, new JavaScriptFile.Operator(Kind.NOT, lhs), rhs);
 	}
 
 	@Override
-	public Term visitLogicalNot(Expr.LogicalNot expr, Object data) {
-		Term t1 = visitExpression(expr.getOperand(),data);
-		return new JavaScriptFile.Operator(Kind.NOT, t1);
+	public Term constructLogicalIff(Expr.LogicalIff expr, Term lhs, Term rhs) {
+		Type lhsT = expr.getFirstOperand().getType();
+		Type rhsT = expr.getSecondOperand().getType();
+		return translateEquality(true, lhs, lhsT, rhs, rhsT);
 	}
 
 	@Override
-	public Term visitLogicalOr(Expr.LogicalOr expr, Object data) {
-		return translateInfixOperator(expr);
+	public Term constructLogicalNot(Expr.LogicalNot expr, Term operand) {
+		return new JavaScriptFile.Operator(Kind.NOT, operand);
 	}
 
 	@Override
-	public Term visitExistentialQuantifier(Expr.ExistentialQuantifier expr, Object data) {
-		return translateQuantifier(expr);
+	public Term constructLogicalOr(Expr.LogicalOr expr, List<Term> operands) {
+		return new JavaScriptFile.Operator(Kind.OR, operands);
 	}
 
 	@Override
-	public Term visitUniversalQuantifier(Expr.UniversalQuantifier expr, Object data) {
-		return translateQuantifier(expr);
+	public Term constructExistentialQuantifier(Expr.ExistentialQuantifier expr, List<Pair<Term,Term>> ranges, Term body) {
+		return translateQuantifier(expr,ranges,body);
 	}
 
 	@Override
-	public Term visitInvoke(Expr.Invoke expr, Object data) {
+	public Term constructUniversalQuantifier(Expr.UniversalQuantifier expr, List<Pair<Term,Term>> ranges, Term body) {
+		return translateQuantifier(expr,ranges,body);
+	}
+
+	@Override
+	public Term constructInvoke(Expr.Invoke expr, List<Term> arguments) {
 		// Determine the qualified name
 		String name = toMangledName(expr.getLink().getTarget());
-		// Translate arguments
-		Term[] arguments = translateOperands(expr.getOperands());
 		// Done
 		return new JavaScriptFile.Invoke(null, name, arguments);
 	}
 
 	@Override
-	public Term visitIndirectInvoke(Expr.IndirectInvoke expr, Object data) {
-		Term src = visitExpression(expr.getSource(),data);
-		Term[] args = translateOperands(expr.getArguments());
-		return new IndirectInvoke(src,args);
+	public Term constructIndirectInvoke(Expr.IndirectInvoke expr, Term source, List<Term> arguments) {
+		return new JavaScriptFile.IndirectInvoke(source, arguments);
 	}
 
 	@Override
-	public Term visitLambda(Decl.Lambda expr, Object data) {
-		List<String> parameters = toParameterNames(expr.getParameters());
-		// Construct body
-		Term term = visitExpression(expr.getBody(),data);
-		Term body = new Return(term);
-		//
-		return new Lambda(parameters,new Block(body));
-	}
-
-	@Override
-	public Term visitLambdaAccess(Expr.LambdaAccess expr, Object data) {
+	public Term constructLambdaAccess(Expr.LambdaAccess expr) {
 		ArrayList<String> parameters = new ArrayList<>();
 		ArrayList<Term> arguments = new ArrayList<>();
 		// NOTE: the reason we use a function declaration here (i.e. instead of
@@ -640,16 +591,21 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	}
 
 	@Override
-	public Term visitNew(Expr.New expr, Object data) {
-		Term term = visitExpression(expr.getOperand(), data);
-		return new Operator(Kind.NEW,WY_REF(term));
+	public Term constructNew(Expr.New expr, Term operand) {
+		return new Operator(Kind.NEW,WY_REF(operand));
 	}
 
 	@Override
-	public Term visitRecordAccess(Expr.RecordAccess expr, Object data) {
-		Term term = visitExpression(expr.getOperand(), data);
-		term = new JavaScriptFile.PropertyAccess(term, expr.getField().toString());
-		if(expr.isMove()) {
+	public Term constructNotEqual(Expr.NotEqual expr, Term lhs, Term rhs) {
+		Type lhsT = expr.getFirstOperand().getType();
+		Type rhsT = expr.getSecondOperand().getType();
+		return translateEquality(false, lhs, lhsT, rhs, rhsT);
+	}
+
+	@Override
+	public Term constructRecordAccess(Expr.RecordAccess expr, Term source) {
+		Term term = new JavaScriptFile.PropertyAccess(source, expr.getField().toString());
+		if(expr.isMove() || isCopyable(expr.getType())) {
 			return term;
 		} else {
 			return WY_COPY(term);
@@ -657,33 +613,34 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	}
 
 	@Override
-	public Term visitRecordInitialiser(Expr.RecordInitialiser expr, Object data) {
-		// Translate intialiser operands
-		Term[] terms = translateOperands(expr.getOperands());
+	public Term constructRecordInitialiser(Expr.RecordInitialiser expr, List<Term> operands) {
 		// Extract field names
 		Tuple<Identifier> names = expr.getFields();
 		ArrayList<Pair<String, Term>> fields = new ArrayList<>();
 		//
-		for (int i = 0; i != terms.length; ++i) {
-			fields.add(new Pair<>(names.get(i).toString(), terms[i]));
+		for (int i = 0; i != operands.size(); ++i) {
+			fields.add(new Pair<>(names.get(i).toString(), operands.get(i)));
 		}
-		return new JavaScriptFile.ObjectLiteral(fields);
+		// NOTE: Invoking Wy.record is necessary to set the prototype on the generated
+		// object.
+		return WY_RECORD(new JavaScriptFile.ObjectLiteral(fields));
 	}
 
 	@Override
-	public Term visitRecordUpdate(Expr.RecordUpdate expr, Object data) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public Term visitStaticVariableAccess(Expr.StaticVariableAccess expr, Object data) {
-		// FIXME: should copy data?
+	public Term constructStaticVariableAccess(Expr.StaticVariableAccess expr) {
 		String name = toMangledName(expr.getLink().getTarget());
-		return new JavaScriptFile.VariableAccess(name);
+		VariableAccess var = new JavaScriptFile.VariableAccess(name);
+		// Check whether variable move is sufficient
+		// FIXME: should support isMove?
+		if(isCopyable(expr.getType())) {
+			return var;
+		} else {
+			return WY_COPY(var);
+		}
 	}
 
 	@Override
-	public Term visitVariableAccess(Expr.VariableAccess expr, Object data) {
+	public Term constructVariableAccess(Expr.VariableAccess expr) {
 		String name = expr.getVariableDeclaration().getName().toString();
 		VariableAccess var = new JavaScriptFile.VariableAccess(name);
 		// Check whether variable move is sufficient
@@ -699,73 +656,26 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	// ====================================================================================
 
 	/**
-	 * Translate a bunch of lvals correctly. The key challenge when translating an
-	 * LVal is that we cannot clone the value.
+	 * Implementing equality is tricky because of the disparity between JavaScript
+	 * types and Whiley types. For example, equality of arrays is not reference
+	 * equality in Whiley (as it is in JavaScript).
 	 *
-	 * @param lvals
+	 * @param expr
 	 * @return
 	 */
-	public Term[] translateLVals(Tuple<LVal> lvals) {
-		Term[] terms = new Term[lvals.size()];
-		for (int i = 0; i != terms.length; ++i) {
-			terms[i] = translateLVal(lvals.get(i));
+	private Term translateEquality(boolean positive, Term lhs, Type lhsT, Term rhs, Type rhsT) {
+		//
+		if (isCopyable(lhsT) && isCopyable(rhsT)) {
+			return new JavaScriptFile.Operator(positive ? Kind.EQ : Kind.NEQ, lhs, rhs);
+		} else {
+			Term t3 = WY_EQUALS(lhs, rhs);
+			if (!positive) {
+				t3 = new JavaScriptFile.Operator(Kind.NOT, t3);
+			}
+			return t3;
 		}
-		return terms;
 	}
 
-	/**
-	 * Translate an LVal. For example, the following Whiley code:
-	 *
-	 * <pre>
-	 * x[0] = 2
-	 * r.f = 3
-	 * </pre>
-	 *
-	 * is translated into the following JavaScript code:
-	 *
-	 * <pre>
-	 * x[0] = 2;
-	 * r.f = 3;
-	 * </pre>
-	 *
-	 * This seems straightforward, but there are some subtleties regarding the
-	 * semantics of Whiley. A key invariant maintained by the system is that each
-	 * variable owns the items it refers to. Thus, we can avoid cloning at this
-	 * point to preserve Whiley's semantics because we know the cloning has already
-	 * occurred somewhere upstream (where necessary).
-	 *
-	 * @param lval
-	 * @return
-	 */
-	public Term translateLVal(LVal lval) {
-		switch (lval.getOpcode()) {
-		case EXPR_arrayaccess:
-		case EXPR_arrayborrow: {
-			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
-			Term src = translateLVal((WyilFile.LVal) e.getFirstOperand());
-			Term index = visitExpression(e.getSecondOperand(),null);
-			return new ArrayAccess(src,index);
-		}
-		case EXPR_dereference: {
-			Expr.Dereference e = (Expr.Dereference) lval;
-			Term src = translateLVal((WyilFile.LVal) e.getOperand());
-			return new PropertyAccess(src,"$ref");
-		}
-		case EXPR_recordaccess:
-		case EXPR_recordborrow: {
-			Expr.RecordAccess e = (Expr.RecordAccess) lval;
-			Term src = translateLVal((WyilFile.LVal) e.getOperand());
-			return new PropertyAccess(src,e.getField().toString());
-		}
-		case EXPR_variablecopy:
-		case EXPR_variablemove: {
-			Expr.VariableAccess e = (Expr.VariableAccess) lval;
-			return new VariableAccess(e.getVariableDeclaration().getName().toString());
-		}
-		default:
-			throw new IllegalArgumentException("invalid lval: " + lval);
-		}
-	}
 
 	/**
 	 * This is the easy case for translating switches. We translate a While switch
@@ -801,32 +711,27 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	 * @param stmt
 	 * @return
 	 */
-	private Term translateSwitchAsSwitch(Stmt.Switch stmt) {
-		// Easy case --- direct translation possible.
-		Term condition = visitExpression(stmt.getCondition(), null);
+	private Term translateSwitchAsSwitch(Stmt.Switch stmt, Term condition, List<Pair<List<Term>,Term>> cases) {
 		// Translate each case one-by-one.
 		Tuple<Stmt.Case> wycases = stmt.getCases();
 		ArrayList<Switch.Case> jscases = new ArrayList<>();
 		for (int i = 0; i != wycases.size(); ++i) {
 			// NOTE: one case in Whiley can correspond to multiple cases in JavaScript.
 			// That's because Whiley allows multiple values per case.
-			Stmt.Case wycase = wycases.get(i);
-			// Translate the operands
-			Term[] values = translateOperands(wycase.getConditions());
-			// Translate case body
-			Block body = visitBlock(wycase.getBlock(), null);
+			List<Term> values = cases.get(i).first();
+			Block body = (Block) cases.get(i).second();
 			// Add terminal break since Whiley doesn't use them
 			body.getTerms().add(new Break());
 			// Check for default case
-			if (values.length == 0) {
+			if (values.size() == 0) {
 				jscases.add(new Switch.Case(null, body));
 			} else {
 				// Handle all fall-thru cases first.
-				for (int j = 1; j != values.length; ++j) {
-					jscases.add(new Switch.Case(values[j - 1], null));
+				for (int j = 1; j != values.size(); ++j) {
+					jscases.add(new Switch.Case(values.get(j - 1), null));
 				}
 				// Handle content case finally
-				jscases.add(new Switch.Case(values[values.length - 1], body));
+				jscases.add(new Switch.Case(values.get(values.size() - 1), body));
 			}
 		}
 		return new Switch(condition, jscases);
@@ -863,9 +768,8 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	 * @param stmt
 	 * @return
 	 */
-	private Term translateSwitchAsIfElse(Stmt.Switch stmt) {
+	private Term translateSwitchAsIfElse(Stmt.Switch stmt, Term condition, List<Pair<List<Term>,Term>> cases) {
 		Type conditionT = stmt.getCondition().getType();
-		Term condition = visitExpression(stmt.getCondition(),null);
 		VariableAccess tmp = new VariableAccess("$" + temporaryIndex++);
 		// Create temporary variable declaration
 		VariableDeclaration decl = new VariableDeclaration(tmp.getName(),condition);
@@ -876,29 +780,29 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 			// NOTE: one case in Whiley can correspond to multiple cases in JavaScript.
 			// That's because Whiley allows multiple values per case.
 			Stmt.Case wycase = wycases.get(i);
+			Pair<List<Term>,Term> jscase = cases.get(i);
 			// Translate the operands
 			Tuple<Expr> values = wycase.getConditions();
-			// Translate case body
-			Block body = visitBlock(wycase.getBlock(), null);
 			// Check for default case
 			if (values.size() == 0) {
-				jscases.add(new IfElse.Case(null, body));
+				jscases.add(new IfElse.Case(null, (Block) jscase.second()));
 			} else {
 				Term[] eqs = new Term[values.size()];
+				List<Term> terms = jscase.first();
 				// Construct disjunction of cases
 				for (int j = 0; j != eqs.length; ++j) {
 					Expr value = values.get(j);
-					Term term = visitExpression(value, null);
-					eqs[j] = translateEquality(true, tmp, conditionT, term, value.getType());
+					eqs[j] = translateEquality(true, tmp, conditionT, terms.get(j), value.getType());
 				}
 				Term c = eqs.length == 1 ? eqs[0] : new Operator(Kind.OR, eqs);
 				// Handle content case finally
-				jscases.add(new IfElse.Case(c, body));
+				jscases.add(new IfElse.Case(c, (Block) jscase.second()));
 			}
 		}
 		//
 		return new Block(decl, new IfElse(jscases));
 	}
+
 
 	/**
 	 * Translate a quantifier expression into JavaScript. This is done use a loop
@@ -924,10 +828,10 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 	 * @param expr
 	 * @return
 	 */
-	private Term translateQuantifier(Expr.Quantifier expr) {
+	private Term translateQuantifier(Expr.Quantifier expr, List<Pair<Term,Term>> ranges, Term condition) {
 		boolean isUniversal = expr instanceof Expr.UniversalQuantifier;
 		// Translate quantifier into loop nest
-		Term body = translateQuantifier(expr,0);
+		Term body = translateQuantifier(0,expr,ranges,condition);
 		// Construct final return statement
 		Term ret = new Return(new Constant(isUniversal));
 		// Construct lambda itself
@@ -936,156 +840,29 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 		return new JavaScriptFile.IndirectInvoke(lambda);
 	}
 
-	private Term translateQuantifier(Expr.Quantifier expr, int index) {
+	private Term translateQuantifier(int index, Expr.Quantifier expr, List<Pair<Term, Term>> ranges, Term condition) {
 		boolean isUniversal = expr instanceof Expr.UniversalQuantifier;
 		Tuple<Decl.Variable> parameters = expr.getParameters();
 		// Generate nest
-		if(parameters.size() == index) {
+		if (parameters.size() == index) {
 			// Base case
-			Term condition = visitExpression(expr.getOperand(),null);
 			Term body = new Return(new Constant(!isUniversal));
-			if(isUniversal) {
+			if (isUniversal) {
 				condition = new Operator(Kind.NOT, condition);
 			}
 			return new IfElse(new IfElse.Case(condition, new Block(body)));
 		} else {
 			// Recursive case
 			Decl.Variable v = parameters.get(index);
-			// Quantifiers always use array ranges at this time.
-			Expr.ArrayRange r = (Expr.ArrayRange) v.getInitialiser();
-			// Translate start and end
-			Term start = visitExpression(r.getFirstOperand(),null);
-			Term end = visitExpression(r.getSecondOperand(),null);
+			Pair<Term, Term> range = ranges.get(index);
 			//
 			VariableAccess var = new VariableAccess(v.getName().toString());
-			VariableDeclaration decl = new VariableDeclaration(var.getName(),start);
-			Term condition = new Operator(Kind.LT,var,end);
-			Term increment = new Assignment(var, new Operator(Kind.ADD,var,new Constant(1)));
-			Term body = translateQuantifier(expr,index+1);
+			VariableDeclaration decl = new VariableDeclaration(var.getName(), range.first());
+			Term test = new Operator(Kind.LT, var, range.second());
+			Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
+			Term body = translateQuantifier(index + 1, expr, ranges, condition);
 			//
-			return new JavaScriptFile.For(decl, condition, increment, new Block(body));
-		}
-	}
-
-	/**
-	 * Implementing equality is tricky because of the disparity between JavaScript
-	 * types and Whiley types. For example, equality of arrays is not reference
-	 * equality in Whiley (as it is in JavaScript).
-	 *
-	 * @param expr
-	 * @return
-	 */
-	private Term translateEquality(boolean positive, Term lhs, Type lhsT, Term rhs, Type rhsT) {
-		//
-		if (isCopyable(lhsT) && isCopyable(rhsT)) {
-			return new JavaScriptFile.Operator(positive ? Kind.EQ : Kind.NEQ, lhs, rhs);
-		} else {
-			Term t3 = WY_EQUALS(lhs, rhs);
-			if (!positive) {
-				t3 = new JavaScriptFile.Operator(Kind.NOT, t3);
-			}
-			return t3;
-		}
-	}
-
-	/**
-	 * Translate an arbitrary binary operator, assuming that it is safe to do so.
-	 *
-	 * @param expr
-	 * @param context
-	 * @return
-	 */
-	private Term translateInfixOperator(Expr.BinaryOperator expr) {
-		Term t1 = visitExpression(expr.getFirstOperand(), null);
-		Term t2 = visitExpression(expr.getSecondOperand(), null);
-		return new JavaScriptFile.Operator(opcode(expr.getOpcode()), t1, t2);
-	}
-
-	/**
-	 * Translate an arbitrary n-ary operator, assuming that it is safe to do so.
-	 *
-	 * @param expr
-	 * @return
-	 */
-	private Term translateInfixOperator(Expr.NaryOperator expr) {
-		Term[] operands = translateOperands(expr.getOperands());
-		return new JavaScriptFile.Operator(opcode(expr.getOpcode()), operands);
-	}
-
-	/**
-	 * Translate zero or more Whiley expressions into the corresponding JavaScript
-	 * terms.
-	 *
-	 * @param operands
-	 * @return
-	 */
-	private Term[] translateOperands(Tuple<? extends Expr> operands) {
-		Term[] terms = new Term[operands.size()];
-		for(int i=0;i!=terms.length;++i) {
-			terms[i] = visitExpression(operands.get(i),null);
-		}
-		return terms;
-	}
-
-	/**
-	 * Translate between a While operator and a JavaScript operator. Observe that
-	 * this is not always safe to do, and care must be taken. For example, addition
-	 * in Whiley is not equivalent to addition in JavaScript (i.e. because the
-	 * former is unbounded). Likewise, equality is not always equivalent (i.e.
-	 * because equality of compound types is handled differently).
-	 *
-	 * @param k
-	 * @return
-	 */
-	private static Kind opcode(int k) {
-		switch(k) {
-		case EXPR_integernegation:
-			return Kind.NEG;
-		case EXPR_logicalnot:
-			return Kind.NOT;
-		case EXPR_bitwisenot:
-			return Kind.BITWISEINVERT;
-		// Binary
-		case EXPR_integeraddition:
-			return Kind.ADD;
-		case EXPR_integersubtraction:
-			return Kind.SUB;
-		case EXPR_integermultiplication:
-			return Kind.MUL;
-		case EXPR_integerdivision:
-			return Kind.DIV;
-		case EXPR_integerremainder:
-			return Kind.REM;
-		case EXPR_equal:
-			return Kind.EQ;
-		case EXPR_notequal:
-			return Kind.NEQ;
-		case EXPR_integerlessthan:
-			return Kind.LT;
-		case EXPR_integerlessequal:
-			return Kind.LTEQ;
-		case EXPR_integergreaterthan:
-			return Kind.GT;
-		case EXPR_integergreaterequal:
-			return Kind.GTEQ;
-		case EXPR_logicaland:
-			return Kind.AND;
-		case EXPR_logicalor:
-			return Kind.OR;
-		case EXPR_logicaliff:
-			return Kind.EQ;
-		case EXPR_bitwiseor:
-			return Kind.BITWISEOR;
-		case EXPR_bitwisexor:
-			return Kind.BITWISEXOR;
-		case EXPR_bitwiseand:
-			return Kind.BITWISEAND;
-		case EXPR_bitwiseshl:
-			return Kind.LEFTSHIFT;
-		case EXPR_bitwiseshr:
-			return Kind.RIGHTSHIFT;
-		default:
-			throw new IllegalArgumentException("unknown operator kind : " + k);
+			return new JavaScriptFile.For(decl, test, increment, new Block(body));
 		}
 	}
 
@@ -1404,6 +1181,10 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "equals", t1, t2);
 	}
 
+	private static Term WY_RECORD(Term t1) {
+		return new JavaScriptFile.Invoke(WY_RUNTIME, "record", t1);
+	}
+
 	private static Term WY_REF(Term t1) {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "Ref", t1);
 	}
@@ -1425,4 +1206,5 @@ public class JavaScriptCompiler extends AbstractFunction<Object,Term> {
 		Term FF = new Constant(0xFF);
 		return new Operator(Operator.Kind.BITWISEAND,t1,FF);
 	}
+
 }

@@ -73,7 +73,9 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		// an AST. This would enable, for example, better support for different
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
-		new JavaScriptCompiler(target).visitModule(source, null);
+
+		//new JavaScriptCompiler(target).visitModule(source, null);
+		new NewJavaScriptCompiler(target).visitModule(source);
 		// How can this fail?
 		return true;
 	}

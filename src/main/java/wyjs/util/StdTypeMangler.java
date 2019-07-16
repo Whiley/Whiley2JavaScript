@@ -27,6 +27,7 @@ import static wyil.lang.WyilFile.TYPE_record;
 import static wyil.lang.WyilFile.TYPE_reference;
 import static wyil.lang.WyilFile.TYPE_staticreference;
 import static wyil.lang.WyilFile.TYPE_union;
+import static wyil.lang.WyilFile.TYPE_variable;
 
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Name;
@@ -162,6 +163,9 @@ public class StdTypeMangler implements TypeMangler {
 		case TYPE_union:
 			writeTypeMangleUnion((Type.Union) t, lifetimes, mangle);
 			break;
+		case TYPE_variable:
+			writeTypeMangleVariable((Type.Variable) t, lifetimes, mangle);
+			break;
 		default:
 			throw new IllegalArgumentException("unknown type encountered: " + t);
 		}
@@ -177,7 +181,7 @@ public class StdTypeMangler implements TypeMangler {
 		if (t.hasLifetime()) {
 			String lifetime = t.getLifetime().get();
 			if (lifetime.equals("*")) {
-				mangle.append('0');
+				mangle.append('_');
 			} else {
 				int index = find(t.getLifetime(),lifetimes);
 				mangle.append(index);
@@ -232,6 +236,10 @@ public class StdTypeMangler implements TypeMangler {
 		}
 	}
 
+	private void writeTypeMangleVariable(Type.Variable t, Tuple<Identifier> lifetimes, StringBuilder mangle) {
+		String name = t.getOperand().toString();
+		mangle.append("v" + name.length() + name);
+	}
 
 	private int find(Identifier lifetime, Tuple<Identifier> lifetimes) {
 		for (int i = 0; i != lifetimes.size(); ++i) {
