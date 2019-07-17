@@ -110,12 +110,18 @@ import wyjs.core.TypeMangler;
 public class StdTypeMangler implements TypeMangler {
 
 	@Override
+	public String getMangle(Tuple<Identifier> lifetimes, Type... types) {
+		StringBuilder mangle = new StringBuilder();
+		for (int i = 0; i != types.length; ++i) {
+			writeTypeMangle(types[i], lifetimes, mangle);
+		}
+		return mangle.toString();
+	}
+
+	@Override
 	public String getMangle(Tuple<Type> types, Tuple<Identifier> lifetimes) {
 		StringBuilder mangle = new StringBuilder();
 		for (int i = 0; i != types.size(); ++i) {
-			if (i == 0) {
-				mangle.append("_");
-			}
 			writeTypeMangle(types.get(i), lifetimes, mangle);
 		}
 		return mangle.toString();
@@ -167,7 +173,7 @@ public class StdTypeMangler implements TypeMangler {
 			writeTypeMangleVariable((Type.Variable) t, lifetimes, mangle);
 			break;
 		default:
-			throw new IllegalArgumentException("unknown type encountered: " + t);
+			throw new IllegalArgumentException("unknown type encountered: " + t.getClass().getName());
 		}
 	}
 

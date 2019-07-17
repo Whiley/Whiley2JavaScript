@@ -58,5 +58,13 @@ public interface TypeMangler {
 	 * @param types
 	 * @return
 	 */
+	public String getMangle(Tuple<Identifier> lifetimes, Type... types);
+
+	/**
+	 * Construct the mangle for a given sequence of zero or more types.
+	 *
+	 * @param types
+	 * @return
+	 */
 	public String getMangle(Tuple<Type> types, Tuple<Identifier> lifetimes);
 }

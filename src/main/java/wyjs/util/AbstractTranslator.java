@@ -110,10 +110,6 @@ import wyil.lang.WyilFile.Type;
 import wyil.type.subtyping.EmptinessTest.LifetimeRelation;
 import wyil.type.subtyping.SubtypeOperator;
 import wyil.type.util.AbstractTypeFilter;
-import wyjs.core.JavaScriptFile.ArrayAccess;
-import wyjs.core.JavaScriptFile.PropertyAccess;
-import wyjs.core.JavaScriptFile.Term;
-import wyjs.core.JavaScriptFile.VariableAccess;
 
 /**
  * A more complex visitor over all declarations, statements, expressions and
@@ -134,13 +130,6 @@ public abstract class AbstractTranslator<S> {
 
 	public AbstractTranslator(SubtypeOperator subtypeOperator) {
 		this.subtypeOperator = subtypeOperator;
-	}
-
-	public S visitModule(WyilFile wf) {
-		for (Decl decl : wf.getModule().getUnits()) {
-			visitDeclaration(decl);
-		}
-		return null;
 	}
 
 	public S visitDeclaration(Decl decl) {
@@ -172,7 +161,7 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitImport(Decl.Import decl) {
-		throw new UnsupportedOperationException();
+		return constructImport(decl);
 	}
 
 	public S visitLambda(Decl.Lambda decl, Environment environment) {
@@ -358,7 +347,10 @@ public abstract class AbstractTranslator<S> {
 	public S visitBlock(Stmt.Block stmt, Environment environment, EnclosingScope scope) {
 		ArrayList<S> stmts = new ArrayList<>();
 		for (int i = 0; i != stmt.size(); ++i) {
-			stmts.add(visitStatement(stmt.get(i), environment, scope));
+			S s = visitStatement(stmt.get(i), environment, scope);
+			if(s != null) {
+				stmts.add(s);
+			}
 		}
 		return constructBlock(stmt, stmts);
 	}
@@ -374,8 +366,8 @@ public abstract class AbstractTranslator<S> {
 	public S visitDebug(Stmt.Debug stmt, Environment environment, EnclosingScope scope) {
 		// FIXME: Should be Type.Int(0,255)
 		Type std_ascii = new Type.Array(Type.Int);
-		visitExpression(stmt.getOperand(), std_ascii, environment);
-		throw new UnsupportedOperationException();
+		S operand = visitExpression(stmt.getOperand(), std_ascii, environment);
+		return constructDebug(stmt,operand);
 	}
 
 	public S visitDoWhile(Stmt.DoWhile stmt, Environment environment, EnclosingScope scope) {
@@ -976,6 +968,8 @@ public abstract class AbstractTranslator<S> {
 	// Declaration Constructors
 	// ====================================================================================
 
+	public abstract S constructImport(Decl.Import d);
+
 	public abstract S constructType(Decl.Type d, List<S> invariant);
 
 	public abstract S constructVariable(Decl.Variable d, S initialiser);
@@ -1389,16 +1383,16 @@ public abstract class AbstractTranslator<S> {
 		}
 	}
 
-	private static final AbstractTypeFilter<Type.Int> TYPE_INT_FILTER = new AbstractTypeFilter<>(Type.Int.class,
+	public  static final AbstractTypeFilter<Type.Int> TYPE_INT_FILTER = new AbstractTypeFilter<>(Type.Int.class,
 			Type.Int);
 
-	private static final AbstractTypeFilter<Type.Array> TYPE_ARRAY_FILTER = new AbstractTypeFilter<>(Type.Array.class,
+	public static final AbstractTypeFilter<Type.Array> TYPE_ARRAY_FILTER = new AbstractTypeFilter<>(Type.Array.class,
 			new Type.Array(Type.Any));
 
-	private static final AbstractTypeFilter<Type.Record> TYPE_RECORD_FILTER = new AbstractTypeFilter<>(
+	public  static final AbstractTypeFilter<Type.Record> TYPE_RECORD_FILTER = new AbstractTypeFilter<>(
 			Type.Record.class, new Type.Record(true, new Tuple<>()));
 
-	private static final AbstractTypeFilter<Type.Reference> TYPE_REFERENCE_FILTER = new AbstractTypeFilter<>(
+	public  static final AbstractTypeFilter<Type.Reference> TYPE_REFERENCE_FILTER = new AbstractTypeFilter<>(
 			Type.Reference.class, new Type.Reference(Type.Any));
 
 	private static final Type.Array TYPE_ARRAY_INT = new Type.Array(Type.Int);

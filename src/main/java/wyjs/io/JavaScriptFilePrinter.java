@@ -375,6 +375,7 @@ public class JavaScriptFilePrinter {
 		case NEG:
 		case BITWISEINVERT:
 		case NEW:
+		case TYPEOF:
 			return true;
 		default:
 			return false;
@@ -389,8 +390,12 @@ public class JavaScriptFilePrinter {
 			return "-";
 		case EQ:
 			return "==";
+		case EEQ:
+			return "===";
 		case NEQ:
 			return "!=";
+		case NEEQ:
+			return "!==";
 		case LT:
 			return "<";
 		case LTEQ:
@@ -427,6 +432,8 @@ public class JavaScriptFilePrinter {
 			return ">>";
 		case NEW:
 			return "new ";
+		case TYPEOF:
+			return "typeof ";
 		default:
 			throw new IllegalArgumentException("unknown operator kind: " + kind);
 		}

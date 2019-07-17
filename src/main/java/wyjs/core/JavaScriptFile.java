@@ -23,6 +23,7 @@ import java.util.List;
 
 import wybs.lang.CompilationUnit;
 import wybs.util.AbstractCompilationUnit;
+import wycc.util.ArrayUtils;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyjs.io.JavaScriptFilePrinter;
@@ -79,6 +80,119 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 	public List<Declaration> getDeclarations() {
 		return declarations;
 	}
+
+	// =========================================================================
+	// Static Constructors
+	// =========================================================================
+
+	public static Term and(List<Term> operands) {
+		return and(operands.toArray(new Term[operands.size()]));
+	}
+
+	public static Term and(Term... operands) {
+		if(ArrayUtils.firstIndexOf(operands, Constant.FALSE) > 0) {
+			return Constant.FALSE;
+		} else {
+			operands = ArrayUtils.removeAll(operands, Constant.TRUE);
+			switch(operands.length) {
+			case 0:
+				return Constant.TRUE;
+			case 1:
+				return operands[0];
+			default:
+				return new Operator(Operator.Kind.AND, operands);
+			}
+		}
+	}
+
+	public static Term or(List<Term> operands) {
+		return or(operands.toArray(new Term[operands.size()]));
+	}
+
+	public static Term or(Term... operands) {
+		if(ArrayUtils.firstIndexOf(operands, Constant.TRUE) > 0) {
+			return Constant.TRUE;
+		} else {
+			operands = ArrayUtils.removeAll(operands, Constant.FALSE);
+			switch(operands.length) {
+			case 0:
+				return Constant.FALSE;
+			case 1:
+				return operands[0];
+			default:
+				return new Operator(Operator.Kind.OR, operands);
+			}
+		}
+	}
+
+	public static Term not(Term operand) {
+		if(operand instanceof Operator) {
+			Operator op = (Operator) operand;
+			Operator.Kind kind = op.getKind();
+			List<Term> operands = op.getOperands();
+			switch(kind) {
+			case EQ:
+			case NEQ:
+			case EEQ:
+			case NEEQ:
+			case LT:
+			case LTEQ:
+			case GT:
+			case GTEQ:
+				return new Operator(invert(kind),operands);
+			case NOT:
+				return op.getOperands().get(0);
+			case AND: {
+				Term[] ts = new Term[operands.size()];
+				for(int i=0;i!=ts.length;++i) {
+					ts[i] = not(operands.get(i));
+				}
+				return or(ts);
+			}
+
+			case OR: {
+				Term[] ts = new Term[operands.size()];
+				for(int i=0;i!=ts.length;++i) {
+					ts[i] = not(operands.get(i));
+				}
+				return and(ts);
+			}
+			}
+		} else if(operand == Constant.FALSE) {
+			return Constant.TRUE;
+		} else if(operand == Constant.TRUE) {
+			return Constant.FALSE;
+		}
+		return new Operator(Operator.Kind.NOT, operand);
+	}
+
+	private static Operator.Kind invert(Operator.Kind kind) {
+		switch(kind) {
+		case EQ:
+			return Operator.Kind.NEQ;
+		case NEQ:
+			return Operator.Kind.EQ;
+		case EEQ:
+			return Operator.Kind.NEEQ;
+		case NEEQ:
+			return Operator.Kind.EEQ;
+		case LT:
+			return Operator.Kind.GTEQ;
+		case LTEQ:
+			return Operator.Kind.GT;
+		case GT:
+			return Operator.Kind.LTEQ;
+		case GTEQ:
+			return Operator.Kind.LT;
+		default:
+			throw new IllegalArgumentException("cannot invert operator kind: " + kind);
+		}
+	}
+
+	// =========================================================================
+	// Nodes
+	// =========================================================================
+
 
 	/**
 	 * A declaration (e.g. class or method) within a Java file
@@ -269,12 +383,8 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 		public Constant(double v) {
 			this.value = v;
 		}
-		private Constant(Object value) {
-			if (value == null) {
-				this.value = value;
-			} else {
-				throw new IllegalArgumentException("invalid constant value: " + value);
-			}
+		public Constant(String v) {
+			this.value = v;
 		}
 
 		public Object getValue() {
@@ -436,8 +546,8 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 
 	public static class Operator implements Term {
 		public enum Kind {
-			NOT, NEG, EQ, NEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND,
-			BITWISEINVERT, LEFTSHIFT, RIGHTSHIFT, NEW
+			NOT, NEG, EQ, EEQ, NEQ, NEEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND,
+			BITWISEINVERT, LEFTSHIFT, RIGHTSHIFT, NEW, TYPEOF
 		}
 		private Kind kind;
 		private List<Term> operands;
