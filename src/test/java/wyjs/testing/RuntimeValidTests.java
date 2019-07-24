@@ -123,27 +123,36 @@ public class RuntimeValidTests {
 		IGNORED.put("TypeEquals_Valid_33", "#837");
 		IGNORED.put("TypeEquals_Valid_35", "#837");
 		IGNORED.put("Coercion_Valid_10", "#837");
+		// Problems checking type invariants on lambdas
+		IGNORED.put("Lambda_Valid_11", "???");
+		IGNORED.put("Lambda_Valid_7", "???");
+		IGNORED.put("Lifetime_Lambda_Valid_1", "???");
+		IGNORED.put("Lifetime_Lambda_Valid_3", "???");
+		IGNORED.put("Lifetime_Lambda_Valid_4", "???");
 
 		// ===================================================
 		// WyJS problems
 		// ===================================================
 
-		IGNORED.put("Assign_Valid_3", "??");
-		IGNORED.put("Assign_Valid_4", "??");
-		IGNORED.put("Assign_Valid_5", "??");
-		IGNORED.put("Complex_Valid_10", "??");
-		IGNORED.put("Complex_Valid_11", "??");
-		IGNORED.put("ConstrainedReference_Valid_1", "??");
+		// Bug with ConcreteTypeExtractor
+		IGNORED.put("DoWhile_Valid_4", "WyC#928");
+		// Unbound arithmetic
+		IGNORED.put("IntOp_Valid_1", "#15");
+		// Replace Type Mangle with Interface
 		IGNORED.put("FunctionRef_Valid_13", "#9");
-		IGNORED.put("Switch_Valid_12", "#12");
-		IGNORED.put("Switch_Valid_4", "???");
-		// Following related to runtime assertion checking
-		IGNORED.put("Cast_Valid_5", "??");
-		IGNORED.put("OpenRecord_Valid_9", "??");
-		IGNORED.put("Return_Valid_1", "??");
-		IGNORED.put("Subtype_Valid_5", "??");
-		IGNORED.put("UnionType_Valid_2", "??");
-		IGNORED.put("While_Valid_42", "??");
+		// Type Tests against Open Records
+		IGNORED.put("OpenRecord_Valid_4", "#30");
+		IGNORED.put("OpenRecord_Valid_5", "#30");
+		IGNORED.put("OpenRecord_Valid_9", "#30");
+		// Static Initialiser Order
+		IGNORED.put("StaticVar_Valid_7", "#29");
+		IGNORED.put("StaticVar_Valid_8", "#29");
+		// Strange Problem with Type Checking
+		IGNORED.put("Template_Valid_3", "#31");
+		IGNORED.put("Template_Valid_16", "#31");
+		IGNORED.put("Template_Valid_17", "#31");
+		// Problem with Cloning
+		IGNORED.put("Template_Valid_29", "#32");
 	}
 
 	/**
@@ -223,7 +232,7 @@ public class RuntimeValidTests {
 			});
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
-			jsTarget.write(new JavaScriptFile(new byte[0]));
+			jsTarget.write(new JavaScriptFile(jsTarget));
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override
