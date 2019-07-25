@@ -42,10 +42,9 @@ import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
 import wyil.lang.WyilFile.Type;
-import wyil.type.subtyping.EmptinessTest.LifetimeRelation;
-import wyil.type.subtyping.StrictTypeEmptinessTest;
-import wyil.type.subtyping.SubtypeOperator;
 import wyil.util.AbstractVisitor;
+import wyil.util.SubtypeOperator;
+import wyil.util.SubtypeOperator.LifetimeRelation;
 import wyjs.core.JavaScriptFile;
 import wyjs.core.JavaScriptFile.ArrayAccess;
 import wyjs.core.JavaScriptFile.ArrayInitialiser;
@@ -74,7 +73,6 @@ import wyjs.core.JavaScriptFile.While;
 import wyjs.core.TypeMangler;
 import wyjs.util.AbstractTranslator;
 import wyjs.util.StdTypeMangler;
-import wyjs.util.StrictIncompleteSubtypeOperator;
 
 
 public class JavaScriptCompiler extends AbstractTranslator<Term> {
@@ -87,9 +85,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Provides a standard mechanism for checking whether two Whiley types are
 	 * subtypes or not.
 	 */
-	private final static SubtypeOperator subtyping = new SubtypeOperator(new StrictTypeEmptinessTest());
+	private final static SubtypeOperator subtyping = new SubtypeOperator.Relaxed();
 
-	private final static StrictIncompleteSubtypeOperator strictSubtyping = new StrictIncompleteSubtypeOperator();
+	private final static SubtypeOperator strictSubtyping = new SubtypeOperator.Strict();
 
 	/**
 	 * Represents the JavaScriptFile which is being written to.
@@ -1145,7 +1143,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(TypeOf(operand,"object"));
 		}
 		// Eliminate all non-records
-		Type.Record[] candidates = TYPE_RECORD_FILTER.apply(type);
+		List<Type.Record> candidates = filter(Type.Record.class,type);
 		// Is that enough?
 		if(areStrictSubtypes(test,candidates)) {
 			// YES!
@@ -1275,7 +1273,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(ArrayConstructor(operand));
 		}
 		// Have now eliminated all non-array types. This maybe enough.
-		Type.Array[] candidates = TYPE_ARRAY_FILTER.apply(type);
+		List<Type.Array> candidates = filter(Type.Array.class,type);
 		// Check whether can select purely on basis of being array
 		if(areStrictSubtypes(test,candidates)) {
 			// YES
@@ -1757,7 +1755,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types The subtype(s) being checked.
 	 * @return
 	 */
-	private boolean areStrictSubtypes(Type type, Type... types) {
+	private boolean areStrictSubtypes(Type type, List<? extends Type> types) {
 		for(Type t : types) {
 			if (t != null && !strictSubtyping.isSubtype(type, t, EMPTY_LIFETIMES)) {
 				return false;
@@ -1905,12 +1903,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param size
 	 * @return
 	 */
-	private static boolean filteredByFieldCount(Type.Record[] records, int size) {
+	private static boolean filteredByFieldCount(List<Type.Record> records, int size) {
 		boolean r = false;
-		for (int i = 0; i != records.length; ++i) {
-			Type.Record record = records[i];
+		for (int i = 0; i != records.size(); ++i) {
+			Type.Record record = records.get(i);
 			if (record.getFields().size() != size) {
-				records[i] = null;
+				records.set(i, null);
 				r = true;
 			}
 		}
@@ -1923,27 +1921,27 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types
 	 * @return
 	 */
-	private static Type.Array toArrayType(Type.Array... types) {
-		if(types.length == 0) {
+	private static Type.Array toArrayType(List<Type.Array> types) {
+		if(types.size() == 0) {
 			throw new IllegalArgumentException();
-		} else if(types.length == 1) {
-			return types[0];
+		} else if(types.size() == 1) {
+			return types.get(0);
 		} else {
-			Type[] elements = new Type[types.length];
-			for(int i=0;i!=types.length;++i) {
-				elements[i] = types[i].getElement();
+			Type[] elements = new Type[types.size()];
+			for(int i=0;i!=elements.length;++i) {
+				elements[i] = types.get(i).getElement();
 			}
 			return new Type.Array(new Type.Union(elements));
 		}
 	}
 
-	private static Type toFieldType(Identifier field, Type.Record... types) {
-		if(types.length == 0) {
+	private static Type toFieldType(Identifier field, List<Type.Record> types) {
+		if(types.size() == 0) {
 			throw new IllegalArgumentException();
 		} else {
-			Type[] elements = new Type[types.length];
-			for(int i=0;i!=types.length;++i) {
-				Type.Record rec = types[i];
+			Type[] elements = new Type[types.size()];
+			for(int i=0;i!=types.size();++i) {
+				Type.Record rec = types.get(i);
 				if (rec != null) {
 					Type t = rec.getField(field);
 					if (rec.isOpen() && t == null) {
