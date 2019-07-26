@@ -129,16 +129,10 @@ public class RuntimeValidTests {
 		// Replace Type Mangle with Interface
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		// Type Tests against Open Records
-		IGNORED.put("OpenRecord_Valid_4", "#30");
-		IGNORED.put("OpenRecord_Valid_5", "#30");
-		IGNORED.put("OpenRecord_Valid_9", "#30");
+//		IGNORED.put("OpenRecord_Valid_5", "#30");
 		// Static Initialiser Order
 		IGNORED.put("StaticVar_Valid_7", "#29");
 		IGNORED.put("StaticVar_Valid_8", "#29");
-		// Strange Problem with Type Checking
-		IGNORED.put("Template_Valid_3", "#31");
-		IGNORED.put("Template_Valid_16", "#31");
-		IGNORED.put("Template_Valid_17", "#31");
 		// Problem with Cloning
 		IGNORED.put("Template_Valid_29", "#32");
 	}

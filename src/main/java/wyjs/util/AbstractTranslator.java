@@ -1375,8 +1375,7 @@ public abstract class AbstractTranslator<S> {
 			return (T) type;
 		} else if (type instanceof Type.Nominal) {
 			Type.Nominal t = (Type.Nominal) type;
-			Decl.Type decl = t.getLink().getTarget();
-			return asType(decl.getType(), kind);
+			return asType(t.getConcreteType(), kind);
 		} else {
 			throw new IllegalArgumentException("invalid type: " + type);
 		}
