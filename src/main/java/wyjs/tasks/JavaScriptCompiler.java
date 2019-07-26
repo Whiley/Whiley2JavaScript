@@ -18,7 +18,12 @@ import static wyil.lang.WyilFile.TYPE_int;
 import static wyil.lang.WyilFile.TYPE_nominal;
 import static wyil.lang.WyilFile.TYPE_null;
 import static wyil.lang.WyilFile.TYPE_record;
+import static wyil.lang.WyilFile.TYPE_staticreference;
+import static wyil.lang.WyilFile.TYPE_reference;
 import static wyil.lang.WyilFile.TYPE_union;
+import static wyil.lang.WyilFile.TYPE_method;
+import static wyil.lang.WyilFile.TYPE_function;
+import static wyil.lang.WyilFile.TYPE_property;
 import static wyjs.core.JavaScriptFile.and;
 import static wyjs.core.JavaScriptFile.not;
 import static wyjs.core.JavaScriptFile.or;
@@ -42,10 +47,9 @@ import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
 import wyil.lang.WyilFile.Type;
-import wyil.type.subtyping.EmptinessTest.LifetimeRelation;
-import wyil.type.subtyping.StrictTypeEmptinessTest;
-import wyil.type.subtyping.SubtypeOperator;
 import wyil.util.AbstractVisitor;
+import wyil.util.SubtypeOperator;
+import wyil.util.SubtypeOperator.LifetimeRelation;
 import wyjs.core.JavaScriptFile;
 import wyjs.core.JavaScriptFile.ArrayAccess;
 import wyjs.core.JavaScriptFile.ArrayInitialiser;
@@ -74,7 +78,6 @@ import wyjs.core.JavaScriptFile.While;
 import wyjs.core.TypeMangler;
 import wyjs.util.AbstractTranslator;
 import wyjs.util.StdTypeMangler;
-import wyjs.util.StrictIncompleteSubtypeOperator;
 
 
 public class JavaScriptCompiler extends AbstractTranslator<Term> {
@@ -87,9 +90,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Provides a standard mechanism for checking whether two Whiley types are
 	 * subtypes or not.
 	 */
-	private final static SubtypeOperator subtyping = new SubtypeOperator(new StrictTypeEmptinessTest());
+	private final static SubtypeOperator subtyping = new SubtypeOperator.Relaxed();
 
-	private final static StrictIncompleteSubtypeOperator strictSubtyping = new StrictIncompleteSubtypeOperator();
+	private final static SubtypeOperator strictSubtyping = new SubtypeOperator.Strict();
 
 	/**
 	 * Represents the JavaScriptFile which is being written to.
@@ -934,6 +937,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		case TYPE_array:
 			body = translateIsArray(type, (Type.Array) test, operand, tests);
 			break;
+		case TYPE_staticreference:
+		case TYPE_reference:
+			body = translateIsReference(type, (Type.Reference) test, operand, tests);
+			break;
+		case TYPE_method:
+		case TYPE_function:
+		case TYPE_property:
+			body = translateIsLambda(type, (Type.Callable) test, operand, tests);
+			break;
 		default:
 			throw new IllegalArgumentException("unexpected type: " + test);
 		}
@@ -1142,10 +1154,10 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Check whether any non-record types.
 		if(hasOtherSubtypesBesidesNull(type,Type.Record.class)) {
 			// Yes, therefore check this is an object.
-			operands.add(TypeOf(operand,"object"));
+			operands.add(RecordConstructor(operand));
 		}
 		// Eliminate all non-records
-		Type.Record[] candidates = TYPE_RECORD_FILTER.apply(type);
+		List<Type.Record> candidates = filter(Type.Record.class,type);
 		// Is that enough?
 		if(areStrictSubtypes(test,candidates)) {
 			// YES!
@@ -1153,7 +1165,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		}
 		// Eliminate records based on their field count
 		Tuple<Type.Field> fields = test.getFields();
-		if(filteredByFieldCount(candidates,fields.size())) {
+		if(filteredByFieldCount(candidates,fields.size(),test.isOpen())) {
 			operands.add(checkFieldCount(operand,fields.size()));
 			// Is that enough?
 			if(areStrictSubtypes(test,candidates)) {
@@ -1275,7 +1287,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(ArrayConstructor(operand));
 		}
 		// Have now eliminated all non-array types. This maybe enough.
-		Type.Array[] candidates = TYPE_ARRAY_FILTER.apply(type);
+		List<Type.Array> candidates = filter(Type.Array.class,type);
 		// Check whether can select purely on basis of being array
 		if(areStrictSubtypes(test,candidates)) {
 			// YES
@@ -1333,6 +1345,61 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Done
 		return new Block(forLoop, new Return(Constant.TRUE));
 	}
+
+	private Block translateIsReference(Type type, Type.Reference test, Term operand, Set<Pair<Type, Type>> tests) {
+		ArrayList<Term> operands = new ArrayList<>();
+		// Check whether non-null possible
+		if (isSubtype(type, Type.Null)) {
+			// NOTE: since null could be a value of the operand being tested, we must
+			// eliminate this to be sure we have a record. That's because <code>typeof
+			// null</code> annoyingly returns <code>"object"</code> in JavaScript.
+			operands.add(NonNull(operand));
+		}
+		// Check whether any non-record types.
+		if(hasOtherSubtypesBesidesNull(type,Type.Reference.class)) {
+			// Yes, therefore check this is an object.
+			operands.add(ReferenceConstructor(operand));
+		}
+		// FIXME: in principle there is more to do here, but we'll save that for another
+		// day because the whole type test mechanism is going to change.
+		Block body = new Block(new Return(Constant.TRUE));
+		if (operands.size() == 0) {
+			// Not necessary
+			return body;
+		} else {
+			IfElse.Case caSe = new IfElse.Case(and(operands), body);
+			Term outerIf = new IfElse(Arrays.asList(caSe));
+			return new Block(outerIf, new Return(Constant.FALSE));
+		}
+	}
+
+	private Block translateIsLambda(Type type, Type.Callable test, Term operand, Set<Pair<Type, Type>> tests) {
+		ArrayList<Term> operands = new ArrayList<>();
+		// Check whether non-null possible
+		if (isSubtype(type, Type.Null)) {
+			// NOTE: since null could be a value of the operand being tested, we must
+			// eliminate this to be sure we have a record. That's because <code>typeof
+			// null</code> annoyingly returns <code>"object"</code> in JavaScript.
+			operands.add(NonNull(operand));
+		}
+		// Check whether any non-record types.
+		if(hasOtherSubtypesBesidesNull(type,Type.Callable.class)) {
+			// Yes, therefore check this is an object.
+			operands.add(TypeOf(operand,"function"));
+		}
+		// FIXME: in principle there is more to do here, but we'll save that for another
+		// day because the whole type test mechanism is going to change.
+		Block body = new Block(new Return(Constant.TRUE));
+		if (operands.size() == 0) {
+			// Not necessary
+			return body;
+		} else {
+			IfElse.Case caSe = new IfElse.Case(and(operands), body);
+			Term outerIf = new IfElse(Arrays.asList(caSe));
+			return new Block(outerIf, new Return(Constant.FALSE));
+		}
+	}
+
 
 	/**
 	 * Implementing equality is tricky because of the disparity between JavaScript
@@ -1757,7 +1824,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types The subtype(s) being checked.
 	 * @return
 	 */
-	private boolean areStrictSubtypes(Type type, Type... types) {
+	private boolean areStrictSubtypes(Type type, List<? extends Type> types) {
 		for(Type t : types) {
 			if (t != null && !strictSubtyping.isSubtype(type, t, EMPTY_LIFETIMES)) {
 				return false;
@@ -1905,12 +1972,23 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param size
 	 * @return
 	 */
-	private static boolean filteredByFieldCount(Type.Record[] records, int size) {
+	private static boolean filteredByFieldCount(List<Type.Record> records, int size, boolean isOpen) {
 		boolean r = false;
-		for (int i = 0; i != records.length; ++i) {
-			Type.Record record = records[i];
-			if (record.getFields().size() != size) {
-				records[i] = null;
+		for (int i = 0; i != records.size(); ++i) {
+			Type.Record record = records.get(i);
+			int record_size = record.getFields().size();
+			if(isOpen || record.isOpen()) {
+				// Could match
+				r = true;
+			} else if(isOpen && size <= record_size) {
+				// Could match
+				r = true;
+			} else if (record.isOpen() && record_size <= size) {
+				// Could match
+				r = true;
+			} else if(record_size != size) {
+				// Could not match
+				records.set(i, null);
 				r = true;
 			}
 		}
@@ -1923,27 +2001,27 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types
 	 * @return
 	 */
-	private static Type.Array toArrayType(Type.Array... types) {
-		if(types.length == 0) {
+	private static Type.Array toArrayType(List<Type.Array> types) {
+		if(types.size() == 0) {
 			throw new IllegalArgumentException();
-		} else if(types.length == 1) {
-			return types[0];
+		} else if(types.size() == 1) {
+			return types.get(0);
 		} else {
-			Type[] elements = new Type[types.length];
-			for(int i=0;i!=types.length;++i) {
-				elements[i] = types[i].getElement();
+			Type[] elements = new Type[types.size()];
+			for(int i=0;i!=elements.length;++i) {
+				elements[i] = types.get(i).getElement();
 			}
 			return new Type.Array(new Type.Union(elements));
 		}
 	}
 
-	private static Type toFieldType(Identifier field, Type.Record... types) {
-		if(types.length == 0) {
+	private static Type toFieldType(Identifier field, List<Type.Record> types) {
+		if(types.size() == 0) {
 			throw new IllegalArgumentException();
 		} else {
-			Type[] elements = new Type[types.length];
-			for(int i=0;i!=types.length;++i) {
-				Type.Record rec = types[i];
+			Type[] elements = new Type[types.size()];
+			for(int i=0;i!=types.size();++i) {
+				Type.Record rec = types.get(i);
 				if (rec != null) {
 					Type t = rec.getField(field);
 					if (rec.isOpen() && t == null) {
@@ -2028,6 +2106,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Represents the Math module available from JavaScript.
 	 */
 	private static Term MATH_RUNTIME = new JavaScriptFile.VariableAccess("Math");
+	private static Term OBJECT_RUNTIME = new JavaScriptFile.VariableAccess("Object");
 
 	private static Term TypeOf(Term t1, String kind) {
 		return new Operator(Kind.EEQ, new Operator(Kind.TYPEOF, t1), new Constant(kind));
@@ -2039,6 +2118,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private static Term ArrayConstructor(Term t1) {
 		return new Operator(Kind.EEQ, new PropertyAccess(t1, "constructor"), new VariableAccess("Array"));
+	}
+
+	private static Term RecordConstructor(Term t1) {
+		// NOTE: the or is necessary because of Wy.Copy I believe.
+		return or(
+				new Operator(Kind.EEQ, new PropertyAccess(t1, "constructor"),
+						new PropertyAccess(new VariableAccess("Wy"), "Record")),
+				new Operator(Kind.EEQ, new PropertyAccess(t1, "constructor"), new VariableAccess("Object")));
+	}
+
+	private static Term ReferenceConstructor(Term t1) {
+		return new Operator(Kind.NEQ, new Operator(Kind.TYPEOF, new PropertyAccess(t1, "$ref")),
+				new Constant("undefined"));
 	}
 
 	private static Term MATH_FLOOR(Term t1) {
