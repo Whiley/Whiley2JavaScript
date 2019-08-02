@@ -100,11 +100,6 @@ public class RuntimeValidTests {
 		// Function Overloading for Nominal Types
 		IGNORED.put("Function_Valid_11", "#702");
 		IGNORED.put("Function_Valid_15", "#702");
-		// Bug Subtyping with Templates
-//		IGNORED.put("Template_Valid_31", "934");
-//		IGNORED.put("Template_Valid_32", "934");
-//		IGNORED.put("Template_Valid_33", "934");
-//		IGNORED.put("Template_Valid_34", "934");
 		// Redesigned Interpreter
 		IGNORED.put("Lambda_Valid_7", "908");
 		IGNORED.put("Lambda_Valid_11", "908");
@@ -114,6 +109,13 @@ public class RuntimeValidTests {
 		IGNORED.put("RecursiveType_Valid_7", "936");
 		IGNORED.put("TypeEquals_Valid_61", "936");
 		IGNORED.put("TypeEquals_Valid_62", "936");
+		// FlowTyping over Logical Conditions
+		IGNORED.put("Complex_Valid_3", "936");
+		IGNORED.put("RecursiveType_Valid_12", "936");
+		IGNORED.put("RecursiveType_Valid_30", "936");
+		// Subtype Operator for Casting
+		IGNORED.put("Coercion_Valid_9", "938");
+		IGNORED.put("RecordCoercion_Valid_1", "938");
 		// Unclassified
 		IGNORED.put("Lifetime_Valid_8", "???");
 		IGNORED.put("Lifetime_Lambda_Valid_1", "???");
@@ -214,7 +216,7 @@ public class RuntimeValidTests {
 			});
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
-			jsTarget.write(new JavaScriptFile(jsTarget));
+			jsTarget.write(new JavaScriptFile());
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override
