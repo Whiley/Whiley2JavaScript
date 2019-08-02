@@ -115,7 +115,7 @@ public class Activator implements Module.Activator {
 				// No, it doesn't so create and initialise it
 				Path.Entry<JavaScriptFile> target = binroot.create(id, JavaScriptFile.ContentType);
 				// Initialise with empty javascript file
-				JavaScriptFile jsf = new JavaScriptFile(target);
+				JavaScriptFile jsf = new JavaScriptFile();
 				// Write
 				target.write(jsf);
 				// Done

@@ -22,13 +22,16 @@ import java.util.Collection;
 import java.util.List;
 
 import wybs.lang.CompilationUnit;
+import wybs.lang.SyntacticHeap;
+import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit;
 import wycc.util.ArrayUtils;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
+import wyfs.lang.Path.Entry;
 import wyjs.io.JavaScriptFilePrinter;
 
-public class JavaScriptFile extends AbstractCompilationUnit {
+public class JavaScriptFile {
 	// =========================================================================
 	// Content Type
 	// =========================================================================
@@ -47,8 +50,10 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 
 		@Override
 		public JavaScriptFile read(Path.Entry<JavaScriptFile> e, InputStream input) throws IOException {
-			// At this stage, parsing javascript files is strictly off-limits :)
-			throw new UnsupportedOperationException();
+			// NOTE: this is strictly a hack at this time as its unclear what the best
+			// alternative option is. Specifically, parsing JavaScriptFiles is not something
+			// I'm contemplating right now :)
+			return new JavaScriptFile();
 		}
 
 		@Override
@@ -72,8 +77,7 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 	 */
 	private List<Declaration> declarations;
 
-	public JavaScriptFile(Path.Entry<? extends CompilationUnit> entry) {
-		super(entry);
+	public JavaScriptFile() {
 		this.declarations = new ArrayList<>();
 	}
 
@@ -190,7 +194,7 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 	}
 
 	// =========================================================================
-	// Nodes
+	// Declaration
 	// =========================================================================
 
 
@@ -690,5 +694,4 @@ public class JavaScriptFile extends AbstractCompilationUnit {
 			return body;
 		}
 	}
-
 }
