@@ -75,16 +75,15 @@ import wyjs.core.JavaScriptFile.Term;
 import wyjs.core.JavaScriptFile.VariableAccess;
 import wyjs.core.JavaScriptFile.VariableDeclaration;
 import wyjs.core.JavaScriptFile.While;
-import wyjs.core.TypeMangler;
+import wyil.util.TypeMangler;
 import wyjs.util.AbstractTranslator;
-import wyjs.util.StdTypeMangler;
 
 
 public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	/**
 	 * Provides a standard mechanism for writing out type mangles.
 	 */
-	private final static TypeMangler mangler = new StdTypeMangler();
+	private final static TypeMangler mangler = new TypeMangler.Default();
 
 	/**
 	 * Provides a standard mechanism for checking whether two Whiley types are
@@ -1929,6 +1928,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			name += getMangle(parameters, new Tuple<>());
 		} else if(decl instanceof Decl.Type) {
 			name += "$type";
+		} else if(decl instanceof Decl.StaticVariable) {
+			name += "$static";
 		}
 		return name;
 	}
