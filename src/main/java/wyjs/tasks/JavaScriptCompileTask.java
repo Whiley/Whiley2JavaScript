@@ -13,7 +13,6 @@
 // limitations under the License.
 package wyjs.tasks;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
@@ -24,7 +23,6 @@ import wycc.util.Logger;
 import wyfs.lang.Path;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
-import wyjs.io.JavaScriptFileWriter;
 
 public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScriptFile> {
 
@@ -75,12 +73,7 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		// an AST. This would enable, for example, better support for different
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		JavaScriptFileWriter jsfw = new JavaScriptFileWriter(project,bos);
-		jsfw.setDebug(debug);
-		jsfw.apply(source);
-		// Write out contents
-		target.setBytes(bos.toByteArray());
+		new JavaScriptCompiler(target).visitModule(source);
 		// How can this fail?
 		return true;
 	}

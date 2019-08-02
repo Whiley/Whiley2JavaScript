@@ -197,10 +197,12 @@ ensures index < 52:
     // Get item from random sequence
     int result = r.sequence[r.index]
     // Move to next item
-    r.index = r.index + 1
+    int tmp = r.index + 1
     // Check for overflow
-    if r.index == |r.sequence|:
-        r.index = 0
+    if tmp == |r.sequence|:
+        tmp = 0
+    //
+    r.index = tmp
     //
     return result, r
 
@@ -210,10 +212,12 @@ ensures index < 52:
 
 function swap(Deck deck, nat from, nat to) -> Deck
 requires from < 52 && to < 52:
-    // Swap two cards around
-    Card tmp = deck[from]
-    deck[from] = deck[to]
-    deck[to] = tmp
+    // Create copy of deck, which is necessary to temporarily break the
+    // invariant.
+    Card[] tmp = deck
+    // Swap two cards around    
+    tmp[from] = deck[to]
+    tmp[to] = deck[from]
     //
     return deck
 
