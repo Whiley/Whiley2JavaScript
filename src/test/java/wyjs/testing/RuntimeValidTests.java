@@ -128,6 +128,8 @@ public class RuntimeValidTests {
 
 		// Unbound arithmetic
 		IGNORED.put("IntOp_Valid_1", "#15");
+		IGNORED.put("IntConst_Valid_1", "#15");
+		IGNORED.put("Function_Valid_3", "#15");
 		// Replace Type Mangle with Interface
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		// Type Tests against Open Records
@@ -216,7 +218,8 @@ public class RuntimeValidTests {
 			});
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
-			jsTarget.write(new JavaScriptFile());
+			// NOTE: Java Nashorn supports ES5 only?
+			jsTarget.write(new JavaScriptFile(JavaScriptFile.Standard.ES5));
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override

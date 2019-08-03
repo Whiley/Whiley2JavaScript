@@ -8,18 +8,15 @@ package wyjs.io;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 import java.util.List;
 
 import wycc.util.Pair;
 import wyjs.core.JavaScriptFile;
 
 public class JavaScriptFilePrinter {
-	/**
-	 * Enable support for ES6 which introduced several syntactic improvements, such
-	 * as <code>let</code> and <code>const</code>, simplified object literal and
-	 * destructuring syntax and modules.
-	 */
-	private final boolean es6 = false;
+
+
 	private final PrintWriter out;
 
 	public JavaScriptFilePrinter(OutputStream output) {
@@ -27,6 +24,9 @@ public class JavaScriptFilePrinter {
 	}
 
 	public void write(JavaScriptFile file) {
+		if(file.strictMode()) {
+			out.println("'use strict';");
+		}
 		for(JavaScriptFile.Declaration d : file.getDeclarations()) {
 			write(0,d);
 		}
@@ -209,7 +209,17 @@ public class JavaScriptFilePrinter {
 	}
 
 	private void writeVariableDeclaration(int indent, JavaScriptFile.VariableDeclaration term) {
-		out.print("var ");
+		switch(term.getKind()) {
+		case VAR:
+			out.print("var ");
+			break;
+		case LET:
+			out.print("let ");
+			break;
+		case CONST:
+			out.print("const ");
+			break;
+		}
 		out.print(term.getName());
 		if(term.getInitialiser() != null) {
 			out.print(" = ");
@@ -303,16 +313,11 @@ public class JavaScriptFilePrinter {
 			out.print("\"");
 		} else if(value instanceof Byte){
 			byte b = (Byte) value;
-			if(es6) {
-				// NOTE: ES6 supports binary literals
-				out.print("0b");
-				out.print(Integer.toBinaryString(b & 0xFF));
-			} else {
-				// NOTE: this is the old way
-				out.print("parseInt('");
-				out.print(Integer.toBinaryString(b & 0xFF));
-				out.print("',2)");
-			}
+			// NOTE: only ES6+ supports binary literals
+			out.print("0b");
+			out.print(Integer.toBinaryString(b & 0xFF));
+		} else if (value instanceof BigInteger) {
+			out.print("BigInt(" + term.getValue() + ")");
 		} else {
 			out.print(term.getValue());
 		}
