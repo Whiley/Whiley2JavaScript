@@ -28,6 +28,7 @@ import static wyjs.core.JavaScriptFile.and;
 import static wyjs.core.JavaScriptFile.not;
 import static wyjs.core.JavaScriptFile.or;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -159,11 +160,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	@Override
 	public Term constructVariable(Decl.Variable decl, Term initialiser) {
 		String name = decl.getName().toString();
-		// TODO: ES6 supports let modifier
+		// Determine appropriate modifier
+		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
+		//
 		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(name,initialiser);
+			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
 		} else {
-			return new JavaScriptFile.VariableDeclaration(name);
+			return new JavaScriptFile.VariableDeclaration(kind,name);
 		}
 	}
 
@@ -171,11 +174,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	public Term constructStaticVariable(Decl.StaticVariable decl, Term initialiser) {
 		// Determine qualified name
 		String name = toMangledName(decl);
-		// TODO: ES6 supports const modifier
+		// Determine appropriate modifier
+		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
+		//
 		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(name,initialiser);
+			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
 		} else {
-			return new JavaScriptFile.VariableDeclaration(name);
+			return new JavaScriptFile.VariableDeclaration(kind,name);
 		}
 	}
 
@@ -192,13 +197,16 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
-	public Term constructFunction(Decl.Function decl, List<Term> precondition, List<Term> postcondition, Term body) {
+	public Term constructFunction(Decl.Function decl, List<Term> precondition, List<Term> postcondition, Term _body) {
+		Block body = (Block) _body;
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Translate parameters
 		List<String> parameters = toParameterNames(decl.getParameters());
+		//
+		declareNamedReturns(decl,body);
 		// Done
-		return new JavaScriptFile.Method(name, parameters, (Block) body);
+		return new JavaScriptFile.Method(name, parameters, body);
 	}
 
 	@Override
@@ -256,7 +264,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				Tuple<Type> types = e.getTypes();
 				// Translate right-hand side
 				VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
-				first.add(new VariableDeclaration(tmp.getName(), rhs.get(i)));
+				first.add(new VariableDeclaration(toConstKind(),tmp.getName(), rhs.get(i)));
 				// Translate left-hand side
 				if(types == null) {
 					// Unit assignment
@@ -481,21 +489,30 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			boolean b = ((Value.Bool) val).get();
 			return b ? Constant.TRUE : Constant.FALSE;
 		}
-		case ITEM_byte:
-			return new Constant(((Value.Byte) val).get());
-		case ITEM_int:
-			// FIXME: broken for arbitrary precision integers.
-			return new Constant(((Value.Int) val).get().longValue());
+		case ITEM_byte: {
+			byte b = ((Value.Byte) val).get();
+			if(jsFile.ES6()) {
+				return new Constant(b);
+			} else {
+				// NOTE: this is the old way
+				return PARSE_INT(Integer.toBinaryString(b & 0xFF),2);
+			}
+		}
+		case ITEM_int: {
+			BigInteger i = ((Value.Int) val).get();
+			if(jsFile.bigInt()) {
+				return new Constant(i);
+			} else {
+				// NOTE: this will fail for bigintegers
+				return new Constant(i.longValueExact());
+			}
+		}
 		default:
 		case ITEM_utf8:
 			// NOTE: special case as Whiley strings are int arrays.
 			Value.UTF8 utf8 = (Value.UTF8) val;
-			byte[] bytes = utf8.get();
-			ArrayList<Term> terms = new ArrayList<>();
-			for (int i = 0; i != bytes.length; ++i) {
-				terms.add(new JavaScriptFile.Constant(bytes[i]));
-			}
-			return new JavaScriptFile.ArrayInitialiser(terms);
+			String str = new String(utf8.get());
+			return WY_TOSTRING(new JavaScriptFile.Constant(str));
 		}
 	}
 
@@ -1330,7 +1347,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private Block translateIsArrayHelper(Type.Array from, Type.Array test, Term operand, Set<Pair<Type, Type>> tests) {
 		// Loop Header
-		VariableDeclaration decl = new VariableDeclaration("i", new Constant(0));
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(),"i", new Constant(0));
 		VariableAccess var = new VariableAccess("i");
 		Term loopTest = new Operator(Kind.LT, var, new ArrayLength(operand));
 		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
@@ -1517,7 +1534,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Type conditionT = stmt.getCondition().getType();
 		VariableAccess tmp = new VariableAccess("$" + temporaryIndex++);
 		// Create temporary variable declaration
-		VariableDeclaration decl = new VariableDeclaration(tmp.getName(),condition);
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(),tmp.getName(),condition);
 		// Translate each case one-by-one.
 		Tuple<Stmt.Case> wycases = stmt.getCases();
 		ArrayList<IfElse.Case> jscases = new ArrayList<>();
@@ -1602,12 +1619,30 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			Pair<Term, Term> range = ranges.get(index);
 			//
 			VariableAccess var = new VariableAccess(v.getName().toString());
-			VariableDeclaration decl = new VariableDeclaration(var.getName(), range.first());
+			VariableDeclaration decl = new VariableDeclaration(toLetKind(),var.getName(), range.first());
 			Term test = new Operator(Kind.LT, var, range.second());
 			Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
 			Term body = translateQuantifier(index + 1, expr, ranges, condition);
 			//
 			return new JavaScriptFile.For(decl, test, increment, new Block(body));
+		}
+	}
+
+	/**
+	 * Declare any named returns as, otherwise, they will have no local variable
+	 * declaration and, hence, in strict mode, this will fail.
+	 *
+	 * @param fm
+	 * @param body
+	 */
+	private void declareNamedReturns(Decl.FunctionOrMethod fm, Block body) {
+		Tuple<Decl.Variable> returns = fm.getReturns();
+		for(int i=0;i!=returns.size();++i) {
+			Decl.Variable v = returns.get(i);
+			String name = v.getName().get();
+			if(!name.equals("$")) {
+				body.getTerms().add(0,new JavaScriptFile.VariableDeclaration(toLetKind(), name));
+			}
 		}
 	}
 
@@ -1935,6 +1970,56 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
+	 * Determine the appropriate kind for a variable declaration. This depends on
+	 * what JavaScript standard is available.
+	 *
+	 * @param decl
+	 * @return
+	 */
+	private JavaScriptFile.VariableDeclaration.Kind toVariableKind(Decl.Named decl) {
+		// Determine appropriate modifier
+		if(jsFile.ES6()) {
+			if(decl.getModifiers().match(Modifier.Final.class) != null) {
+				return JavaScriptFile.VariableDeclaration.Kind.CONST;
+			} else {
+				return JavaScriptFile.VariableDeclaration.Kind.LET;
+			}
+		} else {
+			return JavaScriptFile.VariableDeclaration.Kind.VAR;
+		}
+	}
+
+	/**
+	 * Determine the best kind for an immutable local variable declaration. This
+	 * depends on what JavaScript standard is available.
+	 *
+	 * @param decl
+	 * @return
+	 */
+	private JavaScriptFile.VariableDeclaration.Kind toLetKind() {
+		if(jsFile.ES6()) {
+			return JavaScriptFile.VariableDeclaration.Kind.LET;
+		} else {
+			return JavaScriptFile.VariableDeclaration.Kind.VAR;
+		}
+	}
+
+	/**
+	 * Determine the best kind for a mutable local variable declaration. This
+	 * depends on what JavaScript standard is available.
+	 *
+	 * @param decl
+	 * @return
+	 */
+	private JavaScriptFile.VariableDeclaration.Kind toConstKind() {
+		if(jsFile.ES6()) {
+			return JavaScriptFile.VariableDeclaration.Kind.CONST;
+		} else {
+			return JavaScriptFile.VariableDeclaration.Kind.VAR;
+		}
+	}
+
+	/**
 	 * Convert a tuple of parameters into a list of their name strings.
 	 *
 	 * @param parameters
@@ -2099,6 +2184,10 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "Ref", t1);
 	}
 
+	private static Term WY_TOSTRING(Term t1) {
+		return new JavaScriptFile.Invoke(WY_RUNTIME, "toString", t1);
+	}
+
 	// ====================================================================================
 	// JavaScript Runtime Accessors
 	// ====================================================================================
@@ -2148,4 +2237,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return new Operator(Operator.Kind.BITWISEAND,t1,FF);
 	}
 
+	private static Term PARSE_INT(String str, int base) {
+		return new JavaScriptFile.Invoke(null, "parseInt", new Constant(str), new Constant(base));
+	}
 }

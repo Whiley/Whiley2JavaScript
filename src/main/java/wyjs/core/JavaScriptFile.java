@@ -16,6 +16,7 @@ package wyjs.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,7 +54,7 @@ public class JavaScriptFile {
 			// NOTE: this is strictly a hack at this time as its unclear what the best
 			// alternative option is. Specifically, parsing JavaScriptFiles is not something
 			// I'm contemplating right now :)
-			return new JavaScriptFile();
+			return new JavaScriptFile(true, Standard.ES6);
 		}
 
 		@Override
@@ -72,13 +73,88 @@ public class JavaScriptFile {
 		}
 	};
 
+	// =========================================================================
+	// JavaScript Standard
+	// =========================================================================
+
+	public enum Standard {
+		ES5,
+		/**
+		 * Support for ES6 which introduced several syntactic improvements, such as
+		 * <code>let</code> and <code>const</code>, simplified object literal and
+		 * destructuring syntax and modules.
+		 */
+		ES6,
+		/**
+		 * Support for (proposed) TC39 BigInt standard which is currently supported by
+		 * some browser.
+		 */
+		ES6_BIGINT
+	}
+
+	// =========================================================================
+	//
+	// =========================================================================
+
+	/**
+	 * Indicate whether or not to use strict mode.
+	 */
+	private final boolean strictMode;
+
+	/**
+	 * Indicate which JavaScript standard this file conforms to.
+	 */
+	private final Standard standard;
 	/**
 	 * The list of top-level declarations within this file.
 	 */
 	private List<Declaration> declarations;
 
-	public JavaScriptFile() {
+	public JavaScriptFile(Standard standard) {
+		this(true,standard);
+	}
+
+	public JavaScriptFile(boolean strictMode, Standard standard) {
+		this.strictMode = strictMode;
+		this.standard = standard;
 		this.declarations = new ArrayList<>();
+	}
+
+	/**
+	 * Indicate whether or not this file supports to strict mode.
+	 *
+	 * @return
+	 */
+	public boolean strictMode() {
+		return strictMode;
+	}
+
+	/**
+	 * Indicate whether target platform is ES5 or later.
+	 *
+	 * @return
+	 */
+	public boolean ES5() {
+		return standard == Standard.ES5;
+	}
+
+	/**
+	 * Indicate whether target platform is ES6 or later.
+	 *
+	 * @return
+	 */
+	public boolean ES6() {
+		return standard == Standard.ES6 || standard == Standard.ES6_BIGINT;
+	}
+
+	/**
+	 * Indicate whether target platform must support (draft) TC39 BigInt
+	 * specification.
+	 *
+	 * @return
+	 */
+	public boolean bigInt() {
+		return standard == Standard.ES6_BIGINT;
 	}
 
 	public List<Declaration> getDeclarations() {
@@ -243,16 +319,26 @@ public class JavaScriptFile {
 	}
 
 	public static class VariableDeclaration extends AbstractDeclaration implements Term {
+		public static enum Kind {
+			VAR,
+			LET,
+			CONST
+		}
+		private final Kind kind;
 		private final Term initialiser;
 
-		public VariableDeclaration(String name) {
-			super(name);
-			this.initialiser = null;
+		public VariableDeclaration(Kind kind,String name) {
+			this(kind,name,null);
 		}
 
-		public VariableDeclaration(String name, Term initialiser) {
+		public VariableDeclaration(Kind kind,String name, Term initialiser) {
 			super(name);
+			this.kind = kind;
 			this.initialiser = initialiser;
+		}
+
+		public Kind getKind() {
+			return kind;
 		}
 
 		public boolean hasInitialisr() {
@@ -369,7 +455,7 @@ public class JavaScriptFile {
 	}
 
 	public static class Constant implements Term {
-		public final static Constant NULL = new Constant(null);
+		public final static Constant NULL = new Constant((String) null);
 		public final static Constant TRUE = new Constant(true);
 		public final static Constant FALSE = new Constant(false);
 
@@ -385,6 +471,9 @@ public class JavaScriptFile {
 			this.value = v;
 		}
 		public Constant(double v) {
+			this.value = v;
+		}
+		public Constant(BigInteger v) {
 			this.value = v;
 		}
 		public Constant(String v) {
@@ -550,8 +639,8 @@ public class JavaScriptFile {
 
 	public static class Operator implements Term {
 		public enum Kind {
-			NOT, NEG, EQ, EEQ, NEQ, NEEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND,
-			BITWISEINVERT, LEFTSHIFT, RIGHTSHIFT, NEW, TYPEOF
+			NOT, NEG, EQ, EEQ, NEQ, NEEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND, BITWISEINVERT,
+			LEFTSHIFT, RIGHTSHIFT, NEW, TYPEOF
 		}
 		private Kind kind;
 		private List<Term> operands;
