@@ -504,7 +504,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				return new Constant(i);
 			} else {
 				// NOTE: this will fail for bigintegers
-				return new Constant(i.longValueExact());
+				return new Constant(i.longValue());
 			}
 		}
 		default:
