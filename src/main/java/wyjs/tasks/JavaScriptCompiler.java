@@ -1173,7 +1173,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(RecordConstructor(operand));
 		}
 		// Eliminate all non-records
-		List<Type.Record> candidates = filter(Type.Record.class,type);
+		List<Type.Record> candidates = type.filter(Type.Record.class);
 		// Is that enough?
 		if(areStrictSubtypes(test,candidates)) {
 			// YES!
@@ -1303,7 +1303,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(ArrayConstructor(operand));
 		}
 		// Have now eliminated all non-array types. This maybe enough.
-		List<Type.Array> candidates = filter(Type.Array.class,type);
+		List<Type.Array> candidates = type.filter(Type.Array.class);
 		// Check whether can select purely on basis of being array
 		if(areStrictSubtypes(test,candidates)) {
 			// YES
