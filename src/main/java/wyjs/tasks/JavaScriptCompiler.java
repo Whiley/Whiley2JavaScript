@@ -36,9 +36,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import wybs.lang.SyntacticHeap;
+import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
+import wybs.util.AbstractSyntacticItem;
 import wycc.util.ArrayUtils;
 import wycc.util.Pair;
 import wyil.lang.WyilFile;
@@ -739,7 +742,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * In this case, the type of the source operand is <code>int|null</code> whilst
 	 * the type being tested against is <code>int</code>.
 	 *
-	 * @param type    The type of the operand.
+	 * @param type    The type of the operand or <code>null</code> if any type possible.
 	 * @param test    The type being tested against
 	 * @param operand The translated operand expression
 	 * @param tests   Records additional type tests which are required.
@@ -748,7 +751,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	private Term translateIs(Type type, Type test, Term operand, Set<Pair<Type, Type>> tests) {
 		Term result = null;
 		// Quick sanity check first
-		if(type.equals(test)) {
+		if(type != null && type.equals(test)) {
 			return Constant.TRUE;
 		}
 		// Handle all easy cases first. These can all be inlined directly and do not
@@ -785,8 +788,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// In this event, we're going to fall back to creating a specialised helper
 			// method.
 			tests.add(new Pair<>(type, test));
-			// Calculate mangled name
-			String name = "is" + getMangle(new Tuple<>(), type, test);
+			//
+			String name = getTypeTestMangle(type,test);
 			// Done
 			return new JavaScriptFile.Invoke(null, name, operand);
 		}
@@ -850,7 +853,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private Term translateIsByte(Type type, Type.Byte test, Term operand) {
 		// FIXME: need constructor for byte types??
-		throw new UnsupportedOperationException();
+		return TypeOf(operand,"number");
 	}
 
 	/**
@@ -929,7 +932,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private Declaration translateTypeTest(Type type, Type test, Set<Pair<Type, Type>> tests) {
 		// Calculate mangled name
-		String name = "is" + getMangle(new Tuple<>(), type, test);
+		String name = getTypeTestMangle(type,test);
 		String parameter = "v";
 		Term operand = new VariableAccess(parameter);
 		Block body;
@@ -1159,6 +1162,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private Block translateIsRecord(Type type, Type.Record test, Term operand, Set<Pair<Type,Type>> tests) {
+		Tuple<Type.Field> fields = test.getFields();
 		// Attempt simple selection
 		ArrayList<Term> operands = new ArrayList<>();
 		if (isSubtype(type, Type.Null)) {
@@ -1172,21 +1176,24 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// Yes, therefore check this is an object.
 			operands.add(RecordConstructor(operand));
 		}
-		// Eliminate all non-records
-		List<Type.Record> candidates = type.filter(Type.Record.class);
-		// Is that enough?
-		if(areStrictSubtypes(test,candidates)) {
-			// YES!
-			return new Block(new Return(and(operands)));
-		}
-		// Eliminate records based on their field count
-		Tuple<Type.Field> fields = test.getFields();
-		if(filteredByFieldCount(candidates,fields.size(),test.isOpen())) {
-			operands.add(checkFieldCount(operand,fields.size()));
+		List<Type.Record> candidates = null;
+		//
+		if(type != null) {
+			// Eliminate all non-records
+			candidates = type.filter(Type.Record.class);
 			// Is that enough?
 			if(areStrictSubtypes(test,candidates)) {
 				// YES!
 				return new Block(new Return(and(operands)));
+			}
+			// Eliminate records based on their field count
+			if(filteredByFieldCount(candidates,fields.size(),test.isOpen())) {
+				operands.add(checkFieldCount(operand,fields.size()));
+				// Is that enough?
+				if(areStrictSubtypes(test,candidates)) {
+					// YES!
+					return new Block(new Return(and(operands)));
+				}
 			}
 		}
 		// NOTE: at this point, we could do more by attempting to find one or more
@@ -1303,11 +1310,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			operands.add(ArrayConstructor(operand));
 		}
 		// Have now eliminated all non-array types. This maybe enough.
-		List<Type.Array> candidates = type.filter(Type.Array.class);
-		// Check whether can select purely on basis of being array
-		if(areStrictSubtypes(test,candidates)) {
-			// YES
-			return new Block(new Return(and(operands)));
+		List<Type.Array> candidates = null;
+		// Attempt to do things with knowledge of declared type
+		if(type != null) {
+			candidates = type.filter(Type.Array.class);
+			// Check whether can select purely on basis of being array
+			if(areStrictSubtypes(test,candidates)) {
+				// YES
+				return new Block(new Return(and(operands)));
+			}
 		}
 		// TODO: can improve this in some cases by examining the first element. This
 		// works when the element types are disjoint.
@@ -1353,7 +1364,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
 		// Loop Body
 		Term if_condition = new Operator(Kind.NOT,
-				translateIs(from.getElement(), test.getElement(), new ArrayAccess(operand, var), tests));
+				translateIs(from == null ? null : from.getElement(), test.getElement(), new ArrayAccess(operand, var), tests));
 		Block if_body = new Block(new Return(Constant.FALSE));
 		Term inner_if = new IfElse(new IfElse.Case(if_condition, if_body));
 		//
@@ -1629,6 +1640,25 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
+	 * Determine the appropriate mangle for a type test function.
+	 *
+	 * @param type
+	 * @param test
+	 * @return
+	 */
+	private String getTypeTestMangle(Type type, Type test) {
+		String mangle;
+		// Calculate mangled name
+		if(type == null) {
+			mangle = getMangle(new Tuple<>(), test);
+		} else {
+			mangle = getMangle(new Tuple<>(), type, test);
+		}
+		return "is" + mangle;
+	}
+
+
+	/**
 	 * Declare any named returns as, otherwise, they will have no local variable
 	 * declaration and, hence, in strict mode, this will fail.
 	 *
@@ -1848,7 +1878,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private boolean isSubtype(Type t1, Type t2) {
-		return subtyping.isSubtype(t1, t2, EMPTY_LIFETIMES);
+		return t1 == null || subtyping.isSubtype(t1, t2, EMPTY_LIFETIMES);
 	}
 
 	/**
@@ -2088,7 +2118,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private static Type.Array toArrayType(List<Type.Array> types) {
-		if(types.size() == 0) {
+		if(types == null) {
+			return null;
+		} else if(types.size() == 0) {
 			throw new IllegalArgumentException();
 		} else if(types.size() == 1) {
 			return types.get(0);
@@ -2102,7 +2134,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	private static Type toFieldType(Identifier field, List<Type.Record> types) {
-		if(types.size() == 0) {
+		if(types == null) {
+			return null;
+		} else if(types.size() == 0) {
 			throw new IllegalArgumentException();
 		} else {
 			Type[] elements = new Type[types.size()];
@@ -2113,7 +2147,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 					if (rec.isOpen() && t == null) {
 						// NOTE: this is important as, otherwise, we'll make false assumptions in the
 						// resulting type test.
-						return Type.Any;
+						return null;
 					}
 					elements[i] = t;
 				}
@@ -2124,6 +2158,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return new Type.Union(elements);
 		}
 	}
+
+
 
 	/**
 	 * Strip off any nominal information.
