@@ -76,36 +76,22 @@ public class Activator implements Module.Activator {
 
 		@Override
 		public void initialise(Configuration configuration, Build.Project project) throws IOException {
-			Trie pkg = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+			Trie pkgName = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 			// Specify directory where generated JS files are dumped.
 			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
-			// Specify directory where generated JS files are dumped.
-			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
-			// Extract target JS standard
-			String standard = configuration.get(Value.UTF8.class, STANDARD_CONFIG_OPTION).unwrap();
-			// Extract strict mode setting
-			boolean strict = configuration.get(Value.Bool.class, STRICTMODE_CONFIG_OPTION).unwrap();
-			// Specify set of files included
-			Content.Filter<WyilFile> includes = Content.filter("**", WyilFile.ContentType);
-			// Specify whether debug mode enabled or not.
-			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
 			// Construct the source root
 			Path.Root sourceRoot = project.getRoot().createRelativeRoot(source);
-			// Construct the binary root
-			Path.Root binaryRoot = project.getRoot().createRelativeRoot(target);
-			// Initialise the target file being built
-			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot, pkg, strict, standard);
-			// Add build rule to project.
-			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, includes, null) {
-
-				@Override
-				protected void apply(List<Entry<WyilFile>> matches, Collection<Task> tasks) throws IOException {
-					JavaScriptCompileTask task = new JavaScriptCompileTask(project,binary,matches.get(0));
-					task.setDebug(debug);
-					tasks.add(task);
-				}
-
-			});
+			// Register build target for this package
+			registerBuildTarget(configuration,project,sourceRoot,pkgName);
+			// Add build rules for any project dependencies
+			for(Build.Package dep : project.getPackages()) {
+				// Determine package name
+				Trie depName = Trie.fromString(dep.getConfiguration().get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+				// Determine source root
+				Path.Root pkgRoot = dep.getRoot();
+				// Register corresponding build target
+				registerBuildTarget(configuration,project,pkgRoot,depName);
+			}
 		}
 
 		@Override
@@ -123,7 +109,38 @@ public class Activator implements Module.Activator {
 			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
 		}
 
-		private Path.Entry<JavaScriptFile> initialiseBinaryTarget(Path.Root binroot, Path.ID id, boolean strictMode, String stdString) throws IOException {
+		private void registerBuildTarget(Configuration configuration, Build.Project project, Path.Root sourceRoot,
+				Trie pkg) throws IOException {
+			// Specify directory where generated JS files are dumped.
+			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
+			// Extract target JS standard
+			String standard = configuration.get(Value.UTF8.class, STANDARD_CONFIG_OPTION).unwrap();
+			// Extract strict mode setting
+			boolean strict = configuration.get(Value.Bool.class, STRICTMODE_CONFIG_OPTION).unwrap();
+			// Specify set of files included
+			Content.Filter<WyilFile> includes = Content.filter("**", WyilFile.ContentType);
+			// Specify whether debug mode enabled or not.
+			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
+			// Construct the binary root
+			Path.Root binaryRoot = project.getRoot().createRelativeRoot(target);
+			// Initialise the target file being built
+			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot, pkg, strict, standard);
+			//
+			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, includes, null) {
+
+				@Override
+				protected void apply(List<Entry<WyilFile>> matches, Collection<Task> tasks) throws IOException {
+					// FIXME: this looks like a bug when we have multiple matches
+					JavaScriptCompileTask task = new JavaScriptCompileTask(project,binary,matches.get(0));
+					task.setDebug(debug);
+					tasks.add(task);
+				}
+
+			});
+		}
+
+		private Path.Entry<JavaScriptFile> initialiseBinaryTarget(Path.Root binroot, Path.ID id, boolean strictMode,
+				String stdString) throws IOException {
 			JavaScriptFile.Standard std = fromStandardString(stdString);
 			Path.Entry<JavaScriptFile> target;
 			if (binroot.exists(id, JavaScriptFile.ContentType)) {
@@ -134,12 +151,12 @@ public class Activator implements Module.Activator {
 				target = binroot.create(id, JavaScriptFile.ContentType);
 			}
 			// Initialise with empty JavaScript file
-			JavaScriptFile jsf = new JavaScriptFile(strictMode,std);
+			JavaScriptFile jsf = new JavaScriptFile(strictMode, std);
 			// Write
 			target.write(jsf);
 			// Done
 			return target;
-			}
+		}
 	};
 
 	private static JavaScriptFile.Standard fromStandardString(String str) {
