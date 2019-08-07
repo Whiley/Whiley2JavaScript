@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import wybs.lang.SyntacticException;
 import wybs.lang.SyntacticHeap;
 import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit.Identifier;
@@ -507,7 +508,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				return new Constant(i);
 			} else {
 				// NOTE: this will fail for bigintegers
-				return new Constant(i.longValue());
+				try {
+					return new Constant(i.longValueExact());
+				} catch(Exception e) {
+					throw new SyntacticException(
+							"Integer " + i.toString() + " cannot be represented in 64bits (see Issue #15)", null, expr);
+				}
 			}
 		}
 		default:
