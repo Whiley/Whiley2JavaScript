@@ -403,7 +403,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand,"$ref");
+		Type elementType = expr.getType();
+		if (isCopyable(elementType)) {
+			// Immutable types are explicitly wrapped
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
@@ -527,7 +533,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereference(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand,"$ref");
+		Type elementType = expr.getType();
+		if (isCopyable(elementType)) {
+			// Immutable types are explicitly wrapped
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
@@ -670,7 +682,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructNew(Expr.New expr, Term operand) {
-		return new Operator(Kind.NEW,WY_REF(operand));
+		Type element = expr.getOperand().getType();
+		if(isCopyable(element)) {
+			// immutable types must be converted into references
+			return new Operator(Kind.NEW,WY_REF(operand));
+		} else {
+			// mutable types are already references
+			return operand;
+		}
 	}
 
 	@Override
@@ -1927,6 +1946,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			//
 			Decl.Type td = tn.getLink().getTarget();
 			return isCopyable(td.getType());
+		} else if (type instanceof Type.Union) {
+			Type.Union union = (Type.Union) type;
+			for (int i = 0; i != union.size(); ++i) {
+				if (!isCopyable(union.get(i))) {
+					return false;
+				}
+			}
+			return true;
 		} else {
 			return false;
 		}
