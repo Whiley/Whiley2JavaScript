@@ -139,6 +139,12 @@ public class RuntimeValidTests {
 		IGNORED.put("StaticVar_Valid_8", "#29");
 		// Problem with Cloning
 		IGNORED.put("Template_Valid_29", "#32");
+		// Implementation of References
+		IGNORED.put("Reference_Valid_5", "#41");
+		IGNORED.put("Reference_Valid_14", "#41");
+		IGNORED.put("Reference_Valid_16", "#41");
+		IGNORED.put("Reference_Valid_17", "#41");
+		IGNORED.put("Reference_Valid_18", "#41");
 	}
 
 	/**
