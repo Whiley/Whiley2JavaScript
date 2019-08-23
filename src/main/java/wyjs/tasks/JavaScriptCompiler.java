@@ -202,25 +202,35 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructFunction(Decl.Function decl, List<Term> precondition, List<Term> postcondition, Term _body) {
-		Block body = (Block) _body;
-		// Determine qualified name
-		String name = toMangledName(decl);
-		// Translate parameters
-		List<String> parameters = toParameterNames(decl.getParameters());
-		//
-		declareNamedReturns(decl,body);
-		// Done
-		return new JavaScriptFile.Method(name, parameters, body);
+		if (decl.getModifiers().match(Modifier.Native.class) == null) {
+			Block body = (Block) _body;
+			// Determine qualified name
+			String name = toMangledName(decl);
+			// Translate parameters
+			List<String> parameters = toParameterNames(decl.getParameters());
+			//
+			declareNamedReturns(decl, body);
+			// Done
+			return new JavaScriptFile.Method(name, parameters, body);
+		} else {
+			// Native methods don't generate any JavaScript
+			return null;
+		}
 	}
 
 	@Override
 	public Term constructMethod(Decl.Method decl, List<Term> precondition, List<Term> postcondition, Term body) {
-		// Determine qualified name
-		String name = toMangledName(decl);
-		// Translate parameters
-		List<String> parameters = toParameterNames(decl.getParameters());
-		// Done
-		return new JavaScriptFile.Method(name, parameters, (Block) body);
+		if (decl.getModifiers().match(Modifier.Native.class) == null) {
+			// Determine qualified name
+			String name = toMangledName(decl);
+			// Translate parameters
+			List<String> parameters = toParameterNames(decl.getParameters());
+			// Done
+			return new JavaScriptFile.Method(name, parameters, (Block) body);
+		} else {
+			// Native methods don't generate any JavaScript
+			return null;
+		}
 	}
 
 	@Override
