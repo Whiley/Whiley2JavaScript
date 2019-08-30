@@ -41,6 +41,7 @@ import static wyil.lang.WyilFile.EXPR_bitwisexor;
 import static wyil.lang.WyilFile.EXPR_cast;
 import static wyil.lang.WyilFile.EXPR_constant;
 import static wyil.lang.WyilFile.EXPR_dereference;
+import static wyil.lang.WyilFile.EXPR_fielddereference;
 import static wyil.lang.WyilFile.EXPR_equal;
 import static wyil.lang.WyilFile.EXPR_indirectinvoke;
 import static wyil.lang.WyilFile.EXPR_integeraddition;
@@ -323,6 +324,11 @@ public abstract class AbstractTranslator<S> {
 			S src = visitLVal((WyilFile.LVal) e.getOperand(), environment);
 			return constructDereferenceLVal(e,src);
 		}
+		case EXPR_fielddereference: {
+			Expr.FieldDereference e = (Expr.FieldDereference) lval;
+			S src = visitLVal((WyilFile.LVal) e.getOperand(), environment);
+			return constructFieldDereferenceLVal(e,src);
+		}
 		case EXPR_recordaccess:
 		case EXPR_recordborrow: {
 			Expr.RecordAccess e = (Expr.RecordAccess) lval;
@@ -510,6 +516,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_logicaluniversal:
 		case EXPR_bitwisenot:
 		case EXPR_dereference:
+		case EXPR_fielddereference:
 		case EXPR_staticnew:
 		case EXPR_new:
 		case EXPR_recordaccess:
@@ -577,6 +584,8 @@ public abstract class AbstractTranslator<S> {
 			return visitBitwiseComplement((Expr.BitwiseComplement) expr, environment);
 		case EXPR_dereference:
 			return visitDereference((Expr.Dereference) expr, target, environment);
+		case EXPR_fielddereference:
+			return visitFieldDereference((Expr.FieldDereference) expr, target, environment);
 		case EXPR_staticnew:
 		case EXPR_new: {
 			Type.Reference refT = selectReference(target, expr, environment);
@@ -767,6 +776,11 @@ public abstract class AbstractTranslator<S> {
 	public S visitDereference(Expr.Dereference expr, Type target, Environment environment) {
 		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
 		return constructDereference(expr,operand);
+	}
+
+	public S visitFieldDereference(Expr.FieldDereference expr, Type target, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+		return constructFieldDereference(expr,operand);
 	}
 
 	public S visitEqual(Expr.Equal expr, Environment environment) {
@@ -1026,6 +1040,8 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructDereferenceLVal(Expr.Dereference expr, S operand);
 
+	public abstract S constructFieldDereferenceLVal(Expr.FieldDereference expr, S operand);
+
 	public abstract S constructRecordAccessLVal(Expr.RecordAccess expr, S source);
 
 	public abstract S constructVariableAccessLVal(Expr.VariableAccess expr);
@@ -1059,6 +1075,8 @@ public abstract class AbstractTranslator<S> {
 	public abstract S constructConstant(Expr.Constant expr);
 
 	public abstract S constructDereference(Expr.Dereference expr, S operand);
+
+	public abstract S constructFieldDereference(Expr.FieldDereference expr, S operand);
 
 	public abstract S constructEqual(Expr.Equal expr, S lhs, S rhs);
 

@@ -105,6 +105,8 @@ public class RuntimeValidTests {
 		IGNORED.put("Lambda_Valid_11", "908");
 		IGNORED.put("Template_Valid_35", "908");
 		IGNORED.put("Template_Valid_36", "908");
+		// Bug with Template Inference
+		IGNORED.put("Template_Valid_38", "912");
 		// Semantics of Runtime Type Tests
 		IGNORED.put("RecursiveType_Valid_7", "936");
 		IGNORED.put("TypeEquals_Valid_61", "936");
@@ -139,12 +141,10 @@ public class RuntimeValidTests {
 		IGNORED.put("StaticVar_Valid_8", "#29");
 		// Problem with Cloning
 		IGNORED.put("Template_Valid_29", "#32");
-		// Implementation of References
-		IGNORED.put("Reference_Valid_5", "#41");
-		IGNORED.put("Reference_Valid_14", "#41");
-		IGNORED.put("Reference_Valid_16", "#41");
-		IGNORED.put("Reference_Valid_17", "#41");
-		IGNORED.put("Reference_Valid_18", "#41");
+		// Coercions for Unknown References
+		IGNORED.put("UnknownReference_Valid_1", "#44");
+		IGNORED.put("UnknownReference_Valid_2", "#44");
+		IGNORED.put("UnknownReference_Valid_3", "#44");
 	}
 
 	/**

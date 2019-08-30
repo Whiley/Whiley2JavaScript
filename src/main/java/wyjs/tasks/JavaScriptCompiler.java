@@ -413,13 +413,18 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
-		Type elementType = expr.getType();
-		if (isCopyable(elementType)) {
-			// Immutable types are explicitly wrapped
-			return new PropertyAccess(operand, "$ref");
-		} else {
-			return operand;
+		return new PropertyAccess(operand, "$ref");
+	}
+
+	@Override
+	public Term constructFieldDereferenceLVal(Expr.FieldDereference expr, Term operand) {
+		Type type = expr.getOperand().getType();
+		//
+		if (!isUnknownReference(type)) {
+			// Known types are explicitly wrapped, whilst unknown types are not.
+			operand =  new PropertyAccess(operand, "$ref");
 		}
+		return new PropertyAccess(operand, expr.getField().get());
 	}
 
 	@Override
@@ -543,13 +548,17 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereference(Expr.Dereference expr, Term operand) {
-		Type elementType = expr.getType();
-		if (isCopyable(elementType)) {
-			// Immutable types are explicitly wrapped
-			return new PropertyAccess(operand, "$ref");
-		} else {
-			return operand;
+		return new PropertyAccess(operand, "$ref");
+	}
+
+	@Override
+	public Term constructFieldDereference(Expr.FieldDereference expr, Term operand) {
+		Type type = expr.getOperand().getType();
+		if (!isUnknownReference(type)) {
+			// Known types are explicitly wrapped, whilst unknown types are not.
+			operand =  new PropertyAccess(operand, "$ref");
 		}
+		return new PropertyAccess(operand, expr.getField().get());
 	}
 
 	@Override
@@ -692,14 +701,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructNew(Expr.New expr, Term operand) {
-		Type element = expr.getOperand().getType();
-		if(isCopyable(element)) {
-			// immutable types must be converted into references
-			return new Operator(Kind.NEW,WY_REF(operand));
-		} else {
-			// mutable types are already references
-			return operand;
-		}
+		// known types must be converted into references
+		return new Operator(Kind.NEW,WY_REF(operand));
 	}
 
 	@Override
@@ -1964,6 +1967,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				}
 			}
 			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isUnknownReference(Type type) {
+		if (type instanceof Type.Reference) {
+			Type.Reference t = (Type.Reference) type;
+			return t.isUnknown();
+		} else if(type instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) type;
+			Decl.Type td = t.getLink().getTarget();
+			return isUnknownReference(td.getType());
 		} else {
 			return false;
 		}
