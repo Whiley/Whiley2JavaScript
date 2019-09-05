@@ -236,10 +236,17 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	@Override
 	public Term constructLambda(Decl.Lambda decl, Term term) {
 		List<String> parameters = toParameterNames(decl.getParameters());
-		// Construct body
-		Term body = new Return(term);
+		// Construct inner lambda
+		Term inner = new Lambda(parameters,new Block(new Return(term)));
+		// NOTE: need to use Immediately Invoked Function Expression here, otherwise
+		// capture variables don't behave properly.
+		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables());
+		List<String> captures = toParameterNames(captured);
+		Term[] capturedArgs = toLambdaArguments(captured);
+		// Construct outer lambda (this is for the IIFE)
+		Term outer = new Lambda(captures,new Block(new Return(inner)));
 		//
-		return new Lambda(parameters,new Block(body));
+		return new JavaScriptFile.IndirectInvoke(outer, capturedArgs);
 	}
 
 	// ====================================================================================
@@ -2118,6 +2125,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		ArrayList<String> results = new ArrayList<>();
 		for(int i=0;i!=parameters.size();++i) {
 			results.add(parameters.get(i).getName().toString());
+		}
+		return results;
+	}
+
+	private Term[] toLambdaArguments(Tuple<Decl.Variable> arguments) {
+		Term[] results = new Term[arguments.size()];
+		for (int i = 0; i != arguments.size(); ++i) {
+			results[i] = new JavaScriptFile.VariableAccess(arguments.get(i).getName().toString());
 		}
 		return results;
 	}
