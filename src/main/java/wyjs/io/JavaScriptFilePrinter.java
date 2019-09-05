@@ -94,10 +94,10 @@ public class JavaScriptFilePrinter {
 		} else if(term instanceof JavaScriptFile.IfElse) {
 			writeIfElse(indent,(JavaScriptFile.IfElse) term);
 		} else if(term instanceof JavaScriptFile.Invoke) {
-			writeInvoke((JavaScriptFile.Invoke) term);
+			writeInvoke(indent, (JavaScriptFile.Invoke) term);
 			out.println(";");
 		} else if(term instanceof JavaScriptFile.IndirectInvoke) {
-			writeIndirectInvoke((JavaScriptFile.IndirectInvoke) term);
+			writeIndirectInvoke(indent, (JavaScriptFile.IndirectInvoke) term);
 			out.println(";");
 		} else if(term instanceof JavaScriptFile.Switch) {
 			writeSwitch(indent,(JavaScriptFile.Switch) term);
@@ -113,7 +113,7 @@ public class JavaScriptFilePrinter {
 	}
 
 	private void writeAssignment(int indent, JavaScriptFile.Assignment term) {
-		writeAssignment(term);
+		writeAssignmentAsExpression(indent, term);
 		out.println(";");
 	}
 
@@ -131,27 +131,27 @@ public class JavaScriptFilePrinter {
 		out.print("do");
 		writeBlock(indent, term.getBody());
 		out.print(" while(");
-		writeExpression(term.getCondition());
+		writeExpression(indent,term.getCondition());
 		out.println(");");
 	}
 
 	private void writeFor(int indent, JavaScriptFile.For term) {
 		out.print("for(");
-		writeForVariableDeclaration(term.getInitialiser());
-		writeExpression(term.getCondition());
+		writeForVariableDeclaration(indent,term.getInitialiser());
+		writeExpression(indent,term.getCondition());
 		out.print(";");
-		writeExpression(term.getIncrement());
+		writeExpression(indent,term.getIncrement());
 		out.print(")");
 		writeBlock(indent, term.getBody());
 		out.println();
 	}
 
-	private void writeForVariableDeclaration(JavaScriptFile.VariableDeclaration term) {
+	private void writeForVariableDeclaration(int indent, JavaScriptFile.VariableDeclaration term) {
 		out.print("var ");
 		out.print(term.getName());
 		if (term.getInitialiser() != null) {
 			out.print(" = ");
-			writeExpression(term.getInitialiser());
+			writeExpression(indent,term.getInitialiser());
 		}
 		out.print(";");
 	}
@@ -165,7 +165,7 @@ public class JavaScriptFilePrinter {
 			}
 			if(cAse.getLabel() != null) {
 				out.print("if(");
-				writeExpression(cAse.getLabel());
+				writeExpression(indent,cAse.getLabel());
 				out.print(") ");
 			}
 			writeBlock(indent, cAse.getBlock());
@@ -175,7 +175,7 @@ public class JavaScriptFilePrinter {
 
 	private void writeSwitch(int indent, JavaScriptFile.Switch term) {
 		out.print("switch(");
-		writeExpression(term.getCondition());
+		writeExpression(indent,term.getCondition());
 		out.println(") {");
 		List<JavaScriptFile.Switch.Case> cases = term.getCases();
 		for (int i = 0; i != cases.size(); ++i) {
@@ -186,7 +186,7 @@ public class JavaScriptFilePrinter {
 				out.print("default:");
 			} else {
 				out.print("case ");
-				writeExpression(value);
+				writeExpression(indent,value);
 				out.print(":");
 			}
 			// Check for fall-thru case.
@@ -203,7 +203,7 @@ public class JavaScriptFilePrinter {
 		out.print("return");
 		if(term.getInitialiser() != null) {
 			out.print(" ");
-			writeExpression(term.getInitialiser());
+			writeExpression(indent,term.getInitialiser());
 		}
 		out.println(";");
 	}
@@ -223,52 +223,52 @@ public class JavaScriptFilePrinter {
 		out.print(term.getName());
 		if(term.getInitialiser() != null) {
 			out.print(" = ");
-			writeExpression(term.getInitialiser());
+			writeExpression(indent,term.getInitialiser());
 		}
 		out.println(";");
 	}
 
 	private void writeWhile(int indent, JavaScriptFile.While term) {
 		out.print("while(");
-		writeExpression(term.getCondition());
+		writeExpression(indent,term.getCondition());
 		out.print(") ");
 		writeBlock(indent, term.getBody());
 		out.println();
 	}
 
-	private void writeExpressionWithBraces(JavaScriptFile.Term term) {
+	private void writeExpressionWithBraces(int indent, JavaScriptFile.Term term) {
 		if(term instanceof JavaScriptFile.Operator) {
 			out.print("(");
-			writeExpression(term);
+			writeExpression(indent,term);
 			out.print(")");
 			return;
 		}
-		writeExpression(term);
+		writeExpression(indent,term);
 	}
 
-	private void writeExpression(JavaScriptFile.Term term) {
+	private void writeExpression(int indent, JavaScriptFile.Term term) {
 		if(term instanceof JavaScriptFile.ArrayAccess) {
-			writeArrayAccess((JavaScriptFile.ArrayAccess) term);
+			writeArrayAccess(indent, (JavaScriptFile.ArrayAccess) term);
 		} else if(term instanceof JavaScriptFile.ArrayInitialiser) {
-			writeArrayInitialiser((JavaScriptFile.ArrayInitialiser) term);
+			writeArrayInitialiser(indent, (JavaScriptFile.ArrayInitialiser) term);
 		} else if(term instanceof JavaScriptFile.ArrayLength) {
-			writeArrayLength((JavaScriptFile.ArrayLength) term);
+			writeArrayLength(indent, (JavaScriptFile.ArrayLength) term);
 		} else if(term instanceof JavaScriptFile.Assignment) {
-			writeAssignment((JavaScriptFile.Assignment) term);
+			writeAssignmentAsExpression(indent, (JavaScriptFile.Assignment) term);
 		} else if(term instanceof JavaScriptFile.Constant) {
 			writeConstant((JavaScriptFile.Constant) term);
 		} else if(term instanceof JavaScriptFile.Invoke) {
-			writeInvoke((JavaScriptFile.Invoke) term);
+			writeInvoke(indent, (JavaScriptFile.Invoke) term);
 		} else if(term instanceof JavaScriptFile.IndirectInvoke) {
-			writeIndirectInvoke((JavaScriptFile.IndirectInvoke) term);
+			writeIndirectInvoke(indent, (JavaScriptFile.IndirectInvoke) term);
 		} else if(term instanceof JavaScriptFile.Lambda) {
-			writeLambda((JavaScriptFile.Lambda) term);
+			writeLambda(indent, (JavaScriptFile.Lambda) term);
 		} else if(term instanceof JavaScriptFile.ObjectLiteral) {
-			writeObjectLiteral((JavaScriptFile.ObjectLiteral) term);
+			writeObjectLiteral(indent, (JavaScriptFile.ObjectLiteral) term);
 		} else if(term instanceof JavaScriptFile.Operator) {
-			writeOperator((JavaScriptFile.Operator) term);
+			writeOperator(indent, (JavaScriptFile.Operator) term);
 		} else if(term instanceof JavaScriptFile.PropertyAccess) {
-			writePropertyAccess((JavaScriptFile.PropertyAccess) term);
+			writePropertyAccess(indent, (JavaScriptFile.PropertyAccess) term);
 		} else if(term instanceof JavaScriptFile.VariableAccess) {
 			writeVariableAccess((JavaScriptFile.VariableAccess) term);
 		} else {
@@ -276,32 +276,32 @@ public class JavaScriptFilePrinter {
 		}
 	}
 
-	private void writeAssignment(JavaScriptFile.Assignment term) {
-		writeExpression(term.getLefthandSide());
+	private void writeAssignmentAsExpression(int indent, JavaScriptFile.Assignment term) {
+		writeExpression(indent,term.getLefthandSide());
 		out.print(" = ");
-		writeExpression(term.getRighthandSide());
+		writeExpression(indent,term.getRighthandSide());
 	}
 
-	private void writeArrayAccess(JavaScriptFile.ArrayAccess term) {
-		writeExpressionWithBraces(term.getSource());
+	private void writeArrayAccess(int indent, JavaScriptFile.ArrayAccess term) {
+		writeExpressionWithBraces(indent,term.getSource());
 		out.print("[");
-		writeExpression(term.getIndex());
+		writeExpression(indent,term.getIndex());
 		out.print("]");
 	}
 
-	private void writeArrayInitialiser(JavaScriptFile.ArrayInitialiser term) {
+	private void writeArrayInitialiser(int indent, JavaScriptFile.ArrayInitialiser term) {
 		out.print("[");
 		for(int i=0;i!=term.size();++i) {
 			if(i != 0) {
 				out.print(", ");
 			}
-			writeExpression(term.getElement(i));
+			writeExpression(indent,term.getElement(i));
 		}
 		out.print("]");
 	}
 
-	private void writeArrayLength(JavaScriptFile.ArrayLength term) {
-		writeExpressionWithBraces(term.getSource());
+	private void writeArrayLength(int indent, JavaScriptFile.ArrayLength term) {
+		writeExpressionWithBraces(indent,term.getSource());
 		out.print(".length");
 	}
 
@@ -323,26 +323,26 @@ public class JavaScriptFilePrinter {
 		}
 	}
 
-	private void writeInvoke(JavaScriptFile.Invoke term) {
+	private void writeInvoke(int indent, JavaScriptFile.Invoke term) {
 		JavaScriptFile.Term receiver = term.getReceiver();
 		if(receiver != null) {
-			writeExpressionWithBraces(receiver);
+			writeExpressionWithBraces(indent,receiver);
 			out.print(".");
 		}
 		out.print(term.getName());
 		out.print("(");
-		writeArguments(term.getArguments());
+		writeArguments(indent, term.getArguments());
 		out.print(")");
 	}
 
-	private void writeIndirectInvoke(JavaScriptFile.IndirectInvoke term) {
-		writeExpressionWithBraces(term.getReceiver());
+	private void writeIndirectInvoke(int indent, JavaScriptFile.IndirectInvoke term) {
+		writeExpressionWithBraces(indent,term.getReceiver());
 		out.print("(");
-		writeArguments(term.getArguments());
+		writeArguments(indent, term.getArguments());
 		out.print(")");
 	}
 
-	private void writeObjectLiteral(JavaScriptFile.ObjectLiteral term) {
+	private void writeObjectLiteral(int indent, JavaScriptFile.ObjectLiteral term) {
 		out.print("{");
 		for(int i=0;i!=term.size();++i) {
 			Pair<String,JavaScriptFile.Term> property = term.getProperty(i);
@@ -351,25 +351,25 @@ public class JavaScriptFilePrinter {
 			}
 			out.print(property.first());
 			out.print(": ");
-			writeExpression(property.second());
+			writeExpression(indent,property.second());
 		}
 		out.print("}");
 	}
 
-	private void writeOperator(JavaScriptFile.Operator term) {
+	private void writeOperator(int indent, JavaScriptFile.Operator term) {
 		JavaScriptFile.Operator.Kind kind = term.getKind();
 		String operator = getOperatorString(kind);
 		List<JavaScriptFile.Term> operands = term.getOperands();
 		if(isPrefix(kind)) {
 			out.print(operator);
-			writeExpressionWithBraces(operands.get(0));
+			writeExpressionWithBraces(indent,operands.get(0));
 		} else {
-			writeExpressionWithBraces(operands.get(0));
+			writeExpressionWithBraces(indent,operands.get(0));
 			for (int i = 1; i < operands.size(); ++i) {
 				out.print(" ");
 				out.print(operator);
 				out.print(" ");
-				writeExpressionWithBraces(operands.get(i));
+				writeExpressionWithBraces(indent,operands.get(i));
 			}
 		}
 	}
@@ -444,8 +444,8 @@ public class JavaScriptFilePrinter {
 		}
 	}
 
-	private void writePropertyAccess(JavaScriptFile.PropertyAccess term) {
-		writeExpressionWithBraces(term.getSource());
+	private void writePropertyAccess(int indent, JavaScriptFile.PropertyAccess term) {
+		writeExpressionWithBraces(indent, term.getSource());
 		out.print(".");
 		out.print(term.getProperty());
 	}
@@ -454,12 +454,11 @@ public class JavaScriptFilePrinter {
 		out.print(term.getName());
 	}
 
-	private void writeLambda(JavaScriptFile.Lambda term) {
+	private void writeLambda(int indent, JavaScriptFile.Lambda term) {
 		out.print("function(");
 		writeParameters(term.getParameters());
 		out.print(")");
-		// FIXME: the indentation should be passed through.
-		writeBlock(1,term.getBody());
+		writeBlock(indent,term.getBody());
 	}
 
 	/**
@@ -467,12 +466,12 @@ public class JavaScriptFilePrinter {
 	 *
 	 * @param arguments
 	 */
-	private void writeArguments(List<JavaScriptFile.Term> arguments) {
+	private void writeArguments(int indent, List<JavaScriptFile.Term> arguments) {
 		for(int i=0;i!=arguments.size();++i) {
 			if(i != 0) {
 				out.print(", ");
 			}
-			writeExpression(arguments.get(i));
+			writeExpression(indent, arguments.get(i));
 		}
 	}
 
