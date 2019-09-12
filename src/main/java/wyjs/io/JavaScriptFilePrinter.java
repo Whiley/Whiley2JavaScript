@@ -39,9 +39,15 @@ public class JavaScriptFilePrinter {
 			writeVariableDeclaration(indent, (JavaScriptFile.VariableDeclaration) d);
 		} else if (d instanceof JavaScriptFile.Method) {
 			write(indent, (JavaScriptFile.Method) d);
+		} else if (d instanceof JavaScriptFile.NativeDeclaration) {
+			write(indent, (JavaScriptFile.NativeDeclaration) d);
 		} else {
 			throw new RuntimeException("Unknown declaration encountered (" + d.getClass().getName() + ")");
 		}
+	}
+
+	private void write(int indent, JavaScriptFile.NativeDeclaration method) {
+		out.print(method.getContents());
 	}
 
 	private void write(int indent, JavaScriptFile.Method method) {

@@ -14,8 +14,11 @@
 package wyjs;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import wybs.lang.Build;
 import wybs.lang.Build.Project;
@@ -33,7 +36,6 @@ import wyfs.lang.Path.ID;
 import wyfs.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
-import wyjs.io.JavaScriptFilePrinter;
 import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Module.Activator {
@@ -45,6 +47,7 @@ public class Activator implements Module.Activator {
 	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
 	private static Trie STANDARD_CONFIG_OPTION = Trie.fromString("build/js/standard");
 	private static Trie STRICTMODE_CONFIG_OPTION = Trie.fromString("build/js/strictmode");
+	private static Value.Array INCLUDES_DEFAULT = new Value.Array();
 	private static Value.UTF8 STANDARD_DEFAULT = new Value.UTF8(JavaScriptFile.Standard.ES6.toString());
 	private static Value.Bool STRICTMODE_DEFAULT = new Value.Bool(true);
 	private static Value.Bool DEBUG_DEFAULT = new Value.Bool(false);
@@ -65,7 +68,7 @@ public class Activator implements Module.Activator {
 		@Override
 		public Configuration.Schema getConfigurationSchema() {
 			return Configuration.fromArray(
-					Configuration.UNBOUND_STRING_ARRAY(INCLUDES_CONFIG_OPTION, "Files to include in package", false),
+					Configuration.UNBOUND_STRING_ARRAY(INCLUDES_CONFIG_OPTION, "Files to include in package", INCLUDES_DEFAULT),
 					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", DEBUG_DEFAULT),
 					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", TARGET_DEFAULT),
 					Configuration.UNBOUND_STRING(STANDARD_CONFIG_OPTION,
@@ -81,18 +84,25 @@ public class Activator implements Module.Activator {
 			Trie pkgName = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 			// Specify directory where generated JS files are dumped.
 			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
+			// Extract any additional included (i.e. native) files
+			List<Path.Entry<JavaScriptFile>> includes = extractJavaScriptIncludes(project.getRoot(),
+					configuration.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
 			// Construct the source root
 			Path.Root sourceRoot = project.getRoot().createRelativeRoot(source);
 			// Register build target for this package
-			registerBuildTarget(configuration,project,sourceRoot,pkgName);
+			registerBuildTarget(configuration,project,sourceRoot,pkgName, includes);
 			// Add build rules for any project dependencies
 			for(Build.Package dep : project.getPackages()) {
+				Configuration depConfiguration = dep.getConfiguration();
 				// Determine package name
-				Trie depName = Trie.fromString(dep.getConfiguration().get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+				Trie depName = Trie.fromString(depConfiguration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 				// Determine source root
 				Path.Root pkgRoot = dep.getRoot();
+				// Extract package js includes
+				includes = extractJavaScriptIncludes(pkgRoot,
+						depConfiguration.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
 				// Register corresponding build target
-				registerBuildTarget(configuration,project,pkgRoot,depName);
+				registerBuildTarget(configuration, project, pkgRoot, depName, includes);
 			}
 		}
 
@@ -112,7 +122,7 @@ public class Activator implements Module.Activator {
 		}
 
 		private void registerBuildTarget(Configuration configuration, Build.Project project, Path.Root sourceRoot,
-				Trie pkg) throws IOException {
+				Trie pkg, List<Path.Entry<JavaScriptFile>> jsIncludes) throws IOException {
 			// Specify directory where generated JS files are dumped.
 			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
 			// Extract target JS standard
@@ -120,7 +130,7 @@ public class Activator implements Module.Activator {
 			// Extract strict mode setting
 			boolean strict = configuration.get(Value.Bool.class, STRICTMODE_CONFIG_OPTION).unwrap();
 			// Specify set of files included
-			Content.Filter<WyilFile> includes = Content.filter("**", WyilFile.ContentType);
+			Content.Filter<WyilFile> wyilIncludes = Content.filter("**", WyilFile.ContentType);
 			// Specify whether debug mode enabled or not.
 			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
 			// Construct the binary root
@@ -128,13 +138,14 @@ public class Activator implements Module.Activator {
 			// Initialise the target file being built
 			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot, pkg, strict, standard);
 			//
-			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, includes, null) {
+			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, wyilIncludes, null) {
 
 				@Override
 				protected void apply(List<Entry<WyilFile>> matches, Collection<Task> tasks) throws IOException {
 					// FIXME: this looks like a bug when we have multiple matches
-					JavaScriptCompileTask task = new JavaScriptCompileTask(project,binary,matches.get(0));
+					JavaScriptCompileTask task = new JavaScriptCompileTask(project, binary, matches.get(0));
 					task.setDebug(debug);
+					task.setIncludes(jsIncludes);
 					tasks.add(task);
 				}
 
@@ -160,6 +171,15 @@ public class Activator implements Module.Activator {
 			return target;
 		}
 	};
+
+	private static List<Path.Entry<JavaScriptFile>> extractJavaScriptIncludes(Path.Root root, Value.UTF8... items) throws IOException {
+		ArrayList<Path.Entry<JavaScriptFile>> files = new ArrayList<>();
+		for(int i=0;i!=items.length;++i) {
+			Trie filter =Trie.fromString(items[i].toString());
+			files.addAll(root.get(Content.filter(filter, JavaScriptFile.ContentType)));
+		}
+		return files;
+	}
 
 	private static JavaScriptFile.Standard fromStandardString(String str) {
 		for (JavaScriptFile.Standard std : JavaScriptFile.Standard.values()) {

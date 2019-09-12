@@ -15,6 +15,7 @@ package wyjs.tasks;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import wybs.lang.Build;
@@ -36,7 +37,12 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 	 */
 	private Logger logger = Logger.NULL;
 
-	public JavaScriptCompileTask(Build.Project project,Path.Entry<JavaScriptFile> target,
+	/**
+	 * Additional JavaScript files to include in generated file.
+	 */
+	private List<Path.Entry<JavaScriptFile>> includes;
+
+	public JavaScriptCompileTask(Build.Project project, Path.Entry<JavaScriptFile> target,
 			Path.Entry<WyilFile> sources) {
 		super(project, target, Arrays.asList(sources));
 	}
@@ -47,6 +53,10 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+
+	public void setIncludes(List<Path.Entry<JavaScriptFile>> includes) {
+		this.includes = includes;
 	}
 
 	@Override
@@ -60,13 +70,15 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		// requires I/O.
 		JavaScriptFile jsf = target.read();
 		WyilFile wyf = sources.get(0).read();
+		// Extract other (native) includes
+		JavaScriptFile[] jsincs = readAll(includes);
 		// Construct the lambda for subsequent execution. This will eventually make its
 		// way into some kind of execution pool, possibly for concurrent execution with
 		// other tasks.
-		return () -> execute(jsf, wyf);
+		return () -> execute(jsf, wyf, jsincs);
 	}
 
-	public boolean execute(JavaScriptFile target, WyilFile source) {
+	public boolean execute(JavaScriptFile target, WyilFile source, JavaScriptFile... includes) {
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
@@ -74,7 +86,19 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
 		new JavaScriptCompiler(target).visitModule(source);
+		// Process includes
+		for(JavaScriptFile i : includes) {
+			target.getDeclarations().addAll(i.getDeclarations());
+		}
 		// How can this fail?
 		return true;
+	}
+
+	private JavaScriptFile[] readAll(List<Path.Entry<JavaScriptFile>> includes) throws IOException {
+		JavaScriptFile[] files = new JavaScriptFile[includes.size()];
+		for(int i=0;i!=files.length;++i) {
+			files[i] = includes.get(i).read();
+		}
+		return files;
 	}
 }
