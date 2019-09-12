@@ -175,8 +175,12 @@ public class Activator implements Module.Activator {
 	private static List<Path.Entry<JavaScriptFile>> extractJavaScriptIncludes(Path.Root root, Value.UTF8... items) throws IOException {
 		ArrayList<Path.Entry<JavaScriptFile>> files = new ArrayList<>();
 		for(int i=0;i!=items.length;++i) {
-			Trie filter =Trie.fromString(items[i].toString());
-			files.addAll(root.get(Content.filter(filter, JavaScriptFile.ContentType)));
+			String item = items[i].toString();
+			// Strip JavaScript suffix
+			if(item.endsWith(".js")) {
+				Trie filter = Trie.fromString(item.replaceAll(".js",""));
+				files.addAll(root.get(Content.filter(filter, JavaScriptFile.ContentType)));
+			}
 		}
 		return files;
 	}
