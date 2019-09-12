@@ -13,9 +13,12 @@
 // limitations under the License.
 package wyjs.core;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +57,22 @@ public class JavaScriptFile {
 			// NOTE: this is strictly a hack at this time as its unclear what the best
 			// alternative option is. Specifically, parsing JavaScriptFiles is not something
 			// I'm contemplating right now :)
-			return new JavaScriptFile(true, Standard.ES6);
+			Reader reader = new InputStreamReader(e.inputStream());
+			BufferedReader in = new BufferedReader(reader);
+
+	        StringBuilder text = new StringBuilder();
+			int len = 0;
+			char[] buf = new char[1024];
+			while ((len = in.read(buf)) != -1) {
+				text.append(buf, 0, len);
+			}
+	        // Finally, construct the native declaration
+			NativeDeclaration d = new NativeDeclaration(text.toString());
+			//
+			JavaScriptFile js = new JavaScriptFile(true, Standard.ES6);
+			// Append our native declarations.
+			js.declarations.add(d);
+			return js;
 		}
 
 		@Override
@@ -349,6 +367,18 @@ public class JavaScriptFile {
 			return initialiser;
 		}
 	}
+
+	public static class NativeDeclaration implements Declaration {
+		private final String contents;
+
+		public NativeDeclaration(String contents) {
+			this.contents = contents;
+		}
+
+		public String getContents() {
+			return contents;
+		}
+	};
 
 	/**
 	 * Represents either a statement or expression in a Java source file.

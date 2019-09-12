@@ -202,34 +202,51 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructFunction(Decl.Function decl, List<Term> precondition, List<Term> postcondition, Term _body) {
-		Block body = (Block) _body;
-		// Determine qualified name
-		String name = toMangledName(decl);
-		// Translate parameters
-		List<String> parameters = toParameterNames(decl.getParameters());
-		//
-		declareNamedReturns(decl,body);
-		// Done
-		return new JavaScriptFile.Method(name, parameters, body);
+		if (decl.getModifiers().match(Modifier.Native.class) == null) {
+			Block body = (Block) _body;
+			// Determine qualified name
+			String name = toMangledName(decl);
+			// Translate parameters
+			List<String> parameters = toParameterNames(decl.getParameters());
+			//
+			declareNamedReturns(decl, body);
+			// Done
+			return new JavaScriptFile.Method(name, parameters, body);
+		} else {
+			// Native methods don't generate any JavaScript
+			return null;
+		}
 	}
 
 	@Override
 	public Term constructMethod(Decl.Method decl, List<Term> precondition, List<Term> postcondition, Term body) {
-		// Determine qualified name
-		String name = toMangledName(decl);
-		// Translate parameters
-		List<String> parameters = toParameterNames(decl.getParameters());
-		// Done
-		return new JavaScriptFile.Method(name, parameters, (Block) body);
+		if (decl.getModifiers().match(Modifier.Native.class) == null) {
+			// Determine qualified name
+			String name = toMangledName(decl);
+			// Translate parameters
+			List<String> parameters = toParameterNames(decl.getParameters());
+			// Done
+			return new JavaScriptFile.Method(name, parameters, (Block) body);
+		} else {
+			// Native methods don't generate any JavaScript
+			return null;
+		}
 	}
 
 	@Override
 	public Term constructLambda(Decl.Lambda decl, Term term) {
 		List<String> parameters = toParameterNames(decl.getParameters());
-		// Construct body
-		Term body = new Return(term);
+		// Construct inner lambda
+		Term inner = new Lambda(parameters,new Block(new Return(term)));
+		// NOTE: need to use Immediately Invoked Function Expression here, otherwise
+		// capture variables don't behave properly.
+		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables());
+		List<String> captures = toParameterNames(captured);
+		Term[] capturedArgs = toLambdaArguments(captured);
+		// Construct outer lambda (this is for the IIFE)
+		Term outer = new Lambda(captures,new Block(new Return(inner)));
 		//
-		return new Lambda(parameters,new Block(body));
+		return new JavaScriptFile.IndirectInvoke(outer, capturedArgs);
 	}
 
 	// ====================================================================================
@@ -403,7 +420,18 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand,"$ref");
+		return new PropertyAccess(operand, "$ref");
+	}
+
+	@Override
+	public Term constructFieldDereferenceLVal(Expr.FieldDereference expr, Term operand) {
+		Type type = expr.getOperand().getType();
+		//
+		if (!isUnknownReference(type)) {
+			// Known types are explicitly wrapped, whilst unknown types are not.
+			operand =  new PropertyAccess(operand, "$ref");
+		}
+		return new PropertyAccess(operand, expr.getField().get());
 	}
 
 	@Override
@@ -527,7 +555,17 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereference(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand,"$ref");
+		return new PropertyAccess(operand, "$ref");
+	}
+
+	@Override
+	public Term constructFieldDereference(Expr.FieldDereference expr, Term operand) {
+		Type type = expr.getOperand().getType();
+		if (!isUnknownReference(type)) {
+			// Known types are explicitly wrapped, whilst unknown types are not.
+			operand =  new PropertyAccess(operand, "$ref");
+		}
+		return new PropertyAccess(operand, expr.getField().get());
 	}
 
 	@Override
@@ -670,6 +708,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructNew(Expr.New expr, Term operand) {
+		// known types must be converted into references
 		return new Operator(Kind.NEW,WY_REF(operand));
 	}
 
@@ -1927,6 +1966,27 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			//
 			Decl.Type td = tn.getLink().getTarget();
 			return isCopyable(td.getType());
+		} else if (type instanceof Type.Union) {
+			Type.Union union = (Type.Union) type;
+			for (int i = 0; i != union.size(); ++i) {
+				if (!isCopyable(union.get(i))) {
+					return false;
+				}
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isUnknownReference(Type type) {
+		if (type instanceof Type.Reference) {
+			Type.Reference t = (Type.Reference) type;
+			return t.isUnknown();
+		} else if(type instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) type;
+			Decl.Type td = t.getLink().getTarget();
+			return isUnknownReference(td.getType());
 		} else {
 			return false;
 		}
@@ -2065,6 +2125,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		ArrayList<String> results = new ArrayList<>();
 		for(int i=0;i!=parameters.size();++i) {
 			results.add(parameters.get(i).getName().toString());
+		}
+		return results;
+	}
+
+	private Term[] toLambdaArguments(Tuple<Decl.Variable> arguments) {
+		Term[] results = new Term[arguments.size()];
+		for (int i = 0; i != arguments.size(); ++i) {
+			results[i] = new JavaScriptFile.VariableAccess(arguments.get(i).getName().toString());
 		}
 		return results;
 	}
