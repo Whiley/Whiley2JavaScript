@@ -39,6 +39,7 @@ import wyjs.tasks.JavaScriptCompileTask;
 public class Activator implements Module.Activator {
 
 	private static Trie PKGNAME_CONFIG_OPTION = Trie.fromString("package/name");
+	private static Trie INCLUDES_CONFIG_OPTION = Trie.fromString("build/js/includes");
 	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
 	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
 	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
@@ -64,6 +65,7 @@ public class Activator implements Module.Activator {
 		@Override
 		public Configuration.Schema getConfigurationSchema() {
 			return Configuration.fromArray(
+					Configuration.UNBOUND_STRING_ARRAY(INCLUDES_CONFIG_OPTION, "Files to include in package", false),
 					Configuration.UNBOUND_BOOLEAN(DEBUG_CONFIG_OPTION, "Set debug mode (default is ON)", DEBUG_DEFAULT),
 					Configuration.UNBOUND_STRING(TARGET_CONFIG_OPTION, "Specify location for generated JavaScript files", TARGET_DEFAULT),
 					Configuration.UNBOUND_STRING(STANDARD_CONFIG_OPTION,
