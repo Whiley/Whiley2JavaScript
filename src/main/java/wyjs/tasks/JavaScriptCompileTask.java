@@ -14,7 +14,9 @@
 package wyjs.tasks;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -40,7 +42,7 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 	/**
 	 * Additional JavaScript files to include in generated file.
 	 */
-	private List<Path.Entry<JavaScriptFile>> includes;
+	private List<Path.Entry<JavaScriptFile>> includes = Collections.EMPTY_LIST;
 
 	public JavaScriptCompileTask(Build.Project project, Path.Entry<JavaScriptFile> target,
 			Path.Entry<WyilFile> sources) {
