@@ -207,7 +207,7 @@ public class RuntimeValidTests {
 		try {
 			// Construct the project
 			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-			SequentialBuildProject project = new SequentialBuildProject(root);
+			SequentialBuildProject project = new SequentialBuildProject(null, root);
 			// Identify source files and target files
 			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
 			List<Path.Entry<WhileyFile>> sources = Arrays.asList(p.first());
