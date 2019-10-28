@@ -16,6 +16,7 @@ package wyjs.util;
 import static wyil.lang.WyilFile.DECL_function;
 import static wyil.lang.WyilFile.DECL_import;
 import static wyil.lang.WyilFile.DECL_importfrom;
+import static wyil.lang.WyilFile.DECL_importwith;
 import static wyil.lang.WyilFile.DECL_lambda;
 import static wyil.lang.WyilFile.DECL_method;
 import static wyil.lang.WyilFile.DECL_property;
@@ -137,6 +138,7 @@ public abstract class AbstractTranslator<S> {
 		switch (decl.getOpcode()) {
 		case DECL_unit:
 			return visitUnit((Decl.Unit) decl);
+		case DECL_importwith:
 		case DECL_importfrom:
 		case DECL_import:
 			return visitImport((Decl.Import) decl);
