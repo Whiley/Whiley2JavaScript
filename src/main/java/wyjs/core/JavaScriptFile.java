@@ -82,7 +82,7 @@ public class JavaScriptFile {
 
 		@Override
 		public String toString() {
-			return "Content-Type: java";
+			return "Content-Type: javascript";
 		}
 
 		@Override
