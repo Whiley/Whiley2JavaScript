@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import wybs.lang.Build;
 import wybs.lang.SyntacticException;
 import wybs.lang.SyntacticHeap;
 import wybs.lang.SyntacticItem;
@@ -113,8 +114,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private int temporaryIndex = 0;
 
-	public JavaScriptCompiler(JavaScriptFile jsFile) {
-		super(subtyping);
+	public JavaScriptCompiler(Build.Meter meter, JavaScriptFile jsFile) {
+		super(meter,subtyping);
 		this.jsFile = jsFile;
 	}
 

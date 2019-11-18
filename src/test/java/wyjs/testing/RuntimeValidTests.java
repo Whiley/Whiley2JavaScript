@@ -238,7 +238,7 @@ public class RuntimeValidTests {
 			});
 			project.refresh();
 			// Actually force the project to build
-			project.build(ForkJoinPool.commonPool()).get();
+			project.build(ForkJoinPool.commonPool(), Build.NULL_METER).get();
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 			// Check whether any syntax error produced

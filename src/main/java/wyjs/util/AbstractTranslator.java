@@ -99,6 +99,7 @@ import java.util.List;
 import java.util.Map;
 
 import wyal.util.NameResolver.ResolutionError;
+import wybs.lang.Build;
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Tuple;
 import wycc.util.ArrayUtils;
@@ -128,13 +129,16 @@ import wyil.util.SubtypeOperator.LifetimeRelation;
  *
  */
 public abstract class AbstractTranslator<S> {
+	protected final Build.Meter meter;
 	protected final SubtypeOperator subtypeOperator;
 
-	public AbstractTranslator(SubtypeOperator subtypeOperator) {
+	public AbstractTranslator(Build.Meter meter, SubtypeOperator subtypeOperator) {
+		this.meter = meter;
 		this.subtypeOperator = subtypeOperator;
 	}
 
 	public S visitDeclaration(Decl decl) {
+		meter.step("declaration");
 		switch (decl.getOpcode()) {
 		case DECL_unit:
 			return visitUnit((Decl.Unit) decl);
@@ -247,6 +251,8 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitStatement(Stmt stmt, Environment environment, EnclosingScope scope) {
+		meter.step("statement");
+		//
 		switch (stmt.getOpcode()) {
 		case DECL_variable:
 		case DECL_variableinitialiser:
@@ -494,6 +500,8 @@ public abstract class AbstractTranslator<S> {
 	 * @param target
 	 */
 	public S visitExpression(Expr expr, Type target, Environment environment) {
+		meter.step("expression");
+		//
 		switch (expr.getOpcode()) {
 		// Terminals
 		case EXPR_constant:
