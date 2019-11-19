@@ -241,7 +241,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Term inner = new Lambda(parameters,new Block(new Return(term)));
 		// NOTE: need to use Immediately Invoked Function Expression here, otherwise
 		// capture variables don't behave properly.
-		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables());
+		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables(meter));
 		List<String> captures = toParameterNames(captured);
 		Term[] capturedArgs = toLambdaArguments(captured);
 		// Construct outer lambda (this is for the IIFE)
@@ -1854,7 +1854,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private void extractUsedVariables(Expr e, Set<Decl.Variable> uses) {
 		// Construct appropriate visitor
-		AbstractVisitor visitor = new AbstractVisitor() {
+		AbstractVisitor visitor = new AbstractVisitor(meter) {
 			@Override
 			public void visitVariableAccess(Expr.VariableAccess e) {
 				uses.add(e.getVariableDeclaration());

@@ -102,12 +102,14 @@ public final class JavaScriptFileWriter extends AbstractConsumer<JavaScriptFileW
 
 	private WyilFile wyilfile;
 
-	public JavaScriptFileWriter(Build.Project project, PrintWriter writer) {
+	public JavaScriptFileWriter(Build.Meter meter, Build.Project project, PrintWriter writer) {
+		super(meter);
 		this.project = project;
 		this.out = writer;
 	}
 
-	public JavaScriptFileWriter(Build.Project project, OutputStream stream) {
+	public JavaScriptFileWriter(Build.Meter meter, Build.Project project, OutputStream stream) {
+		super(meter);
 		this.project = project;
 		this.out = new PrintWriter(new OutputStreamWriter(stream));
 	}

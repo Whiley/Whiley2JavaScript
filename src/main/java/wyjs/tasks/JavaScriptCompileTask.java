@@ -82,6 +82,7 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 	}
 
 	public boolean execute(Build.Meter meter, JavaScriptFile target, WyilFile source, JavaScriptFile... includes) {
+		meter = meter.fork("JavaScriptCompiler");
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
@@ -93,6 +94,8 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		for (JavaScriptFile i : includes) {
 			target.getDeclarations().addAll(i.getDeclarations());
 		}
+		//
+		meter.done();
 		// How can this fail?
 		return true;
 	}
