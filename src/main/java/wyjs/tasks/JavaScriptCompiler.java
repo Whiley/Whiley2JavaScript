@@ -7,6 +7,7 @@ import static wybs.util.AbstractCompilationUnit.ITEM_utf8;
 import static wyil.lang.WyilFile.EXPR_arrayaccess;
 import static wyil.lang.WyilFile.EXPR_arrayborrow;
 import static wyil.lang.WyilFile.EXPR_dereference;
+import static wyil.lang.WyilFile.EXPR_fielddereference;
 import static wyil.lang.WyilFile.EXPR_recordaccess;
 import static wyil.lang.WyilFile.EXPR_recordborrow;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
@@ -261,15 +262,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructAssign(Stmt.Assign stmt, List<Term> lhs, List<Term> rhs) {
+		boolean simple = isSimpleAssignment(stmt);
 		//
-		// FIXME: es6 supports destructuring assignment which could be used here.
-		//
-		if(lhs.size() == 1) {
-			// Easy case
+		if(lhs.size() == 1 && simple) {
+			// Easy case with no destructuring assignment (unless ES6)
 			return new JavaScriptFile.Assignment(lhs.get(0), rhs.get(0));
-		} else if(isSimpleAssignment(stmt)) {
+		} else if(simple) {
 			// NOTE: what we know here is that there is no interference between the left and
-			// right-hand sides. Also, that we have no multi-assignment
+			// right-hand sides. Also, that we have no destructuring assignment (unless ES6)
 			ArrayList<Term> stmts = new ArrayList<>();
 			for(int i=0;i!=lhs.size();++i) {
 				stmts.add(new JavaScriptFile.Assignment(lhs.get(i), rhs.get(i)));
@@ -277,25 +277,28 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return new Block(stmts);
 		} else {
 			// Harder case as have to workaround interference.
-			Tuple<Expr> exprs = stmt.getRightHandSide();
+			Tuple<LVal> lvals = stmt.getLeftHandSide();
+			// Contains set of rhs terms to evaluate first. These all have to be executed
+			// before the lhs terms because of the potential for interference.
 			ArrayList<Term> first = new ArrayList<>();
+			// Contains set of assignments to evaluate afterwards.
 			ArrayList<Term> second = new ArrayList<>();
-			//
-			for(int i=0,j=0;i!=exprs.size();++i) {
-				Expr e = exprs.get(i);
-				Tuple<Type> types = e.getTypes();
+			// Finally, handle assignents to lvals
+			for(int i=0;i!=lvals.size();++i) {
+				Type lv_t = lvals.get(i).getType();
 				// Translate right-hand side
 				VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
 				first.add(new VariableDeclaration(toConstKind(),tmp.getName(), rhs.get(i)));
 				// Translate left-hand side
-				if(types == null) {
+				if(lv_t.shape() == 1) {
 					// Unit assignment
-					second.add(new JavaScriptFile.Assignment(lhs.get(j++), tmp));
+					second.add(new JavaScriptFile.Assignment(lhs.get(i), tmp));
 				} else {
 					// Multi-assignment
-					for(int k=0;k!=types.size();++k) {
-						Term t = new ArrayAccess(tmp,new Constant(k));
-						second.add(new JavaScriptFile.Assignment(lhs.get(j++), t));
+					JavaScriptFile.ArrayInitialiser ai = (JavaScriptFile.ArrayInitialiser) lhs.get(i);
+					for(int k=0;k!=lv_t.shape();++k) {
+						Term a = new ArrayAccess(tmp,new Constant(k));
+						second.add(new JavaScriptFile.Assignment(ai.getElement(k), a));
 					}
 				}
 			}
@@ -360,24 +363,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
-	public Term constructReturn(Stmt.Return stmt, List<Term> returns) {
-		Term rval;
-		if(returns.size() == 0) {
-			rval = null;
-		} else if (returns.size() == 1) {
-			// Easy case
-			rval = returns.get(0);
-		} else {
-			//
-			if (allUnitExpressions(stmt.getReturns())) {
-				// Easier as direct mapping between expressions.
-				rval = new JavaScriptFile.ArrayInitialiser(returns);
-			} else {
-				// FIXME: implement multiple expressions!!
-				throw new UnsupportedOperationException();
-			}
-		}
-		//
+	public Term constructReturn(Stmt.Return stmt, Term rval) {
 		return new Return(rval);
 	}
 
@@ -438,6 +424,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	@Override
 	public Term constructRecordAccessLVal(Expr.RecordAccess expr, Term source) {
 		return new JavaScriptFile.PropertyAccess(source, expr.getField().toString());
+	}
+
+	@Override
+	public Term constructTupleInitialiserLVal(Expr.TupleInitialiser expr, List<Term> terms) {
+		return new JavaScriptFile.ArrayInitialiser(terms);
 	}
 
 	@Override
@@ -693,9 +684,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// just assigning the name) is that it protects against potential name
 		// clashes with local variables.
 		Type.Callable ft = expr.getLink().getTarget().getType();
-		Tuple<Type> params = ft.getParameters();
+		Type param = ft.getParameter();
 		//
-		for(int i=0;i!=params.size();++i) {
+		for(int i=0;i!=param.shape();++i) {
 			String v = "p" + i;
 			parameters.add(v);
 			arguments.add(new VariableAccess(v));
@@ -742,6 +733,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// NOTE: Invoking Wy.Record is necessary to set the prototype on the generated
 		// object.
 		return new Operator(Kind.NEW,WY_RECORD(new JavaScriptFile.ObjectLiteral(fields)));
+	}
+
+	@Override
+	public Term constructTupleInitialiser(Expr.TupleInitialiser expr, List<Term> operands) {
+		return new ArrayInitialiser(operands);
 	}
 
 	@Override
@@ -1759,33 +1755,32 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Tuple<LVal> lhs = stmt.getLeftHandSide();
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		//
-		if(lhs.size() != rhs.size()) {
-			// Multi-assignment is present
-			return false;
-		} else {
-			Decl.Variable[] defs = new Decl.Variable[lhs.size()];
-			HashSet<Decl.Variable> uses = new HashSet<>();
-			// Identify all defs and uses
-			for(int i=0;i!=lhs.size();++i) {
-				defs[i] = extractDefinedVariable(lhs.get(i));
-				if(defs[i] == null) {
-					// Couldn't tell what was being defined.
-					return false;
-				}
-				extractUsedVariables(lhs.get(i),uses);
-				extractUsedVariables(rhs.get(i),uses);
-
+		Decl.Variable[] defs = new Decl.Variable[lhs.size()];
+		HashSet<Decl.Variable> uses = new HashSet<>();
+		// Identify all defs and uses
+		for(int i=0;i!=lhs.size();++i) {
+			LVal lv = lhs.get(i);
+			if(lv instanceof Expr.TupleInitialiser && !jsFile.ES6()) {
+				// Prior to ES6 was no destructuring assignment
+				return false;
 			}
-			// Check for interference
-			for(int i=0;i!=defs.length;++i) {
-				if(uses.contains(defs[i])) {
-					// Interference detected
-					return false;
-				}
+			defs[i] = extractDefinedVariable(lhs.get(i));
+			if(defs[i] == null) {
+				// Couldn't tell what was being defined.
+				return false;
 			}
-			//
-			return true;
+			extractUsedVariables(lhs.get(i),uses);
+			extractUsedVariables(rhs.get(i),uses);
 		}
+		// Check for interference
+		for(int i=0;i!=defs.length;++i) {
+			if(uses.contains(defs[i])) {
+				// Interference detected
+				return false;
+			}
+		}
+		//
+		return true;
 	}
 
 	private Decl.Variable extractDefinedVariable(LVal lval) {
@@ -1795,6 +1790,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
 			return extractDefinedVariable((WyilFile.LVal) e.getFirstOperand());
 		}
+		case EXPR_fielddereference:
 		case EXPR_dereference: {
 			// NOTE: it's impossible to tell what variable is being defined through a
 			// dereference.
@@ -2020,23 +2016,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
-	 * Determine whether a sequence of expressions are all "unit" expressions (that
-	 * is, return a single value) or not.
-	 *
-	 * @param exprs
-	 * @return
-	 */
-	private static boolean allUnitExpressions(Tuple<Expr> exprs) {
-		for(int i=0;i!=exprs.size();++i) {
-			Tuple<Type> types = exprs.get(i).getTypes();
-			if(types != null) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
 	 * Determine the appropriate mangled string for a given named declaration. This
 	 * is critical to ensuring that overloaded declarations do not clash.
 	 *
@@ -2051,12 +2030,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Add type mangles for non-exported symbols
 		if(!exported && decl instanceof Decl.Method) {
 			Decl.Method method = (Decl.Method) decl;
-			Tuple<Type> parameters = method.getType().getParameters();
+			Type parameters = method.getType().getParameter();
 			Tuple<Identifier> lifetimes = method.getType().getLifetimeParameters();
 			name += getMangle(parameters, lifetimes);
 		} else if(!exported && decl instanceof Decl.Callable) {
 			Decl.Callable callable = (Decl.Callable) decl;
-			Tuple<Type> parameters = callable.getType().getParameters();
+			Type parameters = callable.getType().getParameter();
 			name += getMangle(parameters, new Tuple<>());
 		} else if(decl instanceof Decl.Type) {
 			name += "$type";
@@ -2138,11 +2117,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return results;
 	}
 
-	private String getMangle(Tuple<Type> types, Tuple<Identifier> lifetimes) {
-		if (types.size() == 0) {
+	private String getMangle(Type type, Tuple<Identifier> lifetimes) {
+		if (type.shape() == 0) {
 			return "";
 		} else {
-			return "$" + mangler.getMangle(types, lifetimes);
+			return "$" + mangler.getMangle(type, lifetimes);
 		}
 	}
 

@@ -58,7 +58,7 @@ import static wyil.lang.WyilFile.EXPR_integersubtraction;
 import static wyil.lang.WyilFile.EXPR_invoke;
 import static wyil.lang.WyilFile.EXPR_is;
 import static wyil.lang.WyilFile.EXPR_lambdaaccess;
-import static wyil.lang.WyilFile.EXPR_logiaclimplication;
+import static wyil.lang.WyilFile.EXPR_logicalimplication;
 import static wyil.lang.WyilFile.EXPR_logicaland;
 import static wyil.lang.WyilFile.EXPR_logicalexistential;
 import static wyil.lang.WyilFile.EXPR_logicaliff;
@@ -73,6 +73,7 @@ import static wyil.lang.WyilFile.EXPR_recordinitialiser;
 import static wyil.lang.WyilFile.EXPR_recordupdate;
 import static wyil.lang.WyilFile.EXPR_staticnew;
 import static wyil.lang.WyilFile.EXPR_staticvariable;
+import static wyil.lang.WyilFile.EXPR_tupleinitialiser;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
 import static wyil.lang.WyilFile.EXPR_variablemove;
 import static wyil.lang.WyilFile.STMT_assert;
@@ -88,12 +89,14 @@ import static wyil.lang.WyilFile.STMT_if;
 import static wyil.lang.WyilFile.STMT_ifelse;
 import static wyil.lang.WyilFile.STMT_namedblock;
 import static wyil.lang.WyilFile.STMT_return;
+import static wyil.lang.WyilFile.STMT_returnvoid;
 import static wyil.lang.WyilFile.STMT_skip;
 import static wyil.lang.WyilFile.STMT_switch;
 import static wyil.lang.WyilFile.STMT_while;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -198,7 +201,7 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitType(Decl.Type decl) {
 		Environment environment = new Environment();
-		List<S> invariant = visitExpressions(decl.getInvariant(), Type.Bool, environment);
+		List<S> invariant = visitHomogoneousExpressions(decl.getInvariant(), Type.Bool, environment);
 		return constructType(decl, invariant);
 	}
 
@@ -227,14 +230,14 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitProperty(Decl.Property decl) {
 		Environment environment = new Environment();
-		List<S> clauses = visitExpressions(decl.getInvariant(), Type.Bool, environment);
+		List<S> clauses = visitHomogoneousExpressions(decl.getInvariant(), Type.Bool, environment);
 		return constructProperty(decl,clauses);
 	}
 
 	public S visitFunction(Decl.Function decl) {
 		Environment environment = new Environment();
-		List<S> precondition = visitExpressions(decl.getRequires(), Type.Bool, environment);
-		List<S> postcondition = visitExpressions(decl.getEnsures(), Type.Bool, environment);
+		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), Type.Bool, environment);
+		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), Type.Bool, environment);
 		S body = visitBlock(decl.getBody(), environment, new FunctionOrMethodScope(decl));
 		return constructFunction(decl,precondition,postcondition,body);
 	}
@@ -244,8 +247,8 @@ public abstract class AbstractTranslator<S> {
 		Environment environment = new Environment();
 		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
-		List<S> precondition = visitExpressions(decl.getRequires(), Type.Bool, environment);
-		List<S> postcondition = visitExpressions(decl.getEnsures(), Type.Bool, environment);
+		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), Type.Bool, environment);
+		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), Type.Bool, environment);
 		S body = visitBlock(decl.getBody(), environment, new FunctionOrMethodScope(decl));
 		return constructMethod(decl,precondition,postcondition,body);
 	}
@@ -285,6 +288,7 @@ public abstract class AbstractTranslator<S> {
 		case STMT_namedblock:
 			return visitNamedBlock((Stmt.NamedBlock) stmt, environment, scope);
 		case STMT_return:
+		case STMT_returnvoid:
 			return visitReturn((Stmt.Return) stmt, environment, scope);
 		case STMT_skip:
 			return visitSkip((Stmt.Skip) stmt, environment, scope);
@@ -343,6 +347,15 @@ public abstract class AbstractTranslator<S> {
 			S src = visitLVal((WyilFile.LVal) e.getOperand(), environment);
 			return constructRecordAccessLVal(e,src);
 		}
+		case EXPR_tupleinitialiser: {
+			Expr.TupleInitialiser e = (Expr.TupleInitialiser) lval;
+			Tuple<Expr> operands = e.getOperands();
+			List<S> srcs = new ArrayList<>();
+			for (int i = 0; i != e.size(); ++i) {
+				srcs.add(visitLVal((WyilFile.LVal) operands.get(i), environment));
+			}
+			return constructTupleInitialiserLVal(e, srcs);
+		}
 		case EXPR_variablecopy:
 		case EXPR_variablemove: {
 			Expr.VariableAccess e = (Expr.VariableAccess) lval;
@@ -387,7 +400,7 @@ public abstract class AbstractTranslator<S> {
 	public S visitDoWhile(Stmt.DoWhile stmt, Environment environment, EnclosingScope scope) {
 		S body = visitStatement(stmt.getBody(), environment, scope);
 		S condition = visitExpression(stmt.getCondition(), Type.Bool, environment);
-		List<S> invariant = visitExpressions(stmt.getInvariant(), Type.Bool, environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
 		return constructDoWhile(stmt, body, condition, invariant);
 	}
 
@@ -424,8 +437,12 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitReturn(Stmt.Return stmt, Environment environment, EnclosingScope scope) {
 		Decl.FunctionOrMethod enclosing = stmt.getAncestor(Decl.FunctionOrMethod.class);
-		List<S> returns = visitExpressions(stmt.getReturns(), enclosing.getType().getReturns(), environment);
-		return constructReturn(stmt,returns);
+		if (stmt.hasReturn()) {
+			S returns = visitExpression(stmt.getReturn(), enclosing.getType().getReturn(), environment);
+			return constructReturn(stmt, returns);
+		} else {
+			return constructReturn(stmt, null);
+		}
 	}
 
 	public S visitSkip(Stmt.Skip stmt, Environment environment, EnclosingScope scope) {
@@ -444,52 +461,56 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public Pair<List<S>,S> visitCase(Stmt.Case stmt, Type target, Environment environment, EnclosingScope scope) {
-		List<S> conditions = visitExpressions(stmt.getConditions(), target, environment);
+		List<S> conditions = visitHomogoneousExpressions(stmt.getConditions(), target, environment);
 		S body = visitStatement(stmt.getBlock(), environment, scope);
 		return new Pair<>(conditions,body);
 	}
 
 	public S visitWhile(Stmt.While stmt, Environment environment, EnclosingScope scope) {
 		S condition = visitExpression(stmt.getCondition(), Type.Bool, environment);
-		List<S> invariant = visitExpressions(stmt.getInvariant(), Type.Bool, environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
 		S body = visitStatement(stmt.getBody(), environment, scope);
 		return constructWhile(stmt,condition,invariant,body);
 	}
 
 	public List<S> visitExpressions(Tuple<Expr> exprs, Tuple<Type> targets, Environment environment) {
-		int j = 0;
 		ArrayList<S> returns = new ArrayList<>();
 		for (int i = 0; i != exprs.size(); ++i) {
-			Expr e = exprs.get(i);
-			// Handle multi expressions
-			if (e.getTypes() != null) {
-				int len = e.getTypes().size();
-				Tuple<Type> types = targets.get(j, j + len);
-				returns.add(visitMultiExpression(e, types, environment));
-				j = j + len;
-			} else {
-				// Default to single expression
-				returns.add(visitExpression(e, targets.get(j), environment));
-				j = j + 1;
-			}
+			returns.add(visitExpression(exprs.get(i), targets.get(i), environment));
 		}
 		return returns;
 	}
 
-	public List<S> visitExpressions(Tuple<Expr> exprs, Type target, Environment environment) {
+	/**
+	 * Translate a sequence of expressions, all of which have different types.
+	 *
+	 * @param exprs
+	 * @param target
+	 * @param environment
+	 * @return
+	 */
+	public List<S> visitHeterogenousExpressions(Tuple<Expr> exprs, Type target, Environment environment) {
+		ArrayList<S> results = new ArrayList<>();
+		for (int i = 0; i != exprs.size(); ++i) {
+			results.add(visitExpression(exprs.get(i), target.dimension(i), environment));
+		}
+		return results;
+	}
+
+	/**
+	 * Translate a sequence of expressions, all of which have the same type.
+	 *
+	 * @param exprs
+	 * @param target
+	 * @param environment
+	 * @return
+	 */
+	public List<S> visitHomogoneousExpressions(Tuple<Expr> exprs, Type target, Environment environment) {
 		ArrayList<S> results = new ArrayList<>();
 		for (int i = 0; i != exprs.size(); ++i) {
 			results.add(visitExpression(exprs.get(i), target, environment));
 		}
 		return results;
-	}
-
-	public S visitMultiExpression(Expr expr, Tuple<Type> types, Environment environment) {
-		if (expr instanceof Expr.Invoke) {
-			return visitInvoke((Expr.Invoke) expr, types, environment);
-		} else {
-			return visitIndirectInvoke((Expr.IndirectInvoke) expr, types, environment);
-		}
 	}
 
 	/**
@@ -534,7 +555,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_arraylength:
 			return visitUnaryOperator((Expr.UnaryOperator) expr, target, environment);
 		// Binary Operators
-		case EXPR_logiaclimplication:
+		case EXPR_logicalimplication:
 		case EXPR_logicaliff:
 		case EXPR_equal:
 		case EXPR_notequal:
@@ -564,6 +585,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_bitwisexor:
 		case EXPR_arrayinitialiser:
 		case EXPR_recordinitialiser:
+		case EXPR_tupleinitialiser:
 			return visitNaryOperator((Expr.NaryOperator) expr, target, environment);
 		// Ternary Operators
 		case EXPR_arrayupdate:
@@ -620,7 +642,7 @@ public abstract class AbstractTranslator<S> {
 			return visitEqual((Expr.Equal) expr, environment);
 		case EXPR_notequal:
 			return visitNotEqual((Expr.NotEqual) expr, environment);
-		case EXPR_logiaclimplication:
+		case EXPR_logicalimplication:
 			return visitLogicalImplication((Expr.LogicalImplication) expr, environment);
 		case EXPR_logicaliff:
 			return visitLogicalIff((Expr.LogicalIff) expr, environment);
@@ -707,6 +729,9 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_recordinitialiser:
 			Type.Record recordT = selectRecord(target, expr, environment);
 			return visitRecordInitialiser((Expr.RecordInitialiser) expr, recordT, environment);
+		case EXPR_tupleinitialiser:
+			Type.Tuple tupleT = selectTuple(target, expr, environment);
+			return visitTupleInitialiser((Expr.TupleInitialiser) expr, tupleT, environment);
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
@@ -730,7 +755,7 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitArrayInitialiser(Expr.ArrayInitialiser expr, Type.Array target, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), target.getElement(), environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), target.getElement(), environment);
 		return constructArrayInitialiser(expr,operands);
 	}
 
@@ -748,17 +773,17 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitBitwiseAnd(Expr.BitwiseAnd expr, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
 		return constructBitwiseAnd(expr,operands);
 	}
 
 	public S visitBitwiseOr(Expr.BitwiseOr expr, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
 		return constructBitwiseOr(expr,operands);
 	}
 
 	public S visitBitwiseXor(Expr.BitwiseXor expr, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
 		return constructBitwiseXor(expr,operands);
 	}
 
@@ -864,7 +889,7 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitLogicalAnd(Expr.LogicalAnd expr, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), Type.Bool, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Bool, environment);
 		return constructLogicalAnd(expr,operands);
 	}
 
@@ -886,7 +911,7 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitLogicalOr(Expr.LogicalOr expr, Environment environment) {
-		List<S> operands = visitExpressions(expr.getOperands(), Type.Bool, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Bool, environment);
 		return constructLogicalOr(expr,operands);
 	}
 
@@ -924,15 +949,15 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitInvoke(Expr.Invoke expr, Tuple<Type> targets, Environment environment) {
 		Type.Callable signature = expr.getBinding().getConcreteType();
-		Tuple<Type> parameters = signature.getParameters();
-		List<S> operands = visitExpressions(expr.getOperands(), parameters, environment);
+		Type parameter = signature.getParameter();
+		List<S> operands = visitHeterogenousExpressions(expr.getOperands(), parameter, environment);
 		return constructInvoke(expr, operands);
 	}
 
 	public S visitIndirectInvoke(Expr.IndirectInvoke expr, Tuple<Type> targets, Environment environment) {
 		Type.Callable sourceT = expr.getSource().getType().as(Type.Callable.class);
 		S operand = visitExpression(expr.getSource(), sourceT, environment);
-		List<S> operands = visitExpressions(expr.getArguments(), sourceT.getParameters(), environment);
+		List<S> operands = visitHeterogenousExpressions(expr.getArguments(), sourceT.getParameter(), environment);
 		return constructIndirectInvoke(expr, operand, operands);
 	}
 
@@ -978,6 +1003,17 @@ public abstract class AbstractTranslator<S> {
 		// TODO: implement me!
 		// return constructRecordUpdate(expr,src,val);
 		throw new UnsupportedOperationException();
+	}
+
+	public S visitTupleInitialiser(Expr.TupleInitialiser expr, Type.Tuple target, Environment environment) {
+		Tuple<Expr> operands = expr.getOperands();
+		List<S> args = new ArrayList<>();
+		for (int i = 0; i != operands.size(); ++i) {
+			Expr operand = operands.get(i);
+			Type type = target.get(i);
+			args.add(visitExpression(operand, type, environment));
+		}
+		return constructTupleInitialiser(expr,args);
 	}
 
 	public S visitStaticVariableAccess(Expr.StaticVariableAccess expr, Type target, Environment environment) {
@@ -1034,7 +1070,7 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructNamedBlock(Stmt.NamedBlock stmt, List<S> stmts);
 
-	public abstract S constructReturn(Stmt.Return stmt, List<S> returns);
+	public abstract S constructReturn(Stmt.Return stmt, S ret);
 
 	public abstract S constructSkip(Stmt.Skip stmt);
 
@@ -1053,6 +1089,8 @@ public abstract class AbstractTranslator<S> {
 	public abstract S constructFieldDereferenceLVal(Expr.FieldDereference expr, S operand);
 
 	public abstract S constructRecordAccessLVal(Expr.RecordAccess expr, S source);
+
+	public abstract S constructTupleInitialiserLVal(Expr.TupleInitialiser expr, List<S> source);
 
 	public abstract S constructVariableAccessLVal(Expr.VariableAccess expr);
 
@@ -1140,6 +1178,8 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructRecordInitialiser(Expr.RecordInitialiser expr, List<S> operands);
 
+	public abstract S constructTupleInitialiser(Expr.TupleInitialiser expr, List<S> operands);
+
 	public abstract S constructStaticVariableAccess(Expr.StaticVariableAccess expr);
 
 	public abstract S constructVariableAccess(Expr.VariableAccess expr);
@@ -1218,6 +1258,38 @@ public abstract class AbstractTranslator<S> {
 		Type.Record type = expr.getType().as(Type.Record.class);
 		List<Type.Record> records = target.filter(Type.Record.class);
 		return select(records, type, environment);
+	}
+
+	/**
+	 * <p>
+	 * Given an arbitrary target type, filter out the target tuple types. For
+	 * example, consider the following method:
+	 * </p>
+	 *
+	 *
+	 * <pre>
+	 * method f(int x):
+	 *    (int,int)|null xs = (1,2)
+	 *    ...
+	 * </pre>
+	 * <p>
+	 * When type checking the expression <code>(1,1)</code> the flow type checker
+	 * will attempt to determine an <i>expected</i> tuple type. In order to then
+	 * determine the appropriate expected type for the initialiser expressions it
+	 * filters <code>(int,int)|null</code> down to just <code>(int,int)</code>.
+	 * </p>
+	 *
+	 * @param target
+	 *            Target type for this value
+	 * @param expr
+	 *            Source expression for this value
+	 * @author David J. Pearce
+	 *
+	 */
+	public Type.Tuple selectTuple(Type target, Expr expr, Environment environment) {
+		Type.Tuple type = expr.getType().as(Type.Tuple.class);
+		List<Type.Tuple> tuples = target.filter(Type.Tuple.class);
+		return select(tuples, type, environment);
 	}
 
 	/**
