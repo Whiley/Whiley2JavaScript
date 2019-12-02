@@ -234,7 +234,7 @@ public class JavaScriptFilePrinter {
 					if(j != 0) {
 						out.print(", ");
 					}
-					out.print(names[i]);
+					out.print(names[j]);
 				}
 				out.print("]");
 			}

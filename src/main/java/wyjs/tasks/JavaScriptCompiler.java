@@ -361,7 +361,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			String[][] names = new String[1][variables.size()];
 			// Determine appropriate modifier
 			Term[] initialisers = new Term[] { initialiser };
-			for (int i = 0; i != names.length; ++i) {
+			for (int i = 0; i != variables.size(); ++i) {
 				names[0][i] = variables.get(i).getName().toString();
 			}
 			return new JavaScriptFile.VariableDeclaration(kind, names, initialisers);
@@ -1778,17 +1778,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Tuple<LVal> lhs = stmt.getLeftHandSide();
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		//
-		Decl.Variable[] defs = new Decl.Variable[lhs.size()];
 		HashSet<Decl.Variable> uses = new HashSet<>();
+		HashSet<Decl.Variable> defs = new HashSet<>();
 		// Identify all defs and uses
 		for(int i=0;i!=lhs.size();++i) {
 			LVal lv = lhs.get(i);
 			if(lv instanceof Expr.TupleInitialiser && !jsFile.ES6()) {
 				// Prior to ES6 was no destructuring assignment
 				return false;
-			}
-			defs[i] = extractDefinedVariable(lhs.get(i));
-			if(defs[i] == null) {
+			} else if(!extractDefinedVariable(lhs.get(i),defs)) {
 				// Couldn't tell what was being defined.
 				return false;
 			}
@@ -1796,8 +1794,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			extractUsedVariables(rhs.get(i),uses);
 		}
 		// Check for interference
-		for(int i=0;i!=defs.length;++i) {
-			if(uses.contains(defs[i])) {
+		for(Decl.Variable def : defs) {
+			if(uses.contains(def)) {
 				// Interference detected
 				return false;
 			}
@@ -1806,31 +1804,39 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return true;
 	}
 
-	private Decl.Variable extractDefinedVariable(LVal lval) {
+	private boolean extractDefinedVariable(LVal lval, Set<Decl.Variable> defs) {
 		switch (lval.getOpcode()) {
 		case EXPR_arrayaccess:
 		case EXPR_arrayborrow: {
 			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
-			return extractDefinedVariable((WyilFile.LVal) e.getFirstOperand());
+			return extractDefinedVariable((WyilFile.LVal) e.getFirstOperand(), defs);
 		}
 		case EXPR_fielddereference:
 		case EXPR_dereference: {
 			// NOTE: it's impossible to tell what variable is being defined through a
 			// dereference.
-			return null;
+			return false;
 		}
 		case EXPR_tupleinitialiser: {
-			return null;
+			Expr.TupleInitialiser e = (Expr.TupleInitialiser) lval;
+			Tuple<Expr> operands = e.getOperands();
+			for(int i=0;i!=operands.size();++i) {
+				if(!extractDefinedVariable((WyilFile.LVal)operands.get(i),defs)) {
+					return false;
+				}
+			}
+			return true;
 		}
 		case EXPR_recordaccess:
 		case EXPR_recordborrow: {
 			Expr.RecordAccess e = (Expr.RecordAccess) lval;
-			return extractDefinedVariable((WyilFile.LVal) e.getOperand());
+			return extractDefinedVariable((WyilFile.LVal) e.getOperand(),defs);
 		}
 		case EXPR_variablecopy:
 		case EXPR_variablemove: {
 			Expr.VariableAccess e = (Expr.VariableAccess) lval;
-			return e.getVariableDeclaration();
+			defs.add(e.getVariableDeclaration());
+			return true;
 		}
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
@@ -1855,6 +1861,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		case EXPR_recordborrow: {
 			Expr.RecordAccess e = (Expr.RecordAccess) lval;
 			extractUsedVariables((WyilFile.LVal) e.getOperand(), uses);
+			break;
+		}
+		case EXPR_tupleinitialiser: {
+			Expr.TupleInitialiser e = (Expr.TupleInitialiser) lval;
+			Tuple<Expr> operands = e.getOperands();
+			for(int i=0;i!=operands.size();++i) {
+				extractUsedVariables((WyilFile.LVal) operands.get(i),uses);
+			}
 			break;
 		}
 		case EXPR_variablecopy:
