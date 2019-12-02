@@ -12,6 +12,7 @@ import static wyil.lang.WyilFile.EXPR_recordaccess;
 import static wyil.lang.WyilFile.EXPR_recordborrow;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
 import static wyil.lang.WyilFile.EXPR_variablemove;
+import static wyil.lang.WyilFile.EXPR_tupleinitialiser;
 import static wyil.lang.WyilFile.TYPE_array;
 import static wyil.lang.WyilFile.TYPE_bool;
 import static wyil.lang.WyilFile.TYPE_byte;
@@ -1816,6 +1817,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		case EXPR_dereference: {
 			// NOTE: it's impossible to tell what variable is being defined through a
 			// dereference.
+			return null;
+		}
+		case EXPR_tupleinitialiser: {
 			return null;
 		}
 		case EXPR_recordaccess:
