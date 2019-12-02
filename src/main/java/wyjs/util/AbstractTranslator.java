@@ -13,87 +13,6 @@
 // limitations under the License.
 package wyjs.util;
 
-import static wyil.lang.WyilFile.DECL_function;
-import static wyil.lang.WyilFile.DECL_import;
-import static wyil.lang.WyilFile.DECL_importfrom;
-import static wyil.lang.WyilFile.DECL_importwith;
-import static wyil.lang.WyilFile.DECL_lambda;
-import static wyil.lang.WyilFile.DECL_method;
-import static wyil.lang.WyilFile.DECL_property;
-import static wyil.lang.WyilFile.DECL_rectype;
-import static wyil.lang.WyilFile.DECL_staticvar;
-import static wyil.lang.WyilFile.DECL_type;
-import static wyil.lang.WyilFile.DECL_unit;
-import static wyil.lang.WyilFile.DECL_variable;
-import static wyil.lang.WyilFile.DECL_variableinitialiser;
-import static wyil.lang.WyilFile.EXPR_arrayaccess;
-import static wyil.lang.WyilFile.EXPR_arrayborrow;
-import static wyil.lang.WyilFile.EXPR_arraygenerator;
-import static wyil.lang.WyilFile.EXPR_arrayinitialiser;
-import static wyil.lang.WyilFile.EXPR_arraylength;
-import static wyil.lang.WyilFile.EXPR_arrayrange;
-import static wyil.lang.WyilFile.EXPR_arrayupdate;
-import static wyil.lang.WyilFile.EXPR_bitwiseand;
-import static wyil.lang.WyilFile.EXPR_bitwisenot;
-import static wyil.lang.WyilFile.EXPR_bitwiseor;
-import static wyil.lang.WyilFile.EXPR_bitwiseshl;
-import static wyil.lang.WyilFile.EXPR_bitwiseshr;
-import static wyil.lang.WyilFile.EXPR_bitwisexor;
-import static wyil.lang.WyilFile.EXPR_cast;
-import static wyil.lang.WyilFile.EXPR_constant;
-import static wyil.lang.WyilFile.EXPR_dereference;
-import static wyil.lang.WyilFile.EXPR_fielddereference;
-import static wyil.lang.WyilFile.EXPR_equal;
-import static wyil.lang.WyilFile.EXPR_indirectinvoke;
-import static wyil.lang.WyilFile.EXPR_integeraddition;
-import static wyil.lang.WyilFile.EXPR_integerdivision;
-import static wyil.lang.WyilFile.EXPR_integergreaterequal;
-import static wyil.lang.WyilFile.EXPR_integergreaterthan;
-import static wyil.lang.WyilFile.EXPR_integerlessequal;
-import static wyil.lang.WyilFile.EXPR_integerlessthan;
-import static wyil.lang.WyilFile.EXPR_integermultiplication;
-import static wyil.lang.WyilFile.EXPR_integernegation;
-import static wyil.lang.WyilFile.EXPR_integerremainder;
-import static wyil.lang.WyilFile.EXPR_integersubtraction;
-import static wyil.lang.WyilFile.EXPR_invoke;
-import static wyil.lang.WyilFile.EXPR_is;
-import static wyil.lang.WyilFile.EXPR_lambdaaccess;
-import static wyil.lang.WyilFile.EXPR_logicalimplication;
-import static wyil.lang.WyilFile.EXPR_logicaland;
-import static wyil.lang.WyilFile.EXPR_logicalexistential;
-import static wyil.lang.WyilFile.EXPR_logicaliff;
-import static wyil.lang.WyilFile.EXPR_logicalnot;
-import static wyil.lang.WyilFile.EXPR_logicalor;
-import static wyil.lang.WyilFile.EXPR_logicaluniversal;
-import static wyil.lang.WyilFile.EXPR_new;
-import static wyil.lang.WyilFile.EXPR_notequal;
-import static wyil.lang.WyilFile.EXPR_recordaccess;
-import static wyil.lang.WyilFile.EXPR_recordborrow;
-import static wyil.lang.WyilFile.EXPR_recordinitialiser;
-import static wyil.lang.WyilFile.EXPR_recordupdate;
-import static wyil.lang.WyilFile.EXPR_staticnew;
-import static wyil.lang.WyilFile.EXPR_staticvariable;
-import static wyil.lang.WyilFile.EXPR_tupleinitialiser;
-import static wyil.lang.WyilFile.EXPR_variablecopy;
-import static wyil.lang.WyilFile.EXPR_variablemove;
-import static wyil.lang.WyilFile.STMT_assert;
-import static wyil.lang.WyilFile.STMT_assign;
-import static wyil.lang.WyilFile.STMT_assume;
-import static wyil.lang.WyilFile.STMT_block;
-import static wyil.lang.WyilFile.STMT_break;
-import static wyil.lang.WyilFile.STMT_continue;
-import static wyil.lang.WyilFile.STMT_debug;
-import static wyil.lang.WyilFile.STMT_dowhile;
-import static wyil.lang.WyilFile.STMT_fail;
-import static wyil.lang.WyilFile.STMT_if;
-import static wyil.lang.WyilFile.STMT_ifelse;
-import static wyil.lang.WyilFile.STMT_namedblock;
-import static wyil.lang.WyilFile.STMT_return;
-import static wyil.lang.WyilFile.STMT_returnvoid;
-import static wyil.lang.WyilFile.STMT_skip;
-import static wyil.lang.WyilFile.STMT_switch;
-import static wyil.lang.WyilFile.STMT_while;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -116,6 +35,8 @@ import wyil.lang.WyilFile.Type;
 import wyil.util.SubtypeOperator;
 import wyil.util.AbstractTypedVisitor.Environment;
 import wyil.util.SubtypeOperator.LifetimeRelation;
+
+import static wyil.lang.WyilFile.*;
 
 /**
  * A more complex visitor over all declarations, statements, expressions and
@@ -178,24 +99,13 @@ public abstract class AbstractTranslator<S> {
 		// Redeclare this within
 		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
-		S body = visitExpression(decl.getBody(), decl.getType(), environment);
+		S body = visitExpression(decl.getBody(), decl.getType().getReturn(), environment);
 		return constructLambda(decl,body);
 	}
 
-	public S visitVariable(Decl.Variable decl, Environment environment) {
-		S initialiser = null;
-		if (decl.hasInitialiser()) {
-			initialiser = visitExpression(decl.getInitialiser(), decl.getType(), environment);
-		}
-		return constructVariable(decl,initialiser);
-	}
-
 	public S visitStaticVariable(Decl.StaticVariable decl) {
-		S initialiser = null;
-		if (decl.hasInitialiser()) {
-			Environment environment = new Environment();
-			initialiser = visitExpression(decl.getInitialiser(), decl.getType(), environment);
-		}
+		Environment environment = new Environment();
+		S initialiser = visitExpression(decl.getInitialiser(), decl.getType(), environment);
 		return constructStaticVariable(decl,initialiser);
 	}
 
@@ -257,9 +167,6 @@ public abstract class AbstractTranslator<S> {
 		meter.step("statement");
 		//
 		switch (stmt.getOpcode()) {
-		case DECL_variable:
-		case DECL_variableinitialiser:
-			return visitVariable((Decl.Variable) stmt, environment);
 		case STMT_assert:
 			return visitAssert((Stmt.Assert) stmt, environment, scope);
 		case STMT_assign:
@@ -281,6 +188,9 @@ public abstract class AbstractTranslator<S> {
 		case STMT_if:
 		case STMT_ifelse:
 			return visitIfElse((Stmt.IfElse) stmt, environment, scope);
+		case STMT_initialiser:
+		case STMT_initialiservoid:
+				return visitInitialiser((Stmt.Initialiser) stmt, environment);
 		case EXPR_invoke:
 			return visitInvoke((Expr.Invoke) stmt, new Tuple<>(), environment);
 		case EXPR_indirectinvoke:
@@ -416,6 +326,15 @@ public abstract class AbstractTranslator<S> {
 			falseBranch = visitStatement(stmt.getFalseBranch(), environment, scope);
 		}
 		return constructIfElse(stmt, condition, trueBranch, falseBranch);
+	}
+
+	public S visitInitialiser(Stmt.Initialiser stmt, Environment environment) {
+		S initialiser = null;
+		if (stmt.hasInitialiser()) {
+			Type type = Type.Tuple.create(stmt.getVariables().map(v -> v.getType()));
+			initialiser = visitExpression(stmt.getInitialiser(), type, environment);
+		}
+		return constructInitialiser(stmt, initialiser);
 	}
 
 	public S visitNamedBlock(Stmt.NamedBlock stmt, Environment environment, EnclosingScope scope) {
@@ -916,10 +835,10 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitExistentialQuantifier(Expr.ExistentialQuantifier expr, Environment environment) {
-		Tuple<Decl.Variable> parameters = expr.getParameters();
+		Tuple<Decl.StaticVariable> parameters = expr.getParameters();
 		ArrayList<Pair<S,S>> ranges = new ArrayList<>();
 		for (int i = 0; i != parameters.size(); ++i) {
-			Decl.Variable parameter = parameters.get(i);
+			Decl.StaticVariable parameter = parameters.get(i);
 			// NOTE: Currently ranges can only appear in quantifiers. Eventually, this will
 			// be deprecated.
 			Expr.ArrayRange range = (Expr.ArrayRange) parameter.getInitialiser();
@@ -932,10 +851,10 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitUniversalQuantifier(Expr.UniversalQuantifier expr, Environment environment) {
-		Tuple<Decl.Variable> parameters = expr.getParameters();
+		Tuple<Decl.StaticVariable> parameters = expr.getParameters();
 		ArrayList<Pair<S,S>> ranges = new ArrayList<>();
 		for (int i = 0; i != parameters.size(); ++i) {
-			Decl.Variable parameter = parameters.get(i);
+			Decl.StaticVariable parameter = parameters.get(i);
 			// NOTE: Currently ranges can only appear in quantifiers. Eventually, this will
 			// be deprecated.
 			Expr.ArrayRange range = (Expr.ArrayRange) parameter.getInitialiser();
@@ -1032,8 +951,6 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructType(Decl.Type d, List<S> invariant);
 
-	public abstract S constructVariable(Decl.Variable d, S initialiser);
-
 	public abstract S constructStaticVariable(Decl.StaticVariable d, S initialiser);
 
 	public abstract S constructProperty(Decl.Property decl, List<S> clauses);
@@ -1067,6 +984,8 @@ public abstract class AbstractTranslator<S> {
 	public abstract S constructFail(Stmt.Fail stmt);
 
 	public abstract S constructIfElse(Stmt.IfElse stmt, S condition, S trueBranch, S falseBranch);
+
+	public abstract S constructInitialiser(Stmt.Initialiser stmt, S initialiser);
 
 	public abstract S constructNamedBlock(Stmt.NamedBlock stmt, List<S> stmts);
 

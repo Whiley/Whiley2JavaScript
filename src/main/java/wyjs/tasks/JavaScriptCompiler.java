@@ -164,30 +164,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
-	public Term constructVariable(Decl.Variable decl, Term initialiser) {
-		String name = decl.getName().toString();
-		// Determine appropriate modifier
-		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
-		//
-		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
-		} else {
-			return new JavaScriptFile.VariableDeclaration(kind,name);
-		}
-	}
-
-	@Override
 	public Term constructStaticVariable(Decl.StaticVariable decl, Term initialiser) {
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Determine appropriate modifier
 		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
 		//
-		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
-		} else {
-			return new JavaScriptFile.VariableDeclaration(kind,name);
-		}
+		return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
 	}
 
 	@Override
@@ -288,7 +271,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				Type lv_t = lvals.get(i).getType();
 				// Translate right-hand side
 				VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
-				first.add(new VariableDeclaration(toConstKind(),tmp.getName(), rhs.get(i)));
+				first.add(new VariableDeclaration(toConstKind(),tmp.getName(),rhs.get(i)));
 				// Translate left-hand side
 				if(lv_t.shape() == 1) {
 					// Unit assignment
@@ -355,6 +338,46 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			cases.add(new IfElse.Case(null, (Block) falseBranch));
 		}
 		return new JavaScriptFile.IfElse(cases);
+	}
+
+
+	@Override
+	public Term constructInitialiser(Stmt.Initialiser stmt, Term initialiser) {
+		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(stmt);
+		Tuple<Decl.Variable> variables = stmt.getVariables();
+		//
+		if (initialiser == null) {
+			// unit declaration
+			String[][] names = new String[variables.size()][1];
+			// Determine appropriate modifier
+			Term[] initialisers = new Term[names.length];
+			for (int i = 0; i != names.length; ++i) {
+				names[i][0] = variables.get(i).getName().toString();
+			}
+			return new JavaScriptFile.VariableDeclaration(kind, names, initialisers);
+		} else if (jsFile.ES6() || variables.size() == 1) {
+			// destructuring declaration
+			String[][] names = new String[1][variables.size()];
+			// Determine appropriate modifier
+			Term[] initialisers = new Term[] { initialiser };
+			for (int i = 0; i != names.length; ++i) {
+				names[0][i] = variables.get(i).getName().toString();
+			}
+			return new JavaScriptFile.VariableDeclaration(kind, names, initialisers);
+		} else {
+			// non-destructuring assignment
+			ArrayList<Term> first = new ArrayList<>();
+			// Translate right-hand side expression
+			VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
+			first.add(new VariableDeclaration(toConstKind(), tmp.getName(), initialiser));
+			// Translate destructuring assignments
+			for (int i = 0; i != variables.size(); ++i) {
+				String l = variables.get(i).getName().toString();
+				Term r = new ArrayAccess(tmp, new Constant(i));
+				first.add(new JavaScriptFile.VariableDeclaration(kind, l, r));
+			}
+			return new Block(first);
+		}
 	}
 
 	@Override
@@ -1400,7 +1423,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private Block translateIsArrayHelper(Type.Array from, Type.Array test, Term operand, Set<Pair<Type, Type>> tests) {
 		// Loop Header
-		VariableDeclaration decl = new VariableDeclaration(toLetKind(),"i", new Constant(0));
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(), "i",new Constant(0));
 		VariableAccess var = new VariableAccess("i");
 		Term loopTest = new Operator(Kind.LT, var, new ArrayLength(operand));
 		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
@@ -1475,7 +1498,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * types and Whiley types. For example, equality of arrays is not reference
 	 * equality in Whiley (as it is in JavaScript).
 	 *
-	 * @param expr
 	 * @return
 	 */
 	private Term translateEquality(boolean positive, Term lhs, Type lhsT, Term rhs, Type rhsT) {
@@ -1657,7 +1679,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private Term translateQuantifier(int index, Expr.Quantifier expr, List<Pair<Term, Term>> ranges, Term condition) {
 		boolean isUniversal = expr instanceof Expr.UniversalQuantifier;
-		Tuple<Decl.Variable> parameters = expr.getParameters();
+		Tuple<Decl.StaticVariable> parameters = expr.getParameters();
 		// Generate nest
 		if (parameters.size() == index) {
 			// Base case
@@ -1672,7 +1694,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			Pair<Term, Term> range = ranges.get(index);
 			//
 			VariableAccess var = new VariableAccess(v.getName().toString());
-			VariableDeclaration decl = new VariableDeclaration(toLetKind(),var.getName(), range.first());
+			VariableDeclaration decl = new VariableDeclaration(toLetKind(),var.getName(),range.first());
 			Term test = new Operator(Kind.LT, var, range.second());
 			Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
 			Term body = translateQuantifier(index + 1, expr, ranges, condition);
@@ -2066,10 +2088,30 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
+	 * Determine the appropriate kind for a statement initialiser. This depends on
+	 * what JavaScript standard is available.
+	 *
+	 * @param stmt
+	 * @return
+	 */
+	private JavaScriptFile.VariableDeclaration.Kind toVariableKind(Stmt.Initialiser stmt) {
+		JavaScriptFile.VariableDeclaration.Kind kind = null;
+		// Determine appropriate modifier
+		for(Decl.Variable v : stmt.getVariables()) {
+			JavaScriptFile.VariableDeclaration.Kind old = kind;
+			kind = toVariableKind(v);
+			if(old != null && kind != old) {
+				// NOTE: this is a conservative translation as it's not clear how this could be done better.
+				return JavaScriptFile.VariableDeclaration.Kind.VAR;
+			}
+		}
+		return kind;
+	}
+
+	/**
 	 * Determine the best kind for an immutable local variable declaration. This
 	 * depends on what JavaScript standard is available.
 	 *
-	 * @param decl
 	 * @return
 	 */
 	private JavaScriptFile.VariableDeclaration.Kind toLetKind() {
@@ -2084,7 +2126,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Determine the best kind for a mutable local variable declaration. This
 	 * depends on what JavaScript standard is available.
 	 *
-	 * @param decl
 	 * @return
 	 */
 	private JavaScriptFile.VariableDeclaration.Kind toConstKind() {
