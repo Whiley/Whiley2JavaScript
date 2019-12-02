@@ -44,7 +44,6 @@ import wybs.lang.SyntacticException;
 import wybs.util.SequentialBuildProject;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
-import wyc.testing.AllValidTest;
 import wyc.util.TestUtils;
 import wyc.util.TestUtils.Environment;
 import wycc.util.Pair;
@@ -93,7 +92,7 @@ public class RuntimeValidTests {
 		// Bring over all the currently failing tests for the compiler. There's
 		// absolutely no point trying to see whether these work or not, since we
 		// already know they will not.
-		IGNORED.putAll(AllValidTest.IGNORED);
+		IGNORED.putAll(TestUtils.VALID_IGNORED);
 		// ===================================================
 		// WyJS problems
 		// ===================================================
@@ -104,7 +103,7 @@ public class RuntimeValidTests {
 		// Replace Type Mangle with Interface
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		// Type Tests against Open Records
-//		IGNORED.put("OpenRecord_Valid_5", "#30");
+//		VALID_IGNORED.put("OpenRecord_Valid_5", "#30");
 		// Static Initialiser Order
 		IGNORED.put("StaticVar_Valid_7", "#29");
 		IGNORED.put("StaticVar_Valid_8", "#29");
@@ -115,12 +114,6 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
 	}
-
-	/**
-	 * The directory where compiler libraries are stored. This is necessary
-	 * since it will contain the Whiley Runtime.
-	 */
-	public final static String WYC_LIB_DIR = "../../lib/".replace('/', File.separatorChar);
 
 	// ======================================================================
 	// Test Harness
@@ -160,7 +153,7 @@ public class RuntimeValidTests {
 	 * Run the Whiley Compiler with the given list of arguments to produce a
 	 * JavaScript source file. This will then need to be separately compiled.
 	 *
-	 * @param args
+	 * @param arg
 	 *            --- list of command-line arguments to provide to the Whiley
 	 *            Compiler.
 	 * @return
