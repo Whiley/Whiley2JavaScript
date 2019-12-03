@@ -330,6 +330,18 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
+	public Term constructFor(Stmt.For stmt, Pair<Term, Term> range, List<Term> invariant, Term body) {
+		// NOTE: eventually we'll want to employ foreach loops in some situations.
+		WyilFile.Decl.StaticVariable v = stmt.getVariable();
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(), v.getName().toString(), range.first());
+		VariableAccess var = new VariableAccess(v.getName().toString());
+		Term condition = new JavaScriptFile.Operator(Kind.LT, var, range.second());
+		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
+		// FIXME: support for loop invariant
+		return new For(decl, condition, increment, (Block) body);
+	}
+
+	@Override
 	public Term constructIfElse(Stmt.IfElse stmt, Term condition, Term trueBranch, Term falseBranch) {
 		ArrayList<IfElse.Case> cases = new ArrayList<>();
 		// Translate true branch

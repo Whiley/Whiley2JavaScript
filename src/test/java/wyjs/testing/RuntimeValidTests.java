@@ -113,6 +113,7 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_1", "#44");
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
+		IGNORED.put("Reference_Valid_20", "#44");
 	}
 
 	// ======================================================================
