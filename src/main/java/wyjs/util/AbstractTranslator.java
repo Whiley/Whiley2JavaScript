@@ -185,6 +185,8 @@ public abstract class AbstractTranslator<S> {
 			return visitDoWhile((Stmt.DoWhile) stmt, environment, scope);
 		case STMT_fail:
 			return visitFail((Stmt.Fail) stmt, environment, scope);
+		case STMT_for:
+			return visitFor((Stmt.For) stmt, environment, scope);
 		case STMT_if:
 		case STMT_ifelse:
 			return visitIfElse((Stmt.IfElse) stmt, environment, scope);
@@ -316,6 +318,15 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitFail(Stmt.Fail stmt, Environment environment, EnclosingScope scope) {
 		return constructFail(stmt);
+	}
+
+	public S visitFor(Stmt.For stmt, Environment environment, EnclosingScope scope) {
+		Expr.ArrayRange range = (Expr.ArrayRange) stmt.getVariable().getInitialiser();
+		S start = visitExpression(range.getFirstOperand(),Type.Int, environment);
+		S end = visitExpression(range.getSecondOperand(),Type.Int, environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
+		S body = visitStatement(stmt.getBody(), environment, scope);
+		return constructFor(stmt, new Pair<>(start, end), invariant, body);
 	}
 
 	public S visitIfElse(Stmt.IfElse stmt, Environment environment, EnclosingScope scope) {
@@ -982,6 +993,8 @@ public abstract class AbstractTranslator<S> {
 	public abstract S constructDoWhile(Stmt.DoWhile stmt, S body, S condition, List<S> invariant);
 
 	public abstract S constructFail(Stmt.Fail stmt);
+
+	public abstract S constructFor(Stmt.For stmt, Pair<S,S> range, List<S> invariant, S body);
 
 	public abstract S constructIfElse(Stmt.IfElse stmt, S condition, S trueBranch, S falseBranch);
 
