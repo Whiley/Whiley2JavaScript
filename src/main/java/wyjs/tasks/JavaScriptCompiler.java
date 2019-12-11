@@ -443,15 +443,22 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand, "$ref");
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		//
+		if (isBoxedType(type)) {
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
 	public Term constructFieldDereferenceLVal(Expr.FieldDereference expr, Term operand) {
-		Type type = expr.getOperand().getType();
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
 		//
-		if (!isUnknownReference(type)) {
-			// Known types are explicitly wrapped, whilst unknown types are not.
+		if (isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
 			operand =  new PropertyAccess(operand, "$ref");
 		}
 		return new PropertyAccess(operand, expr.getField().get());
@@ -583,14 +590,22 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructDereference(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand, "$ref");
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		if(isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
 	public Term constructFieldDereference(Expr.FieldDereference expr, Term operand) {
-		Type type = expr.getOperand().getType();
-		if (!isUnknownReference(type)) {
-			// Known types are explicitly wrapped, whilst unknown types are not.
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		if (isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
 			operand =  new PropertyAccess(operand, "$ref");
 		}
 		return new PropertyAccess(operand, expr.getField().get());
@@ -736,8 +751,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructNew(Expr.New expr, Term operand) {
-		// known types must be converted into references
-		return new Operator(Kind.NEW,WY_REF(operand));
+		Type.Reference type = expr.getType().as(Type.Reference.class);
+		//
+		if (isBoxedType(type)) {
+			// Immutable types must be boxed as they cannot be updated in place. All other
+			// types don't need to be boxed.
+			return new Operator(Kind.NEW,WY_REF(operand));
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
@@ -1991,6 +2013,27 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return true;
 	}
 
+	/**
+	 * Check whether a given type is immutable or not. An immutable type is one
+	 * which needs to be boxed for a reference to it to be generated.
+	 *
+	 * @return
+	 */
+	public boolean isBoxedType(Type.Reference type) {
+		Type element = type.getElement();
+		// Strip away nominal info
+		while(element instanceof Type.Nominal) {
+			Type.Nominal n = (Type.Nominal) element;
+			element = n.getConcreteType();
+		}
+		//
+		if(element instanceof Type.Record) {
+			Type.Record r = (Type.Record) element;
+			return !r.isOpen();
+		} else {
+			return true;
+		}
+	}
 
 	/**
 	 * Return true if the type in question can be copied directly. More
@@ -2023,19 +2066,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 				}
 			}
 			return true;
-		} else {
-			return false;
-		}
-	}
-
-	private boolean isUnknownReference(Type type) {
-		if (type instanceof Type.Reference) {
-			Type.Reference t = (Type.Reference) type;
-			return t.isUnknown();
-		} else if(type instanceof Type.Nominal) {
-			Type.Nominal t = (Type.Nominal) type;
-			Decl.Type td = t.getLink().getTarget();
-			return isUnknownReference(td.getType());
 		} else {
 			return false;
 		}
