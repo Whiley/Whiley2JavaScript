@@ -416,7 +416,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Whiley are valid for any datatype, whilst in JavaScript they are only valid
 		// for integer types. Therefore, we must first identify which case we are in,
 		// then handle them separately.
-		boolean simple = subtyping.isSubtype(Type.Int,stmt.getCondition().getType(), EMPTY_LIFETIMES);
+		boolean simple = subtyping.isSatisfiableSubtype(Type.Int,stmt.getCondition().getType(), EMPTY_LIFETIMES);
 		//
 		if(!simple) {
 			// hard case
@@ -1994,7 +1994,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private boolean isSubtype(Type t1, Type t2) {
-		return t1 == null || subtyping.isSubtype(t1, t2, EMPTY_LIFETIMES);
+		return t1 == null || subtyping.isSatisfiableSubtype(t1, t2, EMPTY_LIFETIMES);
 	}
 
 	/**
@@ -2006,7 +2006,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private boolean areStrictSubtypes(Type type, List<? extends Type> types) {
 		for(Type t : types) {
-			if (t != null && !strictSubtyping.isSubtype(type, t, EMPTY_LIFETIMES)) {
+			if (t != null && !strictSubtyping.isSatisfiableSubtype(type, t, EMPTY_LIFETIMES)) {
 				return false;
 			}
 		}
