@@ -32,9 +32,7 @@ import wyil.lang.WyilFile.Expr;
 import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Stmt;
 import wyil.lang.WyilFile.Type;
-import wyil.util.SubtypeOperator;
-import wyil.util.AbstractTypedVisitor.Environment;
-import wyil.util.SubtypeOperator.LifetimeRelation;
+import wyil.util.Subtyping;
 
 import static wyil.lang.WyilFile.*;
 
@@ -54,9 +52,9 @@ import static wyil.lang.WyilFile.*;
  */
 public abstract class AbstractTranslator<S> {
 	protected final Build.Meter meter;
-	protected final SubtypeOperator subtypeOperator;
+	protected final Subtyping.Environment subtypeOperator;
 
-	public AbstractTranslator(Build.Meter meter, SubtypeOperator subtypeOperator) {
+	public AbstractTranslator(Build.Meter meter, Subtyping.Environment subtypeOperator) {
 		this.meter = meter;
 		this.subtypeOperator = subtypeOperator;
 	}
@@ -99,19 +97,19 @@ public abstract class AbstractTranslator<S> {
 		// Redeclare this within
 		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
-		S body = visitExpression(decl.getBody(), decl.getType().getReturn(), environment);
+		S body = visitExpression(decl.getBody(), environment);
 		return constructLambda(decl,body);
 	}
 
 	public S visitStaticVariable(Decl.StaticVariable decl) {
 		Environment environment = new Environment();
-		S initialiser = visitExpression(decl.getInitialiser(), decl.getType(), environment);
+		S initialiser = visitExpression(decl.getInitialiser(), environment);
 		return constructStaticVariable(decl,initialiser);
 	}
 
 	public S visitType(Decl.Type decl) {
 		Environment environment = new Environment();
-		List<S> invariant = visitHomogoneousExpressions(decl.getInvariant(), Type.Bool, environment);
+		List<S> invariant = visitHomogoneousExpressions(decl.getInvariant(), environment);
 		return constructType(decl, invariant);
 	}
 
@@ -140,14 +138,14 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitProperty(Decl.Property decl) {
 		Environment environment = new Environment();
-		List<S> clauses = visitHomogoneousExpressions(decl.getInvariant(), Type.Bool, environment);
+		List<S> clauses = visitHomogoneousExpressions(decl.getInvariant(), environment);
 		return constructProperty(decl,clauses);
 	}
 
 	public S visitFunction(Decl.Function decl) {
 		Environment environment = new Environment();
-		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), Type.Bool, environment);
-		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), Type.Bool, environment);
+		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), environment);
+		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), environment);
 		S body = visitBlock(decl.getBody(), environment, new FunctionOrMethodScope(decl));
 		return constructFunction(decl,precondition,postcondition,body);
 	}
@@ -157,8 +155,8 @@ public abstract class AbstractTranslator<S> {
 		Environment environment = new Environment();
 		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
-		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), Type.Bool, environment);
-		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), Type.Bool, environment);
+		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), environment);
+		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), environment);
 		S body = visitBlock(decl.getBody(), environment, new FunctionOrMethodScope(decl));
 		return constructMethod(decl,precondition,postcondition,body);
 	}
@@ -194,9 +192,9 @@ public abstract class AbstractTranslator<S> {
 		case STMT_initialiservoid:
 				return visitInitialiser((Stmt.Initialiser) stmt, environment);
 		case EXPR_invoke:
-			return visitInvoke((Expr.Invoke) stmt, new Tuple<>(), environment);
+			return visitInvoke((Expr.Invoke) stmt, environment);
 		case EXPR_indirectinvoke:
-			return visitIndirectInvoke((Expr.IndirectInvoke) stmt, new Tuple<>(), environment);
+			return visitIndirectInvoke((Expr.IndirectInvoke) stmt, environment);
 		case STMT_namedblock:
 			return visitNamedBlock((Stmt.NamedBlock) stmt, environment, scope);
 		case STMT_return:
@@ -214,14 +212,14 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitAssert(Stmt.Assert stmt, Environment environment, EnclosingScope scope) {
-		S operand = visitExpression(stmt.getCondition(), Type.Bool, environment);
+		S operand = visitExpression(stmt.getCondition(), environment);
 		return constructAssert(stmt,operand);
 	}
 
 	public S visitAssign(Stmt.Assign stmt, Environment environment, EnclosingScope scope) {
 		Tuple<Type> targets = stmt.getLeftHandSide().map((LVal l) -> l.getType());
 		List<S> lvals = visitLVals(stmt.getLeftHandSide(), environment, scope);
-		List<S> rvals = visitExpressions(stmt.getRightHandSide(), targets, environment);
+		List<S> rvals = visitExpressions(stmt.getRightHandSide(), environment);
 		return constructAssign(stmt,lvals,rvals);
 	}
 
@@ -240,7 +238,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_arrayborrow: {
 			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
 			S src = visitLVal((WyilFile.LVal) e.getFirstOperand(), environment);
-			S index = visitExpression(e.getSecondOperand(), Type.Int, environment);
+			S index = visitExpression(e.getSecondOperand(), environment);
 			return constructArrayAccessLVal(e,src,index);
 		}
 		case EXPR_dereference: {
@@ -279,7 +277,7 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitAssume(Stmt.Assume stmt, Environment environment, EnclosingScope scope) {
-		S operand = visitExpression(stmt.getCondition(), Type.Bool, environment);
+		S operand = visitExpression(stmt.getCondition(), environment);
 		return constructAssume(stmt,operand);
 	}
 
@@ -303,16 +301,14 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitDebug(Stmt.Debug stmt, Environment environment, EnclosingScope scope) {
-		// FIXME: Should be Type.Int(0,255)
-		Type std_ascii = new Type.Array(Type.Int);
-		S operand = visitExpression(stmt.getOperand(), std_ascii, environment);
+		S operand = visitExpression(stmt.getOperand(), environment);
 		return constructDebug(stmt,operand);
 	}
 
 	public S visitDoWhile(Stmt.DoWhile stmt, Environment environment, EnclosingScope scope) {
 		S body = visitStatement(stmt.getBody(), environment, scope);
-		S condition = visitExpression(stmt.getCondition(), Type.Bool, environment);
-		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
+		S condition = visitExpression(stmt.getCondition(), environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), environment);
 		return constructDoWhile(stmt, body, condition, invariant);
 	}
 
@@ -322,15 +318,15 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitFor(Stmt.For stmt, Environment environment, EnclosingScope scope) {
 		Expr.ArrayRange range = (Expr.ArrayRange) stmt.getVariable().getInitialiser();
-		S start = visitExpression(range.getFirstOperand(),Type.Int, environment);
-		S end = visitExpression(range.getSecondOperand(),Type.Int, environment);
-		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
+		S start = visitExpression(range.getFirstOperand(),environment);
+		S end = visitExpression(range.getSecondOperand(),environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), environment);
 		S body = visitStatement(stmt.getBody(), environment, scope);
 		return constructFor(stmt, new Pair<>(start, end), invariant, body);
 	}
 
 	public S visitIfElse(Stmt.IfElse stmt, Environment environment, EnclosingScope scope) {
-		S condition = visitExpression(stmt.getCondition(), Type.Bool, environment);
+		S condition = visitExpression(stmt.getCondition(), environment);
 		S trueBranch = visitStatement(stmt.getTrueBranch(), environment, scope);
 		S falseBranch = null;
 		if (stmt.hasFalseBranch()) {
@@ -342,8 +338,7 @@ public abstract class AbstractTranslator<S> {
 	public S visitInitialiser(Stmt.Initialiser stmt, Environment environment) {
 		S initialiser = null;
 		if (stmt.hasInitialiser()) {
-			Type type = Type.Tuple.create(stmt.getVariables().map(v -> v.getType()));
-			initialiser = visitExpression(stmt.getInitialiser(), type, environment);
+			initialiser = visitExpression(stmt.getInitialiser(), environment);
 		}
 		return constructInitialiser(stmt, initialiser);
 	}
@@ -366,9 +361,8 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitReturn(Stmt.Return stmt, Environment environment, EnclosingScope scope) {
-		Decl.FunctionOrMethod enclosing = stmt.getAncestor(Decl.FunctionOrMethod.class);
 		if (stmt.hasReturn()) {
-			S returns = visitExpression(stmt.getReturn(), enclosing.getType().getReturn(), environment);
+			S returns = visitExpression(stmt.getReturn(), environment);
 			return constructReturn(stmt, returns);
 		} else {
 			return constructReturn(stmt, null);
@@ -380,33 +374,32 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitSwitch(Stmt.Switch stmt, Environment environment, EnclosingScope scope) {
-		Type target = stmt.getCondition().getType();
-		S condition = visitExpression(stmt.getCondition(), target, environment);
+		S condition = visitExpression(stmt.getCondition(), environment);
 		Tuple<Stmt.Case> cases = stmt.getCases();
 		ArrayList<Pair<List<S>,S>> cs = new ArrayList<>();
 		for (int i = 0; i != cases.size(); ++i) {
-			cs.add(visitCase(cases.get(i), target, environment, scope));
+			cs.add(visitCase(cases.get(i), environment, scope));
 		}
 		return constructSwitch(stmt,condition,cs);
 	}
 
-	public Pair<List<S>,S> visitCase(Stmt.Case stmt, Type target, Environment environment, EnclosingScope scope) {
-		List<S> conditions = visitHomogoneousExpressions(stmt.getConditions(), target, environment);
+	public Pair<List<S>,S> visitCase(Stmt.Case stmt, Environment environment, EnclosingScope scope) {
+		List<S> conditions = visitHomogoneousExpressions(stmt.getConditions(), environment);
 		S body = visitStatement(stmt.getBlock(), environment, scope);
 		return new Pair<>(conditions,body);
 	}
 
 	public S visitWhile(Stmt.While stmt, Environment environment, EnclosingScope scope) {
-		S condition = visitExpression(stmt.getCondition(), Type.Bool, environment);
-		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), Type.Bool, environment);
+		S condition = visitExpression(stmt.getCondition(), environment);
+		List<S> invariant = visitHomogoneousExpressions(stmt.getInvariant(), environment);
 		S body = visitStatement(stmt.getBody(), environment, scope);
 		return constructWhile(stmt,condition,invariant,body);
 	}
 
-	public List<S> visitExpressions(Tuple<Expr> exprs, Tuple<Type> targets, Environment environment) {
+	public List<S> visitExpressions(Tuple<Expr> exprs, Environment environment) {
 		ArrayList<S> returns = new ArrayList<>();
 		for (int i = 0; i != exprs.size(); ++i) {
-			returns.add(visitExpression(exprs.get(i), targets.get(i), environment));
+			returns.add(visitExpression(exprs.get(i), environment));
 		}
 		return returns;
 	}
@@ -419,10 +412,10 @@ public abstract class AbstractTranslator<S> {
 	 * @param environment
 	 * @return
 	 */
-	public List<S> visitHeterogenousExpressions(Tuple<Expr> exprs, Type target, Environment environment) {
+	public List<S> visitHeterogenousExpressions(Tuple<Expr> exprs, Environment environment) {
 		ArrayList<S> results = new ArrayList<>();
 		for (int i = 0; i != exprs.size(); ++i) {
-			results.add(visitExpression(exprs.get(i), target.dimension(i), environment));
+			results.add(visitExpression(exprs.get(i), environment));
 		}
 		return results;
 	}
@@ -435,10 +428,10 @@ public abstract class AbstractTranslator<S> {
 	 * @param environment
 	 * @return
 	 */
-	public List<S> visitHomogoneousExpressions(Tuple<Expr> exprs, Type target, Environment environment) {
+	public List<S> visitHomogoneousExpressions(Tuple<Expr> exprs, Environment environment) {
 		ArrayList<S> results = new ArrayList<>();
 		for (int i = 0; i != exprs.size(); ++i) {
-			results.add(visitExpression(exprs.get(i), target, environment));
+			results.add(visitExpression(exprs.get(i), environment));
 		}
 		return results;
 	}
@@ -450,24 +443,24 @@ public abstract class AbstractTranslator<S> {
 	 * @param expr
 	 * @param target
 	 */
-	public S visitExpression(Expr expr, Type target, Environment environment) {
+	public S visitExpression(Expr expr, Environment environment) {
 		meter.step("expression");
 		//
 		switch (expr.getOpcode()) {
 		// Terminals
 		case EXPR_constant:
-			return visitConstant((Expr.Constant) expr, target, environment);
+			return visitConstant((Expr.Constant) expr, environment);
 		case EXPR_indirectinvoke:
-			return visitIndirectInvoke((Expr.IndirectInvoke) expr, new Tuple<>(target), environment);
+			return visitIndirectInvoke((Expr.IndirectInvoke) expr, environment);
 		case EXPR_lambdaaccess:
-			return visitLambdaAccess((Expr.LambdaAccess) expr, target, environment);
+			return visitLambdaAccess((Expr.LambdaAccess) expr, environment);
 		case DECL_lambda:
 			return visitLambda((Decl.Lambda) expr, environment);
 		case EXPR_staticvariable:
-			return visitStaticVariableAccess((Expr.StaticVariableAccess) expr, target, environment);
+			return visitStaticVariableAccess((Expr.StaticVariableAccess) expr, environment);
 		case EXPR_variablecopy:
 		case EXPR_variablemove:
-			return visitVariableAccess((Expr.VariableAccess) expr, target, environment);
+			return visitVariableAccess((Expr.VariableAccess) expr, environment);
 		// Unary Operators
 		case EXPR_cast:
 		case EXPR_integernegation:
@@ -483,7 +476,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_recordaccess:
 		case EXPR_recordborrow:
 		case EXPR_arraylength:
-			return visitUnaryOperator((Expr.UnaryOperator) expr, target, environment);
+			return visitUnaryOperator((Expr.UnaryOperator) expr, environment);
 		// Binary Operators
 		case EXPR_logicalimplication:
 		case EXPR_logicaliff:
@@ -505,7 +498,7 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_arrayrange:
 		case EXPR_recordupdate:
 		case EXPR_arraygenerator:
-			return visitBinaryOperator((Expr.BinaryOperator) expr, target, environment);
+			return visitBinaryOperator((Expr.BinaryOperator) expr, environment);
 		// Nary Operators
 		case EXPR_logicaland:
 		case EXPR_logicalor:
@@ -516,23 +509,22 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_arrayinitialiser:
 		case EXPR_recordinitialiser:
 		case EXPR_tupleinitialiser:
-			return visitNaryOperator((Expr.NaryOperator) expr, target, environment);
+			return visitNaryOperator((Expr.NaryOperator) expr, environment);
 		// Ternary Operators
 		case EXPR_arrayupdate:
-			return visitTernaryOperator((Expr.TernaryOperator) expr, target, environment);
+			return visitTernaryOperator((Expr.TernaryOperator) expr, environment);
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
 	}
 
-	public S visitUnaryOperator(Expr.UnaryOperator expr, Type target, Environment environment) {
+	public S visitUnaryOperator(Expr.UnaryOperator expr, Environment environment) {
 		switch (expr.getOpcode()) {
 		// Unary Operators
 		case EXPR_cast:
-			return visitCast((Expr.Cast) expr, target, environment);
+			return visitCast((Expr.Cast) expr, environment);
 		case EXPR_integernegation: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerNegation((Expr.IntegerNegation) expr, intT, environment);
+			return visitIntegerNegation((Expr.IntegerNegation) expr, environment);
 		}
 		case EXPR_is:
 			return visitIs((Expr.Is) expr, environment);
@@ -545,27 +537,25 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_bitwisenot:
 			return visitBitwiseComplement((Expr.BitwiseComplement) expr, environment);
 		case EXPR_dereference:
-			return visitDereference((Expr.Dereference) expr, target, environment);
+			return visitDereference((Expr.Dereference) expr, environment);
 		case EXPR_fielddereference:
-			return visitFieldDereference((Expr.FieldDereference) expr, target, environment);
+			return visitFieldDereference((Expr.FieldDereference) expr, environment);
 		case EXPR_staticnew:
 		case EXPR_new: {
-			Type.Reference refT = selectReference(target, expr, environment);
-			return visitNew((Expr.New) expr, refT, environment);
+			return visitNew((Expr.New) expr, environment);
 		}
 		case EXPR_recordaccess:
 		case EXPR_recordborrow:
-			return visitRecordAccess((Expr.RecordAccess) expr, target, environment);
+			return visitRecordAccess((Expr.RecordAccess) expr, environment);
 		case EXPR_arraylength: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitArrayLength((Expr.ArrayLength) expr, intT, environment);
+			return visitArrayLength((Expr.ArrayLength) expr, environment);
 		}
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
 	}
 
-	public S visitBinaryOperator(Expr.BinaryOperator expr, Type target, Environment environment) {
+	public S visitBinaryOperator(Expr.BinaryOperator expr, Environment environment) {
 		switch (expr.getOpcode()) {
 		// Binary Operators
 		case EXPR_equal:
@@ -585,65 +575,55 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_integergreaterequal:
 			return visitIntegerGreaterThanOrEqual((Expr.IntegerGreaterThanOrEqual) expr, environment);
 		case EXPR_integeraddition: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerAddition((Expr.IntegerAddition) expr, intT, environment);
+			return visitIntegerAddition((Expr.IntegerAddition) expr, environment);
 		}
 		case EXPR_integersubtraction: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerSubtraction((Expr.IntegerSubtraction) expr, intT, environment);
+			return visitIntegerSubtraction((Expr.IntegerSubtraction) expr, environment);
 		}
 		case EXPR_integermultiplication: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerMultiplication((Expr.IntegerMultiplication) expr, intT, environment);
+			return visitIntegerMultiplication((Expr.IntegerMultiplication) expr, environment);
 		}
 		case EXPR_integerdivision: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerDivision((Expr.IntegerDivision) expr, intT, environment);
+			return visitIntegerDivision((Expr.IntegerDivision) expr, environment);
 		}
 		case EXPR_integerremainder: {
-			Type.Int intT = selectInt(target, expr, environment);
-			return visitIntegerRemainder((Expr.IntegerRemainder) expr, intT, environment);
+			return visitIntegerRemainder((Expr.IntegerRemainder) expr, environment);
 		}
 		case EXPR_bitwiseshl:
 			return visitBitwiseShiftLeft((Expr.BitwiseShiftLeft) expr, environment);
 		case EXPR_bitwiseshr:
 			return visitBitwiseShiftRight((Expr.BitwiseShiftRight) expr, environment);
 		case EXPR_arraygenerator: {
-			Type.Array arrayT = selectArray(target, expr, environment);
-			return visitArrayGenerator((Expr.ArrayGenerator) expr, arrayT, environment);
+			return visitArrayGenerator((Expr.ArrayGenerator) expr, environment);
 		}
 		case EXPR_arrayaccess:
 		case EXPR_arrayborrow:
-			return visitArrayAccess((Expr.ArrayAccess) expr, target, environment);
+			return visitArrayAccess((Expr.ArrayAccess) expr, environment);
 		case EXPR_arrayrange: {
-			Type.Array arrayT = selectArray(target, expr, environment);
-			return visitArrayRange((Expr.ArrayRange) expr, arrayT, environment);
+			return visitArrayRange((Expr.ArrayRange) expr, environment);
 		}
 		case EXPR_recordupdate:
-			Type.Record recordT = selectRecord(target, expr, environment);
-			return visitRecordUpdate((Expr.RecordUpdate) expr, recordT, environment);
+			return visitRecordUpdate((Expr.RecordUpdate) expr, environment);
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
 	}
 
-	public S visitTernaryOperator(Expr.TernaryOperator expr, Type target, Environment environment) {
+	public S visitTernaryOperator(Expr.TernaryOperator expr, Environment environment) {
 		switch (expr.getOpcode()) {
 		// Ternary Operators
 		case EXPR_arrayupdate:
-			Type.Array arrayT = selectArray(target, expr, environment);
-			return visitArrayUpdate((Expr.ArrayUpdate) expr, arrayT, environment);
+			return visitArrayUpdate((Expr.ArrayUpdate) expr, environment);
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
 	}
 
-	public S visitNaryOperator(Expr.NaryOperator expr, Type target, Environment environment) {
+	public S visitNaryOperator(Expr.NaryOperator expr, Environment environment) {
 		switch (expr.getOpcode()) {
 		// Nary Operators
 		case EXPR_arrayinitialiser:
-			Type.Array arrayT = selectArray(target, expr, environment);
-			return visitArrayInitialiser((Expr.ArrayInitialiser) expr, arrayT, environment);
+			return visitArrayInitialiser((Expr.ArrayInitialiser) expr, environment);
 		case EXPR_bitwiseand:
 			return visitBitwiseAnd((Expr.BitwiseAnd) expr, environment);
 		case EXPR_bitwiseor:
@@ -651,197 +631,195 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_bitwisexor:
 			return visitBitwiseXor((Expr.BitwiseXor) expr, environment);
 		case EXPR_invoke:
-			return visitInvoke((Expr.Invoke) expr, new Tuple<>(target), environment);
+			return visitInvoke((Expr.Invoke) expr, environment);
 		case EXPR_logicaland:
 			return visitLogicalAnd((Expr.LogicalAnd) expr, environment);
 		case EXPR_logicalor:
 			return visitLogicalOr((Expr.LogicalOr) expr, environment);
 		case EXPR_recordinitialiser:
-			Type.Record recordT = selectRecord(target, expr, environment);
-			return visitRecordInitialiser((Expr.RecordInitialiser) expr, recordT, environment);
+			return visitRecordInitialiser((Expr.RecordInitialiser) expr, environment);
 		case EXPR_tupleinitialiser:
-			Type.Tuple tupleT = selectTuple(target, expr, environment);
-			return visitTupleInitialiser((Expr.TupleInitialiser) expr, tupleT, environment);
+			return visitTupleInitialiser((Expr.TupleInitialiser) expr, environment);
 		default:
 			throw new IllegalArgumentException("unknown expression encountered (" + expr.getClass().getName() + ")");
 		}
 	}
 
-	public S visitArrayAccess(Expr.ArrayAccess expr, Type target, Environment environment) {
-		S source = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S index = visitExpression(expr.getSecondOperand(), Type.Int, environment);
+	public S visitArrayAccess(Expr.ArrayAccess expr, Environment environment) {
+		S source = visitExpression(expr.getFirstOperand(), environment);
+		S index = visitExpression(expr.getSecondOperand(), environment);
 		return constructArrayAccess(expr,source,index);
 	}
 
-	public S visitArrayLength(Expr.ArrayLength expr, Type.Int target, Environment environment) {
-		S source = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+	public S visitArrayLength(Expr.ArrayLength expr,  Environment environment) {
+		S source = visitExpression(expr.getOperand(), environment);
 		return constructArrayLength(expr,source);
 	}
 
-	public S visitArrayGenerator(Expr.ArrayGenerator expr, Type.Array target, Environment environment) {
-		S value = visitExpression(expr.getFirstOperand(), target.getElement(), environment);
-		S length = visitExpression(expr.getSecondOperand(), Type.Int, environment);
+	public S visitArrayGenerator(Expr.ArrayGenerator expr,Environment environment) {
+		S value = visitExpression(expr.getFirstOperand(), environment);
+		S length = visitExpression(expr.getSecondOperand(), environment);
 		return constructArrayGenerator(expr,value,length);
 	}
 
-	public S visitArrayInitialiser(Expr.ArrayInitialiser expr, Type.Array target, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), target.getElement(), environment);
+	public S visitArrayInitialiser(Expr.ArrayInitialiser expr, Environment environment) {
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructArrayInitialiser(expr,operands);
 	}
 
-	public S visitArrayRange(Expr.ArrayRange expr, Type.Array target, Environment environment) {
+	public S visitArrayRange(Expr.ArrayRange expr, Environment environment) {
 		throw new UnsupportedOperationException();
 	}
 
-	public S visitArrayUpdate(Expr.ArrayUpdate expr, Type.Array target, Environment environment) {
+	public S visitArrayUpdate(Expr.ArrayUpdate expr, Environment environment) {
 		throw new UnsupportedOperationException();
 	}
 
 	public S visitBitwiseComplement(Expr.BitwiseComplement expr, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), Type.Byte, environment);
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructBitwiseComplement(expr,operand);
 	}
 
 	public S visitBitwiseAnd(Expr.BitwiseAnd expr, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructBitwiseAnd(expr,operands);
 	}
 
 	public S visitBitwiseOr(Expr.BitwiseOr expr, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructBitwiseOr(expr,operands);
 	}
 
 	public S visitBitwiseXor(Expr.BitwiseXor expr, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Byte, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructBitwiseXor(expr,operands);
 	}
 
 	public S visitBitwiseShiftLeft(Expr.BitwiseShiftLeft expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), Type.Byte, environment);
-		S rhs = visitExpression(expr.getSecondOperand(), Type.Int, environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructBitwiseShiftLeft(expr,lhs,rhs);
 	}
 
 	public S visitBitwiseShiftRight(Expr.BitwiseShiftRight expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), Type.Byte, environment);
-		S rhs = visitExpression(expr.getSecondOperand(), Type.Int, environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructBitwiseShiftRight(expr,lhs,rhs);
 	}
 
-	public S visitCast(Expr.Cast expr, Type target, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+	public S visitCast(Expr.Cast expr, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructCast(expr,operand);
 	}
 
-	public S visitConstant(Expr.Constant expr, Type target, Environment environment) {
+	public S visitConstant(Expr.Constant expr, Environment environment) {
 		return constructConstant(expr);
 	}
 
-	public S visitDereference(Expr.Dereference expr, Type target, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+	public S visitDereference(Expr.Dereference expr, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructDereference(expr,operand);
 	}
 
-	public S visitFieldDereference(Expr.FieldDereference expr, Type target, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+	public S visitFieldDereference(Expr.FieldDereference expr, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructFieldDereference(expr,operand);
 	}
 
 	public S visitEqual(Expr.Equal expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructEqual(expr,lhs,rhs);
 	}
 
 	public S visitIntegerLessThan(Expr.IntegerLessThan expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerLessThan(expr,lhs,rhs);
 	}
 
 	public S visitIntegerLessThanOrEqual(Expr.IntegerLessThanOrEqual expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerLessThanOrEqual(expr,lhs,rhs);
 	}
 
 	public S visitIntegerGreaterThan(Expr.IntegerGreaterThan expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerGreaterThan(expr,lhs,rhs);
 	}
 
 	public S visitIntegerGreaterThanOrEqual(Expr.IntegerGreaterThanOrEqual expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerGreaterThanOrEqual(expr,lhs,rhs);
 	}
 
-	public S visitIntegerNegation(Expr.IntegerNegation expr, Type.Int target, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), target, environment);
+	public S visitIntegerNegation(Expr.IntegerNegation expr, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructIntegerNegation(expr,operand);
 	}
 
-	public S visitIntegerAddition(Expr.IntegerAddition expr, Type.Int target, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+	public S visitIntegerAddition(Expr.IntegerAddition expr, Environment environment) {
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerAddition(expr,lhs,rhs);
 	}
 
-	public S visitIntegerSubtraction(Expr.IntegerSubtraction expr, Type.Int target, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+	public S visitIntegerSubtraction(Expr.IntegerSubtraction expr, Environment environment) {
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerSubtraction(expr,lhs,rhs);
 	}
 
-	public S visitIntegerMultiplication(Expr.IntegerMultiplication expr, Type.Int target, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+	public S visitIntegerMultiplication(Expr.IntegerMultiplication expr, Environment environment) {
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerMultiplication(expr,lhs,rhs);
 	}
 
-	public S visitIntegerDivision(Expr.IntegerDivision expr, Type.Int target, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+	public S visitIntegerDivision(Expr.IntegerDivision expr, Environment environment) {
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerDivision(expr,lhs,rhs);
 	}
 
-	public S visitIntegerRemainder(Expr.IntegerRemainder expr, Type.Int target, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+	public S visitIntegerRemainder(Expr.IntegerRemainder expr, Environment environment) {
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructIntegerRemainder(expr,lhs,rhs);
 	}
 
 	public S visitIs(Expr.Is expr, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructIs(expr,operand);
 	}
 
 	public S visitLogicalAnd(Expr.LogicalAnd expr, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Bool, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructLogicalAnd(expr,operands);
 	}
 
 	public S visitLogicalImplication(Expr.LogicalImplication expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructLogicalImplication(expr,lhs,rhs);
 	}
 
 	public S visitLogicalIff(Expr.LogicalIff expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructLogicalIff(expr,lhs,rhs);
 	}
 
 	public S visitLogicalNot(Expr.LogicalNot expr, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), Type.Bool, environment);
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructLogicalNot(expr,operand);
 	}
 
 	public S visitLogicalOr(Expr.LogicalOr expr, Environment environment) {
-		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), Type.Bool, environment);
+		List<S> operands = visitHomogoneousExpressions(expr.getOperands(), environment);
 		return constructLogicalOr(expr,operands);
 	}
 
@@ -853,11 +831,11 @@ public abstract class AbstractTranslator<S> {
 			// NOTE: Currently ranges can only appear in quantifiers. Eventually, this will
 			// be deprecated.
 			Expr.ArrayRange range = (Expr.ArrayRange) parameter.getInitialiser();
-			S start = visitExpression(range.getFirstOperand(),Type.Int, environment);
-			S end = visitExpression(range.getSecondOperand(),Type.Int, environment);
+			S start = visitExpression(range.getFirstOperand(), environment);
+			S end = visitExpression(range.getSecondOperand(), environment);
 			ranges.add(new Pair<>(start,end));
 		}
-		S body = visitExpression(expr.getOperand(), Type.Bool, environment);
+		S body = visitExpression(expr.getOperand(), environment);
 		return constructExistentialQuantifier(expr,ranges,body);
 	}
 
@@ -869,88 +847,79 @@ public abstract class AbstractTranslator<S> {
 			// NOTE: Currently ranges can only appear in quantifiers. Eventually, this will
 			// be deprecated.
 			Expr.ArrayRange range = (Expr.ArrayRange) parameter.getInitialiser();
-			S start = visitExpression(range.getFirstOperand(),Type.Int, environment);
-			S end = visitExpression(range.getSecondOperand(),Type.Int, environment);
+			S start = visitExpression(range.getFirstOperand(), environment);
+			S end = visitExpression(range.getSecondOperand(), environment);
 			ranges.add(new Pair<>(start,end));
 		}
-		S body = visitExpression(expr.getOperand(), Type.Bool, environment);
+		S body = visitExpression(expr.getOperand(), environment);
 		return constructUniversalQuantifier(expr,ranges,body);
 	}
 
-	public S visitInvoke(Expr.Invoke expr, Tuple<Type> targets, Environment environment) {
-		Type.Callable signature = expr.getBinding().getConcreteType();
-		Type parameter = signature.getParameter();
-		List<S> operands = visitHeterogenousExpressions(expr.getOperands(), parameter, environment);
+	public S visitInvoke(Expr.Invoke expr, Environment environment) {
+		List<S> operands = visitHeterogenousExpressions(expr.getOperands(), environment);
 		return constructInvoke(expr, operands);
 	}
 
-	public S visitIndirectInvoke(Expr.IndirectInvoke expr, Tuple<Type> targets, Environment environment) {
-		Type.Callable sourceT = expr.getSource().getType().as(Type.Callable.class);
-		S operand = visitExpression(expr.getSource(), sourceT, environment);
-		List<S> operands = visitHeterogenousExpressions(expr.getArguments(), sourceT.getParameter(), environment);
+	public S visitIndirectInvoke(Expr.IndirectInvoke expr, Environment environment) {
+		S operand = visitExpression(expr.getSource(), environment);
+		List<S> operands = visitHeterogenousExpressions(expr.getArguments(), environment);
 		return constructIndirectInvoke(expr, operand, operands);
 	}
 
-	public S visitLambdaAccess(Expr.LambdaAccess expr, Type type, Environment environment) {
+	public S visitLambdaAccess(Expr.LambdaAccess expr, Environment environment) {
 		return constructLambdaAccess(expr);
 	}
 
-	public S visitNew(Expr.New expr, Type.Reference target, Environment environment) {
-		S operand = visitExpression(expr.getOperand(), target.getElement(), environment);
+	public S visitNew(Expr.New expr, Environment environment) {
+		S operand = visitExpression(expr.getOperand(), environment);
 		return constructNew(expr,operand);
 	}
 
 	public S visitNotEqual(Expr.NotEqual expr, Environment environment) {
-		S lhs = visitExpression(expr.getFirstOperand(), expr.getFirstOperand().getType(), environment);
-		S rhs = visitExpression(expr.getSecondOperand(), expr.getSecondOperand().getType(), environment);
+		S lhs = visitExpression(expr.getFirstOperand(), environment);
+		S rhs = visitExpression(expr.getSecondOperand(), environment);
 		return constructNotEqual(expr,lhs,rhs);
 	}
 
-	public S visitRecordAccess(Expr.RecordAccess expr, Type target, Environment environment) {
-		S src = visitExpression(expr.getOperand(), expr.getOperand().getType(), environment);
+	public S visitRecordAccess(Expr.RecordAccess expr, Environment environment) {
+		S src = visitExpression(expr.getOperand(), environment);
 		return constructRecordAccess(expr, src);
 	}
 
-	public S visitRecordInitialiser(Expr.RecordInitialiser expr, Type.Record target, Environment environment) {
+	public S visitRecordInitialiser(Expr.RecordInitialiser expr, Environment environment) {
 		Tuple<Identifier> fields = expr.getFields();
 		Tuple<Expr> operands = expr.getOperands();
 		List<S> args = new ArrayList<>();
 		for (int i = 0; i != fields.size(); ++i) {
 			Expr operand = operands.get(i);
-			Type type = target.getField(fields.get(i));
-			if (type == null) {
-				// NOTE: open records may not have concrete types for fields.
-				type = operand.getType();
-			}
-			args.add(visitExpression(operand, type, environment));
+			args.add(visitExpression(operand, environment));
 		}
 		return constructRecordInitialiser(expr,args);
 	}
 
-	public S visitRecordUpdate(Expr.RecordUpdate expr, Type.Record target, Environment environment) {
-		S src = visitExpression(expr.getFirstOperand(), target, environment);
-		S val = visitExpression(expr.getSecondOperand(), target.getField(expr.getField()), environment);
+	public S visitRecordUpdate(Expr.RecordUpdate expr, Environment environment) {
+		S src = visitExpression(expr.getFirstOperand(), environment);
+		S val = visitExpression(expr.getSecondOperand(), environment);
 		// TODO: implement me!
 		// return constructRecordUpdate(expr,src,val);
 		throw new UnsupportedOperationException();
 	}
 
-	public S visitTupleInitialiser(Expr.TupleInitialiser expr, Type.Tuple target, Environment environment) {
+	public S visitTupleInitialiser(Expr.TupleInitialiser expr, Environment environment) {
 		Tuple<Expr> operands = expr.getOperands();
 		List<S> args = new ArrayList<>();
 		for (int i = 0; i != operands.size(); ++i) {
 			Expr operand = operands.get(i);
-			Type type = target.get(i);
-			args.add(visitExpression(operand, type, environment));
+			args.add(visitExpression(operand, environment));
 		}
 		return constructTupleInitialiser(expr,args);
 	}
 
-	public S visitStaticVariableAccess(Expr.StaticVariableAccess expr, Type target, Environment environment) {
+	public S visitStaticVariableAccess(Expr.StaticVariableAccess expr, Environment environment) {
 		return constructStaticVariableAccess(expr);
 	}
 
-	public S visitVariableAccess(Expr.VariableAccess expr, Type target, Environment environment) {
+	public S visitVariableAccess(Expr.VariableAccess expr, Environment environment) {
 		return constructVariableAccess(expr);
 	}
 
@@ -1116,246 +1085,6 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructVariableAccess(Expr.VariableAccess expr);
 
-	// ====================================================================================
-	// Helpers
-	// ====================================================================================
-
-
-	public Type.Int selectInt(Type target, Expr expr, Environment environment) {
-		Type.Int type = expr.getType().as(Type.Int.class);
-		List<Type.Int> ints = target.filter(Type.Int.class);
-		return select(ints, type, environment);
-	}
-
-	/**
-	 * <p>
-	 * Given an arbitrary target type, filter out the target array types. For
-	 * example, consider the following method:
-	 * </p>
-	 *
-	 *
-	 * <pre>
-	 * method f(int x):
-	 *    null|int[] xs = [x]
-	 *    ...
-	 * </pre>
-	 * <p>
-	 * When type checking the expression <code>[x]</code> the flow type checker will
-	 * attempt to determine an <i>expected</i> array type. In order to then
-	 * determine the appropriate expected type for expression <code>x</code> it
-	 * filters <code>null|int[]</code> down to just <code>int[]</code>.
-	 * </p>
-	 *
-	 * @param target
-	 *            Target type for this value
-	 * @param expr
-	 *            Source expression for this value
-	 * @author David J. Pearce
-	 *
-	 */
-	public Type.Array selectArray(Type target, Expr expr, Environment environment) {
-		Type.Array type = expr.getType().as(Type.Array.class);
-		List<Type.Array> arrays = target.filter(Type.Array.class);
-		return select(arrays, type, environment);
-	}
-
-	/**
-	 * <p>
-	 * Given an arbitrary target type, filter out the target record types. For
-	 * example, consider the following method:
-	 * </p>
-	 *
-	 *
-	 * <pre>
-	 * method f(int x):
-	 *    {int f}|null xs = {f: x}
-	 *    ...
-	 * </pre>
-	 * <p>
-	 * When type checking the expression <code>{f: x}</code> the flow type checker
-	 * will attempt to determine an <i>expected</i> record type. In order to then
-	 * determine the appropriate expected type for field initialiser expression
-	 * <code>x</code> it filters <code>{int f}|null</code> down to just
-	 * <code>{int f}</code>.
-	 * </p>
-	 *
-	 * @param target
-	 *            Target type for this value
-	 * @param expr
-	 *            Source expression for this value
-	 * @author David J. Pearce
-	 *
-	 */
-	public Type.Record selectRecord(Type target, Expr expr, Environment environment) {
-		Type.Record type = expr.getType().as(Type.Record.class);
-		List<Type.Record> records = target.filter(Type.Record.class);
-		return select(records, type, environment);
-	}
-
-	/**
-	 * <p>
-	 * Given an arbitrary target type, filter out the target tuple types. For
-	 * example, consider the following method:
-	 * </p>
-	 *
-	 *
-	 * <pre>
-	 * method f(int x):
-	 *    (int,int)|null xs = (1,2)
-	 *    ...
-	 * </pre>
-	 * <p>
-	 * When type checking the expression <code>(1,1)</code> the flow type checker
-	 * will attempt to determine an <i>expected</i> tuple type. In order to then
-	 * determine the appropriate expected type for the initialiser expressions it
-	 * filters <code>(int,int)|null</code> down to just <code>(int,int)</code>.
-	 * </p>
-	 *
-	 * @param target
-	 *            Target type for this value
-	 * @param expr
-	 *            Source expression for this value
-	 * @author David J. Pearce
-	 *
-	 */
-	public Type.Tuple selectTuple(Type target, Expr expr, Environment environment) {
-		Type.Tuple type = expr.getType().as(Type.Tuple.class);
-		List<Type.Tuple> tuples = target.filter(Type.Tuple.class);
-		return select(tuples, type, environment);
-	}
-
-	/**
-	 * <p>
-	 * Given an arbitrary target type, filter out the target reference types. For
-	 * example, consider the following method:
-	 * </p>
-	 *
-	 *
-	 * <pre>
-	 * method f(int x):
-	 *    &int|null xs = new(x)
-	 *    ...
-	 * </pre>
-	 * <p>
-	 * When type checking the expression <code>new(x)</code> the flow type checker
-	 * will attempt to determine an <i>expected</i> reference type. In order to then
-	 * determine the appropriate expected type for element expression <code>x</code>
-	 * it filters <code>&int|null</code> down to just <code>&int</code>.
-	 * </p>
-	 *
-	 * @param target
-	 *            Target type for this value
-	 * @param expr
-	 *            Source expression for this value
-	 *
-	 * @author David J. Pearce
-	 *
-	 */
-	public Type.Reference selectReference(Type target, Expr expr, Environment environment) {
-		Type.Reference type = expr.getType().as(Type.Reference.class);
-		List<Type.Reference> refs = target.filter(Type.Reference.class);
-		return select(refs, type, environment);
-	}
-
-	/**
-	 * <p>
-	 * Given an arbitrary target type, filter out the target lambda types. For
-	 * example, consider the following method:
-	 * </p>
-	 *
-	 *
-	 * <pre>
-	 * type fun_t is function(int)->(int)
-	 *
-	 * method f(int x):
-	 *    fun_t|null xs = &(int y -> y+1)
-	 *    ...
-	 * </pre>
-	 * <p>
-	 * When type checking the expression <code>&(int y -> y+1)</code> the flow type
-	 * checker will attempt to determine an <i>expected</i> lambda type. In order to
-	 * then determine the appropriate expected type for the lambda body
-	 * <code>y+1</code> it filters <code>fun_t|null</code> down to just
-	 * <code>fun_t</code>.
-	 * </p>
-	 *
-	 * @param target
-	 *            Target type for this value
-	 * @param expr
-	 *            Source expression for this value
-	 * @author David J. Pearce
-	 *
-	 */
-	public Type.Callable selectLambda(Type target, Expr expr, Environment environment) {
-		Type.Callable type = expr.getType().as(Type.Callable.class);
-		// Create the filter itself
-		List<Type.Callable> callables = target.filter(Type.Callable.class);
-		//
-		return select(callables, type, environment);
-	}
-
-	/**
-	 * Given an array of candidate types, select the most precise match for a actual
-	 * type. If no such candidate exists, return null (which should be impossible
-	 * for type correct code).
-	 *
-	 * @param candidates
-	 * @param actual
-	 * @return
-	 */
-	public <T extends Type> T select(List<T> candidates, T actual, Environment environment) {
-		//
-		T candidate = null;
-		for (int i = 0; i != candidates.size(); ++i) {
-			T next = candidates.get(i);
-			if (subtypeOperator.isSatisfiableSubtype(next, actual, environment)) {
-				if (candidate == null) {
-					candidate = next;
-				} else {
-					candidate = select(candidate, next, actual, environment);
-				}
-			}
-		}
-		//
-		return candidate;
-	}
-
-	/**
-	 * Given two candidates, return the more precise one. If no viable candidate,
-	 * return null;
-	 *
-	 * @param candidate
-	 *            The current best candidate.
-	 * @param next
-	 *            The next candidate being considered
-	 * @param environment
-	 * @return
-	 * @throws ResolutionError
-	 */
-	public <T extends Type> T select(T candidate, T next, T actual, Environment environment) {
-		// Found a viable candidate
-		boolean left = subtypeOperator.isSatisfiableSubtype(candidate, next, environment);
-		boolean right = subtypeOperator.isSatisfiableSubtype(next, candidate, environment);
-		if (left && !right) {
-			// Yes, is better than current candidate
-			return next;
-		} else if (right && !left) {
-			return candidate;
-		}
-		// Unable to distinguish options based on subtyping alone
-		left = isDerivation(next, actual);
-		right = isDerivation(candidate, actual);
-		if (left && !right) {
-			// Yes, is better than current candidate
-			return next;
-		} else if (right && !left) {
-			return candidate;
-		} else {
-			return null;
-		}
-
-	}
-
 	/**
 	 * Check whether one type is a derivation of another. For example, in this
 	 * scenario:
@@ -1392,7 +1121,7 @@ public abstract class AbstractTranslator<S> {
 	 * @author David J. Pearce
 	 *
 	 */
-	public static class Environment implements LifetimeRelation {
+	public static class Environment {
 		private final Map<String, String[]> withins;
 
 		public Environment() {
@@ -1403,7 +1132,6 @@ public abstract class AbstractTranslator<S> {
 			this.withins = new HashMap<>(withins);
 		}
 
-		@Override
 		public boolean isWithin(String inner, String outer) {
 			//
 			if (outer.equals("*") || inner.equals(outer)) {
