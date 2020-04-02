@@ -45,7 +45,6 @@ import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
-import wybs.util.AbstractSyntacticItem;
 import wycc.util.ArrayUtils;
 import wycc.util.Pair;
 import wyil.lang.WyilFile;
@@ -56,33 +55,11 @@ import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
 import wyil.lang.WyilFile.Type;
 import wyil.util.AbstractVisitor;
-import wyil.util.SubtypeOperator;
-import wyil.util.SubtypeOperator.LifetimeRelation;
+import wyil.util.IncrementalSubtypingEnvironment;
+import wyil.util.Subtyping;
 import wyjs.core.JavaScriptFile;
-import wyjs.core.JavaScriptFile.ArrayAccess;
-import wyjs.core.JavaScriptFile.ArrayInitialiser;
-import wyjs.core.JavaScriptFile.ArrayLength;
-import wyjs.core.JavaScriptFile.Assignment;
-import wyjs.core.JavaScriptFile.Block;
-import wyjs.core.JavaScriptFile.Break;
-import wyjs.core.JavaScriptFile.Constant;
-import wyjs.core.JavaScriptFile.Continue;
-import wyjs.core.JavaScriptFile.Declaration;
-import wyjs.core.JavaScriptFile.DoWhile;
-import wyjs.core.JavaScriptFile.For;
-import wyjs.core.JavaScriptFile.IfElse;
-import wyjs.core.JavaScriptFile.Invoke;
-import wyjs.core.JavaScriptFile.Lambda;
-import wyjs.core.JavaScriptFile.ObjectLiteral;
-import wyjs.core.JavaScriptFile.Operator;
 import wyjs.core.JavaScriptFile.Operator.Kind;
-import wyjs.core.JavaScriptFile.PropertyAccess;
-import wyjs.core.JavaScriptFile.Return;
-import wyjs.core.JavaScriptFile.Switch;
-import wyjs.core.JavaScriptFile.Term;
-import wyjs.core.JavaScriptFile.VariableAccess;
-import wyjs.core.JavaScriptFile.VariableDeclaration;
-import wyjs.core.JavaScriptFile.While;
+import wyjs.core.JavaScriptFile.*;
 import wyil.util.TypeMangler;
 import wyjs.util.AbstractTranslator;
 
@@ -97,9 +74,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Provides a standard mechanism for checking whether two Whiley types are
 	 * subtypes or not.
 	 */
-	private final static SubtypeOperator subtyping = new SubtypeOperator.Relaxed();
-
-	private final static SubtypeOperator strictSubtyping = new SubtypeOperator.Strict();
+	private final static Subtyping.Environment subtyping = new IncrementalSubtypingEnvironment();
 
 	/**
 	 * Represents the JavaScriptFile which is being written to.
@@ -416,7 +391,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Whiley are valid for any datatype, whilst in JavaScript they are only valid
 		// for integer types. Therefore, we must first identify which case we are in,
 		// then handle them separately.
-		boolean simple = subtyping.isSatisfiableSubtype(Type.Int,stmt.getCondition().getType(), EMPTY_LIFETIMES);
+		boolean simple = subtyping.isSatisfiableSubtype(Type.Int, stmt.getCondition().getType());
 		//
 		if(!simple) {
 			// hard case
@@ -1282,7 +1257,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// Eliminate all non-records
 			candidates = type.filter(Type.Record.class);
 			// Is that enough?
-			if(areStrictSubtypes(test,candidates)) {
+			if(areSubtypes(test,candidates)) {
 				// YES!
 				return new Block(new Return(and(operands)));
 			}
@@ -1290,7 +1265,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			if(filteredByFieldCount(candidates,fields.size(),test.isOpen())) {
 				operands.add(checkFieldCount(operand,fields.size()));
 				// Is that enough?
-				if(areStrictSubtypes(test,candidates)) {
+				if(areSubtypes(test,candidates)) {
 					// YES!
 					return new Block(new Return(and(operands)));
 				}
@@ -1415,7 +1390,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		if(type != null) {
 			candidates = type.filter(Type.Array.class);
 			// Check whether can select purely on basis of being array
-			if(areStrictSubtypes(test,candidates)) {
+			if(areSubtypes(test,candidates)) {
 				// YES
 				return new Block(new Return(and(operands)));
 			}
@@ -1994,7 +1969,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private boolean isSubtype(Type t1, Type t2) {
-		return t1 == null || subtyping.isSatisfiableSubtype(t1, t2, EMPTY_LIFETIMES);
+		return t1 == null || subtyping.isSatisfiableSubtype(t1, t2);
 	}
 
 	/**
@@ -2004,9 +1979,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types The subtype(s) being checked.
 	 * @return
 	 */
-	private boolean areStrictSubtypes(Type type, List<? extends Type> types) {
+	private boolean areSubtypes(Type type, List<? extends Type> types) {
 		for(Type t : types) {
-			if (t != null && !strictSubtyping.isSatisfiableSubtype(type, t, EMPTY_LIFETIMES)) {
+			if (t != null && !subtyping.isSatisfiableSubtype(type, t)) {
 				return false;
 			}
 		}
@@ -2111,14 +2086,20 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		String name = decl.getQualifiedName().toString().replace("::", "$");
 		// Add type mangles for non-exported symbols
 		if(!exported && decl instanceof Decl.Method) {
+			// FIXME: this could be simplified if TypeMangler was updated to support void.
 			Decl.Method method = (Decl.Method) decl;
 			Type parameters = method.getType().getParameter();
+			Type returns = method.getType().getReturn();
 			Tuple<Identifier> lifetimes = method.getType().getLifetimeParameters();
 			name += getMangle(parameters, lifetimes);
+			name += getMangle(returns, lifetimes);
 		} else if(!exported && decl instanceof Decl.Callable) {
+			// FIXME: this could be simplified if TypeMangler was updated to support void.
 			Decl.Callable callable = (Decl.Callable) decl;
 			Type parameters = callable.getType().getParameter();
+			Type returns = callable.getType().getReturn();
 			name += getMangle(parameters, new Tuple<>());
+			name += getMangle(returns, new Tuple<>());
 		} else if(decl instanceof Decl.Type) {
 			name += "$type";
 		} else if(decl instanceof Decl.StaticVariable) {
@@ -2220,7 +2201,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private String getMangle(Type type, Tuple<Identifier> lifetimes) {
 		if (type.shape() == 0) {
-			return "";
+			return "$V";
 		} else {
 			return "$" + mangler.getMangle(type, lifetimes);
 		}
@@ -2228,7 +2209,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private String getMangle(Tuple<Identifier> lifetimes, Type... types) {
 		if (types.length == 0) {
-			return "";
+			return "$V";
 		} else {
 			return "$" + mangler.getMangle(lifetimes, types);
 		}
@@ -2330,16 +2311,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return type;
 		}
 	}
-
-	/**
-	 * This is a simple implementation which doesn't do anything.
-	 */
-	private static LifetimeRelation EMPTY_LIFETIMES = new LifetimeRelation() {
-		@Override
-		public boolean isWithin(String inner, String outer) {
-			return false;
-		}
-	};
 
 	// ====================================================================================
 	// Whiley Runtime Accessors
