@@ -4,7 +4,7 @@ public export method test():
     // generate normal string
     int[] ascii = "hello"
     // coerce to js string
-    string js = (string) ascii
+    null|string js = (null|string) ascii
     //
     assert ascii == "hello"
     assert ascii[0] == 'h'
@@ -12,6 +12,7 @@ public export method test():
     assert ascii[2] == 'l'
     assert ascii[3] == 'l'
     assert ascii[4] == 'o'
+    assert js is string
     assert js == "hello"
     assert js[0] == 'h'
     assert js[1] == 'e'

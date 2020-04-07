@@ -1,7 +1,9 @@
 import string from js::core
 
+type Ref<T> is &{T val}
+
 public export method test():
-    &string p = new "Hello"
-    assert *p == (string) "Hello"
-    *p = "World"
-    assert *p == (string) "World"
+    Ref<string> p = new {val: "Hello"}
+    assert p->val == (string) "Hello"
+    p->val = "World"
+    assert p->val == (string) "World"

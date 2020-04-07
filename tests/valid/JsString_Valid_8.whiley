@@ -5,5 +5,5 @@ type Box<T> is {
 }
 
 public export method test():
-    Box<T> box = { content: "hello" }
+    Box<string> box = { content: "hello" }
     assert box.content == (string) "hello"

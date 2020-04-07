@@ -44,6 +44,8 @@ import wybs.lang.SyntacticException;
 import wybs.util.SequentialBuildProject;
 import wybs.util.AbstractCompilationUnit.Name;
 import wybs.util.AbstractCompilationUnit.Tuple;
+import wybs.util.AbstractCompilationUnit.Value.Bool;
+
 import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
@@ -59,6 +61,7 @@ import wyfs.util.Trie;
 import wyfs.util.VirtualRoot;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
+import wyjs.core.JavaScriptFile.Constant;
 import wyjs.tasks.JavaScriptCompileTask;
 
 /**
@@ -121,6 +124,9 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
 		IGNORED.put("Reference_Valid_20", "#44");
+		// Mutable native strings
+		IGNORED.put("JsString_Valid_4", "#48");
+		IGNORED.put("JsString_Valid_12", "#48");
 	}
 
 	// ======================================================================
@@ -174,9 +180,9 @@ public class RuntimeValidTests {
 				// FIXME: type here is incorrect and should be updated with fixed-with integer
 				// type (i.e. uint:16).
  				Decl.Variable var = new Decl.Variable(new Tuple<>(), new Identifier("$"), new Type.Array(Type.Int));
- 				// public type string is (int[] $)
+ 				// public type string is (int[] $) where true
 				Decl.Type type = new Decl.Type(new Tuple<>(new Modifier.Public()), new Identifier("string"),
-						new Tuple<>(), var, new Tuple<>());
+						new Tuple<>(), var, new Tuple<>(new Expr.Constant(Type.Bool, new Value.Bool(true))));
  				Decl.Unit unit = new Decl.Unit(new Name(mid), new Tuple<>(type));
  				wf.setRootItem(new WyilFile.Decl.Module(new Name(mid), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
  				// Done
@@ -241,7 +247,11 @@ public class RuntimeValidTests {
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
 			// NOTE: Java Nashorn supports ES5 only?
-			jsTarget.write(new JavaScriptFile(JavaScriptFile.Standard.ES5));
+			JavaScriptFile jsFile = new JavaScriptFile(JavaScriptFile.Standard.ES5);
+			// Add invariant handler for js::core::string
+			jsFile.getDeclarations().add(constructJsCoreStringInvariant());
+			// Write out the JavaScriptFile
+			jsTarget.write(jsFile);
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override
@@ -298,6 +308,12 @@ public class RuntimeValidTests {
 		// Execute the test() method
 		engine.eval(name + "$test();");
 	}
+
+	private static JavaScriptFile.Method constructJsCoreStringInvariant() {
+		JavaScriptFile.Term body = new JavaScriptFile.Return(new JavaScriptFile.Constant(true));
+		return new JavaScriptFile.Method("js$core$string$type", Arrays.asList("v"), new JavaScriptFile.Block(body));
+	}
+
 	// ======================================================================
 	// Tests
 	// ======================================================================
