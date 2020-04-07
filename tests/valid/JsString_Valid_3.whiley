@@ -1,0 +1,10 @@
+import string from js::core
+
+public export method test():
+    string s1 = "hello"
+    assert s1[0] == 'h'
+    assert s1[1] == 'e'
+    assert s1[2] == 'l'
+    assert s1[3] == 'l'
+    assert s1[4] == 'o'
+    assert |s1| == 5

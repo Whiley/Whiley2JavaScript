@@ -42,14 +42,21 @@ import org.junit.runners.Parameterized.Parameters;
 import wybs.lang.Build;
 import wybs.lang.SyntacticException;
 import wybs.util.SequentialBuildProject;
+import wybs.util.AbstractCompilationUnit.Name;
+import wybs.util.AbstractCompilationUnit.Tuple;
+import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
 import wyc.util.TestUtils.Environment;
 import wycc.util.Pair;
+import wycc.cfg.Configuration;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
+import wyfs.lang.Path.Root;
 import wyfs.util.DirectoryRoot;
+import wyfs.util.Trie;
+import wyfs.util.VirtualRoot;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
@@ -151,6 +158,47 @@ public class RuntimeValidTests {
  	private static final Content.Registry registry = new TestUtils.Registry();
 
  	/**
+	 * Mock of js::core package which is needed for various JavaScript specific
+	 * tests (e.g. for native strings, etc).
+	 */
+ 	private static final Build.Package JSCORE_PACKAGE = new Build.Package() {
+ 		private VirtualRoot root = new VirtualRoot(registry);
+
+ 		{
+ 			try {
+ 				Path.ID mid = Trie.fromString("js/core");
+ 				// Create an entry
+ 				Path.Entry<WyilFile> e = root.create(mid, WyilFile.ContentType);
+ 				// Construct WyilFile
+ 				WyilFile wf = new WyilFile(e);
+				// FIXME: type here is incorrect and should be updated with fixed-with integer
+				// type (i.e. uint:16).
+ 				Decl.Variable var = new Decl.Variable(new Tuple<>(), new Identifier("$"), new Type.Array(Type.Int));
+ 				// public type string is (int[] $)
+				Decl.Type type = new Decl.Type(new Tuple<>(new Modifier.Public()), new Identifier("string"),
+						new Tuple<>(), var, new Tuple<>());
+ 				Decl.Unit unit = new Decl.Unit(new Name(mid), new Tuple<>(type));
+ 				wf.setRootItem(new WyilFile.Decl.Module(new Name(mid), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
+ 				// Done
+ 				e.write(wf);
+ 			} catch(IOException e) {
+ 				throw new RuntimeException(e);
+ 			}
+ 		}
+
+		@Override
+		public Configuration getConfiguration() {
+			return null;
+		}
+
+		@Override
+		public Root getRoot() {
+			return root;
+		}
+
+ 	};
+
+ 	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
 	 * JavaScript source file. This will then need to be separately compiled.
 	 *
@@ -174,6 +222,8 @@ public class RuntimeValidTests {
 			Build.Environment environment = new Environment(root,false);
 			//
 			SequentialBuildProject project = new SequentialBuildProject(environment, root);
+			// Add mock for js::core
+			project.getPackages().add(JSCORE_PACKAGE);
 			// Identify source files and target files
 			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
 			List<Path.Entry<WhileyFile>> sources = Arrays.asList(p.first());
