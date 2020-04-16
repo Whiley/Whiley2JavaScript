@@ -650,8 +650,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructIntegerDivision(Expr.IntegerDivision expr, Term lhs, Term rhs) {
-		// NOTE: must floor result as JavaScript numbers are floating point.
-		return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		Type type = expr.getType();
+		//
+		if(isJsNumber(type)) {
+			return new JavaScriptFile.Operator(Kind.DIV, lhs, rhs);
+		} else {
+			// NOTE: must floor result as JavaScript numbers are floating point.
+			return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		}
 	}
 
 	@Override
@@ -828,6 +834,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		} else if (!containsJsString(target) && isJsString(source)) {
 			// Coercion from a JavaScript string required
 			return WY_TOSTRING(term);
+		} else if(target instanceof Type.Int && isJsNumber(source)) {
+			// Coercion from a JavaScript number required
+			return MATH_FLOOR(term);
 		}
 		// No operation
 		return term;
@@ -848,6 +857,24 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return false;
 		}
 	}
+
+
+	/**
+	 * Check whether a given target type corresponds to a native JavaScript string.
+	 *
+	 * @param target
+	 * @return
+	 */
+	private boolean isJsNumber(Type target) {
+		if (target instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) target;
+			Decl.Type decl = t.getLink().getTarget();
+			return decl.getQualifiedName().toString().equals("js::core::number");
+		} else {
+			return false;
+		}
+	}
+
 
 	private boolean containsJsString(Type target) {
 		// FIXME: this function is a HACK.
