@@ -1085,6 +1085,26 @@ public abstract class AbstractTranslator<S> {
 
 	public abstract S constructVariableAccess(Expr.VariableAccess expr);
 
+	// ====================================================================================
+	// Coercions
+	// ====================================================================================
+
+	/**
+	 * Apply an implicit coercion (where appropriate) from a term representing the
+	 * given source type to a term representing the given target type. This may be a
+	 * no-operation if no coercion is required.
+	 *
+	 * @param target
+	 * @param source
+	 * @param expr
+	 * @return
+	 */
+	public abstract S applyImplicitCoercion(Type target, Type source, S expr);
+
+	// ====================================================================================
+	// Helpers
+	// ====================================================================================
+
 	/**
 	 * Check whether one type is a derivation of another. For example, in this
 	 * scenario:

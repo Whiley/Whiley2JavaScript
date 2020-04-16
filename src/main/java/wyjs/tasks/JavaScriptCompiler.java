@@ -413,7 +413,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructArrayAccessLVal(Expr.ArrayAccess expr, Term source, Term index) {
-		return new ArrayAccess(source,index);
+		Type t = expr.getFirstOperand().getType();
+		// Check whether it's a js string
+		if (isJsString(t)) {
+			// Return character code instead of string.
+			WyilFile parent = (WyilFile) expr.getHeap();
+			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent.getEntry(), expr);
+		} else {
+			return new ArrayAccess(source,index);
+		}
 	}
 
 	@Override
@@ -461,11 +469,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructArrayAccess(Expr.ArrayAccess expr, Term source, Term index) {
-		Term term = new ArrayAccess(source,index);
-		if(expr.isMove() || isCopyable(expr.getType())) {
-			return term;
+		// Extract type of source operand
+		Type t = expr.getFirstOperand().getType();
+		// Check whether it's a js string
+		if (isJsString(t)) {
+			// Return character code instead of string.
+			return new JavaScriptFile.Invoke(source, "charCodeAt", index);
 		} else {
-			return WY_COPY(term);
+			Term term = new ArrayAccess(source, index);
+			if (expr.isMove() || isCopyable(expr.getType())) {
+				return term;
+			} else {
+				return WY_COPY(term);
+			}
 		}
 	}
 
@@ -516,14 +532,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructCast(Expr.Cast expr, Term operand) {
-		// TODO: implement this properly
-		return operand;
+		return applyImplicitCoercion(expr.getType(), expr.getOperand().getType(), operand);
 	}
 
 	@Override
 	public Term constructConstant(Expr.Constant expr) {
 		Value val = expr.getValue();
-		Object c;
 		switch (val.getOpcode()) {
 		case ITEM_null:
 			return Constant.NULL;
@@ -559,7 +573,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// NOTE: special case as Whiley strings are int arrays.
 			Value.UTF8 utf8 = (Value.UTF8) val;
 			String str = new String(utf8.get());
-			return WY_TOSTRING(new JavaScriptFile.Constant(str));
+			Term term = new JavaScriptFile.Constant(str);
+			return isJsString(expr.getType()) ? term : WY_TOSTRING(term);
 		}
 	}
 
@@ -635,8 +650,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructIntegerDivision(Expr.IntegerDivision expr, Term lhs, Term rhs) {
-		// NOTE: must floor result as JavaScript numbers are floating point.
-		return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		Type type = expr.getType();
+		//
+		if(isJsNumber(type)) {
+			return new JavaScriptFile.Operator(Kind.DIV, lhs, rhs);
+		} else {
+			// NOTE: must floor result as JavaScript numbers are floating point.
+			return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		}
 	}
 
 	@Override
@@ -788,14 +809,86 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructVariableAccess(Expr.VariableAccess expr) {
-		String name = expr.getVariableDeclaration().getName().toString();
+		Decl.Variable decl = expr.getVariableDeclaration();
+		String name = decl.getName().toString();
 		VariableAccess var = new JavaScriptFile.VariableAccess(name);
-		// Check whether variable move is sufficient
-		if(expr.isMove() || isCopyable(expr.getType())) {
+		if (expr.isMove() || isCopyable(expr.getType())) {
 			return var;
 		} else {
 			return WY_COPY(var);
 		}
+	}
+
+	// ====================================================================================
+	// Coercions
+	// ====================================================================================
+
+	@Override
+	public Term applyImplicitCoercion(Type target, Type source, Term term) {
+		if (target.equals(source)) {
+			// No coercion required
+			return term;
+		} else if (isJsString(target) && !containsJsString(source)) {
+			// Coercion to a JavaScript string required
+			return WY_FROMSTRING(term);
+		} else if (!containsJsString(target) && isJsString(source)) {
+			// Coercion from a JavaScript string required
+			return WY_TOSTRING(term);
+		} else if(target instanceof Type.Int && isJsNumber(source)) {
+			// Coercion from a JavaScript number required
+			return MATH_FLOOR(term);
+		}
+		// No operation
+		return term;
+	}
+
+	/**
+	 * Check whether a given target type corresponds to a native JavaScript string.
+	 *
+	 * @param target
+	 * @return
+	 */
+	private boolean isJsString(Type target) {
+		if (target instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) target;
+			Decl.Type decl = t.getLink().getTarget();
+			return decl.getQualifiedName().toString().equals("js::core::string");
+		} else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Check whether a given target type corresponds to a native JavaScript string.
+	 *
+	 * @param target
+	 * @return
+	 */
+	private boolean isJsNumber(Type target) {
+		if (target instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) target;
+			Decl.Type decl = t.getLink().getTarget();
+			return decl.getQualifiedName().toString().equals("js::core::number");
+		} else {
+			return false;
+		}
+	}
+
+
+	private boolean containsJsString(Type target) {
+		// FIXME: this function is a HACK.
+		if(isJsString(target)) {
+			return true;
+		} else if(target instanceof Type.Union) {
+			Type.Union t = (Type.Union) target;
+			for(int i=0;i!=t.size();++i) {
+				if(containsJsString(t.get(i))) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// ====================================================================================
@@ -1501,7 +1594,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return new Block(outerIf, new Return(Constant.FALSE));
 		}
 	}
-
 
 	/**
 	 * Implementing equality is tricky because of the disparity between JavaScript
@@ -2350,6 +2442,10 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "toString", t1);
 	}
 
+	private static Term WY_FROMSTRING(Term t1) {
+		return new JavaScriptFile.Invoke(WY_RUNTIME, "fromString", t1);
+	}
+
 	// ====================================================================================
 	// JavaScript Runtime Accessors
 	// ====================================================================================
@@ -2358,6 +2454,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Represents the Math module available from JavaScript.
 	 */
 	private static Term MATH_RUNTIME = new JavaScriptFile.VariableAccess("Math");
+
 	private static Term OBJECT_RUNTIME = new JavaScriptFile.VariableAccess("Object");
 
 	private static Term TypeOf(Term t1, String kind) {
