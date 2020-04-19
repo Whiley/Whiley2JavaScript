@@ -945,6 +945,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// otherwise, would have to evaluate operand more than once.
 			if(decl.getInvariant().size() == 0) {
 				result = translateIs(type,t.getConcreteType(),operand,tests);
+			} else if(isJsString(t)) {
+				result = translateIsString(type, (Type.Nominal) test, operand);
 			}
 			break;
 		}
@@ -1052,6 +1054,33 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return TypeOf(operand,"number");
 	}
 
+	/**
+	 * Translate a type test against a native JavaScript <code>string</code>. This
+	 * is very easy in JavaScript since we can employ the <code>typeof</code>
+	 * operator to resolve this. For example, the following Whiley:
+	 *
+	 * <pre>
+	 * if x is string:
+	 *    ...
+	 * </pre>
+	 *
+	 * Becomes the following in JavaScript:
+	 *
+	 * <pre>
+	 * if((typeof x) == "string") {
+	 *   ...
+	 * }
+	 * </pre>
+	 *
+	 *
+	 * @param type    The type of the operand.
+	 * @param test    The type being tested against
+	 * @param operand The translated operand expression
+	 * @return
+	 */
+	private Term translateIsString(Type type, Type.Nominal test, Term operand) {
+		return TypeOf(operand,"string");
+	}
 	/**
 	 * Translate all type tests into corresponding functions. This must be done in
 	 * an iterative fashion, since translating a given type test might require
