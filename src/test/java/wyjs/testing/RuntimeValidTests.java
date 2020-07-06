@@ -42,15 +42,26 @@ import org.junit.runners.Parameterized.Parameters;
 import wybs.lang.Build;
 import wybs.lang.SyntacticException;
 import wybs.util.SequentialBuildProject;
+import wybs.util.AbstractCompilationUnit.Name;
+import wybs.util.AbstractCompilationUnit.Tuple;
+import wybs.util.AbstractCompilationUnit.Value.Bool;
+
+import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
+import wyc.util.TestUtils.Environment;
 import wycc.util.Pair;
+import wycc.cfg.Configuration;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
+import wyfs.lang.Path.Root;
 import wyfs.util.DirectoryRoot;
+import wyfs.util.Trie;
+import wyfs.util.VirtualRoot;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
+import wyjs.core.JavaScriptFile.Constant;
 import wyjs.tasks.JavaScriptCompileTask;
 
 /**
@@ -77,7 +88,7 @@ public class RuntimeValidTests {
 	 * functions used in generated javascript and is distinct from the Whiley
 	 * standard library.
 	 */
-	public final static String WYJS_RUNTIME = "lib/wy.js".replace('/', File.separatorChar);
+	public final static String WYJS_RUNTIME = "lib/js.js".replace('/', File.separatorChar);
 
 	/**
 	 * Ignored tests and a reason why we ignore them.
@@ -88,46 +99,13 @@ public class RuntimeValidTests {
 		// ===================================================
 		// WyC problems
 		// ===================================================
-		//  Normalisation for Method Subtyping
-		IGNORED.put("Lifetime_Lambda_Valid_2", "#794");
-		IGNORED.put("Lifetime_Lambda_Valid_5", "#794");
-		IGNORED.put("Lifetime_Lambda_Valid_6", "#794");
-		// Support Captured Lifetime Parameters
-		IGNORED.put("Lifetime_Lambda_Valid_7", "#795");
-		// Problem Type Checking Union Type
-		IGNORED.put("RecordSubtype_Valid_1", "#696");
-		IGNORED.put("RecordSubtype_Valid_2", "#696");
-		// Function Overloading for Nominal Types
-		IGNORED.put("Function_Valid_11", "#702");
-		IGNORED.put("Function_Valid_15", "#702");
-		// Redesigned Interpreter
-		IGNORED.put("Lambda_Valid_7", "908");
-		IGNORED.put("Lambda_Valid_11", "908");
-		IGNORED.put("Template_Valid_35", "908");
-		IGNORED.put("Template_Valid_36", "908");
-		// Bug with Template Inference
-		IGNORED.put("Template_Valid_38", "912");
-		// Semantics of Runtime Type Tests
-		IGNORED.put("RecursiveType_Valid_7", "936");
-		IGNORED.put("TypeEquals_Valid_61", "936");
-		IGNORED.put("TypeEquals_Valid_62", "936");
-		// FlowTyping over Logical Conditions
-		IGNORED.put("Complex_Valid_3", "936");
-		IGNORED.put("RecursiveType_Valid_12", "936");
-		IGNORED.put("RecursiveType_Valid_30", "936");
-		// Subtype Operator for Casting
-		IGNORED.put("Coercion_Valid_9", "938");
-		IGNORED.put("RecordCoercion_Valid_1", "938");
-		// Unclassified
-		IGNORED.put("Lifetime_Valid_8", "???");
-		IGNORED.put("Lifetime_Lambda_Valid_1", "???");
-		IGNORED.put("Lifetime_Lambda_Valid_3", "???");
-		IGNORED.put("Lifetime_Lambda_Valid_4", "???");
-
+		// Bring over all the currently failing tests for the compiler. There's
+		// absolutely no point trying to see whether these work or not, since we
+		// already know they will not.
+		IGNORED.putAll(TestUtils.VALID_IGNORED);
 		// ===================================================
 		// WyJS problems
 		// ===================================================
-
 		// Unbound arithmetic
 		IGNORED.put("IntOp_Valid_1", "#15");
 		IGNORED.put("IntConst_Valid_1", "#15");
@@ -135,7 +113,7 @@ public class RuntimeValidTests {
 		// Replace Type Mangle with Interface
 		IGNORED.put("FunctionRef_Valid_13", "#9");
 		// Type Tests against Open Records
-//		IGNORED.put("OpenRecord_Valid_5", "#30");
+//		VALID_IGNORED.put("OpenRecord_Valid_5", "#30");
 		// Static Initialiser Order
 		IGNORED.put("StaticVar_Valid_7", "#29");
 		IGNORED.put("StaticVar_Valid_8", "#29");
@@ -145,13 +123,14 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_1", "#44");
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
+		IGNORED.put("Reference_Valid_20", "#44");
+		//
+		IGNORED.put("MethodRef_Valid_6", "???");
+		// Mutable native strings
+		IGNORED.put("JsString_Valid_4", "#48");
+		IGNORED.put("JsString_Valid_12", "#48");
+		IGNORED.put("JsString_Valid_13", "#49");
 	}
-
-	/**
-	 * The directory where compiler libraries are stored. This is necessary
-	 * since it will contain the Whiley Runtime.
-	 */
-	public final static String WYC_LIB_DIR = "../../lib/".replace('/', File.separatorChar);
 
 	// ======================================================================
 	// Test Harness
@@ -188,10 +167,51 @@ public class RuntimeValidTests {
  	private static final Content.Registry registry = new TestUtils.Registry();
 
  	/**
+	 * Mock of js::core package which is needed for various JavaScript specific
+	 * tests (e.g. for native strings, etc).
+	 */
+ 	private static final Build.Package JSCORE_PACKAGE = new Build.Package() {
+ 		private VirtualRoot root = new VirtualRoot(registry);
+
+ 		{
+ 			try {
+ 				Path.ID mid = Trie.fromString("js/core");
+ 				// Create an entry
+ 				Path.Entry<WyilFile> e = root.create(mid, WyilFile.ContentType);
+ 				// Construct WyilFile
+ 				WyilFile wf = new WyilFile(e);
+				// FIXME: type here is incorrect and should be updated with fixed-with integer
+				// type (i.e. uint:16).
+ 				Decl.Variable var = new Decl.Variable(new Tuple<>(), new Identifier("$"), new Type.Array(Type.Int));
+ 				// public type string is (int[] $) where true
+				Decl.Type type = new Decl.Type(new Tuple<>(new Modifier.Public()), new Identifier("string"),
+						new Tuple<>(), var, new Tuple<>(new Expr.Constant(Type.Bool, new Value.Bool(true))));
+ 				Decl.Unit unit = new Decl.Unit(new Name(mid), new Tuple<>(type));
+ 				wf.setRootItem(new WyilFile.Decl.Module(new Name(mid), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
+ 				// Done
+ 				e.write(wf);
+ 			} catch(IOException e) {
+ 				throw new RuntimeException(e);
+ 			}
+ 		}
+
+		@Override
+		public Configuration getConfiguration() {
+			return null;
+		}
+
+		@Override
+		public Root getRoot() {
+			return root;
+		}
+
+ 	};
+
+ 	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
 	 * JavaScript source file. This will then need to be separately compiled.
 	 *
-	 * @param args
+	 * @param arg
 	 *            --- list of command-line arguments to provide to the Whiley
 	 *            Compiler.
 	 * @return
@@ -207,7 +227,12 @@ public class RuntimeValidTests {
 		try {
 			// Construct the project
 			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-			SequentialBuildProject project = new SequentialBuildProject(null, root);
+			// Construct temporary build environment
+			Build.Environment environment = new Environment(root,false);
+			//
+			SequentialBuildProject project = new SequentialBuildProject(environment, root);
+			// Add mock for js::core
+			project.getPackages().add(JSCORE_PACKAGE);
 			// Identify source files and target files
 			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
 			List<Path.Entry<WhileyFile>> sources = Arrays.asList(p.first());
@@ -225,7 +250,11 @@ public class RuntimeValidTests {
 			// Construct an empty JavaScriptFile
 			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
 			// NOTE: Java Nashorn supports ES5 only?
-			jsTarget.write(new JavaScriptFile(JavaScriptFile.Standard.ES5));
+			JavaScriptFile jsFile = new JavaScriptFile(JavaScriptFile.Standard.ES5);
+			// Add invariant handler for js::core::string
+			jsFile.getDeclarations().add(constructJsCoreStringInvariant());
+			// Write out the JavaScriptFile
+			jsTarget.write(jsFile);
 			// Add WyIL => JavaScript Build Rule
 			project.add(new Build.Rule() {
 				@Override
@@ -238,7 +267,7 @@ public class RuntimeValidTests {
 			});
 			project.refresh();
 			// Actually force the project to build
-			project.build(ForkJoinPool.commonPool()).get();
+			project.build(ForkJoinPool.commonPool(), Build.NULL_METER).get();
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 			// Check whether any syntax error produced
@@ -282,6 +311,12 @@ public class RuntimeValidTests {
 		// Execute the test() method
 		engine.eval(name + "$test();");
 	}
+
+	private static JavaScriptFile.Method constructJsCoreStringInvariant() {
+		JavaScriptFile.Term body = new JavaScriptFile.Return(new JavaScriptFile.Constant(true));
+		return new JavaScriptFile.Method("js$core$string$type", Arrays.asList("v"), new JavaScriptFile.Block(body));
+	}
+
 	// ======================================================================
 	// Tests
 	// ======================================================================

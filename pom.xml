@@ -7,7 +7,7 @@
 
   <groupId>org.whiley</groupId>
   <artifactId>wyjs</artifactId>
-  <version>0.5.6</version>
+  <version>0.5.7</version>
   <packaging>jar</packaging>
 
   <licenses>
@@ -51,7 +51,7 @@
     <dependency>
       <groupId>org.whiley</groupId>
       <artifactId>wyc</artifactId>
-      <version>0.6.12</version>
+      <version>0.7.1</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

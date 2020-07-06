@@ -37,6 +37,7 @@ public class JavaScriptFilePrinter {
 	private void write(int indent, JavaScriptFile.Declaration d) {
 		if (d instanceof JavaScriptFile.VariableDeclaration) {
 			writeVariableDeclaration(indent, (JavaScriptFile.VariableDeclaration) d);
+			out.println(";");
 		} else if (d instanceof JavaScriptFile.Method) {
 			write(indent, (JavaScriptFile.Method) d);
 		} else if (d instanceof JavaScriptFile.NativeDeclaration) {
@@ -111,6 +112,7 @@ public class JavaScriptFilePrinter {
 			writeReturn(indent,(JavaScriptFile.Return) term);
 		} else if(term instanceof JavaScriptFile.VariableDeclaration) {
 			writeVariableDeclaration(indent,(JavaScriptFile.VariableDeclaration) term);
+			out.println(";");
 		} else if(term instanceof JavaScriptFile.While) {
 			writeWhile(indent,(JavaScriptFile.While) term);
 		} else {
@@ -143,23 +145,14 @@ public class JavaScriptFilePrinter {
 
 	private void writeFor(int indent, JavaScriptFile.For term) {
 		out.print("for(");
-		writeForVariableDeclaration(indent,term.getInitialiser());
+		writeVariableDeclaration(indent,term.getInitialiser());
+		out.print(";");
 		writeExpression(indent,term.getCondition());
 		out.print(";");
 		writeExpression(indent,term.getIncrement());
 		out.print(")");
 		writeBlock(indent, term.getBody());
 		out.println();
-	}
-
-	private void writeForVariableDeclaration(int indent, JavaScriptFile.VariableDeclaration term) {
-		out.print("var ");
-		out.print(term.getName());
-		if (term.getInitialiser() != null) {
-			out.print(" = ");
-			writeExpression(indent,term.getInitialiser());
-		}
-		out.print(";");
 	}
 
 	private void writeIfElse(int indent, JavaScriptFile.IfElse term) {
@@ -226,12 +219,31 @@ public class JavaScriptFilePrinter {
 			out.print("const ");
 			break;
 		}
-		out.print(term.getName());
-		if(term.getInitialiser() != null) {
-			out.print(" = ");
-			writeExpression(indent,term.getInitialiser());
+		for(int i=0;i!=term.size();++i) {
+			String[] names = term.getNames(i);
+			JavaScriptFile.Term initialiser = term.getInitialiser(i);
+			if(i != 0) {
+				out.print(", ");
+			}
+			// Write declaration
+			if(names.length == 1) {
+				out.print(names[0]);
+			} else {
+				out.print("[");
+				for (int j = 0; j != names.length; ++j) {
+					if(j != 0) {
+						out.print(", ");
+					}
+					out.print(names[j]);
+				}
+				out.print("]");
+			}
+			// write initialiser
+			if(initialiser != null) {
+				out.print(" = ");
+				writeExpression(indent,initialiser);
+			}
 		}
-		out.println(";");
 	}
 
 	private void writeWhile(int indent, JavaScriptFile.While term) {

@@ -7,10 +7,12 @@ import static wybs.util.AbstractCompilationUnit.ITEM_utf8;
 import static wyil.lang.WyilFile.EXPR_arrayaccess;
 import static wyil.lang.WyilFile.EXPR_arrayborrow;
 import static wyil.lang.WyilFile.EXPR_dereference;
+import static wyil.lang.WyilFile.EXPR_fielddereference;
 import static wyil.lang.WyilFile.EXPR_recordaccess;
 import static wyil.lang.WyilFile.EXPR_recordborrow;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
 import static wyil.lang.WyilFile.EXPR_variablemove;
+import static wyil.lang.WyilFile.EXPR_tupleinitialiser;
 import static wyil.lang.WyilFile.TYPE_array;
 import static wyil.lang.WyilFile.TYPE_bool;
 import static wyil.lang.WyilFile.TYPE_byte;
@@ -18,7 +20,6 @@ import static wyil.lang.WyilFile.TYPE_int;
 import static wyil.lang.WyilFile.TYPE_nominal;
 import static wyil.lang.WyilFile.TYPE_null;
 import static wyil.lang.WyilFile.TYPE_record;
-import static wyil.lang.WyilFile.TYPE_staticreference;
 import static wyil.lang.WyilFile.TYPE_reference;
 import static wyil.lang.WyilFile.TYPE_union;
 import static wyil.lang.WyilFile.TYPE_method;
@@ -36,13 +37,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import wybs.lang.Build;
 import wybs.lang.SyntacticException;
 import wybs.lang.SyntacticHeap;
 import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
-import wybs.util.AbstractSyntacticItem;
 import wycc.util.ArrayUtils;
 import wycc.util.Pair;
 import wyil.lang.WyilFile;
@@ -53,33 +54,11 @@ import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
 import wyil.lang.WyilFile.Type;
 import wyil.util.AbstractVisitor;
-import wyil.util.SubtypeOperator;
-import wyil.util.SubtypeOperator.LifetimeRelation;
+import wyil.util.IncrementalSubtypingEnvironment;
+import wyil.util.Subtyping;
 import wyjs.core.JavaScriptFile;
-import wyjs.core.JavaScriptFile.ArrayAccess;
-import wyjs.core.JavaScriptFile.ArrayInitialiser;
-import wyjs.core.JavaScriptFile.ArrayLength;
-import wyjs.core.JavaScriptFile.Assignment;
-import wyjs.core.JavaScriptFile.Block;
-import wyjs.core.JavaScriptFile.Break;
-import wyjs.core.JavaScriptFile.Constant;
-import wyjs.core.JavaScriptFile.Continue;
-import wyjs.core.JavaScriptFile.Declaration;
-import wyjs.core.JavaScriptFile.DoWhile;
-import wyjs.core.JavaScriptFile.For;
-import wyjs.core.JavaScriptFile.IfElse;
-import wyjs.core.JavaScriptFile.Invoke;
-import wyjs.core.JavaScriptFile.Lambda;
-import wyjs.core.JavaScriptFile.ObjectLiteral;
-import wyjs.core.JavaScriptFile.Operator;
 import wyjs.core.JavaScriptFile.Operator.Kind;
-import wyjs.core.JavaScriptFile.PropertyAccess;
-import wyjs.core.JavaScriptFile.Return;
-import wyjs.core.JavaScriptFile.Switch;
-import wyjs.core.JavaScriptFile.Term;
-import wyjs.core.JavaScriptFile.VariableAccess;
-import wyjs.core.JavaScriptFile.VariableDeclaration;
-import wyjs.core.JavaScriptFile.While;
+import wyjs.core.JavaScriptFile.*;
 import wyil.util.TypeMangler;
 import wyjs.util.AbstractTranslator;
 
@@ -94,9 +73,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Provides a standard mechanism for checking whether two Whiley types are
 	 * subtypes or not.
 	 */
-	private final static SubtypeOperator subtyping = new SubtypeOperator.Relaxed();
-
-	private final static SubtypeOperator strictSubtyping = new SubtypeOperator.Strict();
+	private final static Subtyping.Environment subtyping = new IncrementalSubtypingEnvironment();
 
 	/**
 	 * Represents the JavaScriptFile which is being written to.
@@ -113,8 +90,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private int temporaryIndex = 0;
 
-	public JavaScriptCompiler(JavaScriptFile jsFile) {
-		super(subtyping);
+	public JavaScriptCompiler(Build.Meter meter, JavaScriptFile jsFile) {
+		super(meter,subtyping);
 		this.jsFile = jsFile;
 	}
 
@@ -162,30 +139,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
-	public Term constructVariable(Decl.Variable decl, Term initialiser) {
-		String name = decl.getName().toString();
-		// Determine appropriate modifier
-		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
-		//
-		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
-		} else {
-			return new JavaScriptFile.VariableDeclaration(kind,name);
-		}
-	}
-
-	@Override
 	public Term constructStaticVariable(Decl.StaticVariable decl, Term initialiser) {
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Determine appropriate modifier
 		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(decl);
 		//
-		if (decl.hasInitialiser()) {
-			return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
-		} else {
-			return new JavaScriptFile.VariableDeclaration(kind,name);
-		}
+		return new JavaScriptFile.VariableDeclaration(kind,name,initialiser);
 	}
 
 	@Override
@@ -240,7 +200,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Term inner = new Lambda(parameters,new Block(new Return(term)));
 		// NOTE: need to use Immediately Invoked Function Expression here, otherwise
 		// capture variables don't behave properly.
-		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables());
+		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables(meter));
 		List<String> captures = toParameterNames(captured);
 		Term[] capturedArgs = toLambdaArguments(captured);
 		// Construct outer lambda (this is for the IIFE)
@@ -260,15 +220,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructAssign(Stmt.Assign stmt, List<Term> lhs, List<Term> rhs) {
+		boolean simple = isSimpleAssignment(stmt);
 		//
-		// FIXME: es6 supports destructuring assignment which could be used here.
-		//
-		if(lhs.size() == 1) {
-			// Easy case
+		if(lhs.size() == 1 && simple) {
+			// Easy case with no destructuring assignment (unless ES6)
 			return new JavaScriptFile.Assignment(lhs.get(0), rhs.get(0));
-		} else if(isSimpleAssignment(stmt)) {
+		} else if(simple) {
 			// NOTE: what we know here is that there is no interference between the left and
-			// right-hand sides. Also, that we have no multi-assignment
+			// right-hand sides. Also, that we have no destructuring assignment (unless ES6)
 			ArrayList<Term> stmts = new ArrayList<>();
 			for(int i=0;i!=lhs.size();++i) {
 				stmts.add(new JavaScriptFile.Assignment(lhs.get(i), rhs.get(i)));
@@ -276,25 +235,28 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			return new Block(stmts);
 		} else {
 			// Harder case as have to workaround interference.
-			Tuple<Expr> exprs = stmt.getRightHandSide();
+			Tuple<LVal> lvals = stmt.getLeftHandSide();
+			// Contains set of rhs terms to evaluate first. These all have to be executed
+			// before the lhs terms because of the potential for interference.
 			ArrayList<Term> first = new ArrayList<>();
+			// Contains set of assignments to evaluate afterwards.
 			ArrayList<Term> second = new ArrayList<>();
-			//
-			for(int i=0,j=0;i!=exprs.size();++i) {
-				Expr e = exprs.get(i);
-				Tuple<Type> types = e.getTypes();
+			// Finally, handle assignents to lvals
+			for(int i=0;i!=lvals.size();++i) {
+				Type lv_t = lvals.get(i).getType();
 				// Translate right-hand side
 				VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
-				first.add(new VariableDeclaration(toConstKind(),tmp.getName(), rhs.get(i)));
+				first.add(new VariableDeclaration(toConstKind(),tmp.getName(),rhs.get(i)));
 				// Translate left-hand side
-				if(types == null) {
+				if(lv_t.shape() == 1) {
 					// Unit assignment
-					second.add(new JavaScriptFile.Assignment(lhs.get(j++), tmp));
+					second.add(new JavaScriptFile.Assignment(lhs.get(i), tmp));
 				} else {
 					// Multi-assignment
-					for(int k=0;k!=types.size();++k) {
-						Term t = new ArrayAccess(tmp,new Constant(k));
-						second.add(new JavaScriptFile.Assignment(lhs.get(j++), t));
+					JavaScriptFile.ArrayInitialiser ai = (JavaScriptFile.ArrayInitialiser) lhs.get(i);
+					for(int k=0;k!=lv_t.shape();++k) {
+						Term a = new ArrayAccess(tmp,new Constant(k));
+						second.add(new JavaScriptFile.Assignment(ai.getElement(k), a));
 					}
 				}
 			}
@@ -342,6 +304,18 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
+	public Term constructFor(Stmt.For stmt, Pair<Term, Term> range, List<Term> invariant, Term body) {
+		// NOTE: eventually we'll want to employ foreach loops in some situations.
+		WyilFile.Decl.StaticVariable v = stmt.getVariable();
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(), v.getName().toString(), range.first());
+		VariableAccess var = new VariableAccess(v.getName().toString());
+		Term condition = new JavaScriptFile.Operator(Kind.LT, var, range.second());
+		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
+		// FIXME: support for loop invariant
+		return new For(decl, condition, increment, (Block) body);
+	}
+
+	@Override
 	public Term constructIfElse(Stmt.IfElse stmt, Term condition, Term trueBranch, Term falseBranch) {
 		ArrayList<IfElse.Case> cases = new ArrayList<>();
 		// Translate true branch
@@ -353,30 +327,53 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return new JavaScriptFile.IfElse(cases);
 	}
 
+
+	@Override
+	public Term constructInitialiser(Stmt.Initialiser stmt, Term initialiser) {
+		JavaScriptFile.VariableDeclaration.Kind kind=toVariableKind(stmt);
+		Tuple<Decl.Variable> variables = stmt.getVariables();
+		//
+		if (initialiser == null) {
+			// unit declaration
+			String[][] names = new String[variables.size()][1];
+			// Determine appropriate modifier
+			Term[] initialisers = new Term[names.length];
+			for (int i = 0; i != names.length; ++i) {
+				names[i][0] = variables.get(i).getName().toString();
+			}
+			return new JavaScriptFile.VariableDeclaration(kind, names, initialisers);
+		} else if (jsFile.ES6() || variables.size() == 1) {
+			// destructuring declaration
+			String[][] names = new String[1][variables.size()];
+			// Determine appropriate modifier
+			Term[] initialisers = new Term[] { initialiser };
+			for (int i = 0; i != variables.size(); ++i) {
+				names[0][i] = variables.get(i).getName().toString();
+			}
+			return new JavaScriptFile.VariableDeclaration(kind, names, initialisers);
+		} else {
+			// non-destructuring assignment
+			ArrayList<Term> first = new ArrayList<>();
+			// Translate right-hand side expression
+			VariableAccess tmp = new VariableAccess("$" + (temporaryIndex++));
+			first.add(new VariableDeclaration(toConstKind(), tmp.getName(), initialiser));
+			// Translate destructuring assignments
+			for (int i = 0; i != variables.size(); ++i) {
+				String l = variables.get(i).getName().toString();
+				Term r = new ArrayAccess(tmp, new Constant(i));
+				first.add(new JavaScriptFile.VariableDeclaration(kind, l, r));
+			}
+			return new Block(first);
+		}
+	}
+
 	@Override
 	public Term constructNamedBlock(Stmt.NamedBlock stmt, List<Term> stmts) {
 		return new Block(stmts);
 	}
 
 	@Override
-	public Term constructReturn(Stmt.Return stmt, List<Term> returns) {
-		Term rval;
-		if(returns.size() == 0) {
-			rval = null;
-		} else if (returns.size() == 1) {
-			// Easy case
-			rval = returns.get(0);
-		} else {
-			//
-			if (allUnitExpressions(stmt.getReturns())) {
-				// Easier as direct mapping between expressions.
-				rval = new JavaScriptFile.ArrayInitialiser(returns);
-			} else {
-				// FIXME: implement multiple expressions!!
-				throw new UnsupportedOperationException();
-			}
-		}
-		//
+	public Term constructReturn(Stmt.Return stmt, Term rval) {
 		return new Return(rval);
 	}
 
@@ -393,7 +390,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// Whiley are valid for any datatype, whilst in JavaScript they are only valid
 		// for integer types. Therefore, we must first identify which case we are in,
 		// then handle them separately.
-		boolean simple = subtyping.isSubtype(Type.Int,stmt.getCondition().getType(), EMPTY_LIFETIMES);
+		boolean simple = subtyping.isSatisfiableSubtype(Type.Int, stmt.getCondition().getType());
 		//
 		if(!simple) {
 			// hard case
@@ -415,20 +412,35 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructArrayAccessLVal(Expr.ArrayAccess expr, Term source, Term index) {
-		return new ArrayAccess(source,index);
+		Type t = expr.getFirstOperand().getType();
+		// Check whether it's a js string
+		if (isJsString(t)) {
+			// Return character code instead of string.
+			WyilFile parent = (WyilFile) expr.getHeap();
+			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent.getEntry(), expr);
+		} else {
+			return new ArrayAccess(source,index);
+		}
 	}
 
 	@Override
 	public Term constructDereferenceLVal(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand, "$ref");
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		//
+		if (isBoxedType(type)) {
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
 	public Term constructFieldDereferenceLVal(Expr.FieldDereference expr, Term operand) {
-		Type type = expr.getOperand().getType();
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
 		//
-		if (!isUnknownReference(type)) {
-			// Known types are explicitly wrapped, whilst unknown types are not.
+		if (isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
 			operand =  new PropertyAccess(operand, "$ref");
 		}
 		return new PropertyAccess(operand, expr.getField().get());
@@ -437,6 +449,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	@Override
 	public Term constructRecordAccessLVal(Expr.RecordAccess expr, Term source) {
 		return new JavaScriptFile.PropertyAccess(source, expr.getField().toString());
+	}
+
+	@Override
+	public Term constructTupleInitialiserLVal(Expr.TupleInitialiser expr, List<Term> terms) {
+		return new JavaScriptFile.ArrayInitialiser(terms);
 	}
 
 	@Override
@@ -451,11 +468,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructArrayAccess(Expr.ArrayAccess expr, Term source, Term index) {
-		Term term = new ArrayAccess(source,index);
-		if(expr.isMove() || isCopyable(expr.getType())) {
-			return term;
+		// Extract type of source operand
+		Type t = expr.getFirstOperand().getType();
+		// Check whether it's a js string
+		if (isJsString(t)) {
+			// Return character code instead of string.
+			return new JavaScriptFile.Invoke(source, "charCodeAt", index);
 		} else {
-			return WY_COPY(term);
+			Term term = new ArrayAccess(source, index);
+			if (expr.isMove() || isCopyable(expr.getType())) {
+				return term;
+			} else {
+				return WY_COPY(term);
+			}
 		}
 	}
 
@@ -506,14 +531,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructCast(Expr.Cast expr, Term operand) {
-		// TODO: implement this properly
-		return operand;
+		return applyImplicitCoercion(expr.getType(), expr.getOperand().getType(), operand);
 	}
 
 	@Override
 	public Term constructConstant(Expr.Constant expr) {
 		Value val = expr.getValue();
-		Object c;
 		switch (val.getOpcode()) {
 		case ITEM_null:
 			return Constant.NULL;
@@ -549,20 +572,29 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// NOTE: special case as Whiley strings are int arrays.
 			Value.UTF8 utf8 = (Value.UTF8) val;
 			String str = new String(utf8.get());
-			return WY_TOSTRING(new JavaScriptFile.Constant(str));
+			Term term = new JavaScriptFile.Constant(str);
+			return isJsString(expr.getType()) ? term : WY_TOSTRING(term);
 		}
 	}
 
 	@Override
 	public Term constructDereference(Expr.Dereference expr, Term operand) {
-		return new PropertyAccess(operand, "$ref");
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		if(isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
+			return new PropertyAccess(operand, "$ref");
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
 	public Term constructFieldDereference(Expr.FieldDereference expr, Term operand) {
-		Type type = expr.getOperand().getType();
-		if (!isUnknownReference(type)) {
-			// Known types are explicitly wrapped, whilst unknown types are not.
+		Type.Reference type = expr.getOperand().getType().as(Type.Reference.class);
+		if (isBoxedType(type)) {
+			// Immutable types must be explicitly boxed since they cannot be updated in
+			// place.
 			operand =  new PropertyAccess(operand, "$ref");
 		}
 		return new PropertyAccess(operand, expr.getField().get());
@@ -617,8 +649,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructIntegerDivision(Expr.IntegerDivision expr, Term lhs, Term rhs) {
-		// NOTE: must floor result as JavaScript numbers are floating point.
-		return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		Type type = expr.getType();
+		//
+		if(isJsNumber(type)) {
+			return new JavaScriptFile.Operator(Kind.DIV, lhs, rhs);
+		} else {
+			// NOTE: must floor result as JavaScript numbers are floating point.
+			return MATH_FLOOR(new JavaScriptFile.Operator(Kind.DIV, lhs, rhs));
+		}
 	}
 
 	@Override
@@ -692,9 +730,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		// just assigning the name) is that it protects against potential name
 		// clashes with local variables.
 		Type.Callable ft = expr.getLink().getTarget().getType();
-		Tuple<Type> params = ft.getParameters();
+		Type param = ft.getParameter();
 		//
-		for(int i=0;i!=params.size();++i) {
+		for(int i=0;i!=param.shape();++i) {
 			String v = "p" + i;
 			parameters.add(v);
 			arguments.add(new VariableAccess(v));
@@ -708,8 +746,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructNew(Expr.New expr, Term operand) {
-		// known types must be converted into references
-		return new Operator(Kind.NEW,WY_REF(operand));
+		Type.Reference type = expr.getType().as(Type.Reference.class);
+		//
+		if (isBoxedType(type)) {
+			// Immutable types must be boxed as they cannot be updated in place. All other
+			// types don't need to be boxed.
+			return new Operator(Kind.NEW,WY_REF(operand));
+		} else {
+			return operand;
+		}
 	}
 
 	@Override
@@ -744,6 +789,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	@Override
+	public Term constructTupleInitialiser(Expr.TupleInitialiser expr, List<Term> operands) {
+		return new ArrayInitialiser(operands);
+	}
+
+	@Override
 	public Term constructStaticVariableAccess(Expr.StaticVariableAccess expr) {
 		String name = toMangledName(expr.getLink().getTarget());
 		VariableAccess var = new JavaScriptFile.VariableAccess(name);
@@ -758,14 +808,86 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructVariableAccess(Expr.VariableAccess expr) {
-		String name = expr.getVariableDeclaration().getName().toString();
+		Decl.Variable decl = expr.getVariableDeclaration();
+		String name = decl.getName().toString();
 		VariableAccess var = new JavaScriptFile.VariableAccess(name);
-		// Check whether variable move is sufficient
-		if(expr.isMove() || isCopyable(expr.getType())) {
+		if (expr.isMove() || isCopyable(expr.getType())) {
 			return var;
 		} else {
 			return WY_COPY(var);
 		}
+	}
+
+	// ====================================================================================
+	// Coercions
+	// ====================================================================================
+
+	@Override
+	public Term applyImplicitCoercion(Type target, Type source, Term term) {
+		if (target.equals(source)) {
+			// No coercion required
+			return term;
+		} else if (isJsString(target) && !containsJsString(source)) {
+			// Coercion to a JavaScript string required
+			return WY_FROMSTRING(term);
+		} else if (!containsJsString(target) && isJsString(source)) {
+			// Coercion from a JavaScript string required
+			return WY_TOSTRING(term);
+		} else if(target instanceof Type.Int && isJsNumber(source)) {
+			// Coercion from a JavaScript number required
+			return MATH_FLOOR(term);
+		}
+		// No operation
+		return term;
+	}
+
+	/**
+	 * Check whether a given target type corresponds to a native JavaScript string.
+	 *
+	 * @param target
+	 * @return
+	 */
+	private boolean isJsString(Type target) {
+		if (target instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) target;
+			Decl.Type decl = t.getLink().getTarget();
+			return decl.getQualifiedName().toString().equals("js::core::string");
+		} else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Check whether a given target type corresponds to a native JavaScript string.
+	 *
+	 * @param target
+	 * @return
+	 */
+	private boolean isJsNumber(Type target) {
+		if (target instanceof Type.Nominal) {
+			Type.Nominal t = (Type.Nominal) target;
+			Decl.Type decl = t.getLink().getTarget();
+			return decl.getQualifiedName().toString().equals("js::core::number");
+		} else {
+			return false;
+		}
+	}
+
+
+	private boolean containsJsString(Type target) {
+		// FIXME: this function is a HACK.
+		if(isJsString(target)) {
+			return true;
+		} else if(target instanceof Type.Union) {
+			Type.Union t = (Type.Union) target;
+			for(int i=0;i!=t.size();++i) {
+				if(containsJsString(t.get(i))) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// ====================================================================================
@@ -822,6 +944,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// otherwise, would have to evaluate operand more than once.
 			if(decl.getInvariant().size() == 0) {
 				result = translateIs(type,t.getConcreteType(),operand,tests);
+			} else if(isJsString(t)) {
+				result = translateIsString(type, (Type.Nominal) test, operand);
 			}
 			break;
 		}
@@ -930,6 +1054,33 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
+	 * Translate a type test against a native JavaScript <code>string</code>. This
+	 * is very easy in JavaScript since we can employ the <code>typeof</code>
+	 * operator to resolve this. For example, the following Whiley:
+	 *
+	 * <pre>
+	 * if x is string:
+	 *    ...
+	 * </pre>
+	 *
+	 * Becomes the following in JavaScript:
+	 *
+	 * <pre>
+	 * if((typeof x) == "string") {
+	 *   ...
+	 * }
+	 * </pre>
+	 *
+	 *
+	 * @param type    The type of the operand.
+	 * @param test    The type being tested against
+	 * @param operand The translated operand expression
+	 * @return
+	 */
+	private Term translateIsString(Type type, Type.Nominal test, Term operand) {
+		return TypeOf(operand,"string");
+	}
+	/**
 	 * Translate all type tests into corresponding functions. This must be done in
 	 * an iterative fashion, since translating a given type test might require
 	 * generating another, etc.
@@ -1001,7 +1152,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		case TYPE_array:
 			body = translateIsArray(type, (Type.Array) test, operand, tests);
 			break;
-		case TYPE_staticreference:
 		case TYPE_reference:
 			body = translateIsReference(type, (Type.Reference) test, operand, tests);
 			break;
@@ -1227,7 +1377,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			// Eliminate all non-records
 			candidates = type.filter(Type.Record.class);
 			// Is that enough?
-			if(areStrictSubtypes(test,candidates)) {
+			if(areSubtypes(test,candidates)) {
 				// YES!
 				return new Block(new Return(and(operands)));
 			}
@@ -1235,7 +1385,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			if(filteredByFieldCount(candidates,fields.size(),test.isOpen())) {
 				operands.add(checkFieldCount(operand,fields.size()));
 				// Is that enough?
-				if(areStrictSubtypes(test,candidates)) {
+				if(areSubtypes(test,candidates)) {
 					// YES!
 					return new Block(new Return(and(operands)));
 				}
@@ -1360,7 +1510,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		if(type != null) {
 			candidates = type.filter(Type.Array.class);
 			// Check whether can select purely on basis of being array
-			if(areStrictSubtypes(test,candidates)) {
+			if(areSubtypes(test,candidates)) {
 				// YES
 				return new Block(new Return(and(operands)));
 			}
@@ -1403,7 +1553,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private Block translateIsArrayHelper(Type.Array from, Type.Array test, Term operand, Set<Pair<Type, Type>> tests) {
 		// Loop Header
-		VariableDeclaration decl = new VariableDeclaration(toLetKind(),"i", new Constant(0));
+		VariableDeclaration decl = new VariableDeclaration(toLetKind(), "i",new Constant(0));
 		VariableAccess var = new VariableAccess("i");
 		Term loopTest = new Operator(Kind.LT, var, new ArrayLength(operand));
 		Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
@@ -1472,13 +1622,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		}
 	}
 
-
 	/**
 	 * Implementing equality is tricky because of the disparity between JavaScript
 	 * types and Whiley types. For example, equality of arrays is not reference
 	 * equality in Whiley (as it is in JavaScript).
 	 *
-	 * @param expr
 	 * @return
 	 */
 	private Term translateEquality(boolean positive, Term lhs, Type lhsT, Term rhs, Type rhsT) {
@@ -1660,7 +1808,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	private Term translateQuantifier(int index, Expr.Quantifier expr, List<Pair<Term, Term>> ranges, Term condition) {
 		boolean isUniversal = expr instanceof Expr.UniversalQuantifier;
-		Tuple<Decl.Variable> parameters = expr.getParameters();
+		Tuple<Decl.StaticVariable> parameters = expr.getParameters();
 		// Generate nest
 		if (parameters.size() == index) {
 			// Base case
@@ -1675,7 +1823,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			Pair<Term, Term> range = ranges.get(index);
 			//
 			VariableAccess var = new VariableAccess(v.getName().toString());
-			VariableDeclaration decl = new VariableDeclaration(toLetKind(),var.getName(), range.first());
+			VariableDeclaration decl = new VariableDeclaration(toLetKind(),var.getName(),range.first());
 			Term test = new Operator(Kind.LT, var, range.second());
 			Term increment = new Assignment(var, new Operator(Kind.ADD, var, new Constant(1)));
 			Term body = translateQuantifier(index + 1, expr, ranges, condition);
@@ -1695,9 +1843,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		String mangle;
 		// Calculate mangled name
 		if(type == null) {
-			mangle = getMangle(new Tuple<>(), test);
+			mangle = getMangle(test);
 		} else {
-			mangle = getMangle(new Tuple<>(), type, test);
+			mangle = getMangle(type, test);
 		}
 		return "is" + mangle;
 	}
@@ -1758,56 +1906,65 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		Tuple<LVal> lhs = stmt.getLeftHandSide();
 		Tuple<Expr> rhs = stmt.getRightHandSide();
 		//
-		if(lhs.size() != rhs.size()) {
-			// Multi-assignment is present
-			return false;
-		} else {
-			Decl.Variable[] defs = new Decl.Variable[lhs.size()];
-			HashSet<Decl.Variable> uses = new HashSet<>();
-			// Identify all defs and uses
-			for(int i=0;i!=lhs.size();++i) {
-				defs[i] = extractDefinedVariable(lhs.get(i));
-				if(defs[i] == null) {
-					// Couldn't tell what was being defined.
-					return false;
-				}
-				extractUsedVariables(lhs.get(i),uses);
-				extractUsedVariables(rhs.get(i),uses);
-
+		HashSet<Decl.Variable> uses = new HashSet<>();
+		HashSet<Decl.Variable> defs = new HashSet<>();
+		// Identify all defs and uses
+		for(int i=0;i!=lhs.size();++i) {
+			LVal lv = lhs.get(i);
+			if(lv instanceof Expr.TupleInitialiser && !jsFile.ES6()) {
+				// Prior to ES6 was no destructuring assignment
+				return false;
+			} else if(!extractDefinedVariable(lhs.get(i),defs)) {
+				// Couldn't tell what was being defined.
+				return false;
 			}
-			// Check for interference
-			for(int i=0;i!=defs.length;++i) {
-				if(uses.contains(defs[i])) {
-					// Interference detected
-					return false;
-				}
-			}
-			//
-			return true;
+			extractUsedVariables(lhs.get(i),uses);
+			extractUsedVariables(rhs.get(i),uses);
 		}
+		// Check for interference
+		for(Decl.Variable def : defs) {
+			if(uses.contains(def)) {
+				// Interference detected
+				return false;
+			}
+		}
+		//
+		return true;
 	}
 
-	private Decl.Variable extractDefinedVariable(LVal lval) {
+	private boolean extractDefinedVariable(LVal lval, Set<Decl.Variable> defs) {
 		switch (lval.getOpcode()) {
 		case EXPR_arrayaccess:
 		case EXPR_arrayborrow: {
 			Expr.ArrayAccess e = (Expr.ArrayAccess) lval;
-			return extractDefinedVariable((WyilFile.LVal) e.getFirstOperand());
+			return extractDefinedVariable((WyilFile.LVal) e.getFirstOperand(), defs);
 		}
+		case EXPR_fielddereference:
 		case EXPR_dereference: {
 			// NOTE: it's impossible to tell what variable is being defined through a
 			// dereference.
-			return null;
+			return false;
+		}
+		case EXPR_tupleinitialiser: {
+			Expr.TupleInitialiser e = (Expr.TupleInitialiser) lval;
+			Tuple<Expr> operands = e.getOperands();
+			for(int i=0;i!=operands.size();++i) {
+				if(!extractDefinedVariable((WyilFile.LVal)operands.get(i),defs)) {
+					return false;
+				}
+			}
+			return true;
 		}
 		case EXPR_recordaccess:
 		case EXPR_recordborrow: {
 			Expr.RecordAccess e = (Expr.RecordAccess) lval;
-			return extractDefinedVariable((WyilFile.LVal) e.getOperand());
+			return extractDefinedVariable((WyilFile.LVal) e.getOperand(),defs);
 		}
 		case EXPR_variablecopy:
 		case EXPR_variablemove: {
 			Expr.VariableAccess e = (Expr.VariableAccess) lval;
-			return e.getVariableDeclaration();
+			defs.add(e.getVariableDeclaration());
+			return true;
 		}
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
@@ -1834,6 +1991,14 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			extractUsedVariables((WyilFile.LVal) e.getOperand(), uses);
 			break;
 		}
+		case EXPR_tupleinitialiser: {
+			Expr.TupleInitialiser e = (Expr.TupleInitialiser) lval;
+			Tuple<Expr> operands = e.getOperands();
+			for(int i=0;i!=operands.size();++i) {
+				extractUsedVariables((WyilFile.LVal) operands.get(i),uses);
+			}
+			break;
+		}
 		case EXPR_variablecopy:
 		case EXPR_variablemove: {
 			// NOTE: nothing to do here, since this variable is being defined.
@@ -1853,7 +2018,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 */
 	private void extractUsedVariables(Expr e, Set<Decl.Variable> uses) {
 		// Construct appropriate visitor
-		AbstractVisitor visitor = new AbstractVisitor() {
+		AbstractVisitor visitor = new AbstractVisitor(meter) {
 			@Override
 			public void visitVariableAccess(Expr.VariableAccess e) {
 				uses.add(e.getVariableDeclaration());
@@ -1923,7 +2088,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @return
 	 */
 	private boolean isSubtype(Type t1, Type t2) {
-		return t1 == null || subtyping.isSubtype(t1, t2, EMPTY_LIFETIMES);
+		return t1 == null || subtyping.isSatisfiableSubtype(t1, t2);
 	}
 
 	/**
@@ -1933,15 +2098,36 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * @param types The subtype(s) being checked.
 	 * @return
 	 */
-	private boolean areStrictSubtypes(Type type, List<? extends Type> types) {
+	private boolean areSubtypes(Type type, List<? extends Type> types) {
 		for(Type t : types) {
-			if (t != null && !strictSubtyping.isSubtype(type, t, EMPTY_LIFETIMES)) {
+			if (t != null && !subtyping.isSatisfiableSubtype(type, t)) {
 				return false;
 			}
 		}
 		return true;
 	}
 
+	/**
+	 * Check whether a given type is immutable or not. An immutable type is one
+	 * which needs to be boxed for a reference to it to be generated.
+	 *
+	 * @return
+	 */
+	public boolean isBoxedType(Type.Reference type) {
+		Type element = type.getElement();
+		// Strip away nominal info
+		while(element instanceof Type.Nominal) {
+			Type.Nominal n = (Type.Nominal) element;
+			element = n.getConcreteType();
+		}
+		//
+		if(element instanceof Type.Record) {
+			Type.Record r = (Type.Record) element;
+			return !r.isOpen();
+		} else {
+			return true;
+		}
+	}
 
 	/**
 	 * Return true if the type in question can be copied directly. More
@@ -1979,19 +2165,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		}
 	}
 
-	private boolean isUnknownReference(Type type) {
-		if (type instanceof Type.Reference) {
-			Type.Reference t = (Type.Reference) type;
-			return t.isUnknown();
-		} else if(type instanceof Type.Nominal) {
-			Type.Nominal t = (Type.Nominal) type;
-			Decl.Type td = t.getLink().getTarget();
-			return isUnknownReference(td.getType());
-		} else {
-			return false;
-		}
-	}
-
 	/**
 	 * Check whether the given type has any subtypes other than that of the given
 	 * kind. For example, <code>int|{int f}</code> has a subtype other than a record
@@ -2019,23 +2192,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
-	 * Determine whether a sequence of expressions are all "unit" expressions (that
-	 * is, return a single value) or not.
-	 *
-	 * @param exprs
-	 * @return
-	 */
-	private static boolean allUnitExpressions(Tuple<Expr> exprs) {
-		for(int i=0;i!=exprs.size();++i) {
-			Tuple<Type> types = exprs.get(i).getTypes();
-			if(types != null) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
 	 * Determine the appropriate mangled string for a given named declaration. This
 	 * is critical to ensuring that overloaded declarations do not clash.
 	 *
@@ -2049,14 +2205,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		String name = decl.getQualifiedName().toString().replace("::", "$");
 		// Add type mangles for non-exported symbols
 		if(!exported && decl instanceof Decl.Method) {
+			// FIXME: this could be simplified if TypeMangler was updated to support void.
 			Decl.Method method = (Decl.Method) decl;
-			Tuple<Type> parameters = method.getType().getParameters();
-			Tuple<Identifier> lifetimes = method.getType().getLifetimeParameters();
-			name += getMangle(parameters, lifetimes);
+			Type parameters = method.getType().getParameter();
+			Type returns = method.getType().getReturn();
+			name += getMangle(parameters);
+			name += getMangle(returns);
 		} else if(!exported && decl instanceof Decl.Callable) {
+			// FIXME: this could be simplified if TypeMangler was updated to support void.
 			Decl.Callable callable = (Decl.Callable) decl;
-			Tuple<Type> parameters = callable.getType().getParameters();
-			name += getMangle(parameters, new Tuple<>());
+			Type parameters = callable.getType().getParameter();
+			Type returns = callable.getType().getReturn();
+			name += getMangle(parameters);
+			name += getMangle(returns);
 		} else if(decl instanceof Decl.Type) {
 			name += "$type";
 		} else if(decl instanceof Decl.StaticVariable) {
@@ -2086,10 +2247,30 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	}
 
 	/**
+	 * Determine the appropriate kind for a statement initialiser. This depends on
+	 * what JavaScript standard is available.
+	 *
+	 * @param stmt
+	 * @return
+	 */
+	private JavaScriptFile.VariableDeclaration.Kind toVariableKind(Stmt.Initialiser stmt) {
+		JavaScriptFile.VariableDeclaration.Kind kind = null;
+		// Determine appropriate modifier
+		for(Decl.Variable v : stmt.getVariables()) {
+			JavaScriptFile.VariableDeclaration.Kind old = kind;
+			kind = toVariableKind(v);
+			if(old != null && kind != old) {
+				// NOTE: this is a conservative translation as it's not clear how this could be done better.
+				return JavaScriptFile.VariableDeclaration.Kind.VAR;
+			}
+		}
+		return kind;
+	}
+
+	/**
 	 * Determine the best kind for an immutable local variable declaration. This
 	 * depends on what JavaScript standard is available.
 	 *
-	 * @param decl
 	 * @return
 	 */
 	private JavaScriptFile.VariableDeclaration.Kind toLetKind() {
@@ -2104,7 +2285,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Determine the best kind for a mutable local variable declaration. This
 	 * depends on what JavaScript standard is available.
 	 *
-	 * @param decl
 	 * @return
 	 */
 	private JavaScriptFile.VariableDeclaration.Kind toConstKind() {
@@ -2137,19 +2317,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return results;
 	}
 
-	private String getMangle(Tuple<Type> types, Tuple<Identifier> lifetimes) {
-		if (types.size() == 0) {
-			return "";
+	private String getMangle(Type type) {
+		if (type.shape() == 0) {
+			return "$V";
 		} else {
-			return "$" + mangler.getMangle(types, lifetimes);
+			return "$" + mangler.getMangle(type);
 		}
 	}
 
-	private String getMangle(Tuple<Identifier> lifetimes, Type... types) {
+	private String getMangle(Type... types) {
 		if (types.length == 0) {
-			return "";
+			return "$V";
 		} else {
-			return "$" + mangler.getMangle(lifetimes, types);
+			return "$" + mangler.getMangle(types);
 		}
 	}
 
@@ -2250,16 +2430,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		}
 	}
 
-	/**
-	 * This is a simple implementation which doesn't do anything.
-	 */
-	private static LifetimeRelation EMPTY_LIFETIMES = new LifetimeRelation() {
-		@Override
-		public boolean isWithin(String inner, String outer) {
-			return false;
-		}
-	};
-
 	// ====================================================================================
 	// Whiley Runtime Accessors
 	// ====================================================================================
@@ -2298,6 +2468,10 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "toString", t1);
 	}
 
+	private static Term WY_FROMSTRING(Term t1) {
+		return new JavaScriptFile.Invoke(WY_RUNTIME, "fromString", t1);
+	}
+
 	// ====================================================================================
 	// JavaScript Runtime Accessors
 	// ====================================================================================
@@ -2306,6 +2480,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 	 * Represents the Math module available from JavaScript.
 	 */
 	private static Term MATH_RUNTIME = new JavaScriptFile.VariableAccess("Math");
+
 	private static Term OBJECT_RUNTIME = new JavaScriptFile.VariableAccess("Object");
 
 	private static Term TypeOf(Term t1, String kind) {

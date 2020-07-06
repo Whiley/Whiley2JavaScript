@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 import wybs.lang.Build;
 import wybs.util.AbstractBuildTask;
@@ -67,7 +68,7 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 	}
 
 	@Override
-	public Callable<Boolean> initialise() throws IOException {
+	public Function<Build.Meter,Boolean> initialise() throws IOException {
 		// Extract target and source files for compilation. This is the component which
 		// requires I/O.
 		JavaScriptFile jsf = target.read();
@@ -77,21 +78,24 @@ public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScrip
 		// Construct the lambda for subsequent execution. This will eventually make its
 		// way into some kind of execution pool, possibly for concurrent execution with
 		// other tasks.
-		return () -> execute(jsf, wyf, jsincs);
+		return (Build.Meter meter) -> execute(meter, jsf, wyf, jsincs);
 	}
 
-	public boolean execute(JavaScriptFile target, WyilFile source, JavaScriptFile... includes) {
+	public boolean execute(Build.Meter meter, JavaScriptFile target, WyilFile source, JavaScriptFile... includes) {
+		meter = meter.fork("JavaScriptCompiler");
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
 		// an AST. This would enable, for example, better support for different
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
-		new JavaScriptCompiler(target).visitModule(source);
+		new JavaScriptCompiler(meter,target).visitModule(source);
 		// Process includes
-		for(JavaScriptFile i : includes) {
+		for (JavaScriptFile i : includes) {
 			target.getDeclarations().addAll(i.getDeclarations());
 		}
+		//
+		meter.done();
 		// How can this fail?
 		return true;
 	}

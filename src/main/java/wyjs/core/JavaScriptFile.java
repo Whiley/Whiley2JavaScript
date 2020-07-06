@@ -336,35 +336,53 @@ public class JavaScriptFile {
 		}
 	}
 
-	public static class VariableDeclaration extends AbstractDeclaration implements Term {
+	public static class VariableDeclaration implements Declaration, Term {
 		public static enum Kind {
 			VAR,
 			LET,
 			CONST
 		}
 		private final Kind kind;
-		private final Term initialiser;
+		private final String[][] names;
+		private final Term[] initialisers;
 
 		public VariableDeclaration(Kind kind,String name) {
 			this(kind,name,null);
 		}
 
 		public VariableDeclaration(Kind kind,String name, Term initialiser) {
-			super(name);
+			this(kind,new String[][] {{name}},new Term[]{initialiser});
+		}
+
+		public VariableDeclaration(Kind kind,String[][] names, Term[] initialisers) {
 			this.kind = kind;
-			this.initialiser = initialiser;
+			this.names = names;
+			this.initialisers = initialisers;
+			if(names.length == 0) {
+				throw new IllegalArgumentException("Cannot declare zero variables");
+			} else if(initialisers.length != names.length) {
+				throw new IllegalArgumentException("invalid number of initialisers");
+			}
+		}
+
+		public int size() {
+			return names.length;
+		}
+
+		public String[] getNames(int ith) {
+			return names[ith];
 		}
 
 		public Kind getKind() {
 			return kind;
 		}
 
-		public boolean hasInitialisr() {
-			return initialiser != null;
+		public boolean hasInitialiser(int ith) {
+			return initialisers[ith] != null;
 		}
 
-		public Term getInitialiser() {
-			return initialiser;
+		public Term getInitialiser(int ith) {
+			return initialisers[ith];
 		}
 	}
 
