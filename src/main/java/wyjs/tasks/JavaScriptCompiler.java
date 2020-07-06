@@ -20,7 +20,6 @@ import static wyil.lang.WyilFile.TYPE_int;
 import static wyil.lang.WyilFile.TYPE_nominal;
 import static wyil.lang.WyilFile.TYPE_null;
 import static wyil.lang.WyilFile.TYPE_record;
-import static wyil.lang.WyilFile.TYPE_staticreference;
 import static wyil.lang.WyilFile.TYPE_reference;
 import static wyil.lang.WyilFile.TYPE_union;
 import static wyil.lang.WyilFile.TYPE_method;
@@ -1153,7 +1152,6 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		case TYPE_array:
 			body = translateIsArray(type, (Type.Array) test, operand, tests);
 			break;
-		case TYPE_staticreference:
 		case TYPE_reference:
 			body = translateIsReference(type, (Type.Reference) test, operand, tests);
 			break;
@@ -1845,9 +1843,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		String mangle;
 		// Calculate mangled name
 		if(type == null) {
-			mangle = getMangle(new Tuple<>(), test);
+			mangle = getMangle(test);
 		} else {
-			mangle = getMangle(new Tuple<>(), type, test);
+			mangle = getMangle(type, test);
 		}
 		return "is" + mangle;
 	}
@@ -2211,16 +2209,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 			Decl.Method method = (Decl.Method) decl;
 			Type parameters = method.getType().getParameter();
 			Type returns = method.getType().getReturn();
-			Tuple<Identifier> lifetimes = method.getType().getLifetimeParameters();
-			name += getMangle(parameters, lifetimes);
-			name += getMangle(returns, lifetimes);
+			name += getMangle(parameters);
+			name += getMangle(returns);
 		} else if(!exported && decl instanceof Decl.Callable) {
 			// FIXME: this could be simplified if TypeMangler was updated to support void.
 			Decl.Callable callable = (Decl.Callable) decl;
 			Type parameters = callable.getType().getParameter();
 			Type returns = callable.getType().getReturn();
-			name += getMangle(parameters, new Tuple<>());
-			name += getMangle(returns, new Tuple<>());
+			name += getMangle(parameters);
+			name += getMangle(returns);
 		} else if(decl instanceof Decl.Type) {
 			name += "$type";
 		} else if(decl instanceof Decl.StaticVariable) {
@@ -2320,19 +2317,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 		return results;
 	}
 
-	private String getMangle(Type type, Tuple<Identifier> lifetimes) {
+	private String getMangle(Type type) {
 		if (type.shape() == 0) {
 			return "$V";
 		} else {
-			return "$" + mangler.getMangle(type, lifetimes);
+			return "$" + mangler.getMangle(type);
 		}
 	}
 
-	private String getMangle(Tuple<Identifier> lifetimes, Type... types) {
+	private String getMangle(Type... types) {
 		if (types.length == 0) {
 			return "$V";
 		} else {
-			return "$" + mangler.getMangle(lifetimes, types);
+			return "$" + mangler.getMangle(types);
 		}
 	}
 

@@ -94,8 +94,6 @@ public abstract class AbstractTranslator<S> {
 	}
 
 	public S visitLambda(Decl.Lambda decl, Environment environment) {
-		// Redeclare this within
-		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
 		S body = visitExpression(decl.getBody(), environment);
 		return constructLambda(decl,body);
@@ -153,7 +151,6 @@ public abstract class AbstractTranslator<S> {
 	public S visitMethod(Decl.Method decl) {
 		// Construct environment relation
 		Environment environment = new Environment();
-		environment = environment.declareWithin("this", decl.getLifetimes());
 		//
 		List<S> precondition = visitHomogoneousExpressions(decl.getRequires(), environment);
 		List<S> postcondition = visitHomogoneousExpressions(decl.getEnsures(), environment);
@@ -345,10 +342,6 @@ public abstract class AbstractTranslator<S> {
 
 	public S visitNamedBlock(Stmt.NamedBlock stmt, Environment environment, EnclosingScope scope) {
 		Stmt.Block blk = stmt.getBlock();
-		// Updated the environment with new within relations
-		LifetimeDeclaration enclosing = scope.getEnclosingScope(LifetimeDeclaration.class);
-		String[] lifetimes = enclosing.getDeclaredLifetimes();
-		environment = environment.declareWithin(stmt.getName().get(), lifetimes);
 		// Create an appropriate scope for this block
 		scope = new NamedBlockScope(scope, stmt);
 		//
@@ -471,7 +464,6 @@ public abstract class AbstractTranslator<S> {
 		case EXPR_bitwisenot:
 		case EXPR_dereference:
 		case EXPR_fielddereference:
-		case EXPR_staticnew:
 		case EXPR_new:
 		case EXPR_recordaccess:
 		case EXPR_recordborrow:
@@ -540,7 +532,6 @@ public abstract class AbstractTranslator<S> {
 			return visitDereference((Expr.Dereference) expr, environment);
 		case EXPR_fielddereference:
 			return visitFieldDereference((Expr.FieldDereference) expr, environment);
-		case EXPR_staticnew:
 		case EXPR_new: {
 			return visitNew((Expr.New) expr, environment);
 		}
@@ -1142,47 +1133,7 @@ public abstract class AbstractTranslator<S> {
 	 *
 	 */
 	public static class Environment {
-		private final Map<String, String[]> withins;
 
-		public Environment() {
-			this.withins = new HashMap<>();
-		}
-
-		public Environment(Map<String, String[]> withins) {
-			this.withins = new HashMap<>(withins);
-		}
-
-		public boolean isWithin(String inner, String outer) {
-			//
-			if (outer.equals("*") || inner.equals(outer)) {
-				// Cover easy cases first
-				return true;
-			} else {
-				String[] outers = withins.get(inner);
-				return outers != null && (ArrayUtils.firstIndexOf(outers, outer) >= 0);
-			}
-		}
-
-		public Environment declareWithin(String inner, Tuple<Identifier> outers) {
-			String[] outs = new String[outers.size()];
-			for (int i = 0; i != outs.length; ++i) {
-				outs[i] = outers.get(i).get();
-			}
-			return declareWithin(inner, outs);
-		}
-		public Environment declareWithin(String inner, Identifier... outers) {
-			String[] outs = new String[outers.length];
-			for (int i = 0; i != outs.length; ++i) {
-				outs[i] = outers[i].get();
-			}
-			return declareWithin(inner, outs);
-		}
-
-		public Environment declareWithin(String inner, String... outers) {
-			Environment nenv = new Environment(withins);
-			nenv.withins.put(inner, outers);
-			return nenv;
-		}
 	}
 
 	// ==========================================================================
@@ -1225,23 +1176,13 @@ public abstract class AbstractTranslator<S> {
 		}
 	}
 
-	private interface LifetimeDeclaration {
-		/**
-		 * Get the list of all environment declared by this or an enclosing scope. That
-		 * is the complete set of environment available at this point.
-		 *
-		 * @return
-		 */
-		public String[] getDeclaredLifetimes();
-	}
-
 	/**
 	 * Represents the enclosing scope for a function or method declaration.
 	 *
 	 * @author David J. Pearce
 	 *
 	 */
-	private static class FunctionOrMethodScope extends EnclosingScope implements LifetimeDeclaration {
+	private static class FunctionOrMethodScope extends EnclosingScope {
 		private final Decl.FunctionOrMethod declaration;
 
 		public FunctionOrMethodScope(Decl.FunctionOrMethod declaration) {
@@ -1252,39 +1193,14 @@ public abstract class AbstractTranslator<S> {
 		public Decl.FunctionOrMethod getDeclaration() {
 			return declaration;
 		}
-
-		@Override
-		public String[] getDeclaredLifetimes() {
-			if (declaration instanceof Decl.Method) {
-				Decl.Method meth = (Decl.Method) declaration;
-				Identifier[] environment = meth.getLifetimes();
-				String[] arr = new String[environment.length + 1];
-				for (int i = 0; i != environment.length; ++i) {
-					arr[i] = environment[i].get();
-				}
-				arr[arr.length - 1] = "this";
-				return arr;
-			} else {
-				return new String[] { "this" };
-			}
-		}
 	}
 
-	private static class NamedBlockScope extends EnclosingScope implements LifetimeDeclaration {
+	private static class NamedBlockScope extends EnclosingScope {
 		private final Stmt.NamedBlock stmt;
 
 		public NamedBlockScope(EnclosingScope parent, Stmt.NamedBlock stmt) {
 			super(parent);
 			this.stmt = stmt;
-		}
-
-		@Override
-		public String[] getDeclaredLifetimes() {
-			LifetimeDeclaration enclosing = parent.getEnclosingScope(LifetimeDeclaration.class);
-			String[] declared = enclosing.getDeclaredLifetimes();
-			declared = Arrays.copyOf(declared, declared.length + 1);
-			declared[declared.length - 1] = stmt.getName().get();
-			return declared;
 		}
 	}
 }

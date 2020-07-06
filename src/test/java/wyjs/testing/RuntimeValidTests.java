@@ -124,9 +124,12 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
 		IGNORED.put("Reference_Valid_20", "#44");
+		//
+		IGNORED.put("MethodRef_Valid_6", "???");
 		// Mutable native strings
 		IGNORED.put("JsString_Valid_4", "#48");
 		IGNORED.put("JsString_Valid_12", "#48");
+		IGNORED.put("JsString_Valid_13", "#49");
 	}
 
 	// ======================================================================
