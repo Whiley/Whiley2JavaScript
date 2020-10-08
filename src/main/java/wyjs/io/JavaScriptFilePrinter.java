@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
 
-import wycc.util.Pair;
+import wyfs.util.Pair;
 import wyjs.core.JavaScriptFile;
 
 public class JavaScriptFilePrinter {
@@ -326,8 +326,9 @@ public class JavaScriptFilePrinter {
 	private void writeConstant(JavaScriptFile.Constant term) {
 		Object value = term.getValue();
 		if(value instanceof String) {
+			String s = (String) value;
 			out.print("\"");
-			out.print(term.getValue());
+			out.print(s.replace("\"","\\\"").replace("\n","\\n").replace("\t","\\t"));
 			out.print("\"");
 		} else if(value instanceof Byte){
 			byte b = (Byte) value;

@@ -23,7 +23,7 @@ import java.util.function.Function;
 
 import wybs.lang.Build;
 import wybs.util.AbstractBuildTask;
-import wycc.util.Logger;
+import wybs.util.Logger;
 import wyfs.lang.Path;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;

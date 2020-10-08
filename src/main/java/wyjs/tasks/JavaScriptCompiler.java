@@ -44,8 +44,8 @@ import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit.Identifier;
 import wybs.util.AbstractCompilationUnit.Tuple;
 import wybs.util.AbstractCompilationUnit.Value;
-import wycc.util.ArrayUtils;
-import wycc.util.Pair;
+import wyfs.util.ArrayUtils;
+import wyfs.util.Pair;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
 import wyil.lang.WyilFile.Expr;
@@ -724,24 +724,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term> {
 
 	@Override
 	public Term constructLambdaAccess(Expr.LambdaAccess expr) {
-		ArrayList<String> parameters = new ArrayList<>();
-		ArrayList<Term> arguments = new ArrayList<>();
-		// NOTE: the reason we use a function declaration here (i.e. instead of
-		// just assigning the name) is that it protects against potential name
-		// clashes with local variables.
-		Type.Callable ft = expr.getLink().getTarget().getType();
-		Type param = ft.getParameter();
-		//
-		for(int i=0;i!=param.shape();++i) {
-			String v = "p" + i;
-			parameters.add(v);
-			arguments.add(new VariableAccess(v));
-		}
-		// Construct body
+		// NOTE: see #51
+		// Get mangled name
 		String name = toMangledName(expr.getLink().getTarget());
-		Term body = new Return(new Invoke(null,name,arguments));
 		//
-		return new Lambda(parameters,new Block(body));
+		return new JavaScriptFile.VariableAccess(name);
 	}
 
 	@Override

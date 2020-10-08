@@ -29,10 +29,10 @@ import wybs.lang.CompilationUnit;
 import wybs.lang.SyntacticHeap;
 import wybs.lang.SyntacticItem;
 import wybs.util.AbstractCompilationUnit;
-import wycc.util.ArrayUtils;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Entry;
+import wyfs.util.ArrayUtils;
 import wyjs.io.JavaScriptFilePrinter;
 
 public class JavaScriptFile {
@@ -729,9 +729,9 @@ public class JavaScriptFile {
 	}
 
 	public static class ObjectLiteral implements Term {
-		private List<wycc.util.Pair<String,Term>> properties;
+		private List<wyfs.util.Pair<String,Term>> properties;
 
-		public ObjectLiteral(Collection<wycc.util.Pair<String,Term>> fields) {
+		public ObjectLiteral(Collection<wyfs.util.Pair<String,Term>> fields) {
 			this.properties = new ArrayList<>(fields);
 		}
 
@@ -739,11 +739,11 @@ public class JavaScriptFile {
 			return properties.size();
 		}
 
-		public wycc.util.Pair<String,Term> getProperty(int index) {
+		public wyfs.util.Pair<String,Term> getProperty(int index) {
 			return properties.get(index);
 		}
 
-		public List<wycc.util.Pair<String,Term>> getProperties() {
+		public List<wyfs.util.Pair<String,Term>> getProperties() {
 			return properties;
 		}
 	}

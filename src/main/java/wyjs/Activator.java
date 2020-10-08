@@ -24,10 +24,11 @@ import wybs.lang.Build;
 import wybs.lang.Build.Project;
 import wybs.lang.Build.Task;
 import wybs.util.AbstractBuildRule;
+import wybs.util.Logger;
 import wybs.util.AbstractCompilationUnit.Value;
-import wycc.cfg.Configuration;
-import wycc.lang.Module;
-import wycc.util.Logger;
+import wycli.cfg.Configuration;
+import wycli.lang.Command;
+import wycli.lang.Module;
 import wyfs.lang.Content;
 import wyfs.lang.Content.Type;
 import wyfs.lang.Path;
@@ -58,7 +59,7 @@ public class Activator implements Module.Activator {
 	// Build Platform
 	// =======================================================================
 
-	public static Build.Platform JS_PLATFORM = new Build.Platform() {
+	public static Command.Platform JS_PLATFORM = new Command.Platform() {
 
 		@Override
 		public String getName() {
@@ -80,7 +81,7 @@ public class Activator implements Module.Activator {
 		}
 
 		@Override
-		public void initialise(Configuration configuration, Build.Project project) throws IOException {
+		public void initialise(Configuration configuration, Command.Project project) throws IOException {
 			Trie pkgName = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 			// Specify directory where generated JS files are dumped.
 			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
@@ -93,14 +94,14 @@ public class Activator implements Module.Activator {
 			registerBuildTarget(configuration,project,sourceRoot,pkgName, includes);
 			// Add build rules for any project dependencies
 			for(Build.Package dep : project.getPackages()) {
-				Configuration depConfiguration = dep.getConfiguration();
+				//depConfiguration
 				// Determine package name
-				Trie depName = Trie.fromString(depConfiguration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+				Trie depName = Trie.fromString(dep.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 				// Determine source root
 				Path.Root pkgRoot = dep.getRoot();
 				// Extract package js includes
 				includes = extractJavaScriptIncludes(pkgRoot,
-						depConfiguration.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
+						dep.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
 				// Register corresponding build target
 				registerBuildTarget(configuration, project, pkgRoot, depName, includes);
 			}
@@ -203,7 +204,7 @@ public class Activator implements Module.Activator {
 		// FIXME: logger is a hack!
 		final Logger logger = new Logger.Default(System.err);
 		// Register build platform
-		context.register(Build.Platform.class, JS_PLATFORM);
+		context.register(Command.Platform.class, JS_PLATFORM);
 		// Register JavaScript Content Type
 		context.register(Content.Type.class, JavaScriptFile.ContentType);
 		// Done

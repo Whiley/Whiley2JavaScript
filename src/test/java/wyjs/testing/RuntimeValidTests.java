@@ -41,22 +41,23 @@ import org.junit.runners.Parameterized.Parameters;
 
 import wybs.lang.Build;
 import wybs.lang.SyntacticException;
+import wybs.util.Logger;
 import wybs.util.SequentialBuildProject;
 import wybs.util.AbstractCompilationUnit.Name;
 import wybs.util.AbstractCompilationUnit.Tuple;
+import wybs.util.AbstractCompilationUnit.Value;
 import wybs.util.AbstractCompilationUnit.Value.Bool;
 
 import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
-import wyc.util.TestUtils.Environment;
-import wycc.util.Pair;
-import wycc.cfg.Configuration;
+import wycli.cfg.Configuration;
 import wyfs.lang.Content;
 import wyfs.lang.Path;
 import wyfs.lang.Path.Root;
 import wyfs.util.DirectoryRoot;
+import wyfs.util.Pair;
 import wyfs.util.Trie;
 import wyfs.util.VirtualRoot;
 import wyil.lang.WyilFile;
@@ -196,13 +197,13 @@ public class RuntimeValidTests {
  		}
 
 		@Override
-		public Configuration getConfiguration() {
-			return null;
+		public Root getRoot() {
+			return root;
 		}
 
 		@Override
-		public Root getRoot() {
-			return root;
+		public <T extends Value> T get(Class<T> kind, Trie key) {
+			throw new UnsupportedOperationException();
 		}
 
  	};
@@ -227,10 +228,8 @@ public class RuntimeValidTests {
 		try {
 			// Construct the project
 			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-			// Construct temporary build environment
-			Build.Environment environment = new Environment(root,false);
 			//
-			SequentialBuildProject project = new SequentialBuildProject(environment, root);
+			SequentialBuildProject project = new SequentialBuildProject(root);
 			// Add mock for js::core
 			project.getPackages().add(JSCORE_PACKAGE);
 			// Identify source files and target files
@@ -242,7 +241,7 @@ public class RuntimeValidTests {
 				@Override
 				public void apply(Collection<Build.Task> tasks) throws IOException {
 					// Construct a new build task
-					CompileTask task = new CompileTask(project, root, wyilTarget, sources);
+					CompileTask task = new CompileTask(project, Logger.NULL, root, wyilTarget, sources);
 					// Submit the task for execution
 					tasks.add(task);
 				}
@@ -273,7 +272,7 @@ public class RuntimeValidTests {
 			// Check whether any syntax error produced
 			result = !TestUtils.findSyntaxErrors(wyilTarget.read().getRootItem(), new BitSet());
 			// Print out any error messages
-			wycc.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (Path.Entry) wyilTarget);
+			wycli.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (Path.Entry) wyilTarget);
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 		} catch (SyntacticException e) {
