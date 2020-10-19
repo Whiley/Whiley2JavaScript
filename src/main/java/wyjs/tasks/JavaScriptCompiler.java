@@ -60,10 +60,10 @@ import wyjs.core.JavaScriptFile;
 import wyjs.core.JavaScriptFile.Operator.Kind;
 import wyjs.core.JavaScriptFile.*;
 import wyil.util.TypeMangler;
-import wyjs.util.AbstractTranslator;
+import wyil.util.AbstractTranslator;
 
 
-public class JavaScriptCompiler extends AbstractTranslator<Term> {
+public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	/**
 	 * Provides a standard mechanism for writing out type mangles.
 	 */
