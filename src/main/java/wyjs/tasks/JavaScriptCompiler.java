@@ -368,6 +368,16 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	}
 
 	@Override
+	public Term constructInvokeStmt(Expr.Invoke expr, List<Term> arguments) {
+		return constructInvoke(expr,arguments);
+	}
+
+	@Override
+	public Term constructIndirectInvokeStmt(Expr.IndirectInvoke expr, Term source, List<Term> arguments) {
+		return constructIndirectInvoke(expr,source, arguments);
+	}
+
+	@Override
 	public Term constructNamedBlock(Stmt.NamedBlock stmt, List<Term> stmts) {
 		return new Block(stmts);
 	}
