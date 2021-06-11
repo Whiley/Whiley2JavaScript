@@ -54,19 +54,24 @@ public class JavaScriptFile {
 
 		@Override
 		public JavaScriptFile read(Path.Entry<JavaScriptFile> e, InputStream input) throws IOException {
+			return read(e.id(), e.inputStream());
+		}
+
+		@Override
+		public JavaScriptFile read(Path.ID id, InputStream inputStream) throws IOException {
 			// NOTE: this is strictly a hack at this time as its unclear what the best
 			// alternative option is. Specifically, parsing JavaScriptFiles is not something
 			// I'm contemplating right now :)
-			Reader reader = new InputStreamReader(e.inputStream());
+			Reader reader = new InputStreamReader(inputStream);
 			BufferedReader in = new BufferedReader(reader);
 
-	        StringBuilder text = new StringBuilder();
+			StringBuilder text = new StringBuilder();
 			int len = 0;
 			char[] buf = new char[1024];
 			while ((len = in.read(buf)) != -1) {
 				text.append(buf, 0, len);
 			}
-	        // Finally, construct the native declaration
+			// Finally, construct the native declaration
 			NativeDeclaration d = new NativeDeclaration(text.toString());
 			//
 			JavaScriptFile js = new JavaScriptFile(true, Standard.ES6);

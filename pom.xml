@@ -7,7 +7,7 @@
 
   <groupId>org.whiley</groupId>
   <artifactId>wyjs</artifactId>
-  <version>0.6.0</version>
+  <version>0.6.1</version>
   <packaging>jar</packaging>
 
   <licenses>
@@ -51,7 +51,7 @@
     <dependency>
       <groupId>org.whiley</groupId>
       <artifactId>wyc</artifactId>
-      <version>[0.8.0,0.9.0)</version>
+      <version>[0.8.2,0.9.0)</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -144,6 +144,13 @@
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-gpg-plugin</artifactId>
 	<version>1.6</version>
+	<configuration>	
+          <!-- Prevent gpg from using pinentry programs -->
+          <gpgArguments>
+            <arg>--pinentry-mode</arg>
+            <arg>loopback</arg>
+          </gpgArguments>
+	</configuration>	
 	<executions>
           <execution>
             <id>sign-artifacts</id>
