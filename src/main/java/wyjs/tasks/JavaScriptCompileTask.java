@@ -14,97 +14,99 @@
 package wyjs.tasks;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Function;
-
-import wybs.lang.Build;
-import wybs.util.AbstractBuildTask;
-import wybs.util.Logger;
-import wyfs.lang.Path;
+import wycc.lang.Build;
+import wycc.lang.Build.Artifact;
+import wycc.lang.Build.SnapShot;
+import wycc.lang.Path;
+import wycc.util.Pair;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 
-public class JavaScriptCompileTask extends AbstractBuildTask<WyilFile, JavaScriptFile> {
-
+public class JavaScriptCompileTask implements Build.Task {
 	/**
-	 * Enable debug mode
+	 * The set of source files that this task will compiler from.
 	 */
-	protected boolean debug = true;
-
+	private final Path source;
 	/**
-	 * For logging information.
+	 * Identifier for target of this build task.
 	 */
-	private Logger logger = Logger.NULL;
-
+	private final Path target;
+	/**
+	 * Specify whether or not to generate a "strict" JavaScript file.
+	 */
+	private final boolean strict;
+	/**
+	 *  Specify JavaScript standard to generate for
+	 */
+	private final JavaScriptFile.Standard standard;
 	/**
 	 * Additional JavaScript files to include in generated file.
 	 */
-	private List<Path.Entry<JavaScriptFile>> includes = Collections.EMPTY_LIST;
+	private final List<JavaScriptFile> includes;
 
-	public JavaScriptCompileTask(Build.Project project, Path.Entry<JavaScriptFile> target,
-			Path.Entry<WyilFile> sources) {
-		super(project, target, Arrays.asList(sources));
+	public JavaScriptCompileTask(Path target, Path source, JavaScriptFile.Standard standard) {
+		this(target, source, true, standard, Collections.emptyList());
 	}
 
-	public void setLogger(Logger logger) {
-		this.logger = logger;
-	}
-
-	public void setDebug(boolean debug) {
-		this.debug = debug;
-	}
-
-	public void setIncludes(List<Path.Entry<JavaScriptFile>> includes) {
+	public JavaScriptCompileTask(Path target, Path source, boolean strict, JavaScriptFile.Standard standard,
+			List<JavaScriptFile> includes) {
+		if(target == null) {
+			throw new IllegalArgumentException("invalid target");
+		} else if(source == null) {
+			throw new IllegalArgumentException("invalid source");
+		}
+		this.target = target;
+		this.source = source;
+		this.strict = strict;
+		this.standard = standard;
 		this.includes = includes;
 	}
 
 	@Override
-	public Build.Project project() {
-		return project;
+	public Path getPath() {
+		return target;
 	}
 
 	@Override
-	public Function<Build.Meter,Boolean> initialise() throws IOException {
-		// Extract target and source files for compilation. This is the component which
-		// requires I/O.
-		JavaScriptFile jsf = target.read();
-		WyilFile wyf = sources.get(0).read();
-		// Extract other (native) includes
-		JavaScriptFile[] jsincs = readAll(includes);
-		// Construct the lambda for subsequent execution. This will eventually make its
-		// way into some kind of execution pool, possibly for concurrent execution with
-		// other tasks.
-		return (Build.Meter meter) -> execute(meter, jsf, wyf, jsincs);
+	public Type<? extends Artifact> getContentType() {
+		return JavaScriptFile.ContentType;
 	}
 
-	public boolean execute(Build.Meter meter, JavaScriptFile target, WyilFile source, JavaScriptFile... includes) {
-		meter = meter.fork("JavaScriptCompiler");
+	@Override
+	public List<? extends Artifact> getSourceArtifacts() {
+		throw new IllegalArgumentException();
+	}
+
+	@Override
+	public Pair<SnapShot, Boolean> apply(SnapShot s) {
+		// Read out the WyilFile which we are translating into JavaScript.
+		WyilFile binary = s.get(WyilFile.ContentType, source);
+		// Compile into a single binary target
+		Pair<JavaScriptFile, Boolean> r = compile(binary);
+		// Write target into snapshot
+		s = s.put(r.first());
+		// Done
+		return new Pair<>(s, r.second());
+	}
+
+	private Pair<JavaScriptFile, Boolean> compile(WyilFile source) {
+		// Construct initial (empty) JavaScript file
+		JavaScriptFile jsFile = new JavaScriptFile(target, Arrays.asList(source), strict, standard);
 		// FIXME: this is a fairly temporary solution at the moment which just
 		// turns the WyIL file directly into a string. A more useful solution
 		// will be to generate an intermediate file representing JavaScript in
 		// an AST. This would enable, for example, better support for different
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
-		new JavaScriptCompiler(meter,target).visitModule(source);
+		new JavaScriptCompiler(jsFile).visitModule(source);
 		// Process includes
 		for (JavaScriptFile i : includes) {
-			target.getDeclarations().addAll(i.getDeclarations());
+			jsFile.getDeclarations().addAll(i.getDeclarations());
 		}
-		//
-		meter.done();
-		// How can this fail?
-		return true;
-	}
-
-	private JavaScriptFile[] readAll(List<Path.Entry<JavaScriptFile>> includes) throws IOException {
-		JavaScriptFile[] files = new JavaScriptFile[includes.size()];
-		for(int i=0;i!=files.length;++i) {
-			files[i] = includes.get(i).read();
-		}
-		return files;
+		// How could this fail?
+		return new Pair<>(jsFile, true);
 	}
 }

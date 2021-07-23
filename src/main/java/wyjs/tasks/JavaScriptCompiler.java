@@ -1,9 +1,9 @@
 package wyjs.tasks;
-import static wybs.util.AbstractCompilationUnit.ITEM_bool;
-import static wybs.util.AbstractCompilationUnit.ITEM_byte;
-import static wybs.util.AbstractCompilationUnit.ITEM_int;
-import static wybs.util.AbstractCompilationUnit.ITEM_null;
-import static wybs.util.AbstractCompilationUnit.ITEM_utf8;
+import static wycc.util.AbstractCompilationUnit.ITEM_bool;
+import static wycc.util.AbstractCompilationUnit.ITEM_byte;
+import static wycc.util.AbstractCompilationUnit.ITEM_int;
+import static wycc.util.AbstractCompilationUnit.ITEM_null;
+import static wycc.util.AbstractCompilationUnit.ITEM_utf8;
 import static wyil.lang.WyilFile.EXPR_arrayaccess;
 import static wyil.lang.WyilFile.EXPR_arrayborrow;
 import static wyil.lang.WyilFile.EXPR_dereference;
@@ -37,15 +37,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import wybs.lang.Build;
-import wybs.lang.SyntacticException;
-import wybs.lang.SyntacticHeap;
-import wybs.lang.SyntacticItem;
-import wybs.util.AbstractCompilationUnit.Identifier;
-import wybs.util.AbstractCompilationUnit.Tuple;
-import wybs.util.AbstractCompilationUnit.Value;
-import wyfs.util.ArrayUtils;
-import wyfs.util.Pair;
+import wycc.lang.Build;
+import wycc.lang.SyntacticException;
+import wycc.util.AbstractCompilationUnit.Identifier;
+import wycc.util.AbstractCompilationUnit.Tuple;
+import wycc.util.AbstractCompilationUnit.Value;
+import wycc.util.ArrayUtils;
+import wycc.util.Pair;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
 import wyil.lang.WyilFile.Expr;
@@ -90,8 +88,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	 */
 	private int temporaryIndex = 0;
 
-	public JavaScriptCompiler(Build.Meter meter, JavaScriptFile jsFile) {
-		super(meter,subtyping);
+	public JavaScriptCompiler(JavaScriptFile jsFile) {
+		super(Build.NULL_METER,subtyping);
 		this.jsFile = jsFile;
 	}
 
@@ -427,9 +425,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		if (isJsString(t)) {
 			// Return character code instead of string.
 			WyilFile parent = (WyilFile) expr.getHeap();
-			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent.getEntry(), expr);
+			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent, expr);
 		} else {
-			return new ArrayAccess(source,index);
+			return new ArrayAccess(source, index);
 		}
 	}
 
