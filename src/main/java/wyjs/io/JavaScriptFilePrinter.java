@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
 
-import wyfs.util.Pair;
+import wycc.util.Pair;
 import wyjs.core.JavaScriptFile;
 
 public class JavaScriptFilePrinter {

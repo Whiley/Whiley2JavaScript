@@ -15,39 +15,32 @@ package wyjs;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import wybs.lang.Build;
-import wybs.lang.Build.Project;
-import wybs.lang.Build.Task;
-import wybs.util.AbstractBuildRule;
-import wybs.util.Logger;
-import wybs.util.AbstractCompilationUnit.Value;
+import wycc.lang.Build;
+import wycc.lang.Build.Task;
+import wycc.lang.Filter;
+import wycc.util.Logger;
+import wycc.util.AbstractCompilationUnit.Value;
 import wycli.cfg.Configuration;
 import wycli.lang.Command;
-import wycli.lang.Module;
-import wyfs.lang.Content;
-import wyfs.lang.Content.Type;
-import wyfs.lang.Path;
-import wyfs.lang.Path.Entry;
-import wyfs.lang.Path.ID;
-import wyfs.util.Trie;
+import wycli.lang.Plugin;
+import wycc.lang.Content;
+import wycc.lang.Path;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
-public class Activator implements Module.Activator {
+public class Activator implements Plugin.Activator {
 
-	private static Trie PKGNAME_CONFIG_OPTION = Trie.fromString("package/name");
-	private static Trie INCLUDES_CONFIG_OPTION = Trie.fromString("build/js/includes");
-	private static Trie DEBUG_CONFIG_OPTION = Trie.fromString("build/js/debug");
-	private static Trie TARGET_CONFIG_OPTION = Trie.fromString("build/js/target");
-	private static Trie SOURCE_CONFIG_OPTION = Trie.fromString("build/whiley/target");
-	private static Trie STANDARD_CONFIG_OPTION = Trie.fromString("build/js/standard");
-	private static Trie STRICTMODE_CONFIG_OPTION = Trie.fromString("build/js/strictmode");
+	private static Path PKGNAME_CONFIG_OPTION = Path.fromString("package/name");
+	private static Path INCLUDES_CONFIG_OPTION = Path.fromString("build/js/includes");
+	private static Path DEBUG_CONFIG_OPTION = Path.fromString("build/js/debug");
+	private static Path TARGET_CONFIG_OPTION = Path.fromString("build/js/target");
+	private static Path SOURCE_CONFIG_OPTION = Path.fromString("build/whiley/target");
+	private static Path STANDARD_CONFIG_OPTION = Path.fromString("build/js/standard");
+	private static Path STRICTMODE_CONFIG_OPTION = Path.fromString("build/js/strictmode");
 	private static Value.Array INCLUDES_DEFAULT = new Value.Array();
 	private static Value.UTF8 STANDARD_DEFAULT = new Value.UTF8(JavaScriptFile.Standard.ES6.toString());
 	private static Value.Bool STRICTMODE_DEFAULT = new Value.Bool(true);
@@ -81,51 +74,37 @@ public class Activator implements Module.Activator {
 		}
 
 		@Override
-		public void initialise(Configuration configuration, Command.Project project) throws IOException {
-			Trie pkgName = Trie.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+		public Build.Task initialise(Path path, Command.Environment environment) throws IOException {
+			Configuration configuration = environment.get(path);
+			Path pkgName = Path.fromString(configuration.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
 			// Specify directory where generated JS files are dumped.
-			Trie source = Trie.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
+			Path source = Path.fromString(configuration.get(Value.UTF8.class, SOURCE_CONFIG_OPTION).unwrap());
 			// Extract any additional included (i.e. native) files
-			List<Path.Entry<JavaScriptFile>> includes = extractJavaScriptIncludes(project.getRoot(),
+			List<JavaScriptFile> includes = extractJavaScriptIncludes(project.getRoot(),
 					configuration.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
 			// Construct the source root
-			Path.Root sourceRoot = project.getRoot().createRelativeRoot(source);
+			FileSystem.Root sourceRoot = project.getRoot().createRelativeRoot(source);
 			// Register build target for this package
 			registerBuildTarget(configuration,project,sourceRoot,pkgName, includes);
 			// Add build rules for any project dependencies
-			for(Build.Package dep : project.getPackages()) {
-				//depConfiguration
-				// Determine package name
-				Trie depName = Trie.fromString(dep.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
-				// Determine source root
-				Path.Root pkgRoot = dep.getRoot();
-				// Extract package js includes
-				includes = extractJavaScriptIncludes(pkgRoot,
-						dep.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
-				// Register corresponding build target
-				registerBuildTarget(configuration, project, pkgRoot, depName, includes);
-			}
+//			for(Content.Source dep : environment.getPackages()) {
+//				//depConfiguration
+//				// Determine package name
+//				Path depName = Path.fromString(dep.get(Value.UTF8.class, PKGNAME_CONFIG_OPTION).unwrap());
+//				// Determine source root
+//				FileSystem.Root pkgRoot = dep.getRoot();
+//				// Extract package js includes
+//				includes = extractJavaScriptIncludes(pkgRoot,
+//						dep.get(Value.Array.class, INCLUDES_CONFIG_OPTION).toArray(Value.UTF8.class));
+//				// Register corresponding build target
+//				registerBuildTarget(configuration, project, pkgRoot, depName, includes);
+//			}
 		}
 
-		@Override
-		public Type<?> getSourceType() {
-			return WyilFile.ContentType;
-		}
-
-		@Override
-		public Type<?> getTargetType() {
-			return JavaScriptFile.ContentType;
-		}
-
-		@Override
-		public void execute(Project project, ID path, String name, Value... args) {
-			throw new IllegalArgumentException("native JavaScript execution currently unsupported");
-		}
-
-		private void registerBuildTarget(Configuration configuration, Build.Project project, Path.Root sourceRoot,
-				Trie pkg, List<Path.Entry<JavaScriptFile>> jsIncludes) throws IOException {
+		private void registerBuildTarget(Configuration configuration, Build.Project project, FileSystem.Root sourceRoot,
+										 Path pkg, List<FileSystem.Entry<JavaScriptFile>> jsIncludes) throws IOException {
 			// Specify directory where generated JS files are dumped.
-			Trie target= Trie.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
+			Path target= Path.fromString(configuration.get(Value.UTF8.class, TARGET_CONFIG_OPTION).unwrap());
 			// Extract target JS standard
 			String standard = configuration.get(Value.UTF8.class, STANDARD_CONFIG_OPTION).unwrap();
 			// Extract strict mode setting
@@ -135,9 +114,9 @@ public class Activator implements Module.Activator {
 			// Specify whether debug mode enabled or not.
 			boolean debug = configuration.get(Value.Bool.class, DEBUG_CONFIG_OPTION).get();;
 			// Construct the binary root
-			Path.Root binaryRoot = project.getRoot().createRelativeRoot(target);
+			FileSystem.Root binaryRoot = project.getRoot().createRelativeRoot(target);
 			// Initialise the target file being built
-			Path.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot, pkg, strict, standard);
+			FileSystem.Entry<JavaScriptFile> binary = initialiseBinaryTarget(binaryRoot, pkg, strict, standard);
 			//
 			project.getRules().add(new AbstractBuildRule<WyilFile, JavaScriptFile>(sourceRoot, wyilIncludes, null) {
 
@@ -153,10 +132,10 @@ public class Activator implements Module.Activator {
 			});
 		}
 
-		private Path.Entry<JavaScriptFile> initialiseBinaryTarget(Path.Root binroot, Path.ID id, boolean strictMode,
-				String stdString) throws IOException {
+		private FileSystem.Entry<JavaScriptFile> initialiseBinaryTarget(FileSystem.Root binroot, FileSystem.ID id, boolean strictMode,
+                                                                        String stdString) throws IOException {
 			JavaScriptFile.Standard std = fromStandardString(stdString);
-			Path.Entry<JavaScriptFile> target;
+			FileSystem.Entry<JavaScriptFile> target;
 			if (binroot.exists(id, JavaScriptFile.ContentType)) {
 				// Yes, it does so reuse it.
 				target = binroot.get(id, JavaScriptFile.ContentType);
@@ -173,13 +152,13 @@ public class Activator implements Module.Activator {
 		}
 	};
 
-	private static List<Path.Entry<JavaScriptFile>> extractJavaScriptIncludes(Path.Root root, Value.UTF8... items) throws IOException {
-		ArrayList<Path.Entry<JavaScriptFile>> files = new ArrayList<>();
+	private static List<FileSystem.Entry<JavaScriptFile>> extractJavaScriptIncludes(FileSystem.Root root, Value.UTF8... items) throws IOException {
+		ArrayList<FileSystem.Entry<JavaScriptFile>> files = new ArrayList<>();
 		for(int i=0;i!=items.length;++i) {
 			String item = items[i].toString();
 			// Strip JavaScript suffix
 			if(item.endsWith(".js")) {
-				Trie filter = Trie.fromString(item.replaceAll(".js",""));
+				Path filter = Path.fromString(item.replaceAll(".js",""));
 				files.addAll(root.get(Content.filter(filter, JavaScriptFile.ContentType)));
 			}
 		}
@@ -200,7 +179,7 @@ public class Activator implements Module.Activator {
 	// =======================================================================
 
 	@Override
-	public Module start(Module.Context context) {
+	public Plugin start(Plugin.Context context) {
 		// FIXME: logger is a hack!
 		final Logger logger = new Logger.Default(System.err);
 		// Register build platform
@@ -208,7 +187,7 @@ public class Activator implements Module.Activator {
 		// Register JavaScript Content Type
 		context.register(Content.Type.class, JavaScriptFile.ContentType);
 		// Done
-		return new Module() {
+		return new Plugin() {
 			// what goes here?
 		};
 	}
@@ -218,7 +197,7 @@ public class Activator implements Module.Activator {
 	// =======================================================================
 
 	@Override
-	public void stop(Module module, Module.Context context) {
+	public void stop(Plugin module, Plugin.Context context) {
 		// could do more here?
 	}
 }

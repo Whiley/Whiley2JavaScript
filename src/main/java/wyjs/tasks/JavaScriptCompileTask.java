@@ -14,17 +14,13 @@
 package wyjs.tasks;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.function.Function;
 
-import wybs.lang.Build;
-import wybs.util.AbstractBuildTask;
-import wybs.util.Logger;
-import wyfs.lang.Path;
+import wycc.lang.Build;
+import wycc.util.Logger;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 

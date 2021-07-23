@@ -39,30 +39,23 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wybs.lang.Build;
-import wybs.lang.SyntacticException;
-import wybs.util.Logger;
-import wybs.util.SequentialBuildProject;
-import wybs.util.AbstractCompilationUnit.Name;
-import wybs.util.AbstractCompilationUnit.Tuple;
-import wybs.util.AbstractCompilationUnit.Value;
-import wybs.util.AbstractCompilationUnit.Value.Bool;
+import wycc.lang.Build;
+import wycc.lang.SyntacticException;
+import wycc.util.Logger;
+import wycc.util.AbstractCompilationUnit.Name;
+import wycc.util.AbstractCompilationUnit.Tuple;
+import wycc.util.AbstractCompilationUnit.Value;
 
 import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
-import wyc.task.CompileTask;
 import wyc.util.TestUtils;
-import wycli.cfg.Configuration;
 import wyfs.lang.Content;
-import wyfs.lang.Path;
-import wyfs.lang.Path.Root;
+import wyfs.lang.FileSystem;
 import wyfs.util.DirectoryRoot;
-import wyfs.util.Pair;
-import wyfs.util.Trie;
-import wyfs.util.VirtualRoot;
+import wycc.util.Pair;
+import wycc.lang.Path;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
-import wyjs.core.JavaScriptFile.Constant;
 import wyjs.tasks.JavaScriptCompileTask;
 
 /**
@@ -176,9 +169,9 @@ public class RuntimeValidTests {
 
  		{
  			try {
- 				Path.ID mid = Trie.fromString("js/core");
+ 				FileSystem.ID mid = Path.fromString("js/core");
  				// Create an entry
- 				Path.Entry<WyilFile> e = root.create(mid, WyilFile.ContentType);
+ 				FileSystem.Entry<WyilFile> e = root.create(mid, WyilFile.ContentType);
  				// Construct WyilFile
  				WyilFile wf = new WyilFile(e);
 				// FIXME: type here is incorrect and should be updated with fixed-with integer
@@ -202,7 +195,7 @@ public class RuntimeValidTests {
 		}
 
 		@Override
-		public <T extends Value> T get(Class<T> kind, Trie key) {
+		public <T extends Value> T get(Class<T> kind, Path key) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -233,9 +226,9 @@ public class RuntimeValidTests {
 			// Add mock for js::core
 			project.getPackages().add(JSCORE_PACKAGE);
 			// Identify source files and target files
-			Pair<Path.Entry<WhileyFile>,Path.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
-			List<Path.Entry<WhileyFile>> sources = Arrays.asList(p.first());
-			Path.Entry<WyilFile> wyilTarget = p.second();
+			Pair<FileSystem.Entry<WhileyFile>, FileSystem.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
+			List<FileSystem.Entry<WhileyFile>> sources = Arrays.asList(p.first());
+			FileSystem.Entry<WyilFile> wyilTarget = p.second();
 			// Add Whiley => WyIL build rule
 			project.add(new Build.Rule() {
 				@Override
@@ -247,7 +240,7 @@ public class RuntimeValidTests {
 				}
 			});
 			// Construct an empty JavaScriptFile
-			Path.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
+			FileSystem.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
 			// NOTE: Java Nashorn supports ES5 only?
 			JavaScriptFile jsFile = new JavaScriptFile(JavaScriptFile.Standard.ES5);
 			// Add invariant handler for js::core::string
@@ -272,7 +265,7 @@ public class RuntimeValidTests {
 			// Check whether any syntax error produced
 			result = !TestUtils.findSyntaxErrors(wyilTarget.read().getRootItem(), new BitSet());
 			// Print out any error messages
-			wycli.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (Path.Entry) wyilTarget);
+			wycli.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (FileSystem.Entry) wyilTarget);
 			// Flush any created resources (e.g. wyil files)
 			root.flush();
 		} catch (SyntacticException e) {
