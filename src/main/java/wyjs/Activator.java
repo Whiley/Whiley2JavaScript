@@ -99,6 +99,7 @@ public class Activator implements Plugin.Activator {
 //				// Register corresponding build target
 //				registerBuildTarget(configuration, project, pkgRoot, depName, includes);
 //			}
+			return new JavaScriptCompileTask();
 		}
 
 		private void registerBuildTarget(Configuration configuration, Build.Project project, FileSystem.Root sourceRoot,

@@ -23,14 +23,19 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
+import wyc.lang.WhileyFile;
 import wycc.util.Pair;
-import wyfs.lang.Content;
+import wyil.lang.WyilFile;
+import wycc.lang.Build;
+import wycc.lang.Content;
+import wycc.lang.Path;
 import wycc.util.ArrayUtils;
 import wyjs.io.JavaScriptFilePrinter;
 
-public class JavaScriptFile {
+public class JavaScriptFile implements Build.Artifact {
 	// =========================================================================
 	// Content Type
 	// =========================================================================
@@ -40,20 +45,9 @@ public class JavaScriptFile {
 	 * extension is ".wyil" for WyilFiles.
 	 */
 	public static final Content.Type<JavaScriptFile> ContentType = new Content.Type<JavaScriptFile>() {
-		public Path.Entry<JavaScriptFile> accept(Path.Entry<?> e) {
-			if (e.contentType() == this) {
-				return (Path.Entry<JavaScriptFile>) e;
-			}
-			return null;
-		}
 
 		@Override
-		public JavaScriptFile read(Path.Entry<JavaScriptFile> e, InputStream input) throws IOException {
-			return read(e.id(), e.inputStream());
-		}
-
-		@Override
-		public JavaScriptFile read(Path.ID id, InputStream inputStream) throws IOException {
+		public JavaScriptFile read(Path p, InputStream inputStream, Content.Registry registry) throws IOException {
 			// NOTE: this is strictly a hack at this time as its unclear what the best
 			// alternative option is. Specifically, parsing JavaScriptFiles is not something
 			// I'm contemplating right now :)
@@ -69,7 +63,7 @@ public class JavaScriptFile {
 			// Finally, construct the native declaration
 			NativeDeclaration d = new NativeDeclaration(text.toString());
 			//
-			JavaScriptFile js = new JavaScriptFile(true, Standard.ES6);
+			JavaScriptFile js = new JavaScriptFile(p, Collections.EMPTY_LIST, true, Standard.ES6);
 			// Append our native declarations.
 			js.declarations.add(d);
 			return js;
@@ -88,6 +82,11 @@ public class JavaScriptFile {
 		@Override
 		public String getSuffix() {
 			return "js";
+		}
+
+		@Override
+		public boolean includes(Class<?> kind) {
+			return kind == JavaScriptFile.class;
 		}
 	};
 
@@ -115,10 +114,17 @@ public class JavaScriptFile {
 	// =========================================================================
 
 	/**
+	 * The filename of this artifact
+	 */
+	private final Path path;
+	/**
+	 * The source files that were combined into this file.
+	 */
+	private final List<WyilFile> sources;
+	/**
 	 * Indicate whether or not to use strict mode.
 	 */
 	private final boolean strictMode;
-
 	/**
 	 * Indicate which JavaScript standard this file conforms to.
 	 */
@@ -128,11 +134,13 @@ public class JavaScriptFile {
 	 */
 	private List<Declaration> declarations;
 
-	public JavaScriptFile(Standard standard) {
-		this(true,standard);
+	public JavaScriptFile(Path path, List<WyilFile> sources, Standard standard) {
+		this(path, sources, true, standard);
 	}
 
-	public JavaScriptFile(boolean strictMode, Standard standard) {
+	public JavaScriptFile(Path path, List<WyilFile> sources, boolean strictMode, Standard standard) {
+		this.path = path;
+		this.sources = new ArrayList<>(sources);
 		this.strictMode = strictMode;
 		this.standard = standard;
 		this.declarations = new ArrayList<>();
@@ -175,8 +183,23 @@ public class JavaScriptFile {
 		return standard == Standard.ES6_BIGINT;
 	}
 
+	@Override
+	public Path getPath() {
+		return path;
+	}
+
 	public List<Declaration> getDeclarations() {
 		return declarations;
+	}
+
+	@Override
+	public Content.Type<JavaScriptFile> getContentType() {
+		return JavaScriptFile.ContentType;
+	}
+
+	@Override
+	public List<WyilFile> getSourceArtifacts() {
+		return sources;
 	}
 
 	// =========================================================================

@@ -88,8 +88,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	 */
 	private int temporaryIndex = 0;
 
-	public JavaScriptCompiler(Build.Meter meter, JavaScriptFile jsFile) {
-		super(meter,subtyping);
+	public JavaScriptCompiler(JavaScriptFile jsFile) {
+		super(Build.NULL_METER,subtyping);
 		this.jsFile = jsFile;
 	}
 
@@ -425,9 +425,9 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		if (isJsString(t)) {
 			// Return character code instead of string.
 			WyilFile parent = (WyilFile) expr.getHeap();
-			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent.getEntry(), expr);
+			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent, expr);
 		} else {
-			return new ArrayAccess(source,index);
+			return new ArrayAccess(source, index);
 		}
 	}
 
