@@ -24,6 +24,7 @@ import wycli.cfg.Configuration;
 import wycli.lang.Command;
 import wycli.lang.Package;
 import wycli.lang.Plugin;
+import wyil.lang.WyilFile;
 import wycc.lang.Content;
 import wycc.lang.Path;
 import static wyc.Activator.PACKAGE_NAME;
@@ -87,6 +88,7 @@ public class Activator implements Plugin.Activator {
 					config.get(Value.UTF8.class, BUILD_JS_STANDARD).unwrap());
 			// Determine all native JS files to include
 			List<JavaScriptFile> jsIncludes = new ArrayList<>();
+			List<WyilFile> wyIncludes = new ArrayList<>();
 			// Add all JavaScript files based on the given includes filter(s). These are
 			// JavaScript files contained within the current package being built.
 			Value.Array jsIncludeFilters = config.get(Value.Array.class, BUILD_JS_INCLUDES);
@@ -99,10 +101,13 @@ public class Activator implements Plugin.Activator {
 			}
 			// Traverse all dependencies and include any JavaScript files that they contain.
 			for (Content.Source p : resolver.resolve(config)) {
+				// Add all WyilFiles from dependency
+				wyIncludes.addAll(p.getAll(WyilFile.ContentType, Filter.EVERYTHING));
+				// Add all native JavaScript files from dependency
 				jsIncludes.addAll(p.getAll(JavaScriptFile.ContentType, Filter.EVERYTHING));
 			}
 			// Done
-			return new JavaScriptCompileTask(target.append(pkg), src.append(pkg), strict, standard, jsIncludes);
+			return new JavaScriptCompileTask(target.append(pkg), src.append(pkg), strict, standard, wyIncludes, jsIncludes);
 		}
 	};
 

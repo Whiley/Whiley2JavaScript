@@ -13,7 +13,6 @@
 // limitations under the License.
 package wyjs.tasks;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -45,14 +44,18 @@ public class JavaScriptCompileTask implements Build.Task {
 	/**
 	 * Additional JavaScript files to include in generated file.
 	 */
-	private final List<JavaScriptFile> includes;
+	private final List<WyilFile> wyIncludes;
+	/**
+	 * Additional JavaScript files to include in generated file.
+	 */
+	private final List<JavaScriptFile> jsIncludes;
 
 	public JavaScriptCompileTask(Path target, Path source, JavaScriptFile.Standard standard) {
-		this(target, source, true, standard, Collections.emptyList());
+		this(target, source, true, standard, Collections.emptyList(), Collections.emptyList());
 	}
 
 	public JavaScriptCompileTask(Path target, Path source, boolean strict, JavaScriptFile.Standard standard,
-			List<JavaScriptFile> includes) {
+			List<WyilFile> wyIncludes, List<JavaScriptFile> jsIncludes) {
 		if(target == null) {
 			throw new IllegalArgumentException("invalid target");
 		} else if(source == null) {
@@ -62,7 +65,8 @@ public class JavaScriptCompileTask implements Build.Task {
 		this.source = source;
 		this.strict = strict;
 		this.standard = standard;
-		this.includes = includes;
+		this.wyIncludes = wyIncludes;
+		this.jsIncludes = jsIncludes;
 	}
 
 	@Override
@@ -102,8 +106,12 @@ public class JavaScriptCompileTask implements Build.Task {
 		// standards. It would also enable minification, and allow support for
 		// different module systems (e.g. CommonJS).
 		new JavaScriptCompiler(jsFile).visitModule(source);
-		// Process includes
-		for (JavaScriptFile i : includes) {
+		// Process Wyil includes
+		for (WyilFile i : wyIncludes) {
+			new JavaScriptCompiler(jsFile).visitModule(i);
+		}
+		// Process JavaScript includes
+		for (JavaScriptFile i : jsIncludes) {
 			jsFile.getDeclarations().addAll(i.getDeclarations());
 		}
 		// How could this fail?
