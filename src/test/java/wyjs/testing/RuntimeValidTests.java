@@ -47,17 +47,18 @@ import wycc.util.Logger;
 import wycc.util.AbstractCompilationUnit.Name;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
+import wycc.util.AbstractCompilationUnit.Identifier;
 import wycc.util.ByteRepository;
 
 import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
+import wyil.lang.WyilFile.Type;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
 import wycc.lang.Content;
 import wycc.lang.Filter;
 import wycc.util.DirectoryRoot;
 import wycc.util.Pair;
-import wycli.commands.BuildSystem;
 import wycc.lang.Path;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
@@ -362,7 +363,8 @@ public class RuntimeValidTests {
 	 * Execute a given JavaScript file stored on disk using the built-in
 	 * "Nashorn" interpreter.
 	 *
-	 * @param filename
+	 * @param jsFile The file to be executed.
+	 * @param name
 	 *            The fully qualified name of the JavaScript file to be
 	 *            executed.
 	 * @throws ScriptException
