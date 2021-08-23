@@ -18,26 +18,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wycc.lang.Build;
-import wycc.lang.Filter;
 import wycc.util.AbstractCompilationUnit.Value;
+import wycc.util.Trie;
 import wycli.cfg.Configuration;
 import wycli.lang.Command;
 import wycli.lang.Package;
 import wycli.lang.Plugin;
 import wyil.lang.WyilFile;
 import wycc.lang.Content;
-import wycc.lang.Path;
 import static wyc.Activator.PACKAGE_NAME;
 import static wyc.Activator.BUILD_WHILEY_TARGET;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
 public class Activator implements Plugin.Activator {
-
-	private static Path BUILD_JS_TARGET = Path.fromString("build/js/target");
-	private static Path BUILD_JS_INCLUDES = Path.fromString("build/js/includes");
-	private static Path BUILD_JS_STANDARD = Path.fromString("build/js/standard");
-	private static Path BUILD_JS_STRICTMODE = Path.fromString("build/js/strictmode");
+	private static Content.Filter<WyilFile> ALL_WYILFILES = Content.Filter(WyilFile.ContentType,Trie.EVERYTHING);
+	private static Content.Filter<JavaScriptFile> ALL_JSFILES = Content.Filter(JavaScriptFile.ContentType,Trie.EVERYTHING);
+	private static Trie BUILD_JS_TARGET = Trie.fromString("build/js/target");
+	private static Trie BUILD_JS_INCLUDES = Trie.fromString("build/js/includes");
+	private static Trie BUILD_JS_STANDARD = Trie.fromString("build/js/standard");
+	private static Trie BUILD_JS_STRICTMODE = Trie.fromString("build/js/strictmode");
 	private static Value.Array INCLUDES_DEFAULT = new Value.Array();
 	private static Value.UTF8 STANDARD_DEFAULT = new Value.UTF8(JavaScriptFile.Standard.ES6.toString());
 	private static Value.Bool STRICTMODE_DEFAULT = new Value.Bool(true);
@@ -70,17 +70,17 @@ public class Activator implements Plugin.Activator {
 		}
 
 		@Override
-		public Build.Task initialise(Path path, Command.Environment environment) throws IOException {
+		public Build.Task initialise(Trie path, Command.Environment environment) throws IOException {
 			// Determine local configuration
 			Configuration config = environment.get(path);
 			Build.Repository repo = environment.getRepository();
 			Package.Resolver resolver = environment.getPackageResolver();
 			// Extract the package name.
-			Path pkg = Path.fromString(config.get(Value.UTF8.class, PACKAGE_NAME).unwrap());
+			Trie pkg = Trie.fromString(config.get(Value.UTF8.class, PACKAGE_NAME).unwrap());
 			// Identify source WyilFile
-			Path src = Path.fromString(config.get(Value.UTF8.class, BUILD_WHILEY_TARGET).unwrap());
+			Trie src = Trie.fromString(config.get(Value.UTF8.class, BUILD_WHILEY_TARGET).unwrap());
 			// Determine target directory
-			Path target = Path.fromString(config.get(Value.UTF8.class, BUILD_JS_TARGET).unwrap());
+			Trie target = Trie.fromString(config.get(Value.UTF8.class, BUILD_JS_TARGET).unwrap());
 			// Extract strict mode setting
 			boolean strict = config.get(Value.Bool.class, BUILD_JS_STRICTMODE).unwrap();
 			// Extract and parse target JS standard
@@ -97,14 +97,14 @@ public class Activator implements Plugin.Activator {
 				// FIXME: an interesting question is whether or not it makes sense to read the
 				// JavaScript files at this point. In principle, they could be derived files
 				// from elsewhere, meaning that deferring the actual reading would be sensible.
-				jsIncludes.addAll(repo.getAll(JavaScriptFile.ContentType, Filter.fromString(ith)));
+				jsIncludes.addAll(repo.getAll(Content.Filter(JavaScriptFile.ContentType, Trie.fromString(ith))));
 			}
 			// Traverse all dependencies and include any JavaScript files that they contain.
 			for (Content.Source p : resolver.resolve(config)) {
 				// Add all WyilFiles from dependency
-				wyIncludes.addAll(p.getAll(WyilFile.ContentType, Filter.EVERYTHING));
+				wyIncludes.addAll(p.getAll(ALL_WYILFILES));
 				// Add all native JavaScript files from dependency
-				jsIncludes.addAll(p.getAll(JavaScriptFile.ContentType, Filter.EVERYTHING));
+				jsIncludes.addAll(p.getAll(ALL_JSFILES));
 			}
 			// Done
 			return new JavaScriptCompileTask(target.append(pkg), src.append(pkg), strict, standard, wyIncludes, jsIncludes);

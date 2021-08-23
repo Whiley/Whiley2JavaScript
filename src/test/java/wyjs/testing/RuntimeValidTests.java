@@ -56,10 +56,9 @@ import wyil.lang.WyilFile.Type;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
 import wycc.lang.Content;
-import wycc.lang.Filter;
 import wycc.util.DirectoryRoot;
 import wycc.util.Pair;
-import wycc.lang.Path;
+import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
@@ -169,7 +168,7 @@ public class RuntimeValidTests {
 	 * tests (e.g. for native strings, etc).
 	 */
  	private static final Content.Source JSCORE_PACKAGE = new Content.Source() {
- 		private final Path path = Path.fromString("js/core");
+ 		private final Trie path = Trie.fromString("js/core");
  		private final WyilFile jsCore = new WyilFile(path, Collections.emptyList());
 
  		{
@@ -185,7 +184,7 @@ public class RuntimeValidTests {
  		}
 
 		@Override
-		public <T extends Content> T get(Content.Type<T> kind, Path p) throws IOException {
+		public <T extends Content> T get(Content.Type<T> kind, Trie p) throws IOException {
 			if (kind == WyilFile.ContentType && p.equals(path)) {
 				return (T) jsCore;
 			}
@@ -193,20 +192,20 @@ public class RuntimeValidTests {
 		}
 
 		@Override
-		public <T extends Content> List<T> getAll(Content.Type<T> kind, Filter f) throws IOException {
-			if(f.matches(path)) {
+		public <T extends Content> List<T> getAll(Content.Filter<T> filter) throws IOException {
+			if (filter.includes(WyilFile.ContentType, path)) {
 				return Arrays.asList((T) jsCore);
 			}
 			return null;
 		}
 
 		@Override
-		public List<Path> match(Content.Type<? extends Content> ct, Filter f) {
+		public List<Trie> match(Content.Filter<? extends Content> filter) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public <T extends Content> List<Path> match(Content.Type<T> ct, Predicate<T> p) {
+		public <T extends Content> List<Trie> match(Content.Filter<T> filter, Predicate<T> p) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -231,7 +230,7 @@ public class RuntimeValidTests {
 		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
 		PrintStream psyserr = new PrintStream(syserr);
 		// Determine the ID of the test being compiler
-		Path path = Path.fromString(arg);
+		Trie path = Trie.fromString(arg);
 		//
 		boolean result = true;
 		// Construct the directory root
@@ -259,7 +258,7 @@ public class RuntimeValidTests {
 			// Check whether result valid (or not)
 			result = target.isValid();
 			// Print out syntactic markers
-			wycli.commands.BuildSystem.printSyntacticMarkers(psyserr, target, source);
+			wycli.commands.BuildCmd.printSyntacticMarkers(psyserr, target, source);
 			// Add invariant handler for js::core::string
 			JavaScriptFile jsFile = repository.get(JavaScriptFile.ContentType, path);
 			// FIXME: this should not be permitted in a functional setting :)
@@ -276,7 +275,7 @@ public class RuntimeValidTests {
 			result = false;
 		} finally {
 			// Writeback any results
-			root.flush();
+			root.synchronise();
 		}
 		//
 		psyserr.flush();

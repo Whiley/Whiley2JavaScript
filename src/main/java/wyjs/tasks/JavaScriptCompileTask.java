@@ -19,8 +19,8 @@ import java.util.List;
 import wycc.lang.Build;
 import wycc.lang.Build.Artifact;
 import wycc.lang.Build.SnapShot;
-import wycc.lang.Path;
 import wycc.util.Pair;
+import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 
@@ -28,11 +28,11 @@ public class JavaScriptCompileTask implements Build.Task {
 	/**
 	 * The set of source files that this task will compiler from.
 	 */
-	private final Path source;
+	private final Trie source;
 	/**
 	 * Identifier for target of this build task.
 	 */
-	private final Path target;
+	private final Trie target;
 	/**
 	 * Specify whether or not to generate a "strict" JavaScript file.
 	 */
@@ -50,11 +50,11 @@ public class JavaScriptCompileTask implements Build.Task {
 	 */
 	private final List<JavaScriptFile> jsIncludes;
 
-	public JavaScriptCompileTask(Path target, Path source, JavaScriptFile.Standard standard) {
+	public JavaScriptCompileTask(Trie target, Trie source, JavaScriptFile.Standard standard) {
 		this(target, source, true, standard, Collections.emptyList(), Collections.emptyList());
 	}
 
-	public JavaScriptCompileTask(Path target, Path source, boolean strict, JavaScriptFile.Standard standard,
+	public JavaScriptCompileTask(Trie target, Trie source, boolean strict, JavaScriptFile.Standard standard,
 			List<WyilFile> wyIncludes, List<JavaScriptFile> jsIncludes) {
 		if(target == null) {
 			throw new IllegalArgumentException("invalid target");
@@ -70,7 +70,7 @@ public class JavaScriptCompileTask implements Build.Task {
 	}
 
 	@Override
-	public Path getPath() {
+	public Trie getPath() {
 		return target;
 	}
 

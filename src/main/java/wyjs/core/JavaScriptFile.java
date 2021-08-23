@@ -26,12 +26,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import wyc.lang.WhileyFile;
 import wycc.util.Pair;
+import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wycc.lang.Build;
 import wycc.lang.Content;
-import wycc.lang.Path;
 import wycc.util.ArrayUtils;
 import wyjs.io.JavaScriptFilePrinter;
 
@@ -47,7 +46,7 @@ public class JavaScriptFile implements Build.Artifact {
 	public static final Content.Type<JavaScriptFile> ContentType = new Content.Type<JavaScriptFile>() {
 
 		@Override
-		public JavaScriptFile read(Path p, InputStream inputStream, Content.Registry registry) throws IOException {
+		public JavaScriptFile read(Trie p, InputStream inputStream, Content.Registry registry) throws IOException {
 			// NOTE: this is strictly a hack at this time as its unclear what the best
 			// alternative option is. Specifically, parsing JavaScriptFiles is not something
 			// I'm contemplating right now :)
@@ -83,11 +82,6 @@ public class JavaScriptFile implements Build.Artifact {
 		public String getSuffix() {
 			return "js";
 		}
-
-		@Override
-		public boolean includes(Class<?> kind) {
-			return kind == JavaScriptFile.class;
-		}
 	};
 
 	// =========================================================================
@@ -116,7 +110,7 @@ public class JavaScriptFile implements Build.Artifact {
 	/**
 	 * The filename of this artifact
 	 */
-	private final Path path;
+	private final Trie path;
 	/**
 	 * The source files that were combined into this file.
 	 */
@@ -134,11 +128,11 @@ public class JavaScriptFile implements Build.Artifact {
 	 */
 	private List<Declaration> declarations;
 
-	public JavaScriptFile(Path path, List<WyilFile> sources, Standard standard) {
+	public JavaScriptFile(Trie path, List<WyilFile> sources, Standard standard) {
 		this(path, sources, true, standard);
 	}
 
-	public JavaScriptFile(Path path, List<WyilFile> sources, boolean strictMode, Standard standard) {
+	public JavaScriptFile(Trie path, List<WyilFile> sources, boolean strictMode, Standard standard) {
 		this.path = path;
 		this.sources = new ArrayList<>(sources);
 		this.strictMode = strictMode;
@@ -184,7 +178,7 @@ public class JavaScriptFile implements Build.Artifact {
 	}
 
 	@Override
-	public Path getPath() {
+	public Trie getPath() {
 		return path;
 	}
 
