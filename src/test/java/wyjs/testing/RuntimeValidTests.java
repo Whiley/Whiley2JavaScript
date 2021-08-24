@@ -58,6 +58,7 @@ import wyc.util.TestUtils;
 import wycc.lang.Content;
 import wycc.util.DirectoryRoot;
 import wycc.util.Pair;
+import wycc.util.Transactions;
 import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
@@ -248,15 +249,13 @@ public class RuntimeValidTests {
 			// NOTE: Java Nashorn supports ES5 only?
 			JavaScriptCompileTask jsTask = new JavaScriptCompileTask(path, path, JavaScriptFile.Standard.ES5);
 			// Apply Whiley Compiler to repository
-			repository.apply(s -> wycTask.apply(s).first());
-			// Apply JavaScript Compiler to repository
-			repository.apply(s -> jsTask.apply(s).first());
+			result = repository.apply(Transactions.create(wycTask, jsTask));
 			// Read out binary file from build repository
 			WyilFile target = repository.get(WyilFile.ContentType, path);
 			// Write binary file to directory
 			root.put(path, target);
 			// Check whether result valid (or not)
-			result = target.isValid();
+			result &= target.isValid();
 			// Print out syntactic markers
 			wycli.commands.BuildCmd.printSyntacticMarkers(psyserr, target, source);
 			// Add invariant handler for js::core::string
