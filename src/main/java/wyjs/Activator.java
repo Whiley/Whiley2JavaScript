@@ -17,15 +17,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import wycc.lang.Build;
+import jbfs.core.Build;
+import jbfs.core.Content;
+import jbfs.util.Trie;
 import wycc.util.AbstractCompilationUnit.Value;
-import wycc.util.Trie;
 import wycli.cfg.Configuration;
 import wycli.lang.Command;
 import wycli.lang.Package;
 import wycli.lang.Plugin;
 import wyil.lang.WyilFile;
-import wycc.lang.Content;
+
 import static wyc.Activator.PACKAGE_NAME;
 import static wyc.Activator.BUILD_WHILEY_TARGET;
 import wyjs.core.JavaScriptFile;

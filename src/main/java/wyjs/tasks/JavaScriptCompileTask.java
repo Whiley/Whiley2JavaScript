@@ -16,11 +16,11 @@ package wyjs.tasks;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import wycc.lang.Build;
-import wycc.lang.Build.Artifact;
-import wycc.lang.Build.SnapShot;
-import wycc.util.Pair;
-import wycc.util.Trie;
+import jbfs.core.Build;
+import jbfs.core.Build.Artifact;
+import jbfs.core.Build.SnapShot;
+import jbfs.util.Pair;
+import jbfs.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 
