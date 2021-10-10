@@ -36,14 +36,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import wycc.lang.Build;
+import jbfs.core.Build;
+import jbfs.util.ArrayUtils;
+import jbfs.util.Pair;
 import wycc.lang.SyntacticException;
 import wycc.util.AbstractCompilationUnit.Identifier;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
-import wycc.util.ArrayUtils;
-import wycc.util.Pair;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
 import wyil.lang.WyilFile.Expr;

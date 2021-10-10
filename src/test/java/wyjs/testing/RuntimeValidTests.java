@@ -41,25 +41,27 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wycc.lang.Build;
+import jbfs.core.Build;
+import jbfs.core.Content;
+import jbfs.util.ByteRepository;
+import jbfs.util.DirectoryRoot;
+import jbfs.util.Pair;
+import jbfs.util.Transactions;
+import jbfs.util.Trie;
+
 import wycc.lang.SyntacticException;
 import wycc.util.Logger;
 import wycc.util.AbstractCompilationUnit.Name;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
 import wycc.util.AbstractCompilationUnit.Identifier;
-import wycc.util.ByteRepository;
 
 import static wyil.lang.WyilFile.*;
 import wyc.lang.WhileyFile;
 import wyil.lang.WyilFile.Type;
 import wyc.task.CompileTask;
 import wyc.util.TestUtils;
-import wycc.lang.Content;
-import wycc.util.DirectoryRoot;
-import wycc.util.Pair;
-import wycc.util.Transactions;
-import wycc.util.Trie;
+
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;

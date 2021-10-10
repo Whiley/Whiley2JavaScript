@@ -25,13 +25,12 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import wycc.util.Pair;
-import wycc.util.Trie;
+import jbfs.core.Build;
+import jbfs.core.Content;
+import jbfs.util.Pair;
+import jbfs.util.Trie;
+import jbfs.util.ArrayUtils;
 import wyil.lang.WyilFile;
-import wycc.lang.Build;
-import wycc.lang.Content;
-import wycc.util.ArrayUtils;
 import wyjs.io.JavaScriptFilePrinter;
 
 public class JavaScriptFile implements Build.Artifact {
