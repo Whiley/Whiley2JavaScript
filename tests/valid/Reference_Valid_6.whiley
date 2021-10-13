@@ -1,4 +1,6 @@
-method m(&(&int) x):
+method m(&(&int) x)
+ensures *x == old(*x)
+ensures **x == 1:
     // x = -> [ -> [ 0 ] ]
     &int y = *x
     // y = -> [ 0 ]

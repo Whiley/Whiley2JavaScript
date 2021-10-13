@@ -45,7 +45,9 @@ import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
+import wyil.lang.WyilFile.Decl.Variant;
 import wyil.lang.WyilFile.Expr;
+import wyil.lang.WyilFile.Expr.Old;
 import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
@@ -147,6 +149,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	@Override
 	public Term constructProperty(Decl.Property decl, List<Term> clauses) {
+		// Determine qualified name
+		String name = toMangledName(decl);
+		// Translate parameters
+		List<String> parameters = toParameterNames(decl.getParameters());
+		// Construct body from translated clauses
+		Term body = new Return(and(clauses));
+		// Done
+		return new JavaScriptFile.Method(name, parameters, new Block(body));
+	}
+
+
+	@Override
+	public Term constructVariant(Variant decl, List<Term> clauses) {
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Translate parameters
@@ -749,6 +764,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		} else {
 			return operand;
 		}
+	}
+
+	@Override
+	public Term constructOld(Old expr, Term operand) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

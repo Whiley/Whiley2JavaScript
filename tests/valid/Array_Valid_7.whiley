@@ -1,6 +1,5 @@
 function f(int[] xs) -> (int r)
-requires |xs| > 0
-ensures r >= 0 && r < |xs|:
+ensures r == 0:
     //
     return 0
 
