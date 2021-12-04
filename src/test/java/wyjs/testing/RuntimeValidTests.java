@@ -126,6 +126,33 @@ public class RuntimeValidTests {
 		IGNORED.put("UnknownReference_Valid_2", "#44");
 		IGNORED.put("UnknownReference_Valid_3", "#44");
 		IGNORED.put("Reference_Valid_20", "#44");
+		// Old values
+		IGNORED.put("Old_Valid_1", "#58");
+		IGNORED.put("Old_Valid_2", "#58");
+		IGNORED.put("Old_Valid_3", "#58");
+		IGNORED.put("Old_Valid_4", "#58");
+		IGNORED.put("Old_Valid_7", "#58");
+		IGNORED.put("Old_Valid_8", "#58");
+		IGNORED.put("Old_Valid_9", "#58");
+		IGNORED.put("Old_Valid_10", "#58");
+		IGNORED.put("Old_Valid_11", "#58");
+		IGNORED.put("Old_Valid_12", "#58");
+		IGNORED.put("Old_Valid_13", "#58");
+		IGNORED.put("Old_Valid_14", "#58");
+		IGNORED.put("Old_Valid_15", "#58");
+		IGNORED.put("Old_Valid_16", "#58");
+		IGNORED.put("Old_Valid_17", "#58");
+		IGNORED.put("Old_Valid_18", "#58");
+		IGNORED.put("Old_Valid_20", "#58");
+		IGNORED.put("Reference_Valid_1", "#58");
+		IGNORED.put("Reference_Valid_6", "#58");
+		IGNORED.put("Reference_Valid_9", "#58");
+		IGNORED.put("Reference_Valid_27", "#58");
+		IGNORED.put("Reference_Valid_28", "#58");
+		IGNORED.put("Reference_Valid_33", "#58");
+		IGNORED.put("Reference_Valid_39", "#58");
+		IGNORED.put("Reference_Valid_41", "#58");
+		IGNORED.put("Reference_Valid_42", "#58");
 		//
 		IGNORED.put("MethodRef_Valid_6", "???");
 		// Mutable native strings
