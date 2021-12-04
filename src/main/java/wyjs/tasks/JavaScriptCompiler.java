@@ -45,7 +45,9 @@ import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
 import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
+import wyil.lang.WyilFile.Decl.Variant;
 import wyil.lang.WyilFile.Expr;
+import wyil.lang.WyilFile.Expr.Old;
 import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
@@ -146,15 +148,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	}
 
 	@Override
-	public Term constructProperty(Decl.Property decl, List<Term> clauses) {
+	public Term constructProperty(Decl.Property decl, Term body) {
 		// Determine qualified name
 		String name = toMangledName(decl);
 		// Translate parameters
 		List<String> parameters = toParameterNames(decl.getParameters());
 		// Construct body from translated clauses
-		Term body = new Return(and(clauses));
+		Term stmt = new Return(body);
 		// Done
-		return new JavaScriptFile.Method(name, parameters, new Block(body));
+		return new JavaScriptFile.Method(name, parameters, new Block(stmt));
 	}
 
 	@Override
@@ -759,6 +761,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	}
 
 	@Override
+	public Term constructOld(Old expr, Term operand) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public Term constructRecordAccess(Expr.RecordAccess expr, Term source) {
 		Term term = new JavaScriptFile.PropertyAccess(source, expr.getField().toString());
 		if(expr.isMove() || isCopyable(expr.getType())) {
@@ -810,6 +817,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		} else {
 			return WY_COPY(var);
 		}
+	}
+
+	@Override
+	public Term constructVariant(Variant decl, List<Term> clauses) {
+		throw new UnsupportedOperationException();
 	}
 
 	// ====================================================================================

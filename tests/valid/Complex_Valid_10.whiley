@@ -42,11 +42,11 @@ where HEARTS <= suite && suite <= SPADES
 where 2 <= ordinal && ordinal <= ACE
 
 // Define a "comparator" for cards
-property lessThan(Card c1, Card c2)
-where (c1.suite < c2.suite) || (c1.suite == c1.suite && c1.ordinal < c2.ordinal)
+property lessThan(Card c1, Card c2) -> bool:
+    (c1.suite < c2.suite) || (c1.suite == c1.suite && c1.ordinal < c2.ordinal)
 
-property sorted(Card[] cards)
-where all { i in 1..|cards| | lessThan(cards[i-1],cards[i]) }
+property sorted(Card[] cards) -> bool:
+    all { i in 1..|cards| | lessThan(cards[i-1],cards[i]) }
 
 // =======================================
 // Card Constants
@@ -225,10 +225,10 @@ requires from < 52 && to < 52:
 function shuffle(Deck deck, Random rand, nat count) -> Deck:
     //
     nat i = 0
-    nat from
-    nat to
     //
     while i < count:
+       nat from
+       nat to    
        (from,rand) = next(rand)
        (to,rand) = next(rand)
        deck = swap(deck,from,to)
