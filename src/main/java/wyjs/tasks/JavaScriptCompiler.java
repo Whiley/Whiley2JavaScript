@@ -1,3 +1,16 @@
+// Copyright 2011 The Whiley Project Developers
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package wyjs.tasks;
 import static wycc.util.AbstractCompilationUnit.ITEM_bool;
 import static wycc.util.AbstractCompilationUnit.ITEM_byte;
@@ -36,10 +49,9 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import jbfs.core.Build;
-import jbfs.util.ArrayUtils;
-import jbfs.util.Pair;
-import wycc.lang.SyntacticException;
+import wycc.util.ArrayUtils;
+import wycc.util.Pair;
+import wycc.lang.Syntactic;
 import wycc.util.AbstractCompilationUnit.Identifier;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
@@ -90,7 +102,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	private int temporaryIndex = 0;
 
 	public JavaScriptCompiler(JavaScriptFile jsFile) {
-		super(Build.NULL_METER,subtyping);
+		super(subtyping);
 		this.jsFile = jsFile;
 	}
 
@@ -199,7 +211,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		Term inner = new Lambda(parameters,new Block(new Return(term)));
 		// NOTE: need to use Immediately Invoked Function Expression here, otherwise
 		// capture variables don't behave properly.
-		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables(meter));
+		Tuple<Decl.Variable> captured = new Tuple<>(decl.getCapturedVariables());
 		List<String> captures = toParameterNames(captured);
 		Term[] capturedArgs = toLambdaArguments(captured);
 		// Construct outer lambda (this is for the IIFE)
@@ -426,7 +438,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		if (isJsString(t)) {
 			// Return character code instead of string.
 			WyilFile parent = (WyilFile) expr.getHeap();
-			throw new SyntacticException("Cannot assign JavaScript strings as they are immutable!", parent, expr);
+			throw new Syntactic.Exception("Cannot assign JavaScript strings as they are immutable!", parent, expr);
 		} else {
 			return new ArrayAccess(source, index);
 		}
@@ -571,7 +583,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 				try {
 					return new Constant(i.longValueExact());
 				} catch(Exception e) {
-					throw new SyntacticException(
+					throw new Syntactic.Exception(
 							"Integer " + i.toString() + " cannot be represented in 64bits (see Issue #15)", null, expr);
 				}
 			}
@@ -2024,7 +2036,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	 */
 	private void extractUsedVariables(Expr e, Set<Decl.Variable> uses) {
 		// Construct appropriate visitor
-		AbstractVisitor visitor = new AbstractVisitor(meter) {
+		AbstractVisitor visitor = new AbstractVisitor() {
 			@Override
 			public void visitVariableAccess(Expr.VariableAccess e) {
 				uses.add(e.getVariableDeclaration());

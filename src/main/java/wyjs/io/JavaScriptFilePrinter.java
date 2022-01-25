@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.List;
-import jbfs.util.Pair;
+import wycc.util.Pair;
 import wyjs.core.JavaScriptFile;
 
 public class JavaScriptFilePrinter {

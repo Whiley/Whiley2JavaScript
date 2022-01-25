@@ -16,15 +16,12 @@ package wyjs.tasks;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import jbfs.core.Build;
-import jbfs.core.Build.Artifact;
-import jbfs.core.Build.SnapShot;
-import jbfs.util.Pair;
-import jbfs.util.Trie;
+import wycc.util.Pair;
+import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 
-public class JavaScriptCompileTask implements Build.Task {
+public class JavaScriptCompileTask {
 	/**
 	 * The set of source files that this task will compiler from.
 	 */
@@ -69,34 +66,11 @@ public class JavaScriptCompileTask implements Build.Task {
 		this.jsIncludes = jsIncludes;
 	}
 
-	@Override
 	public Trie getPath() {
 		return target;
 	}
 
-	@Override
-	public Type<? extends Artifact> getContentType() {
-		return JavaScriptFile.ContentType;
-	}
-
-	@Override
-	public List<? extends Artifact> getSourceArtifacts() {
-		throw new IllegalArgumentException();
-	}
-
-	@Override
-	public Pair<SnapShot, Boolean> apply(SnapShot s) {
-		// Read out the WyilFile which we are translating into JavaScript.
-		WyilFile binary = s.get(WyilFile.ContentType, source);
-		// Compile into a single binary target
-		Pair<JavaScriptFile, Boolean> r = compile(binary);
-		// Write target into snapshot
-		s = s.put(r.first());
-		// Done
-		return new Pair<>(s, r.second());
-	}
-
-	private Pair<JavaScriptFile, Boolean> compile(WyilFile source) {
+	public Pair<JavaScriptFile, Boolean> compile(WyilFile source) {
 		// Construct initial (empty) JavaScript file
 		JavaScriptFile jsFile = new JavaScriptFile(target, Arrays.asList(source), strict, standard);
 		// FIXME: this is a fairly temporary solution at the moment which just

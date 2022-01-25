@@ -13,75 +13,17 @@
 // limitations under the License.
 package wyjs.core;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import jbfs.core.Build;
-import jbfs.core.Content;
-import jbfs.util.Pair;
-import jbfs.util.Trie;
-import jbfs.util.ArrayUtils;
+import wycc.util.Pair;
+import wycc.util.Trie;
+import wycc.util.ArrayUtils;
 import wyil.lang.WyilFile;
-import wyjs.io.JavaScriptFilePrinter;
 
-public class JavaScriptFile implements Build.Artifact {
-	// =========================================================================
-	// Content Type
-	// =========================================================================
-
-	/**
-	 * Responsible for identifying and reading/writing WyilFiles. The normal
-	 * extension is ".wyil" for WyilFiles.
-	 */
-	public static final Content.Type<JavaScriptFile> ContentType = new Content.Type<JavaScriptFile>() {
-
-		@Override
-		public JavaScriptFile read(Trie p, InputStream inputStream, Content.Registry registry) throws IOException {
-			// NOTE: this is strictly a hack at this time as its unclear what the best
-			// alternative option is. Specifically, parsing JavaScriptFiles is not something
-			// I'm contemplating right now :)
-			Reader reader = new InputStreamReader(inputStream);
-			BufferedReader in = new BufferedReader(reader);
-
-			StringBuilder text = new StringBuilder();
-			int len = 0;
-			char[] buf = new char[1024];
-			while ((len = in.read(buf)) != -1) {
-				text.append(buf, 0, len);
-			}
-			// Finally, construct the native declaration
-			NativeDeclaration d = new NativeDeclaration(text.toString());
-			//
-			JavaScriptFile js = new JavaScriptFile(p, Collections.EMPTY_LIST, true, Standard.ES6);
-			// Append our native declarations.
-			js.declarations.add(d);
-			return js;
-		}
-
-		@Override
-		public void write(OutputStream output, JavaScriptFile jf) throws IOException {
-			new JavaScriptFilePrinter(output).write(jf);
-		}
-
-		@Override
-		public String toString() {
-			return "Content-Type: javascript";
-		}
-
-		@Override
-		public String getSuffix() {
-			return "js";
-		}
-	};
+public class JavaScriptFile {
 
 	// =========================================================================
 	// JavaScript Standard
@@ -176,7 +118,6 @@ public class JavaScriptFile implements Build.Artifact {
 		return standard == Standard.ES6_BIGINT;
 	}
 
-	@Override
 	public Trie getPath() {
 		return path;
 	}
@@ -185,12 +126,6 @@ public class JavaScriptFile implements Build.Artifact {
 		return declarations;
 	}
 
-	@Override
-	public Content.Type<JavaScriptFile> getContentType() {
-		return JavaScriptFile.ContentType;
-	}
-
-	@Override
 	public List<WyilFile> getSourceArtifacts() {
 		return sources;
 	}
