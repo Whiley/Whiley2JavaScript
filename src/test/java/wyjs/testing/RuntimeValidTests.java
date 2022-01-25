@@ -15,20 +15,14 @@ package wyjs.testing;
 
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
-import java.util.function.Predicate;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -41,24 +35,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import wycc.util.Logger;
 import wycc.util.Pair;
 import wycc.util.Trie;
-import wycc.lang.Syntactic;
-import wycc.lang.Syntactic.Exception;
 import wycc.util.AbstractCompilationUnit.Name;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
 import wycc.util.AbstractCompilationUnit.Identifier;
 
 import static wyil.lang.WyilFile.*;
-
-import wyc.lang.WhileyFile;
 import wyil.lang.WyilFile.Type;
-import wyc.task.CompileTask;
-import wyc.util.TestUtils;
-
 import wyil.lang.WyilFile;
+import wyc.util.TestUtils;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -180,8 +167,8 @@ public class RuntimeValidTests {
 	 * Mock of js::core package which is needed for various JavaScript specific
 	 * tests (e.g. for native strings, etc).
 	 */
- 	private final static Trie path = Trie.fromString("js/core");
- 	private final static WyilFile jsCore = new WyilFile(Collections.emptyList());
+	private final static Trie path = Trie.fromString("js/core");
+	private final static WyilFile jsCore = new WyilFile(Collections.emptyList());
 	static {
 		// FIXME: type here is incorrect and should be updated with fixed-with integer
 		// type (i.e. uint:16).
@@ -207,12 +194,9 @@ public class RuntimeValidTests {
 	 */
 	public static void compileWhiley2JavaScript(File whileydir, String testName) throws IOException {
 		File whileySrcDir = new File(WHILEY_SRC_DIR);
-		//
-		Pair<Boolean, String> p = TestUtils.compile(whileySrcDir, // location of source directory
-				false, // no verification
-				false, // no counterexample generation
-				testName, // name of test to compile
-				Collections.emptyList()); // no dependencies
+		// Configure and run the compiler.
+		Pair<Boolean, String> p = new TestUtils.Compiler().setWhileyDir(whileySrcDir).setWyilDir(whileySrcDir)
+				.setTestName(testName).addDependency(jsCore).run();
 
 		boolean r = p.first();
 
