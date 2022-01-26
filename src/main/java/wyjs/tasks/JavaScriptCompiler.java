@@ -25,6 +25,7 @@ import static wyil.lang.WyilFile.EXPR_recordaccess;
 import static wyil.lang.WyilFile.EXPR_recordborrow;
 import static wyil.lang.WyilFile.EXPR_variablecopy;
 import static wyil.lang.WyilFile.EXPR_variablemove;
+import static wyil.lang.WyilFile.EXPR_staticvariable;
 import static wyil.lang.WyilFile.EXPR_tupleinitialiser;
 import static wyil.lang.WyilFile.TYPE_array;
 import static wyil.lang.WyilFile.TYPE_bool;
@@ -480,6 +481,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	@Override
 	public Term constructVariableAccessLVal(Expr.VariableAccess expr) {
 		String name = expr.getVariableDeclaration().getName().toString();
+		return new JavaScriptFile.VariableAccess(name);
+	}
+
+	@Override
+	public Term constructStaticVariableAccessLVal(Expr.StaticVariableAccess expr) {
+		String name = toMangledName(expr.getLink().getTarget());
 		return new JavaScriptFile.VariableAccess(name);
 	}
 
@@ -1984,6 +1991,11 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 			defs.add(e.getVariableDeclaration());
 			return true;
 		}
+		case EXPR_staticvariable: {
+			Expr.StaticVariableAccess e = (Expr.StaticVariableAccess) lval;
+			defs.add(e.getLink().getTarget());
+			return true;
+		}
 		default:
 			throw new IllegalArgumentException("invalid lval: " + lval);
 		}
@@ -2018,7 +2030,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 			break;
 		}
 		case EXPR_variablecopy:
-		case EXPR_variablemove: {
+		case EXPR_variablemove:
+		case EXPR_staticvariable: {
 			// NOTE: nothing to do here, since this variable is being defined.
 			break;
 		}

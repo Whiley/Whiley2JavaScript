@@ -13,41 +13,152 @@
 // limitations under the License.
 package wyjs;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
+import wycc.util.OptArg;
 import wycc.util.Trie;
-import wyil.io.WyilFileWriter;
-import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
+import wyjs.core.JavaScriptFile.NativeDeclaration;
+import wyjs.core.JavaScriptFile.Standard;
 import wyjs.io.JavaScriptFilePrinter;
+import wyjs.tasks.JavaScriptCompileTask;
 
 public class Main {
+	/**
+	 * Determine the JavaScript standard to use.
+	 */
+	private Standard standard = Standard.ES6;
+	/**
+	 * Destination directory of Wyil files.
+	 */
+	private File wyildir = new File(".");
+	/**
+	 * Destination directory of Wyil files.
+	 */
+	private File jsdir = new File(".");
+	/**
+	 * List of source files.
+	 */
+	private List<Trie> sources = new ArrayList<>();
+	/**
+	 * Determine target filename.
+	 */
+	private Trie target = Trie.fromString("main");
+	/**
+	 * List of JavaScript files to include.
+	 */
+	private List<File> includes = new ArrayList<>();
 
+	public Main addSource(Trie source) {
+		this.sources.add(source);
+		return this;
+	}
 
-//	public JavaScriptFile readJavaScriptFile(Trie p, InputStream inputStream, Content.Registry registry) throws IOException {
-//		// NOTE: this is strictly a hack at this time as its unclear what the best
-//		// alternative option is. Specifically, parsing JavaScriptFiles is not something
-//		// I'm contemplating right now :)
-//		Reader reader = new InputStreamReader(inputStream);
-//		BufferedReader in = new BufferedReader(reader);
-//
-//		StringBuilder text = new StringBuilder();
-//		int len = 0;
-//		char[] buf = new char[1024];
-//		while ((len = in.read(buf)) != -1) {
-//			text.append(buf, 0, len);
-//		}
-//		// Finally, construct the native declaration
-//		NativeDeclaration d = new NativeDeclaration(text.toString());
-//		//
-//		JavaScriptFile js = new JavaScriptFile(p, Collections.EMPTY_LIST, true, Standard.ES6);
-//		// Append our native declarations.
-//		js.declarations.add(d);
-//		return js;
-//	}
+	public Main setStandard(Standard standard) {
+		this.standard = standard;
+		return this;
+	}
 
+	public Main setTarget(Trie target) {
+		this.target = target;
+		return this;
+	}
+
+	public Main setWyilDir(File wyildir) {
+		this.wyildir = wyildir;
+		return this;
+	}
+
+	public Main setJsDir(File jsdir) {
+		this.jsdir = jsdir;
+		return this;
+	}
+
+	public boolean run() throws IOException {
+		// Construct compile task
+		JavaScriptCompileTask task = new JavaScriptCompileTask().setTarget(target).setStandard(standard);
+		// Add sources
+		for(Trie source : sources) {
+			// Extract source file
+			task.addSource(wyc.Compiler.readWyilFile(wyildir, source));
+		}
+		for(File include : includes) {
+			FileInputStream fin = new FileInputStream(include);
+			JavaScriptFile jsf = readJavaScriptFile(fin);
+			fin.close();
+			task.addInclude(jsf);
+		}
+		JavaScriptFile target = task.run();
+		// Write out binary target
+		wyjs.Main.writeJavaScriptFile(this.target, target, jsdir);
+		// Unsure how it can fail!
+		return true;
+	}
+
+	/**
+	 * Command-line options
+	 */
+	private static final OptArg[] OPTIONS = {
+			// Standard options
+			new OptArg("verbose","v","set verbose output"),
+			new OptArg("standard","s",OptArg.STRING,"set JavaScript standard","ES6"),
+			new OptArg("output","o",OptArg.STRING,"set output file","main"),
+			new OptArg("wyildir", OptArg.FILEDIR, "Specify where to place binary (WyIL) files", new File(".")),
+			new OptArg("jsdir", OptArg.FILEDIR, "Specify where to place JavaScript files", new File("."))
+	};
+	//
+	public static void main(String[] _args) throws IOException {
+		List<String> args = new ArrayList<>(Arrays.asList(_args));
+		Map<String, Object> options = OptArg.parseOptions(args, OPTIONS);
+		//
+		File wyildir = (File) options.get("wyildir");
+		File jsdir = (File) options.get("jsdir");
+		Trie target = Trie.fromString((String) options.get("output"));
+		Standard standard = Standard.valueOf((String) options.get("standard"));
+		// Construct Main object
+		Main main = new Main().setStandard(standard).setWyilDir(wyildir).setJsDir(jsdir).setTarget(target);
+		// Add source files
+		for (String s : args) {
+			main.addSource(Trie.fromString(s));
+		}
+		// Run the compiler!
+		boolean result = main.run();
+		// Produce exit code
+		System.exit(result ? 0 : 1);
+	}
+
+	public JavaScriptFile readJavaScriptFile(InputStream inputStream) throws IOException {
+		// NOTE: this is strictly a hack at this time as its unclear what the best
+		// alternative option is. Specifically, parsing JavaScriptFiles is not something
+		// I'm contemplating right now :)
+		Reader reader = new InputStreamReader(inputStream);
+		BufferedReader in = new BufferedReader(reader);
+
+		StringBuilder text = new StringBuilder();
+		int len = 0;
+		char[] buf = new char[1024];
+		while ((len = in.read(buf)) != -1) {
+			text.append(buf, 0, len);
+		}
+		// Finally, construct the native declaration
+		NativeDeclaration d = new NativeDeclaration(text.toString());
+		//
+		JavaScriptFile js = new JavaScriptFile(true, Standard.ES6);
+		// Append our native declarations.
+		js.getDeclarations().add(d);
+		return js;
+	}
 
 	/**
 	 * Write a given WyilFile to disk using the given directory as a root.

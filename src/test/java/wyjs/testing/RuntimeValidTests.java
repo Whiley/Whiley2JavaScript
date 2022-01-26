@@ -46,6 +46,7 @@ import static wyil.lang.WyilFile.*;
 import wyil.lang.WyilFile.Type;
 import wyil.lang.WyilFile;
 import wyc.util.TestUtils;
+import wyjs.Main;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -148,15 +149,15 @@ public class RuntimeValidTests {
 	// Test Harness
 	// ======================================================================
 
- 	protected void runTest(String name) throws IOException {
-		File jsFile = new File(WHILEY_SRC_DIR + File.separatorChar + name + ".js");
+ 	protected void runTest(Trie path) throws IOException {
+		File jsFile = new File(WHILEY_SRC_DIR + File.separatorChar + path + ".js");
 		// Compile to JavaScript
-		compileWhiley2JavaScript(new File(WHILEY_SRC_DIR), name); // name of test to compile
+		compileWhiley2JavaScript(new File(WHILEY_SRC_DIR), path); // name of test to compile
 		try {
-			execJS(jsFile, name);
+			execJS(jsFile, path);
 		} catch (ScriptException e) {
 			System.err.println("=========================================================");
-			System.err.println("TEST: " + name);
+			System.err.println("TEST: " + path);
 			System.err.println("=========================================================");
 			e.printStackTrace();
 			fail("unexpected output!");
@@ -181,7 +182,6 @@ public class RuntimeValidTests {
 		jsCore.setRootItem(new WyilFile.Decl.Module(new Name(path), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
 	}
 
-
  	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
 	 * JavaScript source file. This will then need to be separately compiled.
@@ -192,37 +192,19 @@ public class RuntimeValidTests {
 	 * @return
 	 * @throws IOException
 	 */
-	public static void compileWhiley2JavaScript(File whileydir, String testName) throws IOException {
+	public static void compileWhiley2JavaScript(File whileydir, Trie path) throws IOException {
 		File whileySrcDir = new File(WHILEY_SRC_DIR);
-		// Configure and run the compiler.
-		Pair<Boolean, String> p = new TestUtils.Compiler().setWhileyDir(whileySrcDir).setWyilDir(whileySrcDir)
-				.setTestName(testName).addDependency(jsCore).run();
-
-		boolean r = p.first();
-
-		System.out.print(p.second());
+		// Configure and run Whiley compiler.
+		boolean r = new wyc.Compiler().setWhileyDir(whileySrcDir).setWyilDir(whileySrcDir).setTarget(path)
+				.addSource(path).addDependency(jsCore).run();
 		if (!r) {
 			fail("Test failed to compile!");
-
+		} else {
+			// Configure and run JavaScript backend.
+			new Main().setWyilDir(whileydir).setJsDir(whileydir).setTarget(path).addSource(path)
+					.setStandard(JavaScriptFile.Standard.ES5).run();
 		}
-		compileWyil2JavaScript(whileydir,testName);
 	}
-
-	public static void compileWyil2JavaScript(File whileydir, String name) throws IOException {
-		String filename = name + ".wyil";
-		// Determine the ID of the test being compiler
-		Trie path = Trie.fromString(name);
-		// Extract source file
-		WyilFile source = wyc.Main.readWyilFile(whileydir, filename);
-		// Construct compile task
-		JavaScriptCompileTask task = new JavaScriptCompileTask(path, path, JavaScriptFile.Standard.ES5);
-		Pair<JavaScriptFile, Boolean> r = task.compile(source);
-		// Read out binary file from build repository
-		JavaScriptFile target = r.first();
-		// Write out binary target
-		wyjs.Main.writeJavaScriptFile(path, target, whileydir);
-		// Done
- 	}
 
 	/**
 	 * Execute a given JavaScript file stored on disk using the built-in
@@ -235,19 +217,14 @@ public class RuntimeValidTests {
 	 * @throws ScriptException
 	 * @throws IOException
 	 */
-	private void execJS(File jsFile, String name) throws ScriptException, IOException {
+	private void execJS(File jsFile, Trie path) throws ScriptException, IOException {
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 		// Load the WyJS runtime which provides necessary support methods.
 		engine.eval(new FileReader(WYJS_RUNTIME));
 		// Load the js script from the filesystem
 		engine.eval(new FileReader(jsFile));
 		// Execute the test() method
-		engine.eval(name + "$test();");
-	}
-
-	private static JavaScriptFile.Method constructJsCoreStringInvariant() {
-		JavaScriptFile.Term body = new JavaScriptFile.Return(new JavaScriptFile.Constant(true));
-		return new JavaScriptFile.Method("js$core$string$type", Arrays.asList("v"), new JavaScriptFile.Block(body));
+		engine.eval(path + "$test();");
 	}
 
 	// ======================================================================
@@ -256,9 +233,9 @@ public class RuntimeValidTests {
 
 	// Parameter to test case is the name of the current test.
 	// It will be passed to the constructor by JUnit.
-	private final String testName;
+	private final Trie testName;
 	public RuntimeValidTests(String testName) {
-		this.testName = testName;
+		this.testName = Trie.fromString(testName);
 	}
 
 	// Here we enumerate all available test cases.
@@ -270,7 +247,7 @@ public class RuntimeValidTests {
 	// Skip ignored tests
 	@Before
 	public void beforeMethod() {
-		String ignored = IGNORED.get(this.testName);
+		String ignored = IGNORED.get(this.testName.toString());
 		Assume.assumeTrue("Test " + this.testName + " skipped: " + ignored, ignored == null);
 	}
 

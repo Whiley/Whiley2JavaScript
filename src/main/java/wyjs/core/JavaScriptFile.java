@@ -49,14 +49,6 @@ public class JavaScriptFile {
 	// =========================================================================
 
 	/**
-	 * The filename of this artifact
-	 */
-	private final Trie path;
-	/**
-	 * The source files that were combined into this file.
-	 */
-	private final List<WyilFile> sources;
-	/**
 	 * Indicate whether or not to use strict mode.
 	 */
 	private final boolean strictMode;
@@ -69,13 +61,11 @@ public class JavaScriptFile {
 	 */
 	private List<Declaration> declarations;
 
-	public JavaScriptFile(Trie path, List<WyilFile> sources, Standard standard) {
-		this(path, sources, true, standard);
+	public JavaScriptFile(Standard standard) {
+		this(true, standard);
 	}
 
-	public JavaScriptFile(Trie path, List<WyilFile> sources, boolean strictMode, Standard standard) {
-		this.path = path;
-		this.sources = new ArrayList<>(sources);
+	public JavaScriptFile(boolean strictMode, Standard standard) {
 		this.strictMode = strictMode;
 		this.standard = standard;
 		this.declarations = new ArrayList<>();
@@ -118,16 +108,8 @@ public class JavaScriptFile {
 		return standard == Standard.ES6_BIGINT;
 	}
 
-	public Trie getPath() {
-		return path;
-	}
-
 	public List<Declaration> getDeclarations() {
 		return declarations;
-	}
-
-	public List<WyilFile> getSourceArtifacts() {
-		return sources;
 	}
 
 	// =========================================================================
