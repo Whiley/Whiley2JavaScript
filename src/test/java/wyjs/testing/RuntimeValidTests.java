@@ -15,20 +15,14 @@ package wyjs.testing;
 
 import static org.junit.Assert.fail;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ForkJoinPool;
-import java.util.function.Predicate;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -41,28 +35,18 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import jbfs.core.Build;
-import jbfs.core.Content;
-import jbfs.util.ByteRepository;
-import jbfs.util.DirectoryRoot;
-import jbfs.util.Pair;
-import jbfs.util.Transactions;
-import jbfs.util.Trie;
-
-import wycc.lang.SyntacticException;
-import wycc.util.Logger;
+import wycc.util.Pair;
+import wycc.util.Trie;
 import wycc.util.AbstractCompilationUnit.Name;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
 import wycc.util.AbstractCompilationUnit.Identifier;
 
 import static wyil.lang.WyilFile.*;
-import wyc.lang.WhileyFile;
 import wyil.lang.WyilFile.Type;
-import wyc.task.CompileTask;
-import wyc.util.TestUtils;
-
 import wyil.lang.WyilFile;
+import wyc.util.TestUtils;
+import wyjs.Main;
 import wyjs.core.JavaScriptFile;
 import wyjs.tasks.JavaScriptCompileTask;
 
@@ -165,23 +149,15 @@ public class RuntimeValidTests {
 	// Test Harness
 	// ======================================================================
 
- 	protected void runTest(String name) throws IOException {
-		File jsFile = new File(WHILEY_SRC_DIR + File.separatorChar + name + ".js");
+ 	protected void runTest(Trie path) throws IOException {
+		File jsFile = new File(WHILEY_SRC_DIR + File.separatorChar + path + ".js");
 		// Compile to JavaScript
-		Pair<Boolean, String> p = compileWhiley2JavaScript(new File(WHILEY_SRC_DIR), name); // name of test to compile
-
-		boolean r = p.first();
-		System.out.print(p.second());
-
-		if (!r) {
-			fail("Test failed to compile!");
-		}
-		// Execute the generated JavaScript Program.
+		compileWhiley2JavaScript(new File(WHILEY_SRC_DIR), path); // name of test to compile
 		try {
-			execJS(jsFile, name);
+			execJS(jsFile, path);
 		} catch (ScriptException e) {
 			System.err.println("=========================================================");
-			System.err.println("TEST: " + name);
+			System.err.println("TEST: " + path);
 			System.err.println("=========================================================");
 			e.printStackTrace();
 			fail("unexpected output!");
@@ -189,61 +165,22 @@ public class RuntimeValidTests {
 	}
 
  	/**
- 	 * A simple default registry which knows about whiley files and wyil files.
- 	 */
- 	private static final Content.Registry registry = new TestUtils.Registry();
-
- 	/**
 	 * Mock of js::core package which is needed for various JavaScript specific
 	 * tests (e.g. for native strings, etc).
 	 */
- 	private static final Content.Source JSCORE_PACKAGE = new Content.Source() {
- 		private final Trie path = Trie.fromString("js/core");
- 		private final WyilFile jsCore = new WyilFile(path, Collections.emptyList());
-
- 		{
- 			// FIXME: type here is incorrect and should be updated with fixed-with integer
-			// type (i.e. uint:16).
- 			Decl.Variable var = new Decl.Variable(new Tuple<>(), new Identifier("$"), new Type.Array(Type.Int));
- 			// public type string is (int[] $) where true
- 			Decl.Type type = new Decl.Type(new Tuple<>(new Modifier.Public()), new Identifier("string"),
- 					new Tuple<>(), var, new Tuple<>(new Expr.Constant(Type.Bool, new Value.Bool(true))));
- 			//
- 			Decl.Unit unit = new Decl.Unit(new Name(path), new Tuple<>(type));
- 			jsCore.setRootItem(new WyilFile.Decl.Module(new Name(path), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
- 		}
-
-		@Override
-		public <T extends Content> T get(Content.Type<T> kind, Trie p) throws IOException {
-			if (kind == WyilFile.ContentType && p.equals(path)) {
-				return (T) jsCore;
-			}
-			return null;
-		}
-
-		@Override
-		public <T extends Content> List<T> getAll(Content.Filter<T> filter) throws IOException {
-			if (filter.includes(WyilFile.ContentType, path)) {
-				return Arrays.asList((T) jsCore);
-			}
-			return null;
-		}
-
-		@Override
-		public List<Trie> match(Content.Filter<? extends Content> filter) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public <T extends Content> List<Trie> match(Content.Filter<T> filter, Predicate<T> p) {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public Registry getContentRegistry() {
-			return registry;
-		}
- 	};
+	private final static Trie path = Trie.fromString("js/core");
+	private final static WyilFile jsCore = new WyilFile(Collections.emptyList());
+	static {
+		// FIXME: type here is incorrect and should be updated with fixed-with integer
+		// type (i.e. uint:16).
+		Decl.Variable var = new Decl.Variable(new Tuple<>(), new Identifier("$"), new Type.Array(Type.Int));
+		// public type string is (int[] $) where true
+		Decl.Type type = new Decl.Type(new Tuple<>(new Modifier.Public()), new Identifier("string"), new Tuple<>(), var,
+				new Tuple<>(new Expr.Constant(Type.Bool, new Value.Bool(true))));
+		//
+		Decl.Unit unit = new Decl.Unit(new Name(path), new Tuple<>(type));
+		jsCore.setRootItem(new WyilFile.Decl.Module(new Name(path), new Tuple<>(unit), new Tuple<>(), new Tuple<>()));
+	}
 
  	/**
 	 * Run the Whiley Compiler with the given list of arguments to produce a
@@ -255,136 +192,19 @@ public class RuntimeValidTests {
 	 * @return
 	 * @throws IOException
 	 */
- 	public static Pair<Boolean,String> compileWhiley2JavaScript(File whileydir, String arg) throws IOException {
- 		String filename = arg + ".whiley";
-		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
-		PrintStream psyserr = new PrintStream(syserr);
-		// Determine the ID of the test being compiler
-		Trie path = Trie.fromString(arg);
-		//
-		boolean result = true;
-		// Construct the directory root
-		DirectoryRoot root = new DirectoryRoot(registry, whileydir, f -> {
-			return f.getName().equals(filename);
-		});
-		//
-		try {
-			// Extract source file
-			WhileyFile source = root.get(WhileyFile.ContentType, path);
-			// Construct build repository
-			Build.Repository repository = new ByteRepository(registry, source);
-			// Construct compile task (including special js::core package)
-			CompileTask wycTask = new CompileTask(path, Arrays.asList(source), Arrays.asList(JSCORE_PACKAGE));
-			// NOTE: Java Nashorn supports ES5 only?
-			JavaScriptCompileTask jsTask = new JavaScriptCompileTask(path, path, JavaScriptFile.Standard.ES5);
-			// Apply Whiley Compiler to repository
-			result = repository.apply(Transactions.create(wycTask, jsTask));
-			// Read out binary file from build repository
-			WyilFile target = repository.get(WyilFile.ContentType, path);
-			// Write binary file to directory
-			root.put(path, target);
-			// Check whether result valid (or not)
-			result &= target.isValid();
-			// Print out syntactic markers
-			wycli.commands.BuildCmd.printSyntacticMarkers(psyserr, target, source);
-			// Add invariant handler for js::core::string
-			JavaScriptFile jsFile = repository.get(JavaScriptFile.ContentType, path);
-			// FIXME: this should not be permitted in a functional setting :)
-			jsFile.getDeclarations().add(constructJsCoreStringInvariant());
-			// Finally flush the generated JavaScript file to disk
-			root.put(path, jsFile);
-		} catch (SyntacticException e) {
-			// Print out the syntax error
-			//e.outputSourceError(psyserr);
-			result = false;
-		} catch (Exception e) {
-			// Print out the syntax error
-			TestUtils.printStackTrace(psyserr, e);
-			result = false;
-		} finally {
-			// Writeback any results
-			root.synchronise();
+	public static void compileWhiley2JavaScript(File whileydir, Trie path) throws IOException {
+		File whileySrcDir = new File(WHILEY_SRC_DIR);
+		// Configure and run Whiley compiler.
+		boolean r = new wyc.Compiler().setWhileyDir(whileySrcDir).setWyilDir(whileySrcDir).setTarget(path)
+				.addSource(path).addDependency(jsCore).run();
+		if (!r) {
+			fail("Test failed to compile!");
+		} else {
+			// Configure and run JavaScript backend.
+			new Main().setWyilDir(whileydir).setJsDir(whileydir).setTarget(path).addSource(path)
+					.setStandard(JavaScriptFile.Standard.ES5).run();
 		}
-		//
-		psyserr.flush();
-		// Convert bytes produced into resulting string.
-		byte[] errBytes = syserr.toByteArray();
-		String output = new String(errBytes);
-		return new Pair<>(result, output);
- 	}
-
-//	public static Pair<Boolean,String> compileWhiley2JavaScript_OLD(String whileydir, String arg) throws IOException {
-//		ByteArrayOutputStream syserr = new ByteArrayOutputStream();
-//		ByteArrayOutputStream sysout = new ByteArrayOutputStream();
-//		PrintStream psyserr = new PrintStream(syserr);
-//		//
-//		boolean result = true;
-//		//
-//		try {
-//			// Construct the project
-//			DirectoryRoot root = new DirectoryRoot(whileydir, registry);
-//			//
-//			SequentialBuildProject project = new SequentialBuildProject(root);
-//			// Add mock for js::core
-//			project.getPackages().add(JSCORE_PACKAGE);
-//			// Identify source files and target files
-//			Pair<FileSystem.Entry<WhileyFile>, FileSystem.Entry<WyilFile>> p = TestUtils.findSourceFiles(root,arg);
-//			List<FileSystem.Entry<WhileyFile>> sources = Arrays.asList(p.first());
-//			FileSystem.Entry<WyilFile> wyilTarget = p.second();
-//			// Add Whiley => WyIL build rule
-//			project.add(new Build.Rule() {
-//				@Override
-//				public void apply(Collection<Build.Task> tasks) throws IOException {
-//					// Construct a new build task
-//					CompileTask task = new CompileTask(project, Logger.NULL, root, wyilTarget, sources);
-//					// Submit the task for execution
-//					tasks.add(task);
-//				}
-//			});
-//			// Construct an empty JavaScriptFile
-//			FileSystem.Entry<JavaScriptFile> jsTarget = root.create(wyilTarget.id(), JavaScriptFile.ContentType);
-//			// NOTE: Java Nashorn supports ES5 only?
-//			JavaScriptFile jsFile = new JavaScriptFile(JavaScriptFile.Standard.ES5);
-//			// Add invariant handler for js::core::string
-//			jsFile.getDeclarations().add(constructJsCoreStringInvariant());
-//			// Write out the JavaScriptFile
-//			jsTarget.write(jsFile);
-//			// Add WyIL => JavaScript Build Rule
-//			project.add(new Build.Rule() {
-//				@Override
-//				public void apply(Collection<Build.Task> tasks) throws IOException {
-//					// Construct a new build task
-//					JavaScriptCompileTask task = new JavaScriptCompileTask(project, jsTarget, wyilTarget);
-//					// Submit the task for execution
-//					tasks.add(task);
-//				}
-//			});
-//			project.refresh();
-//			// Actually force the project to build
-//			project.build(ForkJoinPool.commonPool(), Build.NULL_METER).get();
-//			// Flush any created resources (e.g. wyil files)
-//			root.flush();
-//			// Check whether any syntax error produced
-//			result = !TestUtils.findSyntaxErrors(wyilTarget.read().getRootItem(), new BitSet());
-//			// Print out any error messages
-//			wycli.commands.Build.printSyntacticMarkers(psyserr, (List) sources, (FileSystem.Entry) wyilTarget);
-//			// Flush any created resources (e.g. wyil files)
-//			root.flush();
-//		} catch (SyntacticException e) {
-//			// Print out the syntax error
-//			e.outputSourceError(new PrintStream(syserr),false);
-//			result = false;
-//		} catch (Exception e) {
-//			// Print out the syntax error
-//			e.printStackTrace(new PrintStream(syserr));
-//			result = false;
-//		}
-//		// Convert bytes produced into resulting string.
-//		byte[] errBytes = syserr.toByteArray();
-//		byte[] outBytes = sysout.toByteArray();
-//		String output = new String(errBytes) + new String(outBytes);
-//		return new Pair<>(result, output);
-//	}
+	}
 
 	/**
 	 * Execute a given JavaScript file stored on disk using the built-in
@@ -397,19 +217,14 @@ public class RuntimeValidTests {
 	 * @throws ScriptException
 	 * @throws IOException
 	 */
-	private void execJS(File jsFile, String name) throws ScriptException, IOException {
+	private void execJS(File jsFile, Trie path) throws ScriptException, IOException {
 		ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
 		// Load the WyJS runtime which provides necessary support methods.
 		engine.eval(new FileReader(WYJS_RUNTIME));
 		// Load the js script from the filesystem
 		engine.eval(new FileReader(jsFile));
 		// Execute the test() method
-		engine.eval(name + "$test();");
-	}
-
-	private static JavaScriptFile.Method constructJsCoreStringInvariant() {
-		JavaScriptFile.Term body = new JavaScriptFile.Return(new JavaScriptFile.Constant(true));
-		return new JavaScriptFile.Method("js$core$string$type", Arrays.asList("v"), new JavaScriptFile.Block(body));
+		engine.eval(path + "$test();");
 	}
 
 	// ======================================================================
@@ -418,9 +233,9 @@ public class RuntimeValidTests {
 
 	// Parameter to test case is the name of the current test.
 	// It will be passed to the constructor by JUnit.
-	private final String testName;
+	private final Trie testName;
 	public RuntimeValidTests(String testName) {
-		this.testName = testName;
+		this.testName = Trie.fromString(testName);
 	}
 
 	// Here we enumerate all available test cases.
@@ -432,7 +247,7 @@ public class RuntimeValidTests {
 	// Skip ignored tests
 	@Before
 	public void beforeMethod() {
-		String ignored = IGNORED.get(this.testName);
+		String ignored = IGNORED.get(this.testName.toString());
 		Assume.assumeTrue("Test " + this.testName + " skipped: " + ignored, ignored == null);
 	}
 

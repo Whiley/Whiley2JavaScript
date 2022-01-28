@@ -13,108 +13,79 @@
 // limitations under the License.
 package wyjs.tasks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import jbfs.core.Build;
-import jbfs.core.Build.Artifact;
-import jbfs.core.Build.SnapShot;
-import jbfs.util.Pair;
-import jbfs.util.Trie;
+import wycc.util.Pair;
+import wycc.util.Trie;
 import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
+import wyjs.core.JavaScriptFile.Standard;
 
-public class JavaScriptCompileTask implements Build.Task {
-	/**
-	 * The set of source files that this task will compiler from.
-	 */
-	private final Trie source;
+public class JavaScriptCompileTask {
 	/**
 	 * Identifier for target of this build task.
 	 */
-	private final Trie target;
+	private Trie target = Trie.fromString("main");
+	/**
+	 * The set of source files that this task will compiler from.
+	 */
+	private final List<WyilFile> sources = new ArrayList<>();
+	/**
+	 * Additional JavaScript files to include in generated file.
+	 */
+	private final List<JavaScriptFile> includes = new ArrayList<>();
 	/**
 	 * Specify whether or not to generate a "strict" JavaScript file.
 	 */
-	private final boolean strict;
+	private boolean strict = true;
 	/**
 	 *  Specify JavaScript standard to generate for
 	 */
-	private final JavaScriptFile.Standard standard;
-	/**
-	 * Additional JavaScript files to include in generated file.
-	 */
-	private final List<WyilFile> wyIncludes;
-	/**
-	 * Additional JavaScript files to include in generated file.
-	 */
-	private final List<JavaScriptFile> jsIncludes;
+	private Standard standard = Standard.ES6;
 
-	public JavaScriptCompileTask(Trie target, Trie source, JavaScriptFile.Standard standard) {
-		this(target, source, true, standard, Collections.emptyList(), Collections.emptyList());
-	}
-
-	public JavaScriptCompileTask(Trie target, Trie source, boolean strict, JavaScriptFile.Standard standard,
-			List<WyilFile> wyIncludes, List<JavaScriptFile> jsIncludes) {
-		if(target == null) {
-			throw new IllegalArgumentException("invalid target");
-		} else if(source == null) {
-			throw new IllegalArgumentException("invalid source");
-		}
+	public JavaScriptCompileTask setTarget(Trie target) {
 		this.target = target;
-		this.source = source;
-		this.strict = strict;
-		this.standard = standard;
-		this.wyIncludes = wyIncludes;
-		this.jsIncludes = jsIncludes;
+		return this;
 	}
 
-	@Override
+	public JavaScriptCompileTask setStrict(boolean flag) {
+		this.strict = flag;
+		return this;
+	}
+
+	public JavaScriptCompileTask setStandard(Standard std) {
+		this.standard = std;
+		return this;
+	}
+
+	public JavaScriptCompileTask addSource(WyilFile f) {
+		this.sources.add(f);
+		return this;
+	}
+
+	public JavaScriptCompileTask addInclude(JavaScriptFile f) {
+		this.includes.add(f);
+		return this;
+	}
+
 	public Trie getPath() {
 		return target;
 	}
 
-	@Override
-	public Type<? extends Artifact> getContentType() {
-		return JavaScriptFile.ContentType;
-	}
-
-	@Override
-	public List<? extends Artifact> getSourceArtifacts() {
-		throw new IllegalArgumentException();
-	}
-
-	@Override
-	public Pair<SnapShot, Boolean> apply(SnapShot s) {
-		// Read out the WyilFile which we are translating into JavaScript.
-		WyilFile binary = s.get(WyilFile.ContentType, source);
-		// Compile into a single binary target
-		Pair<JavaScriptFile, Boolean> r = compile(binary);
-		// Write target into snapshot
-		s = s.put(r.first());
-		// Done
-		return new Pair<>(s, r.second());
-	}
-
-	private Pair<JavaScriptFile, Boolean> compile(WyilFile source) {
+	public JavaScriptFile run() {
 		// Construct initial (empty) JavaScript file
-		JavaScriptFile jsFile = new JavaScriptFile(target, Arrays.asList(source), strict, standard);
-		// FIXME: this is a fairly temporary solution at the moment which just
-		// turns the WyIL file directly into a string. A more useful solution
-		// will be to generate an intermediate file representing JavaScript in
-		// an AST. This would enable, for example, better support for different
-		// standards. It would also enable minification, and allow support for
-		// different module systems (e.g. CommonJS).
-		new JavaScriptCompiler(jsFile).visitModule(source);
-		// Process Wyil includes
-		for (WyilFile i : wyIncludes) {
+		JavaScriptFile jsFile = new JavaScriptFile(strict, standard);
+		// Process source files one by one
+		for (WyilFile i : sources) {
 			new JavaScriptCompiler(jsFile).visitModule(i);
 		}
-		// Process JavaScript includes
-		for (JavaScriptFile i : jsIncludes) {
+		// Process additional JavaScript includes
+		for (JavaScriptFile i : includes) {
 			jsFile.getDeclarations().addAll(i.getDeclarations());
 		}
 		// How could this fail?
-		return new Pair<>(jsFile, true);
+		return jsFile;
 	}
 }
