@@ -23,11 +23,16 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import wycc.util.OptArg;
 import wycc.util.Trie;
+import wyil.lang.WyilFile;
 import wyjs.core.JavaScriptFile;
 import wyjs.core.JavaScriptFile.NativeDeclaration;
 import wyjs.core.JavaScriptFile.Standard;
@@ -59,6 +64,10 @@ public class Main {
 	 * List of JavaScript files to include.
 	 */
 	private List<File> includes = new ArrayList<>();
+	/**
+	 * WyIL dependencies to include during compilation.
+	 */
+	private List<File> whileypath = Collections.EMPTY_LIST;
 
 	public Main addSource(Trie source) {
 		this.sources.add(source);
@@ -85,6 +94,11 @@ public class Main {
 		return this;
 	}
 
+	public Main setWhileyPath(List<File> whileypath) {
+		this.whileypath = whileypath;
+		return this;
+	}
+
 	public boolean run() throws IOException {
 		// Construct compile task
 		JavaScriptCompileTask task = new JavaScriptCompileTask().setTarget(target).setStandard(standard);
@@ -93,17 +107,81 @@ public class Main {
 			// Extract source file
 			task.addSource(wyc.Compiler.readWyilFile(wyildir, source));
 		}
+		// Extract any dependencies from zips
+		for(File dep : whileypath) {
+			List<WyilFile> deps = new ArrayList<>();
+			wyc.Compiler.extractDependencies(dep,deps);
+			task.addSources(deps);
+		}
+		// Load local includes
 		for(File include : includes) {
 			FileInputStream fin = new FileInputStream(include);
 			JavaScriptFile jsf = readJavaScriptFile(fin);
 			fin.close();
 			task.addInclude(jsf);
 		}
+		// Load includes from dependencies
+		for(JavaScriptFile js : extractIncludes(whileypath)) {
+			task.addInclude(js);
+		}
 		JavaScriptFile target = task.run();
 		// Write out binary target
 		wyjs.Main.writeJavaScriptFile(this.target, target, jsdir);
 		// Unsure how it can fail!
 		return true;
+	}
+
+	public static List<JavaScriptFile> extractIncludes(List<File> whileypath) throws IOException {
+		List<JavaScriptFile> includes = new ArrayList<>();
+		for(File f : whileypath) {
+			String suffix = getSuffix(f.getName());
+			//
+			switch(suffix) {
+			case "zip":
+				extractFromZip(f,includes);
+				break;
+			default:
+				throw new IllegalArgumentException("invalid whileypath entry \"" + f.getName() + "\"");
+			}
+		}
+		return includes;
+	}
+
+	/**
+	 * Extract all WyilFiles contained in a zipfile.
+	 *
+	 * @param dep
+	 * @param dependencies
+	 * @throws IOException
+	 */
+	public static void extractFromZip(File dep, List<JavaScriptFile> includes) throws IOException {
+		ZipFile zf = new ZipFile(dep);
+		Enumeration<? extends ZipEntry> entries = zf.entries();
+		while(entries.hasMoreElements()) {
+			ZipEntry e = entries.nextElement();
+			String suffix = getSuffix(e.getName());
+			if(suffix != null && suffix.equals("js")) {
+				JavaScriptFile jsf = readJavaScriptFile(zf.getInputStream(e));
+				includes.add(jsf);
+			}
+		}
+		zf.close();
+	}
+
+	/**
+	 * Extract the suffix from a given filename. For example, given "std-0.3.2.zip"
+	 * we return "zip".
+	 *
+	 * @param t
+	 * @return
+	 */
+	private static String getSuffix(String t) {
+		int i = t.lastIndexOf('.');
+		if (i >= 0) {
+			return t.substring(i + 1);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -115,7 +193,8 @@ public class Main {
 			new OptArg("standard","s",OptArg.STRING,"set JavaScript standard","ES6"),
 			new OptArg("output","o",OptArg.STRING,"set output file","main"),
 			new OptArg("wyildir", OptArg.FILEDIR, "Specify where to place binary (WyIL) files", new File(".")),
-			new OptArg("jsdir", OptArg.FILEDIR, "Specify where to place JavaScript files", new File("."))
+			new OptArg("jsdir", OptArg.FILEDIR, "Specify where to place JavaScript files", new File(".")),
+			new OptArg("whileypath", OptArg.FILELIST, "Specify additional dependencies", new ArrayList<>())
 	};
 	//
 	public static void main(String[] _args) throws IOException {
@@ -126,8 +205,9 @@ public class Main {
 		File jsdir = (File) options.get("jsdir");
 		Trie target = Trie.fromString((String) options.get("output"));
 		Standard standard = Standard.valueOf((String) options.get("standard"));
+		ArrayList<File> whileypath = (ArrayList<File>) options.get("whileypath");
 		// Construct Main object
-		Main main = new Main().setStandard(standard).setWyilDir(wyildir).setJsDir(jsdir).setTarget(target);
+		Main main = new Main().setStandard(standard).setWyilDir(wyildir).setJsDir(jsdir).setTarget(target).setWhileyPath(whileypath);
 		// Add source files
 		for (String s : args) {
 			main.addSource(Trie.fromString(s));
@@ -138,7 +218,7 @@ public class Main {
 		System.exit(result ? 0 : 1);
 	}
 
-	public JavaScriptFile readJavaScriptFile(InputStream inputStream) throws IOException {
+	public static JavaScriptFile readJavaScriptFile(InputStream inputStream) throws IOException {
 		// NOTE: this is strictly a hack at this time as its unclear what the best
 		// alternative option is. Specifically, parsing JavaScriptFiles is not something
 		// I'm contemplating right now :)

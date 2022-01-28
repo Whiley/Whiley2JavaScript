@@ -15,6 +15,7 @@ package wyjs.tasks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import wycc.util.Pair;
@@ -62,6 +63,11 @@ public class JavaScriptCompileTask {
 
 	public JavaScriptCompileTask addSource(WyilFile f) {
 		this.sources.add(f);
+		return this;
+	}
+
+	public JavaScriptCompileTask addSources(Collection<WyilFile> fs) {
+		this.sources.addAll(fs);
 		return this;
 	}
 
