@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
 
-import wyc.util.testing.CompileTest;
+import wyc.util.testing.WhileyCompileTest;
 import wycc.lang.Syntactic;
 import wycc.util.*;
 import wycc.util.testing.TestFile;
@@ -51,7 +51,7 @@ public class JsCompileTest implements TestStage {
 			return new Result(ignored, new Error[0]);
 		} catch (Syntactic.Exception e) {
 			e.printStackTrace();
-			TestFile.Error err = CompileTest.toError(state, e);
+			TestFile.Error err = WhileyCompileTest.toError(state, e);
 			return new TestStage.Result(ignored, new TestFile.Error[] { err });
 		} catch(Throwable e) {
 			TestFile.Coordinate c = new TestFile.Coordinate(0, new TestFile.Range(0, 0));

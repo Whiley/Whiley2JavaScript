@@ -49,7 +49,7 @@ public class RuntimeTests {
 	 */
 	public final static String WHILEY_SRC_DIR = "tests";
 
-	public final static TestManager manager = new TestManager(Path.of(WHILEY_SRC_DIR), new CompileTest(),
+	public final static TestManager manager = new TestManager(Path.of(WHILEY_SRC_DIR), new WhileyCompileTest(),
 			new JsCompileTest(), new JsExecuteTest());
 
 	// ======================================================================

@@ -28,7 +28,7 @@ import wycc.util.*;
 import wycc.util.testing.TestFile;
 import wycc.util.testing.TestStage;
 import wycc.util.testing.TestFile.Error;
-import wyc.util.testing.ExecuteTest;
+import wyc.util.testing.WhileyExecuteTest;
 import wyil.lang.WyilFile;
 
 public class JsExecuteTest implements TestStage {
@@ -155,7 +155,7 @@ public class JsExecuteTest implements TestStage {
 
 	@Override
 	public Error[] filter(Error[] errors) {
-		return Arrays.asList(errors).stream().filter(m -> ExecuteTest.isRuntimeError(m.getErrorNumber()))
+		return Arrays.asList(errors).stream().filter(m -> WhileyExecuteTest.isRuntimeError(m.getErrorNumber()))
 				.toArray(TestFile.Error[]::new);
 	}
 }
