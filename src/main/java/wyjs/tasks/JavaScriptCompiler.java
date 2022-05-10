@@ -52,7 +52,9 @@ import java.util.List;
 import java.util.Set;
 import wycc.util.ArrayUtils;
 import wycc.util.Pair;
+import wycc.util.Trie;
 import wycc.lang.Syntactic;
+import wycc.util.AbstractCompilationUnit;
 import wycc.util.AbstractCompilationUnit.Identifier;
 import wycc.util.AbstractCompilationUnit.Tuple;
 import wycc.util.AbstractCompilationUnit.Value;
@@ -227,7 +229,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	@Override
 	public Term constructAssert(Stmt.Assert stmt, Term condition) {
-		return WY_ASSERT(condition);
+		return WY_ASSERT(condition, stmt.getCondition(), WyilFile.RUNTIME_ASSERTION_FAILURE);
 	}
 
 	@Override
@@ -280,7 +282,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	@Override
 	public Term constructAssume(Stmt.Assume stmt, Term condition) {
-		return WY_ASSERT(condition);
+		return WY_ASSERT(condition, stmt.getCondition(), WyilFile.RUNTIME_ASSUMPTION_FAILURE);
 	}
 
 	@Override
@@ -312,7 +314,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	@Override
 	public Term constructFail(Stmt.Fail stmt) {
-		return WY_ASSERT(Constant.FALSE);
+		return WY_ASSERT(Constant.FALSE, stmt, WyilFile.RUNTIME_FAULT);
 	}
 
 	@Override
@@ -2475,8 +2477,19 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		return new JavaScriptFile.Invoke(WY_RUNTIME, "array", t1, t2);
 	}
 
-	private static Term WY_ASSERT(Term t1) {
-		return new JavaScriptFile.Invoke(WY_RUNTIME, "assert", t1);
+	private static Term WY_ASSERT(Term t1, Syntactic.Item item, int errcode) {
+		// Convert syntactic item into identifying string
+		JavaScriptFile.Constant c = toCoordinateString(item,errcode);
+		return new JavaScriptFile.Invoke(WY_RUNTIME, "assert", t1, c);
+	}
+
+	private static JavaScriptFile.Constant toCoordinateString(Syntactic.Item item, int errcode) {
+		Decl.Unit unit = item.getAncestor(Decl.Unit.class);
+		String nameStr = unit.getName().toString().replace("::", "/");
+		Trie filename = Trie.fromString(nameStr + ".whiley");
+		// Determine the source-file span for the given syntactic marker.
+		Syntactic.Span span = item.getAncestor(AbstractCompilationUnit.Attribute.Span.class);
+		return new JavaScriptFile.Constant(filename.toString() + ":" + span.getStart() + ":" + span.getEnd() + ":E" + errcode);
 	}
 
 	private static Term WY_COPY(Term t1) {
