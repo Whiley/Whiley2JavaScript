@@ -64,4 +64,8 @@ public class JsCompileTest implements TestStage {
 		return new Error[0];
 	}
 
+	@Override
+	public boolean required() {
+		return false;
+	}
 }

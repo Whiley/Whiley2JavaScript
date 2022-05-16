@@ -158,4 +158,9 @@ public class JsExecuteTest implements TestStage {
 		return Arrays.asList(errors).stream().filter(m -> WhileyExecuteTest.isRuntimeError(m.getErrorNumber()))
 				.toArray(TestFile.Error[]::new);
 	}
+
+	@Override
+	public boolean required() {
+		return false;
+	}
 }

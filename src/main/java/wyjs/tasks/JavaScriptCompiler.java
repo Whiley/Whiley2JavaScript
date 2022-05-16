@@ -62,7 +62,9 @@ import wyil.lang.WyilFile;
 import wyil.lang.WyilFile.Decl;
 import wyil.lang.WyilFile.Decl.Variant;
 import wyil.lang.WyilFile.Expr;
+import wyil.lang.WyilFile.Expr.ArrayUpdate;
 import wyil.lang.WyilFile.Expr.Old;
+import wyil.lang.WyilFile.Expr.RecordUpdate;
 import wyil.lang.WyilFile.LVal;
 import wyil.lang.WyilFile.Modifier;
 import wyil.lang.WyilFile.Stmt;
@@ -2568,5 +2570,17 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	private static Term PARSE_INT(String str, int base) {
 		return new JavaScriptFile.Invoke(null, "parseInt", new Constant(str), new Constant(base));
+	}
+
+	@Override
+	public Term constructArrayUpdate(ArrayUpdate expr, Term source, Term index, Term value) {
+		// TODO: #63
+		throw new UnsupportedOperationException("implement me");
+	}
+
+	@Override
+	public Term constructRecordUpdate(RecordUpdate expr, Term source, Term value) {
+		// TODO: #63
+		throw new UnsupportedOperationException("implement me");
 	}
 }
