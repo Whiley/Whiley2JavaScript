@@ -16,6 +16,7 @@ package wyjs.util.testing;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 
 import wyc.util.testing.WhileyCompileTest;
@@ -50,7 +51,6 @@ public class JsCompileTest implements TestStage {
 			//
 			return new Result(ignored, new Error[0]);
 		} catch (Syntactic.Exception e) {
-			e.printStackTrace();
 			TestFile.Error err = WhileyCompileTest.toError(state, e);
 			return new TestStage.Result(ignored, new TestFile.Error[] { err });
 		} catch(Throwable e) {
@@ -61,11 +61,11 @@ public class JsCompileTest implements TestStage {
 
 	@Override
 	public Error[] filter(Error[] errors) {
-		return new Error[0];
+		return Arrays.asList(errors).stream().filter(m -> m.getErrorNumber() == 0).toArray(TestFile.Error[]::new);
 	}
 
 	@Override
 	public boolean required() {
-		return false;
+		return true;
 	}
 }

@@ -531,6 +531,13 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		return new ArrayInitialiser(values);
 	}
 
+
+	@Override
+	public Term constructArrayUpdate(ArrayUpdate expr, Term source, Term index, Term value) {
+		// TODO: #63
+		throw new Syntactic.Exception("implement me",expr.getHeap(),expr);
+	}
+
 	@Override
 	public Term constructBitwiseComplement(Expr.BitwiseComplement expr, Term operand) {
 		return MASK_FF(new Operator(Kind.BITWISEINVERT, operand));
@@ -785,7 +792,7 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	@Override
 	public Term constructOld(Old expr, Term operand) {
-		throw new UnsupportedOperationException();
+		throw new Syntactic.Exception("implement me", expr.getHeap(), expr);
 	}
 
 	@Override
@@ -810,6 +817,12 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		// NOTE: Invoking Wy.Record is necessary to set the prototype on the generated
 		// object.
 		return new Operator(Kind.NEW,WY_RECORD(new JavaScriptFile.ObjectLiteral(fields)));
+	}
+
+	@Override
+	public Term constructRecordUpdate(RecordUpdate expr, Term source, Term value) {
+		// TODO: #63
+		throw new UnsupportedOperationException("implement me");
 	}
 
 	@Override
@@ -2570,17 +2583,5 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	private static Term PARSE_INT(String str, int base) {
 		return new JavaScriptFile.Invoke(null, "parseInt", new Constant(str), new Constant(base));
-	}
-
-	@Override
-	public Term constructArrayUpdate(ArrayUpdate expr, Term source, Term index, Term value) {
-		// TODO: #63
-		throw new UnsupportedOperationException("implement me");
-	}
-
-	@Override
-	public Term constructRecordUpdate(RecordUpdate expr, Term source, Term value) {
-		// TODO: #63
-		throw new UnsupportedOperationException("implement me");
 	}
 }

@@ -55,6 +55,10 @@ public class JsExecuteTest implements TestStage {
 				execJS(jsFile.toFile(), unit);
 				return new Result(ignored, new Error[0]);
 			} catch (ScriptException|StackOverflowError e) {
+				if(e instanceof Exception) {
+					Exception ex = (Exception) e;
+					ex.printStackTrace();
+				}
 				TestFile.Coordinate c = extractCoordinate(e.getMessage(),state);
 				int errno = extractErrorNumber(e.getMessage());
 				Trie filename = extractFilename(e.getMessage());
