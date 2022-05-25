@@ -437,6 +437,8 @@ public class JavaScriptFilePrinter {
 			return "/";
 		case REM:
 			return "%";
+		case EXP:
+			return "**";
 		case AND:
 			return "&&";
 		case OR:

@@ -620,7 +620,7 @@ public class JavaScriptFile {
 
 	public static class Operator implements Term {
 		public enum Kind {
-			NOT, NEG, EQ, EEQ, NEQ, NEEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND, BITWISEINVERT,
+			NOT, NEG, EQ, EEQ, NEQ, NEEQ, LT, LTEQ, GT, GTEQ, ADD, SUB, MUL, DIV, REM, EXP, AND, OR, BITWISEOR, BITWISEXOR, BITWISEAND, BITWISEINVERT,
 			LEFTSHIFT, RIGHTSHIFT, NEW, TYPEOF
 		}
 		private Kind kind;

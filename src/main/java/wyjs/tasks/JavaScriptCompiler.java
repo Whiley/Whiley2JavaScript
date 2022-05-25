@@ -63,6 +63,7 @@ import wyil.lang.WyilFile.Decl;
 import wyil.lang.WyilFile.Decl.Variant;
 import wyil.lang.WyilFile.Expr;
 import wyil.lang.WyilFile.Expr.ArrayUpdate;
+import wyil.lang.WyilFile.Expr.IntegerExponent;
 import wyil.lang.WyilFile.Expr.Old;
 import wyil.lang.WyilFile.Expr.RecordUpdate;
 import wyil.lang.WyilFile.LVal;
@@ -170,10 +171,8 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 		String name = toMangledName(decl);
 		// Translate parameters
 		List<String> parameters = toParameterNames(decl.getParameters());
-		// Construct body from translated clauses
-		Term stmt = new Return(body);
 		// Done
-		return new JavaScriptFile.Method(name, parameters, new Block(stmt));
+		return new JavaScriptFile.Method(name, parameters, (Block) body);
 	}
 
 	@Override
@@ -701,6 +700,15 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 	@Override
 	public Term constructIntegerRemainder(Expr.IntegerRemainder expr, Term lhs, Term rhs) {
 		return new JavaScriptFile.Operator(Kind.REM, lhs, rhs);
+	}
+
+	@Override
+	public Term constructIntegerExponent(IntegerExponent expr, Term lhs, Term rhs) {
+		if(jsFile.ES6()) {
+			return new JavaScriptFile.Operator(Kind.EXP, lhs, rhs);
+		} else {
+			return MATH_POW(lhs, rhs);
+		}
 	}
 
 	@Override
@@ -2569,6 +2577,10 @@ public class JavaScriptCompiler extends AbstractTranslator<Term, Term, Term> {
 
 	private static Term MATH_FLOOR(Term t1) {
 		return new JavaScriptFile.Invoke(MATH_RUNTIME, "floor", t1);
+	}
+
+	private static Term MATH_POW(Term t1, Term t2) {
+		return new JavaScriptFile.Invoke(MATH_RUNTIME, "pow", t1, t2);
 	}
 
 	private static Term checkFieldCount(Term operand, int size) {
